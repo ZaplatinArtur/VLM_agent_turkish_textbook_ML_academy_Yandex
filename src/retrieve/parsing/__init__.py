@@ -1,7 +1,6 @@
 from .base import Parser
-from .books import parse_all_books
+from .service import get_retrieved_chuncks
 
 __all__ = [
-    "Parser",
-    "parse_all_books",
+    "get_retrieved_chuncks",
 ]

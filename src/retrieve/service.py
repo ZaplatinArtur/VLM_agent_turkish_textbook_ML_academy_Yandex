@@ -1,14 +1,15 @@
 from ..schemas.retrieve import RetrievedChunk
+from .parsing.service import get_retrieved_chuncks
 from .pipeline import RetrievalPipeline
 
-_pipeline: RetrievalPipeline | None = None
 
-
-def get_pipeline() -> RetrievalPipeline:
-    global _pipeline
-    if _pipeline is None:
-        _pipeline = RetrievalPipeline(rankers=[])
-    return _pipeline
+def get_pipeline(k: int) -> RetrievalPipeline:
+    return RetrievalPipeline(
+        rankers=[
+            # TODO: Implement rankers
+        ],
+        chunks=get_retrieved_chuncks()
+    )
 
 
 def textbook_retrieve(
@@ -16,4 +17,5 @@ def textbook_retrieve(
     k: int = 5,
     subject: str | None = None,
 ) -> list[RetrievedChunk]:
-    return get_pipeline().run(query, subject=subject)[:k]
+
+    return get_pipeline(k).run(query, subject=subject)
