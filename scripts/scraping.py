@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 import threading
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -10,9 +11,13 @@ from urllib.parse import urlparse
 import requests
 from PIL import Image
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
+
+from paths import BOOKS_DIR, ensure_data_dirs
+
 BASE_URL = "https://www.odevjet.com"
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-OUTPUT_DIR = PROJECT_ROOT / "data" / "books" / "raw"
+OUTPUT_DIR = BOOKS_DIR
 REQUEST_HEADERS = {"User-Agent": "Mozilla/5.0"}
 MAX_WORKERS = 6
 TIMEOUT = (10, 30)  # connect, read
@@ -132,6 +137,7 @@ def download_book(book_slug: str, page_numbers: list[int]) -> tuple[int, int, in
 
 
 def main() -> None:
+    ensure_data_dirs()
     log("Загружаю список книг с сайта...")
     book_urls = get_book_urls()
     log(f"Книг: {len(book_urls)}")

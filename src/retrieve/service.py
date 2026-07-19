@@ -1,4 +1,4 @@
-from ..schemas.retrieve import RetrievedChunk
+from schemas.retrieve import RetrievedChunk
 from .parsing.service import get_retrieved_chuncks
 from .pipeline import RetrievalPipeline
 
