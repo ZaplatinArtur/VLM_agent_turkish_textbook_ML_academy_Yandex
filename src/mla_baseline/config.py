@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     results_dir: Path = Path("results")
     concurrency: int = 4
 
-    # Textbook retrieval service. These settings are used by agent_rag only.
+    # Optional HTTP retrieval adapter. AgentRag uses direct local retrieval by default.
     retrieval_base_url: str = "http://127.0.0.1:8770"
     retrieval_timeout_s: float = 10.0
     retrieval_top_k: int = 5

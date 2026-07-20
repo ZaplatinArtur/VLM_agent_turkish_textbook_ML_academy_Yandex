@@ -1,6 +1,8 @@
 """Tools available to the homework-solving agent."""
 
 from .textbook_search import (
+    LocalTextbookSearchClient,
+    TextbookSearchBackend,
     TextbookSearchClient,
     TextbookSearchError,
     TextbookSearchInput,
@@ -9,6 +11,8 @@ from .textbook_search import (
 )
 
 __all__ = [
+    "LocalTextbookSearchClient",
+    "TextbookSearchBackend",
     "TextbookSearchClient",
     "TextbookSearchError",
     "TextbookSearchInput",

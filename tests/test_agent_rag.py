@@ -7,6 +7,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 from mla_baseline.config import Settings
 from mla_baseline.contracts import Task
 from mla_baseline.solvers.agent_rag import AgentRag
+from mla_baseline.tools import LocalTextbookSearchClient
 
 
 class FakeLlm:
@@ -103,6 +104,12 @@ def _final_answer() -> AIMessage:
         ),
         usage_metadata={"input_tokens": 20, "output_tokens": 8, "total_tokens": 28},
     )
+
+
+def test_agent_uses_local_retrieval_by_default() -> None:
+    solver = AgentRag(_settings(), llm=FakeLlm([_final_answer()]))
+
+    assert isinstance(solver.search_client, LocalTextbookSearchClient)
 
 
 def test_agent_executes_tool_and_returns_traceable_final_answer() -> None:

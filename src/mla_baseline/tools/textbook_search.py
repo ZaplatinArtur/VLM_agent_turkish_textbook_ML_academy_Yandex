@@ -1,14 +1,15 @@
-"""HTTP adapter for the textbook retrieval service.
+"""Adapters that expose textbook retrieval as a LangChain tool.
 
-The client is independent from the model and agent loop, so it can be tested
-with a fake HTTP session and reused with BM25, FAISS, or another backend that
-implements the same ``POST /api/search`` contract.
+The agent uses the local adapter by default. The HTTP adapter remains available
+for deployments where retrieval runs in a separate process or on another host.
 """
 
 from __future__ import annotations
 
 import json
-from typing import Any, Literal
+import time
+from collections.abc import Callable
+from typing import Any, Literal, Protocol
 
 import requests
 from langchain_core.tools import BaseTool, tool
@@ -39,6 +40,124 @@ class TextbookSearchInput(BaseModel):
     @classmethod
     def strip_strings(cls, value: Any) -> Any:
         return value.strip() if isinstance(value, str) else value
+
+
+class TextbookSearchBackend(Protocol):
+    """Common interface implemented by local and HTTP retrieval adapters."""
+
+    def search(
+        self,
+        query: str,
+        *,
+        top_k: int = 5,
+        subject: str | None = None,
+        grade: int | str | None = None,
+        mode: Literal["or", "and"] = "or",
+    ) -> dict[str, Any]: ...
+
+
+class LocalTextbookSearchClient:
+    """Call ``textbook_retrieve`` directly in the agent process."""
+
+    def __init__(
+        self,
+        retriever: Callable[..., list[Any]] | None = None,
+    ) -> None:
+        # The default import is intentionally lazy: importing the agent should
+        # not load FAISS or sentence-transformers before the tool is called.
+        self._retriever = retriever
+
+    def _get_retriever(self) -> Callable[..., list[Any]]:
+        if self._retriever is None:
+            from retrieve.service import textbook_retrieve
+
+            self._retriever = textbook_retrieve
+        return self._retriever
+
+    @staticmethod
+    def _as_payload(chunk: Any) -> dict[str, Any]:
+        if isinstance(chunk, dict):
+            return dict(chunk)
+        model_dump = getattr(chunk, "model_dump", None)
+        if callable(model_dump):
+            return model_dump(mode="json")
+        raise TypeError("retriever chunks must be mappings or Pydantic models")
+
+    @classmethod
+    def _as_hit(cls, chunk: Any, rank: int) -> dict[str, Any]:
+        payload = cls._as_payload(chunk)
+        metadata_value = payload.get("metadata")
+        metadata = dict(metadata_value) if isinstance(metadata_value, dict) else {}
+
+        hit: dict[str, Any] = {
+            "chunk_id": payload.get("chunk_id"),
+            "text": payload.get("text", ""),
+            "score": payload.get("score"),
+            "rank": rank,
+            "metadata": metadata,
+        }
+        mapped_metadata = {
+            "subject": metadata.get("subject"),
+            "grade": metadata.get("grade"),
+            "book_id": metadata.get("book_id", metadata.get("textbook")),
+            "page_number": metadata.get("page_number", metadata.get("page")),
+            "source_url": metadata.get("source_url"),
+        }
+        hit.update(
+            {key: value for key, value in mapped_metadata.items() if value is not None}
+        )
+        return {key: value for key, value in hit.items() if value is not None}
+
+    def search(
+        self,
+        query: str,
+        *,
+        top_k: int = 5,
+        subject: str | None = None,
+        grade: int | str | None = None,
+        mode: Literal["or", "and"] = "or",
+    ) -> dict[str, Any]:
+        arguments = TextbookSearchInput(
+            query=query,
+            top_k=top_k,
+            subject=subject,
+            grade=grade,
+            mode=mode,
+        )
+
+        # Dense retrieval has no lexical "or"/"and" semantics. ``mode`` is
+        # preserved in the shared response contract but does not change ranking.
+        fetch_k = arguments.top_k if arguments.grade is None else arguments.top_k * 5
+        started = time.perf_counter()
+        try:
+            chunks = self._get_retriever()(
+                arguments.query,
+                k=fetch_k,
+                subject=arguments.subject,
+            )
+        except Exception as exc:
+            raise TextbookSearchError(f"local retrieval failed: {exc}") from exc
+
+        if arguments.grade is not None:
+            chunks = [
+                chunk
+                for chunk in chunks
+                if str(self._as_payload(chunk).get("metadata", {}).get("grade"))
+                == str(arguments.grade)
+            ]
+        chunks = chunks[: arguments.top_k]
+        hits = [self._as_hit(chunk, rank) for rank, chunk in enumerate(chunks, 1)]
+        return {
+            "query": arguments.query,
+            "mode": arguments.mode,
+            "filters": {
+                "subject": arguments.subject,
+                "grade": arguments.grade,
+            },
+            "latency_ms": round((time.perf_counter() - started) * 1_000, 3),
+            "returned": len(hits),
+            "hits": hits,
+        }
 
 
 class TextbookSearchClient:
@@ -141,6 +260,7 @@ def format_search_result_for_model(
                 "chunk_id",
                 "page_id",
                 "rank",
+                "score",
                 "lexical_score",
                 "subject",
                 "grade",
@@ -170,7 +290,7 @@ def format_search_result_for_model(
 
 
 def create_search_textbooks_tool(
-    client: TextbookSearchClient,
+    client: TextbookSearchBackend,
     *,
     max_text_chars: int = 6_000,
 ) -> BaseTool:

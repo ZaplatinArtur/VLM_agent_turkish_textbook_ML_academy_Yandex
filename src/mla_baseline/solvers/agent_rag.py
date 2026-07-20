@@ -12,7 +12,11 @@ from ..config import Settings
 from ..contracts import Task
 from ..parsing import parse_solve_output
 from ..schemas import SolveResult, ToolCallLog, Usage
-from ..tools import TextbookSearchClient, create_search_textbooks_tool
+from ..tools import (
+    LocalTextbookSearchClient,
+    TextbookSearchBackend,
+    create_search_textbooks_tool,
+)
 from .b0_no_tools import B0NoTools
 
 
@@ -26,13 +30,10 @@ class AgentRag(B0NoTools):
         settings: Settings,
         *,
         llm: Any | None = None,
-        search_client: TextbookSearchClient | None = None,
+        search_client: TextbookSearchBackend | None = None,
     ) -> None:
         super().__init__(settings, llm=llm)
-        self.search_client = search_client or TextbookSearchClient(
-            settings.retrieval_base_url,
-            timeout_s=settings.retrieval_timeout_s,
-        )
+        self.search_client = search_client or LocalTextbookSearchClient()
         self.search_tool = create_search_textbooks_tool(
             self.search_client,
             max_text_chars=settings.retrieval_max_context_chars,

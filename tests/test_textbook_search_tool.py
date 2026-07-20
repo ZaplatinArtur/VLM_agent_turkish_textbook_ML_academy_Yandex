@@ -7,11 +7,13 @@ import pytest
 import requests
 
 from mla_baseline.tools import (
+    LocalTextbookSearchClient,
     TextbookSearchClient,
     TextbookSearchError,
     create_search_textbooks_tool,
     format_search_result_for_model,
 )
+from schemas.retrieve import RetrievedChunk
 
 
 class FakeResponse:
@@ -46,6 +48,79 @@ def _search_payload(*hits: dict[str, Any]) -> dict[str, Any]:
         "returned": len(hits),
         "hits": list(hits),
     }
+
+
+def test_local_search_calls_textbook_retrieve_without_http() -> None:
+    calls: list[dict[str, Any]] = []
+
+    def fake_retriever(
+        query: str,
+        *,
+        k: int,
+        subject: str | None,
+    ) -> list[RetrievedChunk]:
+        calls.append({"query": query, "k": k, "subject": subject})
+        return [
+            RetrievedChunk(
+                chunk_id="book-1:42",
+                text="Dikdörtgenin alanı iki kenarın çarpımıdır.",
+                score=0.91,
+                metadata={
+                    "subject": "math",
+                    "grade": 7,
+                    "textbook": "book-1",
+                    "page": 42,
+                },
+            ),
+            RetrievedChunk(
+                chunk_id="book-2:10",
+                text="Başka sınıf için örnek.",
+                score=0.75,
+                metadata={"subject": "math", "grade": 6},
+            ),
+        ]
+
+    client = LocalTextbookSearchClient(retriever=fake_retriever)
+    result = client.search(
+        "  dikdörtgen alanı  ",
+        top_k=1,
+        subject=" math ",
+        grade=7,
+    )
+
+    assert calls == [{"query": "dikdörtgen alanı", "k": 5, "subject": "math"}]
+    assert result["returned"] == 1
+    assert result["hits"] == [
+        {
+            "chunk_id": "book-1:42",
+            "text": "Dikdörtgenin alanı iki kenarın çarpımıdır.",
+            "score": 0.91,
+            "rank": 1,
+            "metadata": {
+                "subject": "math",
+                "grade": 7,
+                "textbook": "book-1",
+                "page": 42,
+            },
+            "subject": "math",
+            "grade": 7,
+            "book_id": "book-1",
+            "page_number": 42,
+        }
+    ]
+
+
+def test_local_search_reports_retriever_failure() -> None:
+    def broken_retriever(*args: Any, **kwargs: Any) -> list[Any]:
+        raise RuntimeError("index is unavailable")
+
+    client = LocalTextbookSearchClient(retriever=broken_retriever)
+
+    with pytest.raises(
+        TextbookSearchError,
+        match="local retrieval failed: index is unavailable",
+    ):
+        client.search("geometri")
 
 
 def test_search_sends_contract_and_defensively_limits_hits() -> None:
