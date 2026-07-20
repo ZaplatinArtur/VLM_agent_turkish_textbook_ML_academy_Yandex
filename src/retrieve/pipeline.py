@@ -9,9 +9,10 @@ class RetrievalPipeline:
     def run(
         self,
         query: str,
+        k: int,
         subject: str | None = None,
     ) -> list[RetrievedChunk]:
-        chunks: list[RetrievedChunk] = []
+        chunks = []
         for ranker in self.rankers:
             chunks = ranker.rank(query, chunks, subject=subject)
-        return chunks
+        return chunks[:k]
