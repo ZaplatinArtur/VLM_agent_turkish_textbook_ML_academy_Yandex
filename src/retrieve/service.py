@@ -1,15 +1,36 @@
 from schemas.retrieve import RetrievedChunk
-from .parsing.service import get_retrieved_chuncks
+
+from .embedders import SentenceTransformerEmbedder
+from .index import Index
+from .parsing import get_retrieved_chunks
 from .pipeline import RetrievalPipeline
+from .rankers import DenseRanker
+
+_pipeline: RetrievalPipeline | None = None
 
 
-def get_pipeline(k: int) -> RetrievalPipeline:
+def build_pipeline(
+    chunks: list[RetrievedChunk] | None = None,
+) -> RetrievalPipeline:
+    """Build dense retrieval over parsed textbook chunks.
+
+    Passing ``chunks`` is useful for tests and experiments. By default the
+    corpus is loaded from the JSONL chunk store produced by the parser.
+    """
+
+    corpus = get_retrieved_chunks() if chunks is None else chunks
+    index = Index(corpus)
+    embedder = SentenceTransformerEmbedder()
     return RetrievalPipeline(
-        rankers=[
-            # TODO: Implement rankers
-        ],
-        chunks=get_retrieved_chuncks()
+        rankers=[DenseRanker(embedder=embedder, index=index)],
     )
+
+
+def get_pipeline() -> RetrievalPipeline:
+    global _pipeline
+    if _pipeline is None:
+        _pipeline = build_pipeline()
+    return _pipeline
 
 
 def textbook_retrieve(
@@ -17,5 +38,4 @@ def textbook_retrieve(
     k: int = 5,
     subject: str | None = None,
 ) -> list[RetrievedChunk]:
-
-    return get_pipeline(k).run(query, subject=subject)
+    return get_pipeline().run(query, k=k, subject=subject)
