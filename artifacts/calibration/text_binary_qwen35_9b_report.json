@@ -1,0 +1,18 @@
+{
+  "prompt_version": "text-binary-v1",
+  "configured_model": "Qwen/Qwen3.5-9B",
+  "endpoint_kind": "OpenAI-compatible vLLM over SSH tunnel",
+  "temperature": 0.0,
+  "seed": 20260714,
+  "max_tokens": 256,
+  "enable_thinking": false,
+  "records": 24,
+  "successful_responses": 24,
+  "format_failures": 0,
+  "manual_agreements": 24,
+  "manual_disagreements": 0,
+  "agreement_rate": 1.0,
+  "dataset": "text_binary_manual_24.jsonl",
+  "scope_note": "Synthetic text-only mechanics calibration; not evidence of accuracy on the real basket dataset.",
+  "deployment_note": "The available checkpoint is Qwen/Qwen3.5-9B. No Qwen3.5-8B checkpoint was present on the supplied Datasphere host."
+}
