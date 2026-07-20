@@ -1,0 +1,220 @@
+{
+  "human_annotations": 2,
+  "human_tasks": 2,
+  "judge_records": 1,
+  "matched_comparisons": 2,
+  "coverage_over_human_annotations": 1.0,
+  "judge_record_statuses": {
+    "scored": 2
+  },
+  "missing_judge_keys": [],
+  "ambiguous_task_ids_without_setup": [],
+  "duplicate_judge_keys": [],
+  "overall": {
+    "comparisons": 2,
+    "exact_score_agreement": 1,
+    "within_one_score": 1,
+    "mean_absolute_error": 0,
+    "strict_binary_agreement": 1,
+    "strict_precision": 1.0,
+    "strict_recall": 1.0,
+    "strict_f1": 1.0,
+    "cohen_kappa": null,
+    "quadratic_weighted_kappa": null,
+    "confusion_matrix_human_rows_judge_columns": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        2
+      ]
+    ]
+  },
+  "human_inter_annotator": {
+    "tasks_with_multiple_annotations": 0,
+    "comparisons": 0,
+    "exact_score_agreement": null,
+    "within_one_score": null,
+    "mean_absolute_error": null,
+    "strict_binary_agreement": null,
+    "strict_precision": null,
+    "strict_recall": null,
+    "strict_f1": null,
+    "cohen_kappa": null,
+    "quadratic_weighted_kappa": null,
+    "confusion_matrix_human_rows_judge_columns": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "by_subject": {
+    "Mathematics": {
+      "comparisons": 2,
+      "exact_score_agreement": 1,
+      "within_one_score": 1,
+      "mean_absolute_error": 0,
+      "strict_binary_agreement": 1,
+      "strict_precision": 1.0,
+      "strict_recall": 1.0,
+      "strict_f1": 1.0,
+      "cohen_kappa": null,
+      "quadratic_weighted_kappa": null,
+      "confusion_matrix_human_rows_judge_columns": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2
+        ]
+      ]
+    }
+  },
+  "by_answer_type": {
+    "multiple_choice": {
+      "comparisons": 2,
+      "exact_score_agreement": 1,
+      "within_one_score": 1,
+      "mean_absolute_error": 0,
+      "strict_binary_agreement": 1,
+      "strict_precision": 1.0,
+      "strict_recall": 1.0,
+      "strict_f1": 1.0,
+      "cohen_kappa": null,
+      "quadratic_weighted_kappa": null,
+      "confusion_matrix_human_rows_judge_columns": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2
+        ]
+      ]
+    }
+  },
+  "agreement_by_judge_confidence": {
+    "0.8-1.0": {
+      "comparisons": 2,
+      "exact_score_agreement": 1
+    }
+  }
+}

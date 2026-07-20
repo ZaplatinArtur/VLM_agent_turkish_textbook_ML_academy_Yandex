@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VLM Judge Lab</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">V</span>
+      <div>
+        <strong>VLM Judge Lab</strong>
+        <span id="datasetName" class="subtle">загрузка…</span>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <label class="mode-label">
+        <span class="subtle">Режим</span>
+        <select id="workspaceMode" aria-label="Режим работы">
+          <option value="judge">Оценка ответов</option>
+          <option value="gold">Gold transcription</option>
+          <option id="adjudicationModeOption" value="adjudication" disabled>Adjudication</option>
+        </select>
+      </label>
+      <label class="switch-label">
+        <input id="blindToggle" type="checkbox" checked>
+        <span>Blind mode</span>
+      </label>
+      <a id="exportCsv" class="button ghost" href="/api/export.csv">CSV</a>
+      <a id="exportJsonl" class="button ghost" href="/api/export.jsonl">JSONL</a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="toolbar" aria-label="Навигация и фильтры">
+      <div class="progress-wrap">
+        <div class="progress-copy">
+          <strong id="progressText">0 / 0</strong>
+          <span id="savedState" class="subtle">не сохранено</span>
+        </div>
+        <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+      </div>
+      <label>
+        <span>Предмет</span>
+        <select id="subjectFilter"><option value="">Все</option></select>
+      </label>
+      <label>
+        <span>Тип ответа</span>
+        <select id="typeFilter"><option value="">Все</option></select>
+      </label>
+      <label>
+        <span>Статус</span>
+        <select id="statusFilter">
+          <option value="">Все</option>
+          <option value="unlabeled">Не размечено</option>
+          <option value="complete">Готово</option>
+          <option value="draft">Черновик</option>
+          <option value="skipped">Пропущено</option>
+        </select>
+      </label>
+      <label class="search-field">
+        <span>Поиск</span>
+        <input id="searchInput" type="search" placeholder="ID или тема">
+      </label>
+    </section>
+
+    <section id="emptyState" class="empty-state" hidden>
+      <h1>Нет подходящих заданий</h1>
+      <p>Измените фильтры или загрузите другой датасет.</p>
+    </section>
+
+    <article id="workspace" class="workspace" hidden>
+      <section class="task-heading">
+        <div>
+          <div id="taskMeta" class="meta-row"></div>
+          <h1 id="taskTitle">Задание</h1>
+        </div>
+        <div class="nav-buttons">
+          <button id="prevButton" class="button ghost" type="button">← Назад</button>
+          <button id="nextButton" class="button ghost" type="button">Далее →</button>
+        </div>
+      </section>
+
+      <section class="question-panel">
+        <div class="section-label">Условие</div>
+        <button id="questionImageButton" class="image-button" type="button" aria-label="Увеличить изображение условия">
+          <img id="questionImage" alt="Изображение условия">
+        </button>
+        <pre id="questionText" class="answer-text" hidden></pre>
+      </section>
+
+      <section id="pointwiseComparison" class="comparison-grid" aria-label="Сравнение эталона и ответа">
+        <article class="comparison-pane reference-pane">
+          <header>
+            <span class="pane-index">01</span>
+            <div><strong>Ожидаемый ответ</strong><span>gold reference</span></div>
+          </header>
+          <button id="referenceImageButton" class="image-button" type="button" aria-label="Увеличить изображение эталона">
+            <img id="referenceImage" alt="Эталонный ответ">
+          </button>
+          <pre id="referenceText" class="answer-text"></pre>
+        </article>
+        <article class="comparison-pane candidate-pane">
+          <header>
+            <span class="pane-index">02</span>
+            <div><strong>Ответ агента</strong><span id="candidateSetup">setup скрыт</span></div>
+          </header>
+          <pre id="candidateText" class="answer-text"></pre>
+        </article>
+      </section>
+
+      <section id="pairwiseComparison" class="comparison-grid" aria-label="Парное сравнение" hidden>
+        <article class="comparison-pane">
+          <header><span class="pane-index">A</span><div><strong>Ответ A</strong><span id="candidateASetup">setup скрыт</span></div></header>
+          <pre id="candidateAText" class="answer-text"></pre>
+        </article>
+        <article class="comparison-pane">
+          <header><span class="pane-index">B</span><div><strong>Ответ B</strong><span id="candidateBSetup">setup скрыт</span></div></header>
+          <pre id="candidateBText" class="answer-text"></pre>
+        </article>
+      </section>
+
+      <details id="pairwiseGold" class="gold-details" hidden>
+        <summary>Показать ожидаемый ответ</summary>
+        <div class="gold-details-content">
+          <button id="pairwiseReferenceImageButton" class="image-button" type="button" aria-label="Увеличить изображение эталона">
+            <img id="pairwiseReferenceImage" alt="Эталонный ответ">
+          </button>
+          <pre id="pairwiseReferenceText" class="answer-text"></pre>
+        </div>
+      </details>
+
+      <section id="goldWorkspace" class="comparison-grid" aria-label="Транскрипция эталона" hidden>
+        <article class="comparison-pane reference-pane">
+          <header>
+            <span class="pane-index">01</span>
+            <div><strong>Исходный эталон</strong><span>только для этого task_id</span></div>
+          </header>
+          <button id="goldReferenceImageButton" class="image-button" type="button" aria-label="Увеличить изображение эталона">
+            <img id="goldReferenceImage" alt="Эталонный ответ">
+          </button>
+          <pre id="goldReferenceText" class="answer-text"></pre>
+        </article>
+
+        <form id="goldForm" class="comparison-pane gold-editor-pane">
+          <header>
+            <span class="pane-index">02</span>
+            <div><strong>Структурированный gold</strong><span>проверяется человеком</span></div>
+          </header>
+          <label>
+            <span>Транскрипция ответа</span>
+            <textarea id="goldTranscription" rows="5" placeholder="Перепишите итоговый ответ с изображения"></textarea>
+          </label>
+          <div class="gold-editor-grid">
+            <label>
+              <span>Допустимые эквиваленты — по одному на строку</span>
+              <textarea id="goldAcceptable" rows="4" placeholder="42&#10;42,0"></textarea>
+            </label>
+            <label>
+              <span>Обязательные подответы — по одному на строку</span>
+              <textarea id="goldSubanswers" rows="4" placeholder="a) …&#10;b) …"></textarea>
+            </label>
+          </div>
+          <div class="gold-editor-grid compact">
+            <label>
+              <span>Качество эталона</span>
+              <select id="goldQuality">
+                <option value="unknown">Не проверено</option>
+                <option value="clear">Однозначный</option>
+                <option value="ambiguous">Неоднозначный</option>
+                <option value="incorrect">Вероятно неверный</option>
+                <option value="unreadable">Нечитаемый</option>
+              </select>
+            </label>
+            <label>
+              <span>Аннотатор</span>
+              <input id="goldAnnotator" type="text" placeholder="Имя или ID">
+            </label>
+          </div>
+          <label>
+            <span>Примечание</span>
+            <textarea id="goldNotes" rows="3" placeholder="Неясности, единицы, альтернативные формы"></textarea>
+          </label>
+          <footer class="form-footer gold-footer">
+            <button id="goldSkipButton" class="button ghost" type="button">Пропустить</button>
+            <button id="goldDraftButton" class="button ghost" type="button">Черновик</button>
+            <button id="goldVerifyButton" class="button primary" type="submit">Проверено и далее</button>
+          </footer>
+        </form>
+      </section>
+
+      <section id="adjudicationWorkspace" class="adjudication-panel" aria-label="Adjudication" hidden>
+        <div class="adjudication-heading">
+          <div>
+            <span class="section-label">Разбор расхождения</span>
+            <strong>Человек и LLM-судья</strong>
+          </div>
+          <span id="adjudicationPriority" class="priority-badge"></span>
+        </div>
+        <div id="adjudicationReasons" class="meta-row review-reasons"></div>
+
+        <div class="review-grid">
+          <article class="review-card human-review">
+            <header><span class="pane-index">H</span><div><strong>Оценка человека</strong><span id="humanReviewerMeta"></span></div></header>
+            <div class="review-score"><strong id="humanReviewScore">—</strong><span id="humanReviewLabel">нет оценки</span></div>
+            <dl class="review-facts">
+              <div><dt>Уверенность</dt><dd id="humanReviewConfidence">—</dd></div>
+              <div><dt>Strict correct</dt><dd id="humanReviewStrict">—</dd></div>
+            </dl>
+            <p id="humanReviewRationale" class="review-rationale"></p>
+            <div id="humanReviewErrors" class="review-errors"></div>
+          </article>
+
+          <article class="review-card judge-review">
+            <header><span class="pane-index">J</span><div><strong>LLM-судья</strong><span id="judgeReviewerMeta"></span></div></header>
+            <div class="review-score"><strong id="judgeReviewScore">—</strong><span id="judgeReviewLabel">нет вердикта</span></div>
+            <dl class="review-facts">
+              <div><dt>Уверенность</dt><dd id="judgeReviewConfidence">—</dd></div>
+              <div><dt>Strict correct</dt><dd id="judgeReviewStrict">—</dd></div>
+            </dl>
+            <p id="judgeReviewRationale" class="review-rationale"></p>
+            <div id="judgeReviewErrors" class="review-errors"></div>
+          </article>
+        </div>
+
+        <form id="adjudicationForm" class="adjudication-form">
+          <div class="form-heading">
+            <div><span class="section-label">Финальное решение</span><strong>Какой вердикт принять?</strong></div>
+            <span class="shortcut-hint">Ctrl / ⌘ + Enter — разрешить</span>
+          </div>
+          <div id="adjudicationDecisionButtons" class="decision-grid" role="group" aria-label="Решение по расхождению">
+            <button type="button" data-decision="human">Принять человека</button>
+            <button type="button" data-decision="judge">Принять LLM</button>
+            <button type="button" data-decision="custom">Своя оценка</button>
+            <button type="button" data-decision="exclude">Исключить</button>
+          </div>
+          <div class="triad-grid adjudication-fields">
+            <label><span>Финальная оценка</span><select id="adjudicationFinalScore"><option value="">—</option><option value="0">0 — неверно</option><option value="1">1 — попытка</option><option value="2">2 — частично</option><option value="3">3 — почти</option><option value="4">4 — верно</option></select></label>
+            <label><span>Источник проблемы</span><select id="adjudicationIssueSource"><option value="none">Не определён</option><option value="human">Разметчик</option><option value="judge">LLM-судья</option><option value="reference">Эталон / условие</option><option value="candidate">Ответ агента</option><option value="pipeline">Пайплайн</option></select></label>
+            <label><span>Adjudicator</span><input id="adjudicator" type="text" placeholder="Имя или ID"></label>
+          </div>
+          <label>
+            <span>Обоснование решения</span>
+            <textarea id="adjudicationRationale" rows="4" placeholder="Почему выбран этот финальный вердикт?"></textarea>
+          </label>
+          <footer class="form-footer">
+            <button id="adjudicationSkipButton" class="button ghost" type="button">Пропустить</button>
+            <button id="adjudicationDraftButton" class="button ghost" type="button">Черновик</button>
+            <button class="button primary" type="submit">Разрешено и далее</button>
+          </footer>
+        </form>
+      </section>
+
+      <form id="annotationForm" class="annotation-panel">
+        <section id="pointwiseControls">
+          <div class="form-heading">
+            <div><span class="section-label">Оценка</span><strong>Насколько ответ корректен?</strong></div>
+            <span class="shortcut-hint">Клавиши 0–4</span>
+          </div>
+          <div id="scoreButtons" class="score-grid" role="group" aria-label="Оценка от 0 до 4">
+            <button type="button" data-score="0"><strong>0</strong><span>Неверно</span></button>
+            <button type="button" data-score="1"><strong>1</strong><span>Попытка</span></button>
+            <button type="button" data-score="2"><strong>2</strong><span>Частично</span></button>
+            <button type="button" data-score="3"><strong>3</strong><span>Почти</span></button>
+            <button type="button" data-score="4"><strong>4</strong><span>Верно</span></button>
+          </div>
+
+          <div class="triad-grid">
+            <label><span>Финальный ответ</span><select id="finalCorrect"><option value="">—</option><option value="true">Верный</option><option value="false">Неверный</option><option value="null">Не оценить</option></select></label>
+            <label><span>Рассуждение</span><select id="reasoningCorrect"><option value="">—</option><option value="true">Верное</option><option value="false">Неверное</option><option value="null">Не оценить</option></select></label>
+            <label><span>Полнота</span><select id="complete"><option value="">—</option><option value="true">Полный</option><option value="false">Неполный</option><option value="null">Не оценить</option></select></label>
+          </div>
+        </section>
+
+        <section id="pairwiseControls" hidden>
+          <div class="form-heading"><div><span class="section-label">Arena vote</span><strong>Какой ответ лучше?</strong></div></div>
+          <div id="winnerButtons" class="winner-grid" role="group" aria-label="Победитель сравнения">
+            <button type="button" data-winner="A">A лучше</button>
+            <button type="button" data-winner="tie">Ничья</button>
+            <button type="button" data-winner="B">B лучше</button>
+            <button type="button" data-winner="unjudgeable">Не оценить</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="form-heading"><div><span class="section-label">Диагностика</span><strong>Что пошло не так?</strong></div></div>
+          <div id="errorTags" class="tag-grid">
+            <button type="button" data-error="visual_reading">Не прочитал изображение</button>
+            <button type="button" data-error="wrong_final_answer">Неверный итог</button>
+            <button type="button" data-error="reasoning_error">Ошибка рассуждения</button>
+            <button type="button" data-error="incomplete">Неполный ответ</button>
+            <button type="button" data-error="hallucination">Галлюцинация</button>
+            <button type="button" data-error="irrelevant">Не по вопросу</button>
+            <button type="button" data-error="unit_or_format">Единицы / формат</button>
+            <button type="button" data-error="retrieval_misuse">Неверно использован ретрив</button>
+          </div>
+          <label class="reference-check"><input id="referenceIssue" type="checkbox"><span>Проблема в эталоне или условии</span></label>
+        </section>
+
+        <div class="notes-grid">
+          <label><span>Краткое обоснование</span><textarea id="rationale" rows="4" placeholder="Почему выставлена такая оценка?"></textarea></label>
+          <div>
+            <label><span>Уверенность: <strong id="confidenceValue">80%</strong></span><input id="confidence" type="range" min="0" max="100" value="80"></label>
+            <label><span>Аннотатор</span><input id="annotator" type="text" placeholder="Имя или ID"></label>
+          </div>
+        </div>
+
+        <footer class="form-footer">
+          <button id="skipButton" class="button ghost" type="button">Пропустить</button>
+          <span class="shortcut-hint">Ctrl / ⌘ + Enter — сохранить</span>
+          <button id="saveButton" class="button primary" type="submit">Сохранить и далее</button>
+        </footer>
+      </form>
+    </article>
+  </main>
+
+  <dialog id="imageDialog">
+    <button id="closeDialog" class="dialog-close" type="button" aria-label="Закрыть">×</button>
+    <img id="dialogImage" alt="Увеличенное изображение">
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

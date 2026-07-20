@@ -1,0 +1,34 @@
+{
+  "seed": "calibration-v1",
+  "records": 120,
+  "by_answer_type": {
+    "multiple_choice": 50,
+    "multi_answer": 38,
+    "numeric": 15,
+    "open_ended": 15,
+    "unknown": 2
+  },
+  "by_difficulty": {
+    "medium": 49,
+    "hard": 36,
+    "easy": 35
+  },
+  "by_grade": {
+    "1": 5,
+    "2": 5,
+    "3": 5,
+    "4": 5,
+    "5": 11,
+    "6": 13,
+    "7": 11,
+    "8": 12,
+    "9": 15,
+    "10": 14,
+    "11": 11,
+    "12": 13
+  },
+  "jsonl": "artifacts\\calibration\\calibration_tasks.jsonl",
+  "labeling_csv": "artifacts\\calibration\\calibration_labeling.csv",
+  "synthetic_mc_stress_records": 150,
+  "synthetic_mc_stress_jsonl": "artifacts\\calibration\\synthetic_mc_stress.jsonl"
+}

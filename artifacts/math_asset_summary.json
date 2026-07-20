@@ -1,0 +1,11 @@
+{
+  "assets": 400,
+  "available": 400,
+  "unavailable": 0,
+  "question_assets": 200,
+  "reference_assets": 200,
+  "total_bytes": 166796084,
+  "reused_from_manifest": 388,
+  "checked_this_run": 12,
+  "manifest": "artifacts\\math_asset_manifest.jsonl"
+}
