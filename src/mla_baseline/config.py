@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     max_tokens: int = 3072
     temperature: float = 0.0
     request_timeout_s: float = 300.0
+    enable_thinking: bool = False
 
     prompt_version: str = "v1"
 

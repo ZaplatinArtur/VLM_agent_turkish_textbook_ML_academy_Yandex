@@ -32,6 +32,9 @@ class B0NoTools(Solver):
             temperature=settings.temperature,
             timeout=settings.request_timeout_s,
             max_retries=2,
+            extra_body={
+                "chat_template_kwargs": {"enable_thinking": settings.enable_thinking}
+            },
         )
 
     def build_messages(self, task: Task) -> list:

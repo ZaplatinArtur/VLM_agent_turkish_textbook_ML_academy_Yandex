@@ -136,6 +136,9 @@ def evaluate_text_records(
                     "metadata": metadata,
                 },
             }
+            for field_name in ("condition", "setup", "subject", "grade", "answer_type"):
+                if field_name in record:
+                    result[field_name] = record[field_name]
             if "manual_score" in record:
                 result["manual_score"] = record["manual_score"]
                 result["agreement"] = (

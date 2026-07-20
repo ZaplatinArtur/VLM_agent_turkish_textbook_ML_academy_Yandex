@@ -20,6 +20,7 @@ from .gold import apply_verified_gold
 from .metrics import deterministic_match
 from .ingest import import_candidates, read_records
 from .judge_audit import audit_judge_run
+from .mla_adapter import build_seed_text_tasks, prepare_text_judge_input
 from .pipeline import prepare_request_records
 from .retrieval import build_bm25_index, index_info, search_bm25
 from .retrieval_eval import evaluate_retrieval, prepare_qrels_template
@@ -138,6 +139,23 @@ def _import_candidates(args: argparse.Namespace) -> int:
         answer_field=args.answer_field,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+def _prepare_mla_judge_input(args: argparse.Namespace) -> int:
+    report = prepare_text_judge_input(
+        Path(args.tasks),
+        Path(args.results),
+        Path(args.output),
+        require_all=args.require_all,
+    )
+    print(json.dumps(report, ensure_ascii=False))
+    return 0
+
+
+def _build_seed_text_tasks(args: argparse.Namespace) -> int:
+    report = build_seed_text_tasks(Path(args.input), Path(args.output))
+    print(json.dumps(report, ensure_ascii=False))
     return 0
 
 
@@ -471,6 +489,24 @@ def build_parser() -> argparse.ArgumentParser:
     candidate_import.add_argument("--id-field", default="task_id")
     candidate_import.add_argument("--answer-field")
     candidate_import.set_defaults(handler=_import_candidates)
+
+    mla_judge_input = commands.add_parser(
+        "prepare-mla-judge-input",
+        help="join mla_baseline tasks and solver results for the text binary judge",
+    )
+    mla_judge_input.add_argument("--tasks", required=True)
+    mla_judge_input.add_argument("--results", required=True)
+    mla_judge_input.add_argument("--output", required=True)
+    mla_judge_input.add_argument("--require-all", action="store_true")
+    mla_judge_input.set_defaults(handler=_prepare_mla_judge_input)
+
+    seed_tasks = commands.add_parser(
+        "build-seed-text-tasks",
+        help="extract text-only MLA tasks from the real legacy failure sample",
+    )
+    seed_tasks.add_argument("--input", required=True)
+    seed_tasks.add_argument("--output", required=True)
+    seed_tasks.set_defaults(handler=_build_seed_text_tasks)
 
     pairs = commands.add_parser("prepare-pairs", help="build blinded LMArena-style A/B records")
     pairs.add_argument("--input", action="append", required=True)

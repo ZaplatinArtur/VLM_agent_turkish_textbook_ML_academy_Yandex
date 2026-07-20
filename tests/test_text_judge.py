@@ -38,13 +38,16 @@ class TextBinaryJudgeTests(unittest.TestCase):
                     "reference_answer": "4",
                     "candidate_answer": "4",
                     "manual_score": 1,
+                    "setup": "no_tools",
                 }],
                 ReplayBackend(['{"score": 1, "rationale": "matches"}']),
                 output,
                 retry_delay_seconds=0,
             )
             self.assertEqual(report["succeeded"], 1)
-            self.assertIn('"agreement": true', output.read_text(encoding="utf-8"))
+            saved = output.read_text(encoding="utf-8")
+            self.assertIn('"agreement": true', saved)
+            self.assertIn('"setup": "no_tools"', saved)
 
 
 if __name__ == "__main__":
