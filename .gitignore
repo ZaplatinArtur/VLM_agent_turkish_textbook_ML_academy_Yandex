@@ -1,5 +1,6 @@
 .idea/
 .venv/
+*.egg-info/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -171,6 +172,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Project data
-data/
+# Project data (keep the tiny, dependency-free smoke manifest in Git)
+data/*
+!data/tasks.sample.jsonl
 

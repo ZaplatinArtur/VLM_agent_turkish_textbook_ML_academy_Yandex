@@ -1,5 +1,2 @@
-pydantic>=2.0,<3
-requests>=2.31
-Pillow>=10.0
-pytesseract>=0.3.10
-tqdm>=4.66
+# pyproject.toml is the single source of project dependencies.
+-e .

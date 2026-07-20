@@ -8,7 +8,17 @@ version = "0.1.0"
 description = "Reference-aware evaluation pipeline for multimodal homework agents"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "langchain>=0.3",
+    "langchain-openai>=0.2",
+    "langgraph>=0.2",
+    "Pillow>=10.0",
+    "pydantic>=2.7,<3",
+    "pydantic-settings>=2.2",
+    "pytesseract>=0.3.10",
+    "requests>=2.31",
+    "tqdm>=4.66",
+]
 
 [project.optional-dependencies]
 sources = ["openpyxl>=3.1"]
@@ -18,6 +28,7 @@ dev = ["pytest>=8"]
 vlm-judge = "vlm_judge.cli:main"
 vlm-judge-ui = "vlm_judge.ui_server:main"
 vlm-retrieval-api = "vlm_judge.retrieval_server:main"
+mla-baseline = "mla_baseline.runner:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
