@@ -26,9 +26,21 @@ ANSWER_TYPE_HINTS_V1: dict[str, str] = {
 
 USER_TEXT_V1 = "Çöz"
 
+RAG_TOOL_POLICY_V1 = """\
+Elinde search_textbooks adlı bir ders kitabı arama aracı var.
+- Müfredata özgü bir formül, tanım, yöntem veya benzer çözülmüş örnek yararlıysa aracı kullan.
+- Arama sorgusunu kısa tut; konu, işlem ve ayırt edici terimleri yaz. Sorunun tamamını kopyalama.
+- İlk aramada yüksek kapsama için mode="or" ve top_k=5 kullan.
+- Aynı sorguyu tekrar etme. Sonuçlar yetersizse sorguyu en fazla iki kez yeniden formüle et.
+- Arama sonucu yalnızca kanıttır. Sayıları, birimleri ve şekilleri asıl soruyla karşılaştır.
+- Arama başarısızsa veya sonuç yoksa soruyu kendi bilginle çözmeye devam et.
+- Son mesajında araç çağrısı yapma; yalnızca istenen çözüm JSON'unu döndür.
+"""
+
 PROMPTS = {
     "v1": {
         "system": SYSTEM_PROMPT_V1,
+        "rag_tool_policy": RAG_TOOL_POLICY_V1,
         "answer_type_hints": ANSWER_TYPE_HINTS_V1,
         "user_text": USER_TEXT_V1,
     }

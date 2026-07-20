@@ -4,6 +4,7 @@
 """
 
 import time
+from typing import Any
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
@@ -20,10 +21,10 @@ from .base import Solver
 class B0NoTools(Solver):
     condition = "b0_no_tools"
 
-    def __init__(self, settings: Settings):
+    def __init__(self, settings: Settings, *, llm: Any | None = None):
         super().__init__(settings)
         self.prompt = PROMPTS[settings.prompt_version]
-        self.llm = ChatOpenAI(
+        self.llm = llm or ChatOpenAI(
             base_url=settings.vllm_base_url,
             api_key=settings.vllm_api_key,
             model=settings.model_name,

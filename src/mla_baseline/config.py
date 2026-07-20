@@ -39,6 +39,13 @@ class Settings(BaseSettings):
     results_dir: Path = Path("results")
     concurrency: int = 4
 
+    # Textbook retrieval service. These settings are used by agent_rag only.
+    retrieval_base_url: str = "http://127.0.0.1:8770"
+    retrieval_timeout_s: float = 10.0
+    retrieval_top_k: int = 5
+    retrieval_max_context_chars: int = 6_000
+    retrieval_max_calls: int = 3
+
 
 def get_settings() -> Settings:
     return Settings()

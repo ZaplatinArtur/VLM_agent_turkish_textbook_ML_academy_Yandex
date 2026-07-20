@@ -1,6 +1,6 @@
 """Схемы бейзлайнов: что должна вернуть модель и что мы отдаём судье."""
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class SolveOutput(BaseModel):
@@ -18,8 +18,11 @@ class Usage(BaseModel):
 
 class ToolCallLog(BaseModel):
     tool: str
-    args: dict = {}
+    args: dict = Field(default_factory=dict)
     result_preview: str | None = None
+    returned_chunk_ids: list[str] = Field(default_factory=list)
+    latency_ms: float | None = None
+    error: str | None = None
 
 
 class SolveResult(BaseModel):
@@ -32,6 +35,6 @@ class SolveResult(BaseModel):
     final_answer: str | None = None
     solution_steps: str | None = None
     raw_response: str | None = None
-    tool_calls: list[ToolCallLog] = []
-    usage: Usage = Usage()
+    tool_calls: list[ToolCallLog] = Field(default_factory=list)
+    usage: Usage = Field(default_factory=Usage)
     error: str | None = None
