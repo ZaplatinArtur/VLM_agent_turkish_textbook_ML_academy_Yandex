@@ -1,0 +1,19 @@
+[project]
+name = "mla-baseline"
+version = "0.1.0"
+description = "Baselines (no-tools, web-search) for the Turkish school-task solving agent"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.7",
+    "pydantic-settings>=2.2",
+    "langchain>=0.3",
+    "langchain-openai>=0.2",
+    "langgraph>=0.2",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["mla_baseline*"]
