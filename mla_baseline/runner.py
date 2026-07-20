@@ -1,0 +1,111 @@
+"""Батч-прогон: tasks.jsonl × solver -> results/<condition>_<prompt_version>.jsonl.
+
+Особенности:
+- resume: task_id, уже присутствующие в выходном файле, пропускаются;
+- конкурентность: vLLM батчует параллельные запросы, поэтому пул потоков
+  даёт почти линейное ускорение;
+- --dry-run: собирает сообщения без вызова модели (проверка входа без GPU).
+"""
+
+import argparse
+import json
+import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
+
+from .config import get_settings
+from .contracts import Task
+from .solvers import SOLVERS
+
+
+def load_tasks(path: Path) -> list[Task]:
+    tasks = []
+    with path.open(encoding="utf-8") as fh:
+        for line_no, line in enumerate(fh, 1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                tasks.append(Task.model_validate_json(line))
+            except ValueError as exc:
+                raise SystemExit(f"{path}:{line_no}: невалидная задача: {exc}") from exc
+    return tasks
+
+
+def load_done_ids(out_path: Path) -> set[str]:
+    if not out_path.exists():
+        return set()
+    done = set()
+    with out_path.open(encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if line:
+                done.add(json.loads(line)["task_id"])
+    return done
+
+
+def describe_messages(task: Task, messages: list) -> str:
+    human = messages[-1]
+    n_images = sum(1 for b in human.content if b.get("type") == "image_url")
+    texts = [b["text"] for b in human.content if b.get("type") == "text"]
+    return (
+        f"{task.task_id}: {n_images} img, text blocks: "
+        + " | ".join(t[:60].replace("\n", " ") for t in texts)
+    )
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Прогон бейзлайна по набору задач")
+    parser.add_argument("--tasks", type=Path, required=True, help="JSONL с Task")
+    parser.add_argument("--condition", choices=sorted(SOLVERS), default="b0_no_tools")
+    parser.add_argument("--limit", type=int, default=None, help="только первые N задач")
+    parser.add_argument("--out", type=Path, default=None, help="путь к результату")
+    parser.add_argument("--dry-run", action="store_true", help="собрать вход без вызова модели")
+    args = parser.parse_args(argv)
+
+    settings = get_settings()
+    solver = SOLVERS[args.condition](settings)
+
+    tasks = load_tasks(args.tasks)
+    if args.limit:
+        tasks = tasks[: args.limit]
+
+    if args.dry_run:
+        for task in tasks:
+            print(describe_messages(task, solver.build_messages(task)))
+        print(f"[dry-run] OK: {len(tasks)} задач, condition={args.condition}, "
+              f"model={settings.model_name}, prompt={settings.prompt_version}")
+        return 0
+
+    out_path = args.out or (
+        settings.results_dir / f"{args.condition}_{settings.prompt_version}.jsonl"
+    )
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    done = load_done_ids(out_path)
+    todo = [t for t in tasks if t.task_id not in done]
+    print(f"Задач: {len(tasks)}, уже готово: {len(tasks) - len(todo)}, к прогону: {len(todo)}")
+
+    write_lock = threading.Lock()
+    errors = 0
+    with out_path.open("a", encoding="utf-8") as out_fh:
+        with ThreadPoolExecutor(max_workers=settings.concurrency) as pool:
+            futures = {pool.submit(solver.solve, task): task for task in todo}
+            for i, future in enumerate(as_completed(futures), 1):
+                result = future.result()
+                if result.error:
+                    errors += 1
+                with write_lock:
+                    out_fh.write(result.model_dump_json() + "\n")
+                    out_fh.flush()
+                status = result.error or "ok"
+                print(f"[{i}/{len(todo)}] {result.task_id}: {status} "
+                      f"({result.usage.latency_s}s)")
+
+    print(f"Готово: {len(todo)} прогнано, ошибок: {errors}, результат: {out_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
