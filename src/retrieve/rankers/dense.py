@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from schemas.retrieve import RetrievedChunk
+from ...schemas.retrieve import RetrievedChunk
 
 from ..cache import EmbeddingCache
 from ..embedders import Embedder
