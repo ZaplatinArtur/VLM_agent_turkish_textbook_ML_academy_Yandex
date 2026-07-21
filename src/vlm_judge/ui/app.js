@@ -1,11 +1,13 @@
 const state = {
   tasks: [],
   goldTasks: [],
+  binaryTasks: [],
   adjudicationTasks: [],
   filtered: [],
   annotations: new Map(),
   gold: new Map(),
   adjudications: new Map(),
+  binarySummary: {},
   mode: "judge",
   goldDirty: false,
   adjudicationDirty: false,
@@ -21,12 +23,14 @@ const state = {
 const $ = (id) => document.getElementById(id);
 const els = {
   datasetName: $("datasetName"), progressText: $("progressText"), progressBar: $("progressBar"), savedState: $("savedState"),
-  subjectFilter: $("subjectFilter"), typeFilter: $("typeFilter"), statusFilter: $("statusFilter"), searchInput: $("searchInput"), blindToggle: $("blindToggle"), workspaceMode: $("workspaceMode"), exportCsv: $("exportCsv"), exportJsonl: $("exportJsonl"),
+  subjectFilter: $("subjectFilter"), typeFilter: $("typeFilter"), statusFilter: $("statusFilter"), statusFilterWrap: $("statusFilterWrap"), binaryVerdictFilter: $("binaryVerdictFilter"), binaryVerdictFilterWrap: $("binaryVerdictFilterWrap"), searchInput: $("searchInput"), blindToggle: $("blindToggle"), workspaceMode: $("workspaceMode"), exportCsv: $("exportCsv"), exportJsonl: $("exportJsonl"),
   workspace: $("workspace"), emptyState: $("emptyState"), taskMeta: $("taskMeta"), taskTitle: $("taskTitle"),
   questionImage: $("questionImage"), questionImageButton: $("questionImageButton"), questionText: $("questionText"),
   referenceImage: $("referenceImage"), referenceImageButton: $("referenceImageButton"), referenceText: $("referenceText"), candidateText: $("candidateText"), candidateSetup: $("candidateSetup"),
   pointwiseComparison: $("pointwiseComparison"), pairwiseComparison: $("pairwiseComparison"), candidateAText: $("candidateAText"), candidateBText: $("candidateBText"), candidateASetup: $("candidateASetup"), candidateBSetup: $("candidateBSetup"),
   pairwiseGold: $("pairwiseGold"), pairwiseReferenceImage: $("pairwiseReferenceImage"), pairwiseReferenceImageButton: $("pairwiseReferenceImageButton"), pairwiseReferenceText: $("pairwiseReferenceText"),
+  binaryModeOption: $("binaryModeOption"), binarySummary: $("binarySummary"), binaryCoverage: $("binaryCoverage"), binaryAccepted: $("binaryAccepted"), binaryRejected: $("binaryRejected"), binaryGuarded: $("binaryGuarded"), binaryRunModel: $("binaryRunModel"), binaryRunPrompt: $("binaryRunPrompt"),
+  binaryJudgePanel: $("binaryJudgePanel"), binaryJudgeTitle: $("binaryJudgeTitle"), binaryJudgeScore: $("binaryJudgeScore"), binaryJudgeRationale: $("binaryJudgeRationale"), binaryJudgeModel: $("binaryJudgeModel"), binaryJudgePrompt: $("binaryJudgePrompt"), binaryJudgeAttempts: $("binaryJudgeAttempts"), binaryJudgeGuard: $("binaryJudgeGuard"), binaryJudgeError: $("binaryJudgeError"),
   goldWorkspace: $("goldWorkspace"), goldReferenceImage: $("goldReferenceImage"), goldReferenceImageButton: $("goldReferenceImageButton"), goldReferenceText: $("goldReferenceText"), goldForm: $("goldForm"),
   goldTranscription: $("goldTranscription"), goldAcceptable: $("goldAcceptable"), goldSubanswers: $("goldSubanswers"), goldQuality: $("goldQuality"), goldNotes: $("goldNotes"), goldAnnotator: $("goldAnnotator"), goldSkipButton: $("goldSkipButton"), goldDraftButton: $("goldDraftButton"),
   adjudicationModeOption: $("adjudicationModeOption"), adjudicationWorkspace: $("adjudicationWorkspace"), adjudicationPriority: $("adjudicationPriority"), adjudicationReasons: $("adjudicationReasons"),
@@ -69,20 +73,39 @@ function adjudicationFor(task) {
   return state.adjudications.get(task._adjudication?.adjudication_id) || {};
 }
 
+function binaryJudgeFor(task) {
+  return task?._binary_judge || null;
+}
+
+function binaryStatus(task) {
+  const result = binaryJudgeFor(task);
+  const score = result?.verdict?.score;
+  if (score === 1) return "score_1";
+  if (score === 0) return "score_0";
+  return "failed";
+}
+
+function binaryGuarded(task) {
+  return binaryJudgeFor(task)?.judge?.metadata?.deterministic_choice_mismatch === true;
+}
+
 function sourceTasks() {
   if (state.mode === "gold") return state.goldTasks;
+  if (state.mode === "binary") return state.binaryTasks;
   if (state.mode === "adjudication") return state.adjudicationTasks;
   return state.tasks;
 }
 
 function currentRecordKey(task) {
   if (state.mode === "gold") return task.task_id;
+  if (state.mode === "binary") return `${task.task_id}::binary`;
   if (state.mode === "adjudication") return task._adjudication?.adjudication_id || annotationId(task);
   return annotationId(task);
 }
 
 function recordFor(task) {
   if (state.mode === "gold") return goldFor(task);
+  if (state.mode === "binary") return {status: binaryStatus(task)};
   if (state.mode === "adjudication") return adjudicationFor(task);
   return annotationFor(task);
 }
@@ -137,6 +160,7 @@ function applyFilters({ preserveTaskId = true } = {}) {
   const subject = els.subjectFilter.value;
   const type = els.typeFilter.value;
   const status = els.statusFilter.value;
+  const binaryVerdict = els.binaryVerdictFilter.value;
   const query = els.searchInput.value.trim().toLowerCase();
   const requestedStatus = status === "complete"
     ? (state.mode === "gold" ? "verified" : state.mode === "adjudication" ? "resolved" : "complete")
@@ -144,10 +168,15 @@ function applyFilters({ preserveTaskId = true } = {}) {
   state.filtered = sourceTasks().filter((task) => {
     const record = recordFor(task);
     const taskStatus = record?.status || "unlabeled";
-    const haystack = [task.task_id, task.subject, task.metadata?.topic_area, task.metadata?.sub_topic].filter(Boolean).join(" ").toLowerCase();
+    const result = binaryJudgeFor(task);
+    const haystack = [task.task_id, task.subject, task.metadata?.topic_area, task.metadata?.sub_topic, task.question_text, task.reference_answer, task.candidate_answer, result?.verdict?.rationale].filter(Boolean).join(" ").toLowerCase();
+    const binaryMatch = state.mode !== "binary"
+      || !binaryVerdict
+      || (binaryVerdict === "guarded" ? binaryGuarded(task) : binaryStatus(task) === binaryVerdict);
     return (!subject || task.subject === subject)
       && (!type || task.answer_type === type)
-      && (!requestedStatus || taskStatus === requestedStatus)
+      && (state.mode === "binary" || !requestedStatus || taskStatus === requestedStatus)
+      && binaryMatch
       && (!query || haystack.includes(query));
   });
   const preservedIndex = activeId ? state.filtered.findIndex((task) => currentRecordKey(task) === activeId) : -1;
@@ -166,6 +195,40 @@ function renderMeta(task) {
   els.taskMeta.innerHTML = values.map((value) => `<span class="meta-pill">${escapeHtml(String(value))}</span>`).join("");
 }
 
+function renderBinarySummary() {
+  const summary = state.binarySummary || {};
+  const valid = summary.valid || 0;
+  const total = summary.tasks || 0;
+  const accepted = summary.score_1 || 0;
+  const rate = valid ? Math.round(accepted / valid * 1000) / 10 : 0;
+  els.binaryCoverage.textContent = `${valid} / ${total}`;
+  els.binaryAccepted.textContent = `${accepted} · ${rate}%`;
+  els.binaryRejected.textContent = String(summary.score_0 || 0);
+  els.binaryGuarded.textContent = String(summary.guarded || 0);
+  els.binaryRunModel.textContent = (summary.models || []).join(", ") || "Модель не указана";
+  els.binaryRunPrompt.textContent = (summary.prompt_versions || []).join(", ") || "Промпт не указан";
+}
+
+function renderBinaryJudge(task) {
+  const result = binaryJudgeFor(task);
+  const verdict = result?.verdict || {};
+  const judge = result?.judge || {};
+  const score = verdict.score;
+  const valid = score === 0 || score === 1;
+  els.binaryJudgeScore.classList.remove("score-0", "score-1");
+  els.binaryJudgeScore.textContent = valid ? String(score) : "—";
+  if (valid) els.binaryJudgeScore.classList.add(`score-${score}`);
+  els.binaryJudgeTitle.textContent = score === 1 ? "Ответ принят" : score === 0 ? "Ответ отклонён" : "Нет валидного вердикта";
+  els.binaryJudgeRationale.textContent = verdict.rationale || "";
+  els.binaryJudgeModel.textContent = judge.model || "—";
+  els.binaryJudgePrompt.textContent = result?.prompt_version || "—";
+  els.binaryJudgeAttempts.textContent = Number.isInteger(judge.attempts) ? String(judge.attempts) : "—";
+  els.binaryJudgeGuard.textContent = binaryGuarded(task) ? "да — несовпадение варианта" : "нет";
+  const error = judge.error || (!result ? "Для задания нет результата джаджа." : !valid ? "Вердикт не соответствует формату 0/1." : "");
+  els.binaryJudgeError.textContent = error;
+  els.binaryJudgeError.hidden = !error;
+}
+
 function escapeHtml(value) {
   return value.replace(/[&<>"]/g, (character) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[character]));
 }
@@ -180,8 +243,9 @@ function render() {
   const tasks = sourceTasks();
   const doneStatus = state.mode === "gold" ? "verified" : state.mode === "adjudication" ? "resolved" : "complete";
   const completed = tasks.filter((value) => recordFor(value).status === doneStatus).length;
-  els.progressText.textContent = `${completed} / ${tasks.length}`;
-  els.progressBar.style.width = `${tasks.length ? completed / tasks.length * 100 : 0}%`;
+  const binaryPosition = task ? state.index + 1 : 0;
+  els.progressText.textContent = state.mode === "binary" ? `${binaryPosition} / ${state.filtered.length}` : `${completed} / ${tasks.length}`;
+  els.progressBar.style.width = `${state.mode === "binary" ? (state.filtered.length ? binaryPosition / state.filtered.length * 100 : 0) : (tasks.length ? completed / tasks.length * 100 : 0)}%`;
   els.workspace.hidden = !task;
   els.emptyState.hidden = Boolean(task);
   if (!task) return;
@@ -193,11 +257,13 @@ function render() {
   els.questionText.hidden = !task.question_text;
 
   const goldMode = state.mode === "gold";
+  const binaryMode = state.mode === "binary";
   const adjudicationMode = state.mode === "adjudication";
   els.goldWorkspace.hidden = !goldMode;
+  els.binaryJudgePanel.hidden = !binaryMode;
   els.adjudicationWorkspace.hidden = !adjudicationMode;
-  els.annotationForm.hidden = goldMode || adjudicationMode;
-  els.blindToggle.closest("label").hidden = goldMode || adjudicationMode;
+  els.annotationForm.hidden = goldMode || binaryMode || adjudicationMode;
+  els.blindToggle.closest("label").hidden = goldMode || binaryMode || adjudicationMode;
   if (goldMode) {
     els.pointwiseComparison.hidden = true;
     els.pairwiseComparison.hidden = true;
@@ -213,7 +279,11 @@ function render() {
   setImage(els.referenceImage, els.referenceImageButton, task.reference_image_url);
   els.referenceText.textContent = task.reference_answer || "";
 
-  if (!adjudicationMode) {
+  if (binaryMode) {
+    els.blindToggle.checked = false;
+    els.blindToggle.disabled = true;
+    state.blind = false;
+  } else if (!adjudicationMode) {
     const primaryLabelLocked = annotationFor(task).status !== "complete";
     els.blindToggle.disabled = primaryLabelLocked;
     if (primaryLabelLocked) {
@@ -245,7 +315,8 @@ function render() {
     els.pairwiseReferenceText.textContent = task.reference_answer || "";
   }
 
-  if (adjudicationMode) loadAdjudication(task);
+  if (binaryMode) renderBinaryJudge(task);
+  else if (adjudicationMode) loadAdjudication(task);
   else loadAnnotation(task);
   els.prevButton.disabled = state.index === 0;
   els.nextButton.disabled = state.index >= state.filtered.length - 1;
@@ -580,11 +651,19 @@ async function switchWorkspaceMode(mode) {
   if (state.mode === "adjudication" && state.adjudicationDirty) await saveAdjudication("draft", {quiet: true});
   state.mode = mode;
   state.index = 0;
+  const binaryMode = mode === "binary";
   els.exportCsv.href = mode === "gold" ? "/api/export-gold.csv" : mode === "adjudication" ? "/api/export-adjudications.csv" : "/api/export.csv";
   els.exportJsonl.href = mode === "gold" ? "/api/export-gold.jsonl" : mode === "adjudication" ? "/api/export-adjudications.jsonl" : "/api/export.jsonl";
+  els.exportCsv.hidden = binaryMode;
+  els.exportJsonl.hidden = binaryMode;
+  els.statusFilterWrap.hidden = binaryMode;
+  els.binaryVerdictFilterWrap.hidden = !binaryMode;
+  els.binarySummary.hidden = !binaryMode;
+  if (binaryMode) renderBinarySummary();
   els.subjectFilter.value = "";
   els.typeFilter.value = "";
   els.statusFilter.value = "";
+  els.binaryVerdictFilter.value = "";
   els.searchInput.value = "";
   renderFilters();
   applyFilters({preserveTaskId: false});
@@ -592,6 +671,7 @@ async function switchWorkspaceMode(mode) {
 
 function bindEvents() {
   [els.subjectFilter, els.typeFilter, els.statusFilter].forEach((element) => element.addEventListener("change", () => applyFilters()));
+  els.binaryVerdictFilter.addEventListener("change", () => applyFilters());
   els.searchInput.addEventListener("input", () => applyFilters());
   els.workspaceMode.addEventListener("change", () => switchWorkspaceMode(els.workspaceMode.value));
   els.blindToggle.addEventListener("change", () => { state.blind = els.blindToggle.checked; render(); });
@@ -640,6 +720,7 @@ function bindEvents() {
       event.preventDefault();
       if (state.mode === "gold") { if (await saveGold("verified")) advanceAfterGold(); }
       else if (state.mode === "adjudication") { if (await saveAdjudication("resolved")) advanceAfterAdjudication(); }
+      else if (state.mode === "binary") return;
       else if (await save("complete")) advanceAfterSave();
       return;
     }
@@ -701,19 +782,21 @@ function renderWinnerSelection() {
 
 async function init() {
   bindEvents();
-  const [tasksResponse, annotationsResponse, goldResponse, adjudicationContextResponse, adjudicationsResponse] = await Promise.all([
+  const [tasksResponse, annotationsResponse, goldResponse, adjudicationContextResponse, adjudicationsResponse, binaryContextResponse] = await Promise.all([
     fetch("/api/tasks"),
     fetch("/api/annotations"),
     fetch("/api/gold"),
     fetch("/api/adjudication-context"),
     fetch("/api/adjudications"),
+    fetch("/api/binary-judge-context"),
   ]);
-  if (![tasksResponse, annotationsResponse, goldResponse, adjudicationContextResponse, adjudicationsResponse].every((response) => response.ok)) throw new Error("Не удалось загрузить данные");
+  if (![tasksResponse, annotationsResponse, goldResponse, adjudicationContextResponse, adjudicationsResponse, binaryContextResponse].every((response) => response.ok)) throw new Error("Не удалось загрузить данные");
   const taskPayload = await tasksResponse.json();
   const annotationPayload = await annotationsResponse.json();
   const goldPayload = await goldResponse.json();
   const adjudicationPayload = await adjudicationContextResponse.json();
   const adjudicationsPayload = await adjudicationsResponse.json();
+  const binaryPayload = await binaryContextResponse.json();
   state.tasks = taskPayload.tasks;
   const seenTaskIds = new Set();
   state.goldTasks = state.tasks.filter((task) => {
@@ -723,13 +806,22 @@ async function init() {
   });
   state.annotations = new Map(annotationPayload.annotations.map((annotation) => [annotation.annotation_id || annotation.task_id, annotation]));
   state.gold = new Map(goldPayload.gold.map((record) => [record.task_id, record]));
+  state.binaryTasks = binaryPayload.items || [];
+  state.binarySummary = binaryPayload.summary || {};
   state.adjudicationTasks = adjudicationPayload.items || [];
   state.adjudications = new Map((adjudicationsPayload.adjudications || []).map((record) => [record.adjudication_id, record]));
   els.adjudicationModeOption.disabled = !adjudicationPayload.enabled || !state.adjudicationTasks.length;
   els.adjudicationModeOption.textContent = state.adjudicationTasks.length ? `Adjudication (${state.adjudicationTasks.length})` : "Adjudication — нет очереди";
+  els.binaryModeOption.disabled = !binaryPayload.enabled;
+  els.binaryModeOption.textContent = binaryPayload.enabled ? `Binary judge (${state.binarySummary.valid || 0})` : "Binary judge — нет результатов";
   els.datasetName.textContent = taskPayload.dataset;
-  renderFilters();
-  applyFilters({preserveTaskId: false});
+  if (binaryPayload.enabled) {
+    els.workspaceMode.value = "binary";
+    await switchWorkspaceMode("binary");
+  } else {
+    renderFilters();
+    applyFilters({preserveTaskId: false});
+  }
 }
 
 init().catch((error) => {

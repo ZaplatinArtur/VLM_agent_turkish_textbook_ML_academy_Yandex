@@ -20,6 +20,7 @@
         <span class="subtle">Режим</span>
         <select id="workspaceMode" aria-label="Режим работы">
           <option value="judge">Оценка ответов</option>
+          <option id="binaryModeOption" value="binary" disabled>Binary judge</option>
           <option value="gold">Gold transcription</option>
           <option id="adjudicationModeOption" value="adjudication" disabled>Adjudication</option>
         </select>
@@ -50,7 +51,7 @@
         <span>Тип ответа</span>
         <select id="typeFilter"><option value="">Все</option></select>
       </label>
-      <label>
+      <label id="statusFilterWrap">
         <span>Статус</span>
         <select id="statusFilter">
           <option value="">Все</option>
@@ -60,10 +61,28 @@
           <option value="skipped">Пропущено</option>
         </select>
       </label>
+      <label id="binaryVerdictFilterWrap" hidden>
+        <span>Вердикт джаджа</span>
+        <select id="binaryVerdictFilter">
+          <option value="">Все</option>
+          <option value="score_1">1 — принято</option>
+          <option value="score_0">0 — отклонено</option>
+          <option value="guarded">Wrong-choice guard</option>
+          <option value="failed">Ошибка / нет результата</option>
+        </select>
+      </label>
       <label class="search-field">
         <span>Поиск</span>
         <input id="searchInput" type="search" placeholder="ID или тема">
       </label>
+    </section>
+
+    <section id="binarySummary" class="binary-summary" aria-label="Сводка binary judge" hidden>
+      <article><span>Покрытие</span><strong id="binaryCoverage">—</strong></article>
+      <article class="accepted"><span>Принято</span><strong id="binaryAccepted">—</strong></article>
+      <article class="rejected"><span>Отклонено</span><strong id="binaryRejected">—</strong></article>
+      <article><span>Wrong-choice guard</span><strong id="binaryGuarded">—</strong></article>
+      <div class="binary-run-meta"><strong id="binaryRunModel">—</strong><span id="binaryRunPrompt">—</span></div>
     </section>
 
     <section id="emptyState" class="empty-state" hidden>
@@ -120,6 +139,24 @@
           <header><span class="pane-index">B</span><div><strong>Ответ B</strong><span id="candidateBSetup">setup скрыт</span></div></header>
           <pre id="candidateBText" class="answer-text"></pre>
         </article>
+      </section>
+
+      <section id="binaryJudgePanel" class="binary-judge-panel" aria-label="Результат binary judge" hidden>
+        <header class="binary-judge-heading">
+          <div>
+            <span class="section-label">Вердикт джаджа</span>
+            <strong id="binaryJudgeTitle">Результат проверки</strong>
+          </div>
+          <span id="binaryJudgeScore" class="binary-score">—</span>
+        </header>
+        <p id="binaryJudgeRationale" class="binary-rationale"></p>
+        <dl class="binary-facts">
+          <div><dt>Модель</dt><dd id="binaryJudgeModel">—</dd></div>
+          <div><dt>Промпт</dt><dd id="binaryJudgePrompt">—</dd></div>
+          <div><dt>Попытки</dt><dd id="binaryJudgeAttempts">—</dd></div>
+          <div><dt>Защитное правило</dt><dd id="binaryJudgeGuard">—</dd></div>
+        </dl>
+        <div id="binaryJudgeError" class="binary-error" hidden></div>
       </section>
 
       <details id="pairwiseGold" class="gold-details" hidden>
