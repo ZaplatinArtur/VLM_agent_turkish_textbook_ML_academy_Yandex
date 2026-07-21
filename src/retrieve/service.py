@@ -1,4 +1,4 @@
-from schemas.retrieve import RetrievedChunk
+from ..schemas.retrieve import RetrievedChunk
 
 from .embedders import SentenceTransformerEmbedder
 from .index import Index
@@ -12,12 +12,6 @@ _pipeline: RetrievalPipeline | None = None
 def build_pipeline(
     chunks: list[RetrievedChunk] | None = None,
 ) -> RetrievalPipeline:
-    """Build dense retrieval over parsed textbook chunks.
-
-    Passing ``chunks`` is useful for tests and experiments. By default the
-    corpus is loaded from the JSONL chunk store produced by the parser.
-    """
-
     corpus = get_retrieved_chunks() if chunks is None else chunks
     index = Index(corpus)
     embedder = SentenceTransformerEmbedder()
