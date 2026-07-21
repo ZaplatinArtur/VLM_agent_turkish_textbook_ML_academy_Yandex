@@ -26,6 +26,24 @@ ANSWER_TYPE_HINTS_V1: dict[str, str] = {
 
 USER_TEXT_V1 = "Çöz"
 
+SYSTEM_PROMPT_V2 = SYSTEM_PROMPT_V1 + """
+
+Ek çıktı kuralları:
+- solution_steps en fazla 5 kısa adımdan ve yaklaşık 800 karakterden oluşmalı.
+- Aynı hesabı veya yorumu tekrarlama; seçenekleri tek tek uzun uzun tartışma.
+- Görsel ya da soru belirsiz görünse bile en makul çözümü seç, kısa gerekçe ver ve JSON'u tamamla.
+- Token sınırına yaklaşmadan mutlaka final_answer alanını yaz ve JSON nesnesini kapat.
+"""
+
+SYSTEM_PROMPT_V3 = SYSTEM_PROMPT_V1 + """
+
+Zorunlu kısa çıktı kuralları:
+- solution_steps yalnızca 1-3 kısa cümle ve en fazla 400 karakter olmalı.
+- Hesabı bir kez yap. Kontrol döngüsü, tekrar, alternatif yorum veya uzun seçenek analizi yazma.
+- Görsel belirsiz ya da seçenekler hesapla tam uyuşmuyor görünse bile en olası seçeneği seç.
+- Önce kısa gerekçeyi, hemen ardından final_answer değerini yaz ve JSON nesnesini kapat.
+"""
+
 RAG_TOOL_POLICY_V1 = """\
 Elinde search_textbooks adlı bir ders kitabı arama aracı var.
 - Müfredata özgü bir formül, tanım, yöntem veya benzer çözülmüş örnek yararlıysa aracı kullan.
@@ -43,5 +61,17 @@ PROMPTS = {
         "rag_tool_policy": RAG_TOOL_POLICY_V1,
         "answer_type_hints": ANSWER_TYPE_HINTS_V1,
         "user_text": USER_TEXT_V1,
-    }
+    },
+    "v2": {
+        "system": SYSTEM_PROMPT_V2,
+        "rag_tool_policy": RAG_TOOL_POLICY_V1,
+        "answer_type_hints": ANSWER_TYPE_HINTS_V1,
+        "user_text": USER_TEXT_V1,
+    },
+    "v3": {
+        "system": SYSTEM_PROMPT_V3,
+        "rag_tool_policy": RAG_TOOL_POLICY_V1,
+        "answer_type_hints": ANSWER_TYPE_HINTS_V1,
+        "user_text": USER_TEXT_V1,
+    },
 }

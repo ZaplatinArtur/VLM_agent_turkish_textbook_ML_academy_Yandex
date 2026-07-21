@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,7 +12,9 @@ from typing import Any
 from .backends import JudgeBackend
 
 
-TEXT_BINARY_PROMPT_VERSION = "text-binary-v1"
+TEXT_BINARY_PROMPT_VERSION = "text-binary-v4"
+
+_FINAL_CHOICE = re.compile(r"(?is)\bfinal\s+answer\s*:\s*([A-E])\b")
 
 TEXT_BINARY_SYSTEM_PROMPT = """You are a strict binary evaluator of a candidate answer to a text-only school task.
 
@@ -31,6 +34,15 @@ Rules:
 4. Do not award 1 for a lucky final token when the explanation contains a material contradiction.
 5. Do not infer information absent from the candidate or reference.
 6. If the reference is missing, ambiguous, or obviously invalid, use score 0 and mention reference_issue.
+7. Treat REFERENCE as trusted. Do not replace it by independently re-solving the task.
+8. If REFERENCE is one choice letter (A-E) and CANDIDATE has an explicit final choice letter,
+   return 1 if and only if those letters match and the explanation has no material contradiction.
+9. Keep rationale under 50 words. Do not provide a full solution or explore alternative interpretations.
+10. Give priority to the explicit answer after "Final answer:". If it matches REFERENCE after
+    ignoring case, whitespace, punctuation, and equivalent separators, return score 1 immediately
+    unless the preceding explanation contains a clear material contradiction.
+11. Decide the score before writing JSON and never revise it inside rationale. Rationale must be
+    one direct sentence of at most 25 words; do not re-read or reconsider the task in the output.
 
 Return exactly one JSON object with exactly these keys:
 {"score": 0 or 1, "rationale": "brief reason"}
@@ -80,6 +92,26 @@ def parse_text_binary_verdict(raw: str) -> dict[str, Any]:
     return {"score": score, "rationale": value["rationale"]}
 
 
+def deterministic_choice_mismatch(
+    reference_answer: str,
+    candidate_answer: str,
+) -> dict[str, Any] | None:
+    """Reject an explicit wrong final choice without allowing an LLM false positive."""
+    reference = reference_answer.strip().upper()
+    if not re.fullmatch(r"[A-E]", reference):
+        return None
+    matches = list(_FINAL_CHOICE.finditer(candidate_answer))
+    if not matches:
+        return None
+    candidate = matches[-1].group(1).upper()
+    if candidate == reference:
+        return None
+    return {
+        "score": 0,
+        "rationale": f"Explicit final choice {candidate} does not match trusted reference {reference}.",
+    }
+
+
 def evaluate_text_records(
     records: list[dict[str, Any]],
     backend: JudgeBackend,
@@ -87,15 +119,30 @@ def evaluate_text_records(
     *,
     max_attempts: int = 2,
     retry_delay_seconds: float = 1.0,
+    retry_failures: bool = False,
 ) -> dict[str, Any]:
     """Run text records through an OpenAI-compatible backend and save JSONL results."""
     if max_attempts < 1:
         raise ValueError("max_attempts must be at least 1")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    succeeded = 0
+    prior_successes: dict[str, dict[str, Any]] = {}
+    if retry_failures and output_path.exists():
+        with output_path.open(encoding="utf-8") as existing:
+            for line in existing:
+                if not line.strip():
+                    continue
+                result = json.loads(line)
+                if result.get("verdict") is not None:
+                    prior_successes[str(result["task_id"])] = result
+    records_to_process = [
+        record for record in records if str(record.get("task_id")) not in prior_successes
+    ]
+    succeeded = len(prior_successes)
     failed = 0
     with output_path.open("w", encoding="utf-8", newline="\n") as destination:
-        for index, record in enumerate(records, start=1):
+        for result in prior_successes.values():
+            destination.write(json.dumps(result, ensure_ascii=False) + "\n")
+        for index, record in enumerate(records_to_process, start=1):
             task_id = str(record.get("task_id") or f"row-{index}")
             request = build_text_binary_request(
                 record.get("question_text"),
@@ -107,19 +154,26 @@ def evaluate_text_records(
             metadata: dict[str, Any] = {}
             error = None
             attempts = 0
-            for attempt in range(1, max_attempts + 1):
-                attempts = attempt
-                if attempt > 1 and retry_delay_seconds:
-                    time.sleep(retry_delay_seconds * (attempt - 1))
-                try:
-                    response = backend.complete(request)
-                    raw_response = response.text
-                    metadata = response.metadata
-                    verdict = parse_text_binary_verdict(response.text)
-                    error = None
-                    break
-                except Exception as exc:
-                    error = f"{type(exc).__name__}: {exc}"
+            verdict = deterministic_choice_mismatch(
+                str(record.get("reference_answer") or ""),
+                str(record.get("candidate_answer") or ""),
+            )
+            if verdict is not None:
+                metadata = {"deterministic_choice_mismatch": True}
+            else:
+                for attempt in range(1, max_attempts + 1):
+                    attempts = attempt
+                    if attempt > 1 and retry_delay_seconds:
+                        time.sleep(retry_delay_seconds * (attempt - 1))
+                    try:
+                        response = backend.complete(request)
+                        raw_response = response.text
+                        metadata = response.metadata
+                        verdict = parse_text_binary_verdict(response.text)
+                        error = None
+                        break
+                    except Exception as exc:
+                        error = f"{type(exc).__name__}: {exc}"
             if verdict is None:
                 failed += 1
             else:
@@ -150,6 +204,7 @@ def evaluate_text_records(
     return {
         "records": len(records),
         "succeeded": succeeded,
-        "failed": failed,
+        "failed": len(records) - succeeded,
+        "retried": len(records_to_process) if retry_failures else 0,
         "output": str(output_path),
     }

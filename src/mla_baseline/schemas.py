@@ -35,6 +35,7 @@ class SolveResult(BaseModel):
     final_answer: str | None = None
     solution_steps: str | None = None
     raw_response: str | None = None
+    generation: dict = Field(default_factory=dict)
     tool_calls: list[ToolCallLog] = Field(default_factory=list)
     usage: Usage = Field(default_factory=Usage)
     error: str | None = None

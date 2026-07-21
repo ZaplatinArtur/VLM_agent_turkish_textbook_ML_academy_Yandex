@@ -101,6 +101,12 @@ class B0NoTools(Solver):
             final_answer=parsed.final_answer if parsed else None,
             solution_steps=parsed.solution_steps if parsed else None,
             raw_response=raw,
+            generation={
+                "temperature": self.settings.temperature,
+                "max_tokens": self.settings.max_tokens,
+                "structured_mode": self.settings.structured_mode,
+                "enable_thinking": self.settings.enable_thinking,
+            },
             usage=usage,
             error=error,
         )

@@ -103,7 +103,14 @@ def prepare_text_judge_input(
                 "answer_type": task.get("answer_type"),
                 "agent_result": {
                     key: result.get(key)
-                    for key in ("model", "prompt_version", "tool_calls", "usage", "error")
+                    for key in (
+                        "model",
+                        "prompt_version",
+                        "generation",
+                        "tool_calls",
+                        "usage",
+                        "error",
+                    )
                 },
             }
             destination.write(json.dumps(record, ensure_ascii=False) + "\n")
