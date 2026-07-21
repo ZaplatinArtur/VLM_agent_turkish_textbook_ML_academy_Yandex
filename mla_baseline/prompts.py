@@ -64,6 +64,13 @@ Arama kuralları:
 - Aynı sorguyu tekrar etme; sonuç yetersizse aramadan kendi bilginle çöz.\
 """
 
+# Несгораемый микро-финал: последняя ступень, когда даже структурный wrap-up
+# вырождается. Никакого JSON — только сам ответ, JSON собираем сами.
+LAST_RESORT_V1 = """\
+Yukarıdaki taslağa göre SADECE nihai cevabı yaz: çoktan seçmeli için sadece \
+şık harfi, sayısal için sadece sayı. Başka HİÇBİR ŞEY yazma.\
+"""
+
 # Принудительный финал: если модель выжгла бюджет токенов на рассуждение,
 # ей возвращают хвост её же черновика и требуют немедленный ответ.
 WRAPUP_V1 = """\
@@ -83,6 +90,7 @@ PROMPTS = {
         "answer_type_hints": ANSWER_TYPE_HINTS_V1,
         "user_text": USER_TEXT_V1,
         "wrapup": WRAPUP_V1,
+        "last_resort": LAST_RESORT_V1,
         "b1_tool_note": B1_TOOL_NOTE_V1,
     },
     "v2_cot": {
@@ -90,6 +98,7 @@ PROMPTS = {
         "answer_type_hints": ANSWER_TYPE_HINTS_V1,
         "user_text": USER_TEXT_V1,
         "wrapup": WRAPUP_V1,
+        "last_resort": LAST_RESORT_V1,
         "b1_tool_note": B1_TOOL_NOTE_V1,
     },
 }

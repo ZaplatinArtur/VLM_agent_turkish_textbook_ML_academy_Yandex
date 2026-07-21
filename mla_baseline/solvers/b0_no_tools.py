@@ -107,19 +107,38 @@ class B0NoTools(Solver):
         usage.output_tokens = (usage.output_tokens or 0) + (meta.get("output_tokens") or 0)
         return response.content if isinstance(response.content, str) else str(response.content)
 
-    def _forced_wrapup(self, task: Task, usage: Usage) -> tuple[str | None, str | None]:
-        """Бюджет сгорел: получить черновик без guided decoding и потребовать финал.
+    def _finalize(self, task: Task, usage: Usage, draft: str) -> str:
+        """Принудительный финал по черновику. Гарантированно возвращает JSON.
 
-        Возвращает (raw_final, draft). Модель-«думатель» может блуждать дольше
-        любого бюджета; чат-продукты в этот момент принуждают к ответу — делаем
-        так же, а judge видит flag forced_answer.
+        Ступень 1: структурный вызов без thinking (бюджет 2048).
+        Ступень 2 (несгораемая): если модель выродилась даже там — микро-вызов
+        на 64 токена «напиши только ответ», JSON собираем сами. Обрывов после
+        этой лестницы не существует как класса.
         """
-        draft = self._invoke(self.build_messages(task), task, usage, structured=False)
+        import json as _json
+
         wrapup = self.prompt["wrapup"].format(draft=draft[-6000:])
         messages = self.build_messages(task)
         messages.append(HumanMessage(content=[{"type": "text", "text": wrapup}]))
-        # финалу — короткий бюджет и без thinking: JSON влезает, блуждать негде
-        return self._invoke(messages, task, usage, max_tokens=2048, think=False), draft
+        try:
+            return self._invoke(messages, task, usage, max_tokens=2048, think=False)
+        except Exception as exc:
+            if "LengthFinishReason" not in type(exc).__name__:
+                raise
+        messages.append(HumanMessage(content=[{
+            "type": "text", "text": self.prompt["last_resort"]}]))
+        answer = self._invoke(messages, task, usage, structured=False,
+                              max_tokens=64, think=False).strip()
+        answer = answer.splitlines()[0][:120] if answer else ""
+        return _json.dumps({
+            "solution_steps": draft[-1500:],
+            "final_answer": answer,
+        }, ensure_ascii=False)
+
+    def _forced_wrapup(self, task: Task, usage: Usage) -> tuple[str | None, str | None]:
+        """Бюджет сгорел: получить черновик без guided decoding и финализировать."""
+        draft = self._invoke(self.build_messages(task), task, usage, structured=False)
+        return self._finalize(task, usage, draft), draft
 
     def solve(self, task: Task) -> SolveResult:
         raw: str | None = None

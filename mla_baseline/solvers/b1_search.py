@@ -7,7 +7,7 @@
 
 import time
 
-from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
+from langchain_core.messages import SystemMessage, ToolMessage
 
 from ..config import Settings
 from ..contracts import Task
@@ -91,11 +91,8 @@ class B1Search(B0NoTools):
             parsed = parse_solve_output(raw) if raw else None
             if parsed is None:
                 # цикл кончился без валидного JSON (болтовня/обрыв/лимит шагов):
-                # принудительный финал с черновиком, как в B0
-                wrapup = self.prompt["wrapup"].format(draft=(raw or "")[-6000:])
-                messages = self.build_messages(task)
-                messages.append(HumanMessage(content=[{"type": "text", "text": wrapup}]))
-                raw = self._invoke(messages, task, usage, max_tokens=2048, think=False)
+                # принудительный финал с черновиком, как в B0 (несгораемый)
+                raw = self._finalize(task, usage, raw or "")
                 forced = True
                 parsed = parse_solve_output(raw)
                 if parsed is None:
