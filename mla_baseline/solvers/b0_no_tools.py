@@ -22,13 +22,22 @@ class B0NoTools(Solver):
 
     def __init__(self, settings: Settings):
         super().__init__(settings)
+        from ..tracing import langchain_callbacks
+
         self.prompt = PROMPTS[settings.prompt_version]
+        self.callbacks = langchain_callbacks(settings)
         self.llm = ChatOpenAI(
             base_url=settings.vllm_base_url,
             api_key=settings.vllm_api_key,
             model=settings.model_name,
-            max_tokens=settings.max_tokens,
+            # именно max_tokens в payload: langchain шлёт max_completion_tokens,
+            # который Ollama молча игнорирует (вылезает за лимит до num_ctx);
+            # extra_body кладёт ключ в payload в обход маппинга langchain
+            # max_tokens в payload в обход langchain-маппинга; top_k — параметр vLLM
+            extra_body={"max_tokens": settings.max_tokens, "top_k": settings.top_k},
             temperature=settings.temperature,
+            top_p=settings.top_p,
+            presence_penalty=settings.presence_penalty,
             timeout=settings.request_timeout_s,
             max_retries=2,
         )
@@ -68,25 +77,75 @@ class B0NoTools(Solver):
             return {"extra_body": {"guided_json": schema}}
         return {}
 
-    def solve(self, task: Task) -> SolveResult:
+    def _invoke(self, messages, task: Task, usage: Usage, structured: bool = True,
+                max_tokens: int | None = None, think: bool = True):
+        """Один вызов модели с трейсингом; токены суммируются в usage."""
+        llm = self.llm
+        if max_tokens is not None or not think:
+            extra: dict = {"max_tokens": max_tokens or self.settings.max_tokens,
+                           "top_k": self.settings.top_k}
+            if not think:
+                # финалу думать не надо — иначе thinking сжигает весь бюджет
+                extra["chat_template_kwargs"] = {"enable_thinking": False}
+            llm = self.llm.bind(extra_body=extra)
+        response = llm.invoke(
+            messages,
+            config={
+                "callbacks": self.callbacks,
+                "run_name": f"{self.condition}:{task.task_id}",
+                "metadata": {
+                    "task_id": task.task_id,
+                    "subject": task.subject,
+                    "answer_type": task.answer_type,
+                    "langfuse_tags": [self.condition, self.settings.prompt_version],
+                },
+            },
+            **(self._invoke_kwargs() if structured else {}),
+        )
+        meta = response.usage_metadata or {}
+        usage.input_tokens = (usage.input_tokens or 0) + (meta.get("input_tokens") or 0)
+        usage.output_tokens = (usage.output_tokens or 0) + (meta.get("output_tokens") or 0)
+        return response.content if isinstance(response.content, str) else str(response.content)
+
+    def _forced_wrapup(self, task: Task, usage: Usage) -> tuple[str | None, str | None]:
+        """Бюджет сгорел: получить черновик без guided decoding и потребовать финал.
+
+        Возвращает (raw_final, draft). Модель-«думатель» может блуждать дольше
+        любого бюджета; чат-продукты в этот момент принуждают к ответу — делаем
+        так же, а judge видит flag forced_answer.
+        """
+        draft = self._invoke(self.build_messages(task), task, usage, structured=False)
+        wrapup = self.prompt["wrapup"].format(draft=draft[-6000:])
         messages = self.build_messages(task)
+        messages.append(HumanMessage(content=[{"type": "text", "text": wrapup}]))
+        # финалу — короткий бюджет и без thinking: JSON влезает, блуждать негде
+        return self._invoke(messages, task, usage, max_tokens=2048, think=False), draft
+
+    def solve(self, task: Task) -> SolveResult:
         raw: str | None = None
+        draft: str | None = None
         parsed = None
         error: str | None = None
+        forced = False
         usage = Usage()
 
         started = time.perf_counter()
         try:
-            response = self.llm.invoke(messages, **self._invoke_kwargs())
-            raw = response.content if isinstance(response.content, str) else str(response.content)
-            meta = response.usage_metadata or {}
-            usage.input_tokens = meta.get("input_tokens")
-            usage.output_tokens = meta.get("output_tokens")
+            raw = self._invoke(self.build_messages(task), task, usage)
+        except Exception as exc:
+            if "LengthFinishReason" in type(exc).__name__:
+                # рассуждение не сошлось за бюджет — принудительный финал
+                try:
+                    raw, draft = self._forced_wrapup(task, usage)
+                    forced = True
+                except Exception as exc2:
+                    error = f"{type(exc2).__name__}: {exc2}"
+            else:  # сетевые/серверные ошибки — в результат, не наружу
+                error = f"{type(exc).__name__}: {exc}"
+        if raw is not None and error is None:
             parsed = parse_solve_output(raw)
             if parsed is None:
                 error = "parse_error"
-        except Exception as exc:  # сетевые/серверные ошибки — в результат, не наружу
-            error = f"{type(exc).__name__}: {exc}"
         usage.latency_s = round(time.perf_counter() - started, 3)
 
         return SolveResult(
@@ -96,6 +155,8 @@ class B0NoTools(Solver):
             prompt_version=self.settings.prompt_version,
             final_answer=parsed.final_answer if parsed else None,
             solution_steps=parsed.solution_steps if parsed else None,
+            reasoning=(parsed.reasoning if parsed else None) or (draft[-4000:] if draft else None),
+            forced_answer=forced,
             raw_response=raw,
             usage=usage,
             error=error,

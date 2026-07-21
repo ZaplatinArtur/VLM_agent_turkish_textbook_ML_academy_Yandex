@@ -5,3 +5,10 @@ __pycache__/
 results/
 data/images/
 .idea/
+
+# локальные данные и артефакты, не для репозитория
+/images/
+*.zip
+*.xlsx
+msedge_*.png
+graphify-out/

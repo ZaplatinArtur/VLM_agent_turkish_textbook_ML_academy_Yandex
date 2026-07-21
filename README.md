@@ -41,12 +41,22 @@ python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --condition b0_no_
 
 ## Запуск модели (GPU-машина)
 
+Профиль под A100 (полный bf16-чекпоинт, ~18 ГБ весов):
+
 ```bash
 pip install vllm
 vllm serve Qwen/Qwen3.5-9B \
-  --max-model-len 32768 \
+  --max-model-len 16384 \
+  --gpu-memory-utilization 0.92 \
+  --max-num-seqs 32 \
   --enable-auto-tool-choice --tool-call-parser hermes
 ```
+
+- A100 40GB: хватает с запасом (весам + KV на ~десятки одновременных запросов);
+  при OOM снизить --max-num-seqs до 16.
+- A100 80GB: можно --max-num-seqs 64 и/или --max-model-len 32768; остатка VRAM
+  хватит и на модель-судью покрупнее на втором процессе.
+- В .env на прогонах ставить MLA_CONCURRENCY=16..32 — vLLM батчит их сам.
 
 `--enable-auto-tool-choice --tool-call-parser hermes` для B0 не нужны, но
 понадобятся для B1 (агент с тул-коллами) — поднимаем сразу с ними, чтобы
@@ -68,6 +78,41 @@ python -m mla_baseline.runner --tasks data/tasks.jsonl --condition b0_no_tools
 Результат: `results/b0_no_tools_v1.jsonl` (по строке `SolveResult` на задачу —
 формат для LLM-as-Judge). Перезапуск продолжает с места остановки (resume по
 `task_id`); чтобы прогнать заново — удалить/переименовать выходной файл.
+
+## Пайплайн валидации (Google Sheets)
+
+Выборка валидации — [таблица](https://docs.google.com/spreadsheets/d/15VJ_gVErnAy2fJLT-JBUO5WvSsBNthhRQyVHti-RVhc/edit?gid=0#gid=0):
+823 задачи-скриншота (Visual — URL картинки на s3.mds.yandex.net) с эталонными
+ответами. Пайплайн: таблица → Task JSONL → прогон → метрики.
+
+```bash
+# 1. Таблица -> data/validation.jsonl + validation.meta.jsonl,
+#    картинки -> data/images/ (resume: уже скачанные пропускаются)
+python -m mla_baseline.sheet --sheet-id 15VJ_gVErnAy2fJLT-JBUO5WvSsBNthhRQyVHti-RVhc
+# либо из локального архива картинок (имена файлов = basename URL из таблицы):
+python -m mla_baseline.sheet --csv data/validation_sheet.csv --archive-dir <папка с картинками>
+
+# 2. Прогон (CoT включается через MLA_PROMPT_VERSION=v2_cot в .env)
+python -m mla_baseline.runner --tasks data/validation.jsonl --condition b0_no_tools
+
+# 3. Быстрые метрики (exact match до LLM-as-Judge)
+python -m mla_baseline.eval --results results/b0_no_tools_v2_cot.jsonl \
+    --tasks data/validation.jsonl --meta data/validation.meta.jsonl --by question_type
+
+# 4. HTML-отчёт с графиками (KPI, точность и состав по предметам, длина
+#    ответов, таблица промахов). Или сразу флагом: runner ... --report
+python -m mla_baseline.report --results results/b0_no_tools_v2_cot.jsonl \
+    --tasks data/validation.jsonl --meta data/validation.meta.jsonl
+```
+
+Отчёт — самодостаточный HTML (без внешних зависимостей), открывается локально,
+поддерживает светлую/тёмную тему. `--meta` можно не указывать, если рядом с
+tasks лежит одноимённый `*.meta.jsonl` — подхватится сам.
+
+`eval` считает точный матч с нормализацией (choice — буква шика, numeric —
+число, short_text — без регистра/пунктуации); free_form и ответы-URL уходят
+в «нужен судья». Срезы: `--by subject|grade|type|class|question_format|question_type`.
+Промахи для разбора: `--dump-misses misses.jsonl`.
 
 ## Перенос на мощное железо по SSH
 
@@ -113,9 +158,11 @@ mla_baseline/
   contracts.py    # общекомандные контракты (Task, ImageRef, RetrievedChunk)
   schemas.py      # SolveOutput (JSON от модели), SolveResult (строка для судьи)
   config.py       # настройки из .env (префикс MLA_)
-  prompts.py      # версионируемые промпты (турецкий)
+  prompts.py      # версионируемые промпты (турецкий): v1, v2_cot (chain-of-thought)
   images.py       # ImageRef -> OpenAI image block
   parsing.py      # робастный разбор JSON из ответа 9B-модели
+  sheet.py        # выборка валидации: Google Sheets CSV -> Task JSONL + картинки
+  eval.py         # быстрые метрики (exact match) со срезами по subject/типу
   solvers/
     base.py       # интерфейс Solver (build_messages + solve)
     b0_no_tools.py

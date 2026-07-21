@@ -62,6 +62,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=None, help="только первые N задач")
     parser.add_argument("--out", type=Path, default=None, help="путь к результату")
     parser.add_argument("--dry-run", action="store_true", help="собрать вход без вызова модели")
+    parser.add_argument("--report", action="store_true",
+                        help="после прогона сгенерировать HTML-отчёт рядом с результатом")
+    parser.add_argument("--meta", type=Path, default=None,
+                        help="meta JSONL (для отчёта: срезы и ответы-картинки)")
     args = parser.parse_args(argv)
 
     settings = get_settings()
@@ -72,6 +76,8 @@ def main(argv: list[str] | None = None) -> int:
         tasks = tasks[: args.limit]
 
     if args.dry_run:
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8")  # Windows-консоль и турецкий текст
         for task in tasks:
             print(describe_messages(task, solver.build_messages(task)))
         print(f"[dry-run] OK: {len(tasks)} задач, condition={args.condition}, "
@@ -104,6 +110,18 @@ def main(argv: list[str] | None = None) -> int:
                       f"({result.usage.latency_s}s)")
 
     print(f"Готово: {len(todo)} прогнано, ошибок: {errors}, результат: {out_path}")
+
+    if args.report:
+        from .report import generate
+        meta = args.meta
+        if meta is None:  # соглашение: рядом с tasks лежит *.meta.jsonl
+            candidate = args.tasks.with_suffix(".meta.jsonl")
+            meta = candidate if candidate.exists() else None
+        report_path = generate(out_path, args.tasks, meta)
+        print(f"Отчёт: {report_path}")
+
+    from .tracing import flush
+    flush()  # дослать трейсы Langfuse, если включены
     return 0
 
 

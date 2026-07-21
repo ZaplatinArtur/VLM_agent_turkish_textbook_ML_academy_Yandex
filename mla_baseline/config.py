@@ -7,6 +7,7 @@
 from pathlib import Path
 from typing import Literal
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -21,7 +22,13 @@ class Settings(BaseSettings):
     model_name: str = "Qwen/Qwen3.5-9B"
 
     max_tokens: int = 3072
-    temperature: float = 0.0
+    # Qwen для thinking-моделей не рекомендует greedy (temp=0): вырождается
+    # в бесконечные повторы. Рекомендация вендора: temp 0.6, top_p 0.95,
+    # top_k 20, а против повторов — presence_penalty до 1.5.
+    temperature: float = 0.6
+    top_p: float = 0.95
+    top_k: int = 20
+    presence_penalty: float = 1.5
     request_timeout_s: float = 300.0
 
     prompt_version: str = "v1"
@@ -38,6 +45,21 @@ class Settings(BaseSettings):
     data_root: Path = Path("data")
     results_dir: Path = Path("results")
     concurrency: int = 4
+
+    # B1: веб-поиск (self-hosted SearXNG с JSON API)
+    searxng_url: str = "http://localhost:8080"
+    search_k: int = 5                # результатов на запрос
+    agent_max_steps: int = 6         # максимум итераций ReAct-цикла
+
+    # Трассировка в Langfuse. Ключи читаем из стандартных имён (без MLA_-префикса),
+    # чтобы .env выглядел как в доке Langfuse; tracing.py прокинет их в SDK.
+    langfuse_enabled: bool = False
+    langfuse_public_key: str | None = Field(
+        None, validation_alias=AliasChoices("LANGFUSE_PUBLIC_KEY"))
+    langfuse_secret_key: str | None = Field(
+        None, validation_alias=AliasChoices("LANGFUSE_SECRET_KEY"))
+    langfuse_host: str | None = Field(
+        None, validation_alias=AliasChoices("LANGFUSE_HOST"))
 
 
 def get_settings() -> Settings:
