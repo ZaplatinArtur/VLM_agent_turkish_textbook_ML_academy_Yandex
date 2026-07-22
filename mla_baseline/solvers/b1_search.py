@@ -44,8 +44,8 @@ class B1Search(B0NoTools):
         return searxng_search(self.settings, query)
 
     def _react_loop(self, task: Task, usage: Usage,
-                    log: list[ToolCallLog]) -> str:
-        """Свободный цикл рассуждение→поиск→…; возвращает финальный текст."""
+                    log: list[ToolCallLog]) -> tuple[str, list]:
+        """Свободный цикл рассуждение→поиск→…; возвращает (текст, диалог)."""
         messages = self.build_messages(task)
         content = ""
         seen_queries: set[str] = set()
@@ -68,6 +68,7 @@ class B1Search(B0NoTools):
             usage.output_tokens = (usage.output_tokens or 0) + (meta.get("output_tokens") or 0)
             if not response.tool_calls:
                 content = response.content if isinstance(response.content, str) else str(response.content)
+                messages.append(response)
                 break
             messages.append(response)
             for tc in response.tool_calls:
@@ -75,7 +76,7 @@ class B1Search(B0NoTools):
                 log.append(ToolCallLog(tool=tc["name"], args=tc["args"] or {},
                                        result_preview=result[:300]))
                 messages.append(ToolMessage(content=result, tool_call_id=tc["id"]))
-        return content
+        return content, messages
 
     def solve(self, task: Task) -> SolveResult:
         raw: str | None = None
@@ -87,12 +88,24 @@ class B1Search(B0NoTools):
 
         started = time.perf_counter()
         try:
-            raw = self._react_loop(task, usage, log)
+            raw, convo = self._react_loop(task, usage, log)
             parsed = parse_solve_output(raw) if raw else None
             if parsed is None:
-                # цикл кончился без валидного JSON (болтовня/обрыв/лимит шагов):
-                # принудительный финал с черновиком, как в B0 (несгораемый)
-                raw = self._finalize(task, usage, raw or "")
+                # цикл кончился без валидного JSON: финализируем ПОВЕРХ всего
+                # диалога (с результатами поиска), а не по огрызку черновика
+                from langchain_core.messages import HumanMessage
+
+                convo.append(HumanMessage(content=[{
+                    "type": "text",
+                    "text": "Şimdi çözümünü bitir ve YALNIZCA istenen JSON "
+                            "formatında nihai cevabını ver."}]))
+                try:
+                    raw = self._invoke(convo, task, usage, max_tokens=2048, think=False)
+                except Exception as exc:
+                    if "LengthFinishReason" not in type(exc).__name__:
+                        raise
+                    # несгораемая ступень: по черновику
+                    raw = self._finalize(task, usage, raw or "")
                 forced = True
                 parsed = parse_solve_output(raw)
                 if parsed is None:
