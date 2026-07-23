@@ -54,6 +54,11 @@ class Settings(BaseSettings):
     # прогонов поиск вредит вычислительным задачам и помогает знаниевым
     b1_no_search_subjects: str = "Math"
 
+    # b1_deep: полный поисковый стек (страницы + реранкер вместо сниппетов)
+    rerank_url: str = "http://localhost:8002"
+    deep_search_pages: int = 8      # сколько URL читать целиком
+    deep_search_chunks: int = 6     # сколько верхних фрагментов отдавать модели
+
     # Трассировка в Langfuse. Ключи читаем из стандартных имён (без MLA_-префикса),
     # чтобы .env выглядел как в доке Langfuse; tracing.py прокинет их в SDK.
     langfuse_enabled: bool = False
