@@ -16,6 +16,7 @@ export MLA_PROMPT_VERSION="${MLA_PROMPT_VERSION:-v2_cot}"
 export MLA_MODEL_NAME="${MLA_MODEL_NAME:-${model}}"
 export MLA_VLLM_BASE_URL="${MLA_VLLM_BASE_URL:-${base_url}}"
 export MLA_CONCURRENCY="${MLA_CONCURRENCY:-4}"
+export MLA_TEXT_ONLY="${MLA_TEXT_ONLY:-true}"
 
 mkdir -p "${output_dir}" "${report_dir}"
 
@@ -30,7 +31,7 @@ curl --fail --silent "${base_url}/models" >/dev/null
 
 "${python_bin}" -m mla_baseline.preflight \
   --tasks "${tasks}" \
-  --require-question-text
+  --text-only
 
 "${python_bin}" -m retrieve.build_index \
   --sample-query "dikdörtgen alan formülü" --k 3

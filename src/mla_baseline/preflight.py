@@ -72,15 +72,20 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="fail if any task has only an image placeholder (required by text judge)",
     )
+    parser.add_argument(
+        "--text-only",
+        action="store_true",
+        help="ignore missing image assets but require real question text",
+    )
     args = parser.parse_args(argv)
     report = inspect_tasks(_read_jsonl(args.tasks), args.data_root)
     print(json.dumps(report, ensure_ascii=False, indent=2))
     failures: list[str] = []
     if report["missing_references"]:
         failures.append(f"missing references: {report['missing_references']}")
-    if report["missing_local_images"]:
+    if report["missing_local_images"] and not args.text_only:
         failures.append(f"missing local images: {report['missing_local_images']}")
-    if args.require_question_text and report["placeholder_questions"]:
+    if (args.require_question_text or args.text_only) and report["placeholder_questions"]:
         failures.append(
             f"question text placeholders: {report['placeholder_questions']}"
         )

@@ -253,6 +253,20 @@ bash scripts/run_rag_evaluation.sh
 набор с транскрипциями условий (с теми же `task_id`) либо обновлённый
 validation-архив от команды judge.
 
+По умолчанию `run_rag_evaluation.sh` работает в режиме
+`MLA_TEXT_ONLY=true`: ссылки `question_images` игнорируются, модель получает
+только поле `question`. Поэтому картинки можно не переносить на сервер, но
+каждое поле `question` должно содержать настоящее условие, а не заглушку.
+
+Из смешанного файла можно получить чистый text-only JSONL: ссылки на картинки
+будут удалены, а задания с заглушками или пропущенными рисунками исключены.
+
+```bash
+python -m mla_baseline.prepare_text_only \
+  --input data/tasks_with_transcriptions.jsonl \
+  --output data/tasks_text_only.jsonl
+```
+
 Скрипт на одном и том же `data/validation.jsonl`:
 
 1. запускает `b0_no_tools` и `agent_rag` с одинаковой моделью и промптом;

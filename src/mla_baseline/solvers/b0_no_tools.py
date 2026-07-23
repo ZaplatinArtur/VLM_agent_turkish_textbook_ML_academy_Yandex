@@ -46,11 +46,12 @@ class B0NoTools(Solver):
     def build_messages(self, task: Task) -> list:
         content: list[dict] = [{"type": "text", "text": self.prompt["user_text"]}]
 
-        for ref in task.question_images:
+        active_images = [] if self.settings.text_only else task.question_images
+        for ref in active_images:
             content.append(image_ref_to_block(ref, self.settings.data_root))
 
         # Сценарий «ленивый школьник»: при наличии картинки текст условия не шлём
-        if not task.question_images or self.settings.include_question_text_with_images:
+        if not active_images or self.settings.include_question_text_with_images:
             content.append({"type": "text", "text": task.question})
 
         hint = self.prompt["answer_type_hints"].get(task.answer_type)

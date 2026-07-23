@@ -39,6 +39,8 @@ class Settings(BaseSettings):
 
     # Сценарий «ленивый школьник»: если есть картинка, текст условия не шлём.
     include_question_text_with_images: bool = False
+    # Text-only experiment: ignore image refs and always send the question text.
+    text_only: bool = False
 
     data_root: Path = Path("data")
     results_dir: Path = Path("results")

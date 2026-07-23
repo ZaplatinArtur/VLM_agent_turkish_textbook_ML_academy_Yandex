@@ -216,3 +216,29 @@ def test_agent_can_answer_without_using_retrieval() -> None:
     assert result.final_answer == "24 cm²"
     assert result.tool_calls == []
     assert search_client.calls == []
+
+
+def test_text_only_mode_ignores_image_refs_and_sends_question_text() -> None:
+    task = _task().model_copy(
+        update={
+            "question_images": [
+                {
+                    "image_id": "missing",
+                    "format": "file_path",
+                    "data": "images/does-not-exist.png",
+                    "mime_type": "image/png",
+                }
+            ]
+        }
+    )
+    solver = AgentRag(
+        _settings(text_only=True),
+        llm=FakeLlm([_final_answer()]),
+        search_client=FakeSearchClient(),  # type: ignore[arg-type]
+    )
+
+    messages = solver.build_messages(task)
+    blocks = messages[-1].content
+
+    assert not any(block.get("type") == "image_url" for block in blocks)
+    assert any(task.question in block.get("text", "") for block in blocks)
