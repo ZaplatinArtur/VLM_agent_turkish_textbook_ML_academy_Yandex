@@ -33,16 +33,26 @@ def load_tasks(path: Path) -> list[Task]:
     return tasks
 
 
-def load_done_ids(out_path: Path) -> set[str]:
+def load_done_ids(out_path: Path, *, retry_errors: bool = False) -> set[str]:
     if not out_path.exists():
         return set()
-    done = set()
+    records: list[dict] = []
     with out_path.open(encoding="utf-8") as fh:
         for line in fh:
             line = line.strip()
             if line:
-                done.add(json.loads(line)["task_id"])
-    return done
+                records.append(json.loads(line))
+    if not retry_errors:
+        return {str(record["task_id"]) for record in records}
+
+    latest = {str(record["task_id"]): record for record in records}
+    successful = [record for record in latest.values() if not record.get("error")]
+    temporary = out_path.with_suffix(out_path.suffix + ".retry.tmp")
+    with temporary.open("w", encoding="utf-8", newline="\n") as destination:
+        for record in successful:
+            destination.write(json.dumps(record, ensure_ascii=False) + "\n")
+    temporary.replace(out_path)
+    return {str(record["task_id"]) for record in successful}
 
 
 def describe_messages(task: Task, messages: list) -> str:
@@ -62,6 +72,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=None, help="только первые N задач")
     parser.add_argument("--out", type=Path, default=None, help="путь к результату")
     parser.add_argument("--dry-run", action="store_true", help="собрать вход без вызова модели")
+    parser.add_argument(
+        "--retry-errors",
+        action="store_true",
+        help="сохранить успешные строки и повторить только записи с error",
+    )
     args = parser.parse_args(argv)
 
     settings = get_settings()
@@ -83,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    done = load_done_ids(out_path)
+    done = load_done_ids(out_path, retry_errors=args.retry_errors)
     todo = [t for t in tasks if t.task_id not in done]
     print(f"Задач: {len(tasks)}, уже готово: {len(tasks) - len(todo)}, к прогону: {len(todo)}")
 

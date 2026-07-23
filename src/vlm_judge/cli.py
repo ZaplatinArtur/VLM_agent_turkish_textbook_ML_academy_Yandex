@@ -20,6 +20,7 @@ from .gold import apply_verified_gold
 from .metrics import deterministic_match
 from .ingest import import_candidates, read_records
 from .judge_audit import audit_judge_run
+from .mla_adapter import build_seed_text_tasks, prepare_text_judge_input
 from .pipeline import prepare_request_records
 from .retrieval import build_bm25_index, index_info, search_bm25
 from .retrieval_eval import evaluate_retrieval, prepare_qrels_template
@@ -29,6 +30,13 @@ from .schema import EvaluationItem
 from .sources import prepare_sources
 from .text_judge import evaluate_text_records
 from .validation import parse_run_specs, validate_experiment_runs
+from .validation_archive import (
+    build_validation_manifest,
+    build_validation_seed_manifest,
+    build_validation_tasks,
+    extract_validation_archive,
+    extract_validation_text,
+)
 
 
 def _prepare_sources(args: argparse.Namespace) -> int:
@@ -138,6 +146,83 @@ def _import_candidates(args: argparse.Namespace) -> int:
         answer_field=args.answer_field,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+def _prepare_mla_judge_input(args: argparse.Namespace) -> int:
+    report = prepare_text_judge_input(
+        Path(args.tasks),
+        Path(args.results),
+        Path(args.output),
+        require_all=args.require_all,
+    )
+    print(json.dumps(report, ensure_ascii=False))
+    return 0
+
+
+def _build_seed_text_tasks(args: argparse.Namespace) -> int:
+    report = build_seed_text_tasks(Path(args.input), Path(args.output))
+    print(json.dumps(report, ensure_ascii=False))
+    return 0
+
+
+def _prepare_validation_archive(args: argparse.Namespace) -> int:
+    output_dir = Path(args.output_dir)
+    extraction = extract_validation_archive(
+        Path(args.archive), output_dir, reuse_existing=args.reuse_extracted
+    )
+    manifest = build_validation_manifest(
+        Path(extraction["workbook"]),
+        output_dir,
+        output_dir / "validation_manifest.jsonl",
+    )
+    seed_manifest = build_validation_seed_manifest(
+        Path(extraction["workbook"]),
+        output_dir,
+        output_dir / "seed_manifest_8.jsonl",
+    )
+    print(
+        json.dumps(
+            {"extraction": extraction, "manifest": manifest, "seed_manifest": seed_manifest},
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+    return 0
+
+
+def _extract_validation_text(args: argparse.Namespace) -> int:
+    backend = OpenAICompatibleBackend(
+        args.base_url,
+        args.model,
+        api_key=os.environ.get(args.api_key_env) if args.api_key_env else None,
+        timeout=args.timeout,
+        temperature=0.0,
+        max_tokens=args.max_tokens,
+        seed=args.seed,
+        use_response_format=not args.no_response_format,
+        enable_thinking=False,
+    )
+    report = extract_validation_text(
+        Path(args.manifest),
+        Path(args.data_root),
+        Path(args.output),
+        backend,
+        workers=args.workers,
+        limit=args.limit,
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0
+
+
+def _build_validation_tasks(args: argparse.Namespace) -> int:
+    report = build_validation_tasks(
+        Path(args.manifest),
+        Path(args.extractions),
+        Path(args.output),
+        require_all=args.require_all,
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 
 
@@ -320,7 +405,7 @@ def _run_text_judge(args: argparse.Namespace) -> int:
         args.base_url,
         args.model,
         timeout=args.timeout,
-        temperature=0.0,
+        temperature=args.temperature,
         max_tokens=args.max_tokens,
         seed=args.seed,
         use_response_format=not args.no_response_format,
@@ -338,6 +423,7 @@ def _run_text_judge(args: argparse.Namespace) -> int:
         Path(args.output),
         max_attempts=args.max_attempts,
         retry_delay_seconds=args.retry_delay,
+        retry_failures=args.retry_failures,
     )
     print(json.dumps(report, ensure_ascii=False))
     return 0 if report["failed"] == 0 else 2
@@ -471,6 +557,61 @@ def build_parser() -> argparse.ArgumentParser:
     candidate_import.add_argument("--id-field", default="task_id")
     candidate_import.add_argument("--answer-field")
     candidate_import.set_defaults(handler=_import_candidates)
+
+    mla_judge_input = commands.add_parser(
+        "prepare-mla-judge-input",
+        help="join mla_baseline tasks and solver results for the text binary judge",
+    )
+    mla_judge_input.add_argument("--tasks", required=True)
+    mla_judge_input.add_argument("--results", required=True)
+    mla_judge_input.add_argument("--output", required=True)
+    mla_judge_input.add_argument("--require-all", action="store_true")
+    mla_judge_input.set_defaults(handler=_prepare_mla_judge_input)
+
+    seed_tasks = commands.add_parser(
+        "build-seed-text-tasks",
+        help="extract text-only MLA tasks from the real legacy failure sample",
+    )
+    seed_tasks.add_argument("--input", required=True)
+    seed_tasks.add_argument("--output", required=True)
+    seed_tasks.set_defaults(handler=_build_seed_text_tasks)
+
+    validation_archive = commands.add_parser(
+        "prepare-validation-archive",
+        help="extract the updated mentor ZIP and resolve local Sheet1 question/reference images",
+    )
+    validation_archive.add_argument("--archive", required=True)
+    validation_archive.add_argument("--output-dir", required=True)
+    validation_archive.add_argument("--reuse-extracted", action="store_true")
+    validation_archive.set_defaults(handler=_prepare_validation_archive)
+
+    validation_extract = commands.add_parser(
+        "extract-validation-text",
+        help="transcribe local validation questions and reference images with multimodal Qwen",
+    )
+    validation_extract.add_argument("--manifest", required=True)
+    validation_extract.add_argument("--data-root", required=True)
+    validation_extract.add_argument("--output", required=True)
+    validation_extract.add_argument("--base-url", required=True)
+    validation_extract.add_argument("--model", required=True)
+    validation_extract.add_argument("--api-key-env")
+    validation_extract.add_argument("--timeout", type=float, default=300.0)
+    validation_extract.add_argument("--max-tokens", type=int, default=3072)
+    validation_extract.add_argument("--seed", type=int, default=20260721)
+    validation_extract.add_argument("--workers", type=int, default=4)
+    validation_extract.add_argument("--limit", type=int)
+    validation_extract.add_argument("--no-response-format", action="store_true")
+    validation_extract.set_defaults(handler=_extract_validation_text)
+
+    validation_tasks = commands.add_parser(
+        "build-validation-tasks",
+        help="join the validation manifest and Qwen transcriptions into MLA tasks",
+    )
+    validation_tasks.add_argument("--manifest", required=True)
+    validation_tasks.add_argument("--extractions", required=True)
+    validation_tasks.add_argument("--output", required=True)
+    validation_tasks.add_argument("--require-all", action="store_true")
+    validation_tasks.set_defaults(handler=_build_validation_tasks)
 
     pairs = commands.add_parser("prepare-pairs", help="build blinded LMArena-style A/B records")
     pairs.add_argument("--input", action="append", required=True)
@@ -611,12 +752,18 @@ def build_parser() -> argparse.ArgumentParser:
     text_judge.add_argument("--base-url", required=True)
     text_judge.add_argument("--model", required=True)
     text_judge.add_argument("--timeout", type=float, default=120.0)
+    text_judge.add_argument("--temperature", type=float, default=0.0)
     text_judge.add_argument("--max-tokens", type=int, default=256)
     text_judge.add_argument("--seed", type=int, default=20260714)
     text_judge.add_argument("--no-response-format", action="store_true")
     text_judge.add_argument("--max-attempts", type=int, default=2)
     text_judge.add_argument("--retry-delay", type=float, default=1.0)
     text_judge.add_argument("--limit", type=int)
+    text_judge.add_argument(
+        "--retry-failures",
+        action="store_true",
+        help="preserve successful output rows and retry only failed or missing task IDs",
+    )
     text_judge.set_defaults(handler=_run_text_judge)
 
     adjudication = commands.add_parser(

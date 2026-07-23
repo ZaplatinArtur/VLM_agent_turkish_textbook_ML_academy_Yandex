@@ -72,6 +72,13 @@ vlm-judge-ui --dataset artifacts/calibration/response_sample.jsonl `
   --adjudications artifacts/annotations/adjudications.jsonl `
   --open-browser
 
+# Binary 0/1 judge monitor. The UI detects text-binary-v* results and opens this mode automatically.
+vlm-judge-ui --dataset artifacts/runs/b0_judge_input.jsonl `
+  --judge-results artifacts/runs/b0_judged.jsonl `
+  --annotations artifacts/annotations/human.jsonl `
+  --gold artifacts/annotations/gold.jsonl `
+  --open-browser
+
 # Apply only verified task-scoped transcriptions before building judge requests.
 vlm-judge apply-gold --dataset artifacts/runs/no_tools.jsonl --gold artifacts/annotations/gold.jsonl --output artifacts/runs/no_tools_with_gold.jsonl
 

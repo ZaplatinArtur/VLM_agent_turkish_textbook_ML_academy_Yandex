@@ -32,6 +32,9 @@ class B0NoTools(Solver):
             temperature=settings.temperature,
             timeout=settings.request_timeout_s,
             max_retries=2,
+            extra_body={
+                "chat_template_kwargs": {"enable_thinking": settings.enable_thinking}
+            },
         )
 
     def build_messages(self, task: Task) -> list:
@@ -98,6 +101,12 @@ class B0NoTools(Solver):
             final_answer=parsed.final_answer if parsed else None,
             solution_steps=parsed.solution_steps if parsed else None,
             raw_response=raw,
+            generation={
+                "temperature": self.settings.temperature,
+                "max_tokens": self.settings.max_tokens,
+                "structured_mode": self.settings.structured_mode,
+                "enable_thinking": self.settings.enable_thinking,
+            },
             usage=usage,
             error=error,
         )

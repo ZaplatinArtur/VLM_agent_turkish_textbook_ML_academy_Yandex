@@ -38,6 +38,99 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return records
 
 
+def _binary_result_key(value: dict[str, Any]) -> str:
+    task_id = str(value.get("task_id") or "").strip()
+    setup = str(value.get("setup") or value.get("condition") or "unknown").strip()
+    return f"{task_id}::{setup}"
+
+
+def _is_binary_judge_result(value: dict[str, Any]) -> bool:
+    prompt_version = str(value.get("prompt_version") or "")
+    verdict = value.get("verdict")
+    if prompt_version.startswith("text-binary-"):
+        return True
+    if not isinstance(verdict, dict):
+        return False
+    score = verdict.get("score")
+    return (
+        not isinstance(score, bool)
+        and score in {0, 1}
+        and set(verdict).issubset({"score", "rationale"})
+    )
+
+
+def build_binary_judge_context(
+    tasks: list[dict[str, Any]], judge_results: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """Join text-binary judge results to UI tasks without coercing them to the 0-4 rubric."""
+
+    binary_results = [dict(value) for value in judge_results if _is_binary_judge_result(value)]
+    by_key: dict[str, dict[str, Any]] = {}
+    by_task_id: dict[str, list[dict[str, Any]]] = {}
+    duplicate_keys: set[str] = set()
+    for result in binary_results:
+        key = _binary_result_key(result)
+        if key in by_key:
+            duplicate_keys.add(key)
+        by_key[key] = result
+        task_id = str(result.get("task_id") or "").strip()
+        by_task_id.setdefault(task_id, []).append(result)
+
+    items: list[dict[str, Any]] = []
+    score_counts = {0: 0, 1: 0}
+    valid = failed = guarded = 0
+    models: set[str] = set()
+    prompt_versions: set[str] = set()
+    for task in tasks:
+        task_id = str(task.get("task_id") or "").strip()
+        result = by_key.get(_binary_result_key(task))
+        if result is None and len(by_task_id.get(task_id, [])) == 1:
+            result = by_task_id[task_id][0]
+
+        item = dict(task)
+        item["_binary_judge"] = result
+        items.append(item)
+        if result is None:
+            failed += 1
+            continue
+
+        verdict = result.get("verdict")
+        score = verdict.get("score") if isinstance(verdict, dict) else None
+        if not isinstance(score, bool) and score in {0, 1}:
+            valid += 1
+            score_counts[int(score)] += 1
+        else:
+            failed += 1
+
+        judge = result.get("judge") if isinstance(result.get("judge"), dict) else {}
+        metadata = judge.get("metadata") if isinstance(judge.get("metadata"), dict) else {}
+        if metadata.get("deterministic_choice_mismatch") is True:
+            guarded += 1
+        if judge.get("model"):
+            models.add(str(judge["model"]))
+        if result.get("prompt_version"):
+            prompt_versions.add(str(result["prompt_version"]))
+
+    total = len(tasks)
+    return {
+        "enabled": bool(binary_results),
+        "items": items,
+        "summary": {
+            "tasks": total,
+            "results": len(binary_results),
+            "valid": valid,
+            "failed": failed,
+            "score_0": score_counts[0],
+            "score_1": score_counts[1],
+            "score_1_rate": score_counts[1] / valid if valid else None,
+            "guarded": guarded,
+            "models": sorted(models),
+            "prompt_versions": sorted(prompt_versions),
+            "duplicate_keys": len(duplicate_keys),
+        },
+    }
+
+
 class AnnotationStore:
     STATUSES = {"draft", "complete", "skipped"}
     MODES = {"pointwise", "pairwise"}
@@ -357,6 +450,8 @@ def _handler_factory(
     agreement_sample_rate: float,
     agreement_sample_seed: str,
 ):
+    binary_context = build_binary_judge_context(tasks, judge_results)
+
     class Handler(BaseHTTPRequestHandler):
         server_version = "VLMJudgeUI/0.1"
 
@@ -400,6 +495,7 @@ def _handler_factory(
                         "annotations": len(annotations.list()),
                         "gold": len(gold.list()),
                         "judge_results": len(judge_results),
+                        "binary_judge_valid": binary_context["summary"]["valid"],
                         "adjudications": len(adjudications.list()),
                         "adjudication_queue": context["stats"]["queue_items"],
                     }
@@ -429,6 +525,9 @@ def _handler_factory(
                 return
             if parsed.path == "/api/adjudications":
                 self._send_json({"adjudications": adjudications.list()})
+                return
+            if parsed.path == "/api/binary-judge-context":
+                self._send_json(binary_context)
                 return
             if parsed.path == "/api/export.csv":
                 self._send_bytes(annotations.export_csv(), "text/csv; charset=utf-8", filename="annotations.csv")

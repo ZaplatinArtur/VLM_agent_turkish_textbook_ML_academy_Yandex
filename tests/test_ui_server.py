@@ -3,10 +3,66 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from vlm_judge.ui_server import AnnotationStore, GoldStore, ImageCache
+from vlm_judge.ui_server import AnnotationStore, GoldStore, ImageCache, build_binary_judge_context
 
 
 class AnnotationStoreTests(unittest.TestCase):
+    def test_binary_judge_context_keeps_zero_one_results_separate(self) -> None:
+        tasks = [
+            {"task_id": "m1", "setup": "no_tools", "subject": "math"},
+            {"task_id": "m2", "setup": "no_tools", "subject": "physics"},
+            {"task_id": "m3", "setup": "no_tools", "subject": "chemistry"},
+        ]
+        results = [
+            {
+                "task_id": "m1",
+                "setup": "no_tools",
+                "prompt_version": "text-binary-v4",
+                "verdict": {"score": 1, "rationale": "Correct."},
+                "judge": {"model": "Qwen", "metadata": {}},
+            },
+            {
+                "task_id": "m2",
+                "setup": "no_tools",
+                "prompt_version": "text-binary-v4",
+                "verdict": {"score": 0, "rationale": "Wrong choice."},
+                "judge": {
+                    "model": "Qwen",
+                    "metadata": {"deterministic_choice_mismatch": True},
+                },
+            },
+        ]
+
+        context = build_binary_judge_context(tasks, results)
+
+        self.assertTrue(context["enabled"])
+        self.assertEqual(context["summary"]["valid"], 2)
+        self.assertEqual(context["summary"]["failed"], 1)
+        self.assertEqual(context["summary"]["score_0"], 1)
+        self.assertEqual(context["summary"]["score_1"], 1)
+        self.assertEqual(context["summary"]["guarded"], 1)
+        self.assertEqual(context["items"][0]["_binary_judge"]["verdict"]["score"], 1)
+        self.assertIsNone(context["items"][2]["_binary_judge"])
+
+    def test_binary_judge_context_ignores_regular_rubric_results(self) -> None:
+        context = build_binary_judge_context(
+            [{"task_id": "m1", "setup": "no_tools"}],
+            [
+                {
+                    "task_id": "m1",
+                    "setup": "no_tools",
+                    "prompt_version": "judge-v1",
+                    "verdict": {
+                        "score": 1,
+                        "label": "partially_correct",
+                        "rationale": "Incomplete.",
+                    },
+                }
+            ],
+        )
+        self.assertFalse(context["enabled"])
+        self.assertEqual(context["summary"]["valid"], 0)
+
     def test_upsert_reload_and_csv_export(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "annotations.jsonl"
