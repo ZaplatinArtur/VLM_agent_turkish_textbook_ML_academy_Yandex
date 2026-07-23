@@ -77,6 +77,17 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="сохранить успешные строки и повторить только записи с error",
     )
+    parser.add_argument(
+        "--report",
+        action="store_true",
+        help="после прогона сгенерировать HTML-отчёт рядом с результатом",
+    )
+    parser.add_argument(
+        "--meta",
+        type=Path,
+        default=None,
+        help="meta JSONL для срезов и ответов-картинок в отчёте",
+    )
     args = parser.parse_args(argv)
 
     settings = get_settings()
@@ -87,6 +98,8 @@ def main(argv: list[str] | None = None) -> int:
         tasks = tasks[: args.limit]
 
     if args.dry_run:
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8")
         for task in tasks:
             print(describe_messages(task, solver.build_messages(task)))
         print(f"[dry-run] OK: {len(tasks)} задач, condition={args.condition}, "
@@ -119,6 +132,20 @@ def main(argv: list[str] | None = None) -> int:
                       f"({result.usage.latency_s}s)")
 
     print(f"Готово: {len(todo)} прогнано, ошибок: {errors}, результат: {out_path}")
+
+    if args.report:
+        from .report import generate
+
+        meta = args.meta
+        if meta is None:
+            candidate = args.tasks.with_suffix(".meta.jsonl")
+            meta = candidate if candidate.exists() else None
+        report_path = generate(out_path, args.tasks, meta)
+        print(f"Отчёт: {report_path}")
+
+    from .tracing import flush
+
+    flush()
     return 0
 
 

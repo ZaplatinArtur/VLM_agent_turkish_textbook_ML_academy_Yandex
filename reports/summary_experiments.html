@@ -1,0 +1,141 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сводный отчёт: эксперименты B0/B1</title>
+<style>
+:root { color-scheme: light dark; }
+.rep {
+  --surface: #fcfcfb; --page: #f9f9f7;
+  --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --baseline: #c3c2b7; --ring: rgba(11,11,11,.10);
+  --accent: #2a78d6; --dim: #c3c2b7;
+  --good: #0ca30c; --bad: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .rep {
+    --surface: #1a1a19; --page: #0d0d0d;
+    --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --ring: rgba(255,255,255,.10);
+    --accent: #3987e5; --dim: #52514e;
+  }
+}
+:root[data-theme="dark"] .rep {
+  --surface: #1a1a19; --page: #0d0d0d;
+  --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --baseline: #383835; --ring: rgba(255,255,255,.10);
+  --accent: #3987e5; --dim: #52514e;
+}
+.rep { background: var(--page); color: var(--ink);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  margin: 0; padding: 24px 16px; }
+.rep .wrap { max-width: 960px; margin: 0 auto; }
+.rep h1 { font-size: 20px; margin: 0 0 4px; }
+.rep h2 { font-size: 15px; margin: 30px 0 10px; }
+.rep .sub { color: var(--ink2); margin: 0 0 20px; }
+.rep .card { background: var(--surface); border: 1px solid var(--ring);
+  border-radius: 10px; padding: 16px; }
+.rep .kpis { display: flex; flex-wrap: wrap; gap: 12px; }
+.rep .kpi { flex: 1 1 150px; }
+.rep .kpi .v { font-size: 30px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.rep .kpi .l { color: var(--ink2); font-size: 12px; margin-top: 2px; }
+.rep svg text { font: 12px system-ui, -apple-system, "Segoe UI", sans-serif; }
+.rep svg .num { font-variant-numeric: tabular-nums; }
+.rep table { border-collapse: collapse; width: 100%; font-size: 13px;
+  font-variant-numeric: tabular-nums; }
+.rep th { text-align: left; color: var(--ink2); font-weight: 600;
+  border-bottom: 1px solid var(--baseline); padding: 6px 10px 6px 0; }
+.rep td { border-bottom: 1px solid var(--grid); padding: 7px 10px 7px 0;
+  vertical-align: top; }
+.rep .overflow { overflow-x: auto; }
+.rep .up { color: var(--good); } .rep .down { color: var(--bad); }
+.rep .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.rep .foot { color: var(--muted); font-size: 12px; margin-top: 26px; }
+</style>
+<div class="rep"><div class="wrap">
+<h1>Сводный отчёт: как бейзлайны пришли от 66% к 75.7%</h1>
+<p class="sub">Qwen3.5-9B · 298 задач валидации (202 авто-оцениваемых) · A100, vLLM · июль 2026</p>
+
+<div class="kpis">
+<div class="kpi card"><div class="v">75.7%</div><div class="l">B0 финальный (без тулов) — лидер</div></div>
+<div class="kpi card"><div class="v">74.3%</div><div class="l">B1 финальный (deep-поиск + роутинг)</div></div>
+<div class="kpi card"><div class="v">66.1% / 65.8%</div><div class="l">LLM-судья, полный охват (B0 / B1): паритет</div></div>
+<div class="kpi card"><div class="v">0</div><div class="l">обрывов во всех финальных прогонах</div></div>
+</div>
+
+<h2>1 · Путь B0: 66.1% → 75.7%</h2>
+<div class="card overflow"><table>
+<tr><th>Шаг</th><th>Что чинили</th><th>Точность после</th></tr>
+<tr><td>Первый полный прогон</td><td>16k контекст, temp 0, лимит 4096 — 54 обрыва из 199</td><td>66.1%*</td></tr>
+<tr><td>Бюджет генерации 4096→12288</td><td>вернуло 20 обрывов</td><td rowspan="3">67.5%* (обрывов 0)</td></tr>
+<tr><td>Сэмплирование вендора</td><td>temp 0.6 / top_p 0.95 / top_k 20 / presence 1.5 — greedy у thinking-моделей вырождается в циклы</td></tr>
+<tr><td>Принудительный финал + несгораемый микро-финал</td><td>лестница «решение → wrap-up без thinking → 64-токенный „только ответ“»; обрывы исчезли как класс</td></tr>
+<tr><td>Выборка 199→298 (второй архив, q-файлы)</td><td>+99 задач, почти вся математика</td><td>70.3%</td></tr>
+<tr><td><b>Контекст 16k→32k, генерация 16384</b></td><td>гипотеза «дай больше бюджета на рассуждение» — блуждающая математика досчитывается (Math 73→80%)</td><td><b>75.7%</b></td></tr>
+</table>
+<p class="note">* на выборке из 199 задач; далее — на 298 (202 авто). Попутно чинилась инфраструктура:
+cu129-сборка vLLM под драйвер 12.8, парсер тул-коллов qwen3_xml (hermes не понимает формат Qwen3.5),
+баг langchain max_completion_tokens, thinking выключен в финалах (сжигал их бюджет).</p></div>
+
+<h2>2 · Какие решения поиска пробовали (B1)</h2>
+<div class="card overflow"><table>
+<tr><th>Вариант</th><th>Стек</th><th>Итог (32k, 202 авто)</th><th>Вывод</th></tr>
+<tr><td>Сниппеты v1</td><td>SearXNG (self-hosted docker), ReAct-цикл, 5 сниппетов на запрос</td><td>68.3%</td>
+<td>тул-коллы заработали только с парсером qwen3_xml; модель гуглила саму задачу — добавлены запрет в промпт, дедуп запросов, обработка пустых</td></tr>
+<tr><td>Deep-поиск</td><td>SearXNG → trafilatura (полные страницы) → реранкер bge-reranker-v2-m3 (vLLM score-API, GPU 2) → топ-6 фрагментов с источниками</td><td>64.4%</td>
+<td>чем лучше поиск — тем хуже математика: 80% (без) → 67% (сниппеты) → 63% (deep). Distractibility 9B: читает вместо того, чтобы считать</td></tr>
+<tr><td>Роутинг (сниппеты)</td><td>предметы из MLA_B1_NO_SEARCH_SUBJECTS (Math) идут B0-путём</td><td>72.3%</td>
+<td>снимает основной ущерб; остальное — шум сэмплирования</td></tr>
+<tr><td><b>Deep + роутинг</b></td><td>комбинация двух улучшений</td><td><b>74.3%</b></td>
+<td>лучший B1; статистически неотличим от B0</td></tr>
+<tr><td>T-Search (t-tech)</td><td>агентный ретривер 36B</td><td>не запускали</td>
+<td>только EN/RU (наши задачи турецкие), ломает принцип «всё на одной 9B»; кандидат для agent_rag у команды ретрива</td></tr>
+</table>
+<p class="note">Критичный фикс харнеса B1: принудительный финал сначала собирался из хвоста
+черновика и терял результаты поиска — после починки (финал видит весь диалог цикла) B1 вырос с 61.4% до 68.3%.</p></div>
+
+<h2>3 · Финальное сравнение условий (один сервер, одни бюджеты)</h2>
+<div class="card">
+<svg viewBox="0 0 760 172" role="img" aria-label="Точность условий">
+<line x1="220" y1="12" x2="220" y2="148" stroke="var(--baseline)" stroke-width="1"/>
+<line x1="595" y1="12" x2="595" y2="148" stroke="var(--grid)" stroke-width="1"/>
+<text x="595" y="164" text-anchor="middle" class="num" fill="var(--muted)">75%</text>
+<line x1="470" y1="12" x2="470" y2="148" stroke="var(--grid)" stroke-width="1"/>
+<text x="470" y="164" text-anchor="middle" class="num" fill="var(--muted)">50%</text>
+<g><title>B0 без тулов: 75.7%</title>
+<text x="210" y="29" text-anchor="end" fill="var(--ink)">B0 (без тулов)</text>
+<rect x="220" y="18" width="378.5" height="15" rx="4" fill="var(--accent)"/>
+<text x="606" y="30" class="num" fill="var(--ink)" font-weight="650">75.7%</text></g>
+<g><title>B1 deep + роутинг: 74.3%</title>
+<text x="210" y="56" text-anchor="end" fill="var(--ink)">B1 deep + роутинг</text>
+<rect x="220" y="45" width="371.5" height="15" rx="4" fill="var(--accent)" opacity="0.75"/>
+<text x="599" y="57" class="num" fill="var(--ink2)">74.3%</text></g>
+<g><title>B1 роутинг (сниппеты): 72.3%</title>
+<text x="210" y="83" text-anchor="end" fill="var(--ink)">B1 роутинг (сниппеты)</text>
+<rect x="220" y="72" width="361.5" height="15" rx="4" fill="var(--dim)"/>
+<text x="589" y="84" class="num" fill="var(--ink2)">72.3%</text></g>
+<g><title>B1 сниппеты: 68.3%</title>
+<text x="210" y="110" text-anchor="end" fill="var(--ink)">B1 сниппеты</text>
+<rect x="220" y="99" width="341.5" height="15" rx="4" fill="var(--dim)"/>
+<text x="569" y="111" class="num" fill="var(--ink2)">68.3%</text></g>
+<g><title>B1 deep без роутинга: 64.4%</title>
+<text x="210" y="137" text-anchor="end" fill="var(--ink)">B1 deep без роутинга</text>
+<rect x="220" y="126" width="322" height="15" rx="4" fill="var(--dim)"/>
+<text x="550" y="138" class="num" fill="var(--ink2)">64.4%</text></g>
+</svg>
+<p class="note">Синим — два финальных условия сравнения; разница 3 задачи из 202, в пределах
+межпрогонного разброса (±5 пп при temp 0.6). LLM-судья на полном охвате (298, включая 72 задачи
+с транскрибированными эталонами): B0 66.1% vs B1 65.8% — тот же паритет; на открытых задачах
+с развёрнутым решением B1 чуть впереди (58% vs 53%).</p></div>
+
+<h2>4 · Главные уроки</h2>
+<div class="card"><table>
+<tr><td>1</td><td><b>Голая 9B с достаточным бюджетом рассуждения — сильный бейзлайн.</b> Крупнейший одиночный прирост (+5.4 пп) дал не инструмент, а контекст 32k.</td></tr>
+<tr><td>2</td><td><b>Польза поиска предметно-зависима, и это устойчиво:</b> знаниевые предметы +10…+26 пп, математика −13 пп — во всех трёх реализациях поиска. Дисциплина ретрива (роутинг, дедуп, бюджеты) дала больше, чем качество ретрива (полные страницы + реранкер).</td></tr>
+<tr><td>3</td><td><b>Харнес решает.</b> Половина «эффектов» оказывалась багами обвязки: парсер тул-коллов, потеря контекста в финале, thinking в бюджете финала, обрывы. Честное сравнение потребовало одинакового сервера и нулевых обрывов по построению.</td></tr>
+<tr><td>4</td><td><b>Для агента с RAG:</b> заходить сразу с роутингом «искать/считать»; deep-стек (trafilatura + bge-reranker-v2-m3) переиспользуем для учебных чанков; планка для обгона — 75.7%.</td></tr>
+<tr><td>5</td><td><b>Статистика:</b> различия ≤5 пп на 202 задачах не разрешаются одним прогоном; финальное ранжирование — только мульти-прогонами или на полной выборке (ждём картинки 525 строк q0xxx).</td></tr>
+</table></div>
+
+<p class="foot">mla_baseline · ветка mla_baseline · условия: b0_no_tools, b1_search, b1_routed,
+b1_deep, b1_deep_routed · результаты и вердикты судьи — в reports/*.jsonl · Langfuse-трейсы всех
+прогонов — на стенде (ssh -L 3000:localhost:3000)</p>
+</div></div>

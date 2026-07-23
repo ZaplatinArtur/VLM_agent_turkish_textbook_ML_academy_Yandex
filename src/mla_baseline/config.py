@@ -7,6 +7,7 @@
 from pathlib import Path
 from typing import Literal
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -22,6 +23,9 @@ class Settings(BaseSettings):
 
     max_tokens: int = 3072
     temperature: float = 0.0
+    top_p: float = 0.95
+    top_k: int = 20
+    presence_penalty: float = 1.5
     request_timeout_s: float = 300.0
     enable_thinking: bool = False
 
@@ -46,6 +50,32 @@ class Settings(BaseSettings):
     retrieval_top_k: int = 5
     retrieval_max_context_chars: int = 6_000
     retrieval_max_calls: int = 3
+
+    # B1: веб-поиск через self-hosted SearXNG.
+    searxng_url: str = "http://localhost:8080"
+    search_k: int = 5
+    agent_max_steps: int = 6
+    b1_no_search_subjects: str = "Math"
+
+    # B1-deep: чтение страниц и внешний reranker.
+    rerank_url: str = "http://localhost:8002"
+    deep_search_pages: int = 8
+    deep_search_chunks: int = 6
+
+    # Опциональная трассировка в Langfuse.
+    langfuse_enabled: bool = False
+    langfuse_public_key: str | None = Field(
+        None,
+        validation_alias=AliasChoices("LANGFUSE_PUBLIC_KEY"),
+    )
+    langfuse_secret_key: str | None = Field(
+        None,
+        validation_alias=AliasChoices("LANGFUSE_SECRET_KEY"),
+    )
+    langfuse_host: str | None = Field(
+        None,
+        validation_alias=AliasChoices("LANGFUSE_HOST"),
+    )
 
 
 def get_settings() -> Settings:

@@ -26,6 +26,8 @@ dependencies = [
 [project.optional-dependencies]
 sources = ["openpyxl>=3.1"]
 dev = ["pytest>=8"]
+tracing = ["langfuse>=3"]
+deep-search = ["trafilatura>=2.0"]
 
 [project.scripts]
 vlm-judge = "vlm_judge.cli:main"

@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 class SolveOutput(BaseModel):
     """Строгий JSON, который обязана вернуть модель (guided decoding)."""
 
+    reasoning: str | None = None
     solution_steps: str
     final_answer: str
 
@@ -34,6 +35,8 @@ class SolveResult(BaseModel):
     prompt_version: str
     final_answer: str | None = None
     solution_steps: str | None = None
+    reasoning: str | None = None
+    forced_answer: bool = False
     raw_response: str | None = None
     generation: dict = Field(default_factory=dict)
     tool_calls: list[ToolCallLog] = Field(default_factory=list)

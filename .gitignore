@@ -176,3 +176,10 @@ __marimo__/
 data/*
 !data/tasks.sample.jsonl
 
+# Generated run outputs and local source artifacts.
+results/
+/images/
+*.zip
+*.xlsx
+msedge_*.png
+graphify-out/
