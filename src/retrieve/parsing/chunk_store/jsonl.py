@@ -3,6 +3,7 @@ from pathlib import Path
 from paths import CHUNKS_JSONL_DIR, ensure_data_dirs
 from schemas.retrieve import RetrievedChunk
 
+from ...metadata import enrich_chunk_metadata
 from .base import ChunkStore
 
 
@@ -40,5 +41,6 @@ class JsonlChunkStore(ChunkStore):
             for line in f:
                 line = line.strip()
                 if line:
-                    chunks.append(RetrievedChunk.model_validate_json(line))
+                    chunk = RetrievedChunk.model_validate_json(line)
+                    chunks.append(enrich_chunk_metadata(chunk))
         return chunks

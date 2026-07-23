@@ -1,3 +1,5 @@
+import threading
+
 from paths import INDEX_DIR
 
 from schemas.retrieve import RetrievedChunk
@@ -8,6 +10,7 @@ from .parsing import get_retrieved_chunks
 from .pipeline import RetrievalPipeline
 
 _pipeline: RetrievalPipeline | None = None
+_pipeline_lock = threading.Lock()
 
 
 def build_pipeline(
@@ -16,7 +19,8 @@ def build_pipeline(
     from .embedders import SentenceTransformerEmbedder
     from .rankers import DenseRanker
 
-    corpus = get_retrieved_chunks() if chunks is None else chunks
+    raw_corpus = get_retrieved_chunks() if chunks is None else chunks
+    corpus = [chunk for chunk in raw_corpus if chunk.text.strip()]
     index = Index(corpus)
     embedder = SentenceTransformerEmbedder()
     return RetrievalPipeline(
@@ -27,7 +31,9 @@ def build_pipeline(
 def get_pipeline() -> RetrievalPipeline:
     global _pipeline
     if _pipeline is None:
-        _pipeline = build_pipeline()
+        with _pipeline_lock:
+            if _pipeline is None:
+                _pipeline = build_pipeline()
     return _pipeline
 
 

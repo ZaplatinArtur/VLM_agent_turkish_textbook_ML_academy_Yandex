@@ -225,6 +225,56 @@ tasks лежит одноимённый `*.meta.jsonl` — подхватитс�
 в «нужен судья». Срезы: `--by subject|grade|type|class|question_format|question_type`.
 Промахи для разбора: `--dump-misses misses.jsonl`.
 
+## Парная оценка B0 против textbook RAG
+
+Корпус должен лежать в `data/chunks/jsonl/*.jsonl`. Он не коммитится в Git.
+Сначала проверьте его состав и один раз постройте постоянный FAISS-индекс:
+
+```bash
+python -m retrieve.build_index --dry-run
+python -m retrieve.build_index \
+  --sample-query "dikdörtgen alan formülü" --k 3
+```
+
+Индекс сохраняется в `data/cache/index/` и при неизменном корпусе загружается
+повторно. Текущий парсер восстанавливает `grade` и `subject` из slug учебника,
+поэтому агентские фильтры на английском и турецком работают одинаково.
+
+Полный воспроизводимый прогон при уже запущенном vLLM:
+
+```bash
+bash scripts/run_rag_evaluation.sh
+```
+
+Перед дорогим прогоном скрипт проверяет, что локальные изображения существуют,
+эталоны заполнены, а вместо текста вопроса нет заглушки `(soru görselde)`.
+Последнее обязательно для text-only judge. Если используется старый
+`data/validation.jsonl` только с картинками, сначала нужен подготовленный
+набор с транскрипциями условий (с теми же `task_id`) либо обновлённый
+validation-архив от команды judge.
+
+Скрипт на одном и том же `data/validation.jsonl`:
+
+1. запускает `b0_no_tools` и `agent_rag` с одинаковой моделью и промптом;
+2. готовит оба результата для строгого binary LLM judge;
+3. оценивает оба условия на общем знаменателе;
+4. пишет `reports/rag_eval/summary.{json,md}`.
+
+В отчёте отдельно показаны exact match, LLM-as-a-judge, частота вызова tool,
+ошибки retrieval, число исправленных/ухудшенных ответов, McNemar p-value,
+парный bootstrap CI и срез по покрытию корпуса. Пропущенный ответ или ошибка
+остаются в общем знаменателе и не засчитываются как правильные.
+
+Пути и endpoint можно переопределить без изменения скрипта:
+
+```bash
+TASKS=data/validation.jsonl \
+BASE_URL=http://127.0.0.1:8000/v1 \
+MODEL=Qwen/Qwen3.5-9B \
+MLA_CONCURRENCY=4 \
+bash scripts/run_rag_evaluation.sh
+```
+
 ## Перенос на мощное железо по SSH
 
 Код не содержит локальных путей и ключей — вся конфигурация в `.env`.

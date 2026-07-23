@@ -1,3 +1,4 @@
+import threading
 from pathlib import Path
 
 from schemas.retrieve import RetrievedChunk
@@ -27,29 +28,35 @@ class DenseRanker(Ranker):
         self._store: FaissVectorStore | None = None
         self._chunks_by_id = {}
         self._built = False
+        self._build_lock = threading.Lock()
 
     @property
     def _embedder_name(self) -> str:
         return getattr(self.embedder, "model_name", type(self.embedder).__name__)
 
     def build(self) -> None:
-        chunks = self.index.get()
-        self._chunks_by_id = {chunk.chunk_id: chunk for chunk in chunks}
-        if not chunks:
-            self._store = None
-            self._built = True
+        if self._built:
             return
-        chunk_ids = [chunk.chunk_id for chunk in chunks]
-        if self.index_dir is not None:
-            store = load_index(self.index_dir, chunk_ids, self._embedder_name)
-            if store is not None:
-                self._store = store
+        with self._build_lock:
+            if self._built:
+                return
+            chunks = self.index.get()
+            self._chunks_by_id = {chunk.chunk_id: chunk for chunk in chunks}
+            if not chunks:
+                self._store = None
                 self._built = True
                 return
-        vectors = self._embed_chunks(chunks)
-        self._store = FaissVectorStore.from_vectors(chunk_ids, vectors)
-        self._built = True
-        self.persist()
+            chunk_ids = [chunk.chunk_id for chunk in chunks]
+            if self.index_dir is not None:
+                store = load_index(self.index_dir, chunk_ids, self._embedder_name)
+                if store is not None:
+                    self._store = store
+                    self._built = True
+                    return
+            vectors = self._embed_chunks(chunks)
+            self._store = FaissVectorStore.from_vectors(chunk_ids, vectors)
+            self._built = True
+            self.persist()
 
     def persist(self) -> None:
         if self.index_dir is None or not isinstance(self._store, FaissVectorStore):

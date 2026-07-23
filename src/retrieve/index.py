@@ -1,5 +1,7 @@
 from schemas.retrieve import RetrievedChunk
 
+from .metadata import subjects_match
+
 
 class Index:
     """In-memory view of chunks loaded from the parser's JSONL store."""
@@ -24,7 +26,11 @@ class Index:
         """
         chunks = list(self._chunks_by_id.values())
         if subject is not None:
-            chunks = [c for c in chunks if c.metadata.get("subject") == subject]
+            chunks = [
+                chunk
+                for chunk in chunks
+                if subjects_match(chunk.metadata.get("subject"), subject)
+            ]
         if textbook is not None:
             chunks = [c for c in chunks if c.metadata.get("textbook") == textbook]
         return chunks

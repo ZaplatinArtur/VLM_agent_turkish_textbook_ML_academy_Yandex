@@ -34,6 +34,7 @@ vlm-judge = "vlm_judge.cli:main"
 vlm-judge-ui = "vlm_judge.ui_server:main"
 vlm-retrieval-api = "vlm_judge.retrieval_server:main"
 mla-baseline = "mla_baseline.runner:main"
+textbook-index = "retrieve.build_index:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
