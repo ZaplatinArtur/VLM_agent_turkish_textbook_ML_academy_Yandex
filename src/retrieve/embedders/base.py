@@ -13,7 +13,7 @@ class Embedder(Protocol):
 class SymmetricTextEmbedder(ABC):
     @abstractmethod
     def encode(self, texts: list[str]) -> list[list[float]]:
-        """Encode texts into vectors in a shared query/document space."""
+        pass
 
     def embed_chunks(self, chunks: list[RetrievedChunk]) -> list[list[float]]:
         if not chunks:

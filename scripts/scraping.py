@@ -14,7 +14,7 @@ from PIL import Image
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from paths import BOOKS_DIR, ensure_data_dirs
+from src.paths import BOOKS_DIR, ensure_data_dirs
 
 BASE_URL = "https://www.odevjet.com"
 OUTPUT_DIR = BOOKS_DIR
@@ -61,9 +61,9 @@ def get_page_numbers(book_url: str) -> list[int]:
     page_numbers: list[int] = []
 
     for script in re.findall(
-        r'<script type="application/ld\+json">(.*?)</script>',
-        html,
-        flags=re.DOTALL,
+            r'<script type="application/ld\+json">(.*?)</script>',
+            html,
+            flags=re.DOTALL,
     ):
         try:
             data = json.loads(script)

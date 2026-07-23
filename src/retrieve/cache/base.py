@@ -3,7 +3,7 @@ import pickle
 from pathlib import Path
 from typing import Any
 
-from paths import DATA_DIR
+from src.paths import DATA_DIR
 
 CACHE_DIR = DATA_DIR / "cache"
 

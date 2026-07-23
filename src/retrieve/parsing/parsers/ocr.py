@@ -19,12 +19,12 @@ _PAGE_RE = re.compile(r"^(\d+)\.(?:jpg|jpeg|png|webp)$", re.IGNORECASE)
 
 class OcrParser(Parser):
     def __init__(
-        self,
-        lang: str = "tur",
-        max_workers: int = 16,
-        chunk_store: ChunkStore | None = None,
+            self,
+            lang: str = "tur",
+            max_workers: int = 16,
+            chunk_store: ChunkStore | None = None,
     ) -> None:
-    
+
         super().__init__(chunk_store=chunk_store)
         configure_tesseract()
         self.lang = lang

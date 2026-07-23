@@ -4,6 +4,7 @@ pytest.importorskip("faiss")
 pytest.importorskip("numpy")
 
 from src.retrieve.embedders.base import SymmetricTextEmbedder
+from src.retrieve.index import Index
 from src.retrieve.rankers.dense import DenseRanker
 from src.schemas.retrieve import RetrievedChunk
 
@@ -125,3 +126,60 @@ def test_original_corpus_chunk_score_not_mutated(corpus):
     ranker = build_ranker(corpus)
     ranker.rank("üçgen alanı")
     assert all(c.score == 0.0 for c in corpus)
+
+
+def test_invalidate_forces_rebuild_on_next_rank(corpus):
+    ranker = build_ranker(corpus)
+    ranker.rank("üçgen")
+    assert ranker._built
+    ranker.invalidate()
+    assert not ranker._built
+    # После инвалидации следующий rank пересобирает индекс и снова работает.
+    assert ranker.rank("bir üçgenin alanı nasıl bulunur")[0].chunk_id == "m1"
+    assert ranker._built
+
+
+class NamedCountingEmbedder(FakeEmbedder):
+    """Считает вызовы encode и имеет стабильное имя модели для манифеста."""
+
+    def __init__(self) -> None:
+        self.model_name = "fake-model"
+        self.calls = 0
+
+    def encode(self, texts: list[str]) -> list[list[float]]:
+        self.calls += 1
+        return super().encode(texts)
+
+
+def test_persisted_index_is_loaded_without_re_embedding(corpus, tmp_path):
+    first = NamedCountingEmbedder()
+    DenseRanker(
+        embedder=first,
+        index=Index(corpus),
+        embedding_cache=DictCache(),
+        index_dir=tmp_path,
+    ).build()  # строит и сохраняет снимок
+    assert first.calls == 1
+
+    # Второй ранкер (как после перезапуска): пустой кэш, тот же корпус и снимок.
+    second = NamedCountingEmbedder()
+    reloaded = DenseRanker(
+        embedder=second,
+        index=Index(corpus),
+        embedding_cache=DictCache(),
+        index_dir=tmp_path,
+    )
+    reloaded.build()
+    assert second.calls == 0, "должен был загрузить снимок, а не эмбеддить чанки"
+    # Поиск работает; encode здесь вызовется лишь для эмбеддинга самого запроса.
+    assert reloaded.rank("bir üçgenin alanı nasıl bulunur")[0].chunk_id == "m1"
+
+
+def test_persisted_index_rebuilt_when_corpus_changes(corpus, tmp_path):
+    first = NamedCountingEmbedder()
+    DenseRanker(first, Index(corpus), DictCache(), index_dir=tmp_path).build()
+
+    grown = corpus + [make_chunk("x1", "Hücre zarı.", "biology")]
+    second = NamedCountingEmbedder()
+    DenseRanker(second, Index(grown), DictCache(), index_dir=tmp_path).build()
+    assert second.calls == 1, "изменился состав корпуса — снимок невалиден, пересборка"

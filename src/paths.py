@@ -6,6 +6,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 BOOKS_DIR = DATA_DIR / "books"
 CHUNKS_JSONL_DIR = DATA_DIR / "chunks" / "jsonl"
 TESSDATA_DIR = DATA_DIR / "tessdata"
+INDEX_DIR = DATA_DIR / "cache" / "index"
 
 
 def ensure_data_dirs() -> None:

@@ -1,4 +1,4 @@
-from schemas.retrieve import RetrievedChunk
+from ...schemas.retrieve import RetrievedChunk
 
 from .factory import get_chunk_store
 
@@ -10,9 +10,3 @@ def get_retrieved_chunks() -> list[RetrievedChunk]:
     if _cache is None:
         _cache = get_chunk_store().load()
     return _cache
-
-
-def get_retrieved_chuncks() -> list[RetrievedChunk]:
-    """Backward-compatible alias for the old misspelled public function."""
-
-    return get_retrieved_chunks()

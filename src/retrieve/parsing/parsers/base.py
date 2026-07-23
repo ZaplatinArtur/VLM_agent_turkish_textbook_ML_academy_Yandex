@@ -12,10 +12,11 @@ class Parser(ABC):
 
     @abstractmethod
     def parse_book(
-        self,
-        book_dir: Path,
-        book_slug: str,
-    ) -> list[RetrievedChunk]: ...
+            self,
+            book_dir: Path,
+            book_slug: str,
+    ) -> list[RetrievedChunk]:
+        ...
 
     def parse_books(self, book_dirs: list[Path]) -> list[RetrievedChunk]:
         all_chunks: list[RetrievedChunk] = []

@@ -1,0 +1,29 @@
+{
+  "book": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-meb-yayinlari",
+  "examples": [
+    {
+      "query": "Mustafa Kemal Atatürk'ün ilkeleri nelerdir",
+      "expect_substring": "İLKELER",
+      "on_topic": true
+    },
+    {
+      "query": "Kurtuluş Savaşı hangi cephelerde yapıldı",
+      "expect_substring": "Cephe",
+      "on_topic": true
+    },
+    {
+      "query": "Lozan Antlaşması ne zaman imzalandı",
+      "expect_substring": "Lozan",
+      "on_topic": true
+    },
+    {
+      "query": "Atatürk hangi savaşlara katıldı",
+      "expect_substring": "Atatürk",
+      "on_topic": true
+    },
+    {
+      "query": "Bitkilerde fotosentez nasıl gerçekleşir",
+      "on_topic": false
+    }
+  ]
+}
