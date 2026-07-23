@@ -3,13 +3,13 @@ import pytest
 pytest.importorskip("faiss")
 pytest.importorskip("numpy")
 
-from src.retrieve.persistence import (
+from retrieve.persistence import (
     corpus_fingerprint,
     load_index,
     load_manifest,
     save_index,
 )
-from src.retrieve.vector_store import FaissVectorStore
+from retrieve.vector_store import FaissVectorStore
 
 
 def make_store() -> FaissVectorStore:

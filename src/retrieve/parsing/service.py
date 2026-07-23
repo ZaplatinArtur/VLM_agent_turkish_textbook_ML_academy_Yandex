@@ -1,4 +1,4 @@
-from ...schemas.retrieve import RetrievedChunk
+from schemas.retrieve import RetrievedChunk
 
 from .factory import get_chunk_store
 

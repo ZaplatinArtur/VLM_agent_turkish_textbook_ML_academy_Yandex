@@ -3,10 +3,10 @@ import pytest
 pytest.importorskip("faiss")
 pytest.importorskip("numpy")
 
-from src.retrieve.embedders.base import SymmetricTextEmbedder
-from src.retrieve.index import Index
-from src.retrieve.rankers.dense import DenseRanker
-from src.schemas.retrieve import RetrievedChunk
+from retrieve.embedders.base import SymmetricTextEmbedder
+from retrieve.index import Index
+from retrieve.rankers.dense import DenseRanker
+from schemas.retrieve import RetrievedChunk
 
 VOCAB = ["üçgen", "alan", "hız", "kuvvet", "hücre"]
 

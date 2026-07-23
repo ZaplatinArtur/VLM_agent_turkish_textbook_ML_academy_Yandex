@@ -11,12 +11,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.paths import CHUNKS_JSONL_DIR
-from src.retrieve.confidence import Relevance, assess_relevance
-from src.retrieve.embedders import SentenceTransformerEmbedder
-from src.retrieve.index import Index
-from src.retrieve.rankers import DenseRanker
-from src.schemas.retrieve import RetrievedChunk
+from paths import CHUNKS_JSONL_DIR
+from retrieve.confidence import Relevance, assess_relevance
+from retrieve.embedders import SentenceTransformerEmbedder
+from retrieve.index import Index
+from retrieve.rankers import DenseRanker
+from schemas.retrieve import RetrievedChunk
 
 EXAMPLES_FILE = Path(__file__).resolve().parent / "retrieval_examples.json"
 

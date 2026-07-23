@@ -1,5 +1,5 @@
-from src.retrieve.index import Index
-from src.schemas.retrieve import RetrievedChunk
+from retrieve.index import Index
+from schemas.retrieve import RetrievedChunk
 
 
 def chunk(chunk_id: str, subject: str, textbook: str) -> RetrievedChunk:

@@ -1,9 +1,9 @@
-from src.retrieve.confidence import (
+from retrieve.confidence import (
     DEFAULT_MIN_SCORE,
     Relevance,
     assess_relevance,
 )
-from src.schemas.retrieve import RetrievedChunk
+from schemas.retrieve import RetrievedChunk
 
 
 def chunk(chunk_id: str, score: float) -> RetrievedChunk:

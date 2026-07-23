@@ -1,13 +1,11 @@
-from src.paths import INDEX_DIR
+from paths import INDEX_DIR
 
-from ..schemas.retrieve import RetrievedChunk
+from schemas.retrieve import RetrievedChunk
 
 from .confidence import RelevanceVerdict, assess_relevance
-from .embedders import SentenceTransformerEmbedder
 from .index import Index
 from .parsing import get_retrieved_chunks
 from .pipeline import RetrievalPipeline
-from .rankers import DenseRanker
 
 _pipeline: RetrievalPipeline | None = None
 
@@ -15,6 +13,9 @@ _pipeline: RetrievalPipeline | None = None
 def build_pipeline(
         chunks: list[RetrievedChunk] | None = None,
 ) -> RetrievalPipeline:
+    from .embedders import SentenceTransformerEmbedder
+    from .rankers import DenseRanker
+
     corpus = get_retrieved_chunks() if chunks is None else chunks
     index = Index(corpus)
     embedder = SentenceTransformerEmbedder()

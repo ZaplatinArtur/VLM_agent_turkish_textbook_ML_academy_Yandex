@@ -14,7 +14,7 @@ score выдачи и решает, стоит ли ей доверять.
 from dataclasses import dataclass
 from enum import Enum
 
-from ..schemas.retrieve import RetrievedChunk
+from schemas.retrieve import RetrievedChunk
 
 DEFAULT_MIN_SCORE = 0.5
 DEFAULT_MIN_MARGIN = 0.0

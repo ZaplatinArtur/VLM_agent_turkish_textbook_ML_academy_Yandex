@@ -4,10 +4,10 @@ pytest.importorskip("numpy")
 pytest.importorskip("sentence_transformers")
 
 import numpy as np
-from src.retrieve.embedders.base import SymmetricTextEmbedder
-from src.retrieve.embedders import sentence_transformer as st_module
-from src.retrieve.embedders.sentence_transformer import SentenceTransformerEmbedder
-from src.schemas.retrieve import RetrievedChunk
+from retrieve.embedders import sentence_transformer as st_module
+from retrieve.embedders.base import SymmetricTextEmbedder
+from retrieve.embedders.sentence_transformer import SentenceTransformerEmbedder
+from schemas.retrieve import RetrievedChunk
 
 
 def make_chunk(chunk_id: str, text: str) -> RetrievedChunk:

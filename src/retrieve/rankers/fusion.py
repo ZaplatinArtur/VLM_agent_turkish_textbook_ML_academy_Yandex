@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from ...schemas.retrieve import RetrievedChunk
+from schemas.retrieve import RetrievedChunk
 
 from .base import Ranker
 

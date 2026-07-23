@@ -14,7 +14,7 @@ from PIL import Image
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from src.paths import BOOKS_DIR, ensure_data_dirs
+from paths import BOOKS_DIR, ensure_data_dirs
 
 BASE_URL = "https://www.odevjet.com"
 OUTPUT_DIR = BOOKS_DIR

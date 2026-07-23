@@ -1,7 +1,7 @@
 import pytest
 
-from src.retrieve.rankers.fusion import DEFAULT_RRF_K, ReciprocalRankFusion
-from src.schemas.retrieve import RetrievedChunk
+from retrieve.rankers.fusion import DEFAULT_RRF_K, ReciprocalRankFusion
+from schemas.retrieve import RetrievedChunk
 
 
 def make_chunk(chunk_id: str, score: float = 0.0) -> RetrievedChunk:

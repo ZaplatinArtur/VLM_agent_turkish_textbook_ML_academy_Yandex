@@ -4,8 +4,8 @@ pytest.importorskip("numpy")
 pytest.importorskip("sentence_transformers")
 
 from collections.abc import Callable
-from src.retrieve.pipeline import RetrievalPipeline
-from src.schemas.retrieve import RetrievedChunk
+from retrieve.pipeline import RetrievalPipeline
+from schemas.retrieve import RetrievedChunk
 
 
 def make_chunk(chunk_id: str) -> RetrievedChunk:

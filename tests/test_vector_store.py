@@ -6,8 +6,8 @@ pytest.importorskip("numpy")
 import faiss
 import numpy as np
 
-from src.retrieve import vector_store as vs
-from src.retrieve.vector_store import (
+from retrieve import vector_store as vs
+from retrieve.vector_store import (
     FaissVectorStore,
     IndexKind,
     make_index,

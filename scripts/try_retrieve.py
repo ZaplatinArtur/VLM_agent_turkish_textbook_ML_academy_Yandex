@@ -21,11 +21,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.paths import CHUNKS_JSONL_DIR
-from src.retrieve.embedders import SentenceTransformerEmbedder
-from src.retrieve.pipeline import RetrievalPipeline
-from src.retrieve.rankers import DenseRanker
-from src.schemas.retrieve import RetrievedChunk
+from paths import CHUNKS_JSONL_DIR
+from retrieve.embedders import SentenceTransformerEmbedder
+from retrieve.pipeline import RetrievalPipeline
+from retrieve.rankers import DenseRanker
+from schemas.retrieve import RetrievedChunk
 
 DEFAULT_BOOK = "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-meb-yayinlari"
 DEFAULT_QUERY = "Mustafa Kemal Atatürk'ün ilkeleri nelerdir"
