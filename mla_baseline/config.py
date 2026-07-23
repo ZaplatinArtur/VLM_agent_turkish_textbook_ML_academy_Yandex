@@ -50,6 +50,9 @@ class Settings(BaseSettings):
     searxng_url: str = "http://localhost:8080"
     search_k: int = 5                # результатов на запрос
     agent_max_steps: int = 6         # максимум итераций ReAct-цикла
+    # b1_routed: предметы (через запятую), где поиск отключён — по данным
+    # прогонов поиск вредит вычислительным задачам и помогает знаниевым
+    b1_no_search_subjects: str = "Math"
 
     # Трассировка в Langfuse. Ключи читаем из стандартных имён (без MLA_-префикса),
     # чтобы .env выглядел как в доке Langfuse; tracing.py прокинет их в SDK.
