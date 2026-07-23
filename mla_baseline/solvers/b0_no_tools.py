@@ -34,13 +34,19 @@ class B0NoTools(Solver):
             # который Ollama молча игнорирует (вылезает за лимит до num_ctx);
             # extra_body кладёт ключ в payload в обход маппинга langchain
             # max_tokens в payload в обход langchain-маппинга; top_k — параметр vLLM
-            extra_body={"max_tokens": settings.max_tokens, "top_k": settings.top_k},
+            extra_body=self._base_extra_body(settings.max_tokens),
             temperature=settings.temperature,
             top_p=settings.top_p,
             presence_penalty=settings.presence_penalty,
             timeout=settings.request_timeout_s,
             max_retries=2,
         )
+
+    def _base_extra_body(self, max_tokens: int) -> dict:
+        extra: dict = {"max_tokens": max_tokens, "top_k": self.settings.top_k}
+        if self.settings.disable_thinking:
+            extra["chat_template_kwargs"] = {"enable_thinking": False}
+        return extra
 
     def build_messages(self, task: Task) -> list:
         content: list[dict] = [{"type": "text", "text": self.prompt["user_text"]}]
@@ -82,8 +88,7 @@ class B0NoTools(Solver):
         """Один вызов модели с трейсингом; токены суммируются в usage."""
         llm = self.llm
         if max_tokens is not None or not think:
-            extra: dict = {"max_tokens": max_tokens or self.settings.max_tokens,
-                           "top_k": self.settings.top_k}
+            extra = self._base_extra_body(max_tokens or self.settings.max_tokens)
             if not think:
                 # финалу думать не надо — иначе thinking сжигает весь бюджет
                 extra["chat_template_kwargs"] = {"enable_thinking": False}

@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     presence_penalty: float = 1.5
     request_timeout_s: float = 300.0
 
+    # Аблация «без reasoning»: thinking выключен во ВСЕХ вызовах
+    # (chat_template_kwargs.enable_thinking=false), бюджеты не меняются
+    disable_thinking: bool = False
+
     prompt_version: str = "v1"
 
     # Как выбивать строгий JSON из модели:
