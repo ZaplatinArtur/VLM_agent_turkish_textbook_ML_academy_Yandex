@@ -1,0 +1,362 @@
+{
+  "records": 298,
+  "by_setup": {
+    "no_tools": {
+      "records": 298,
+      "scored": 0,
+      "unjudgeable": 0,
+      "evaluation_failures": 298,
+      "not_applicable": 0,
+      "agent_failures_counted_incorrect": 0,
+      "score_sources": {
+        "evaluation_failure": 298
+      },
+      "strict_accuracy": null,
+      "strict_accuracy_ci95": null,
+      "mean_score_0_4": null,
+      "mean_score_ci95": null
+    }
+  },
+  "metric_views": {
+    "hybrid_primary": {
+      "no_tools": {
+        "records": 298,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 298,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 298
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "deterministic_only": {
+      "no_tools": {
+        "records": 298,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 0,
+        "not_applicable": 298,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "not_applicable": 298
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "judge_only": {
+      "no_tools": {
+        "records": 298,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 298,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 298
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    }
+  },
+  "by_subject": {
+    "ATATÜRKÇÜLÜK": {
+      "no_tools": {
+        "records": 1,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 1,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 1
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Biology": {
+      "no_tools": {
+        "records": 19,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 19,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 19
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Chemistry": {
+      "no_tools": {
+        "records": 32,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 32,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 32
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "English": {
+      "no_tools": {
+        "records": 9,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 9,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 9
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Geography": {
+      "no_tools": {
+        "records": 14,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 14,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 14
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "History": {
+      "no_tools": {
+        "records": 10,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 10,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 10
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Math": {
+      "no_tools": {
+        "records": 163,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 163,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 163
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Philosophy": {
+      "no_tools": {
+        "records": 2,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 2,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 2
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Physics": {
+      "no_tools": {
+        "records": 19,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 19,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 19
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Science": {
+      "no_tools": {
+        "records": 5,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 5,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 5
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Sociology": {
+      "no_tools": {
+        "records": 3,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 3,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 3
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "Turkish language and literature": {
+      "no_tools": {
+        "records": 21,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 21,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 21
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    }
+  },
+  "by_answer_type": {
+    "choice": {
+      "no_tools": {
+        "records": 236,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 236,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 236
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "free_form": {
+      "no_tools": {
+        "records": 3,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 3,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 3
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "numeric": {
+      "no_tools": {
+        "records": 13,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 13,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 13
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    },
+    "short_text": {
+      "no_tools": {
+        "records": 46,
+        "scored": 0,
+        "unjudgeable": 0,
+        "evaluation_failures": 46,
+        "not_applicable": 0,
+        "agent_failures_counted_incorrect": 0,
+        "score_sources": {
+          "evaluation_failure": 46
+        },
+        "strict_accuracy": null,
+        "strict_accuracy_ci95": null,
+        "mean_score_0_4": null,
+        "mean_score_ci95": null
+      }
+    }
+  },
+  "paired_comparisons": {},
+  "coverage": {
+    "task_run_units_union": 298,
+    "complete_setup_grid_units": 298,
+    "by_setup": {
+      "no_tools": {
+        "task_run_units": 298,
+        "coverage_against_union": 1.0,
+        "missing_task_run_units": []
+      }
+    },
+    "duplicate_task_setup_units": []
+  }
+}
