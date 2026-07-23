@@ -178,6 +178,7 @@ data/*
 
 # Generated run outputs and local source artifacts.
 results/
+/outputs/
 /images/
 *.zip
 *.xlsx

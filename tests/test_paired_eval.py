@@ -91,3 +91,29 @@ def test_automatic_metric_counts_missing_agent_result_as_wrong() -> None:
     assert report["automatic"]["baseline_correct"] == 1
     assert report["automatic"]["rag_correct"] == 2
     assert report["task_set"]["missing_baseline_results"] == 1
+
+
+def test_image_reference_uses_strict_correct_and_is_not_auto_scored() -> None:
+    task = _task("image-ref")
+    task["reference_answer"] = "[REFERENCE_IMAGE_ONLY]"
+    report = build_report(
+        [task],
+        [_result("image-ref", "A")],
+        [_result("image-ref", "B")],
+        baseline_judge=[
+            {
+                "task_id": "image-ref",
+                "verdict": {"score": 4, "strict_correct": True},
+            }
+        ],
+        rag_judge=[
+            {
+                "task_id": "image-ref",
+                "verdict": {"score": 1, "strict_correct": False},
+            }
+        ],
+    )
+
+    assert report["automatic"]["denominator"] == 0
+    assert report["judge_full"]["baseline_correct"] == 1
+    assert report["judge_full"]["rag_correct"] == 0

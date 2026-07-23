@@ -6,6 +6,7 @@ from tempfile import TemporaryDirectory
 from vlm_judge.mla_adapter import (
     build_seed_text_tasks,
     candidate_text_from_solve_result,
+    prepare_image_judge_input,
     prepare_text_judge_input,
 )
 
@@ -67,6 +68,61 @@ class MlaAdapterTests(unittest.TestCase):
             self.assertEqual(report["written"], 1)
             self.assertEqual(task["question"], "Gerçek soru?")
             self.assertEqual(task["answer_type"], "choice")
+
+    def test_image_judge_input_keeps_question_and_reference_as_images(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            images = root / "images"
+            images.mkdir()
+            (images / "question.png").write_bytes(b"question")
+            (images / "answer.png").write_bytes(b"answer")
+            manifest = root / "manifest.jsonl"
+            results = root / "results.jsonl"
+            output = root / "judge.jsonl"
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "task_id": "q1",
+                        "subject": "math",
+                        "grade": 7,
+                        "question_image": "images/question.png",
+                        "reference_answer": None,
+                        "reference_answer_image": "images/answer.png",
+                        "answer_type": "choice",
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            results.write_text(
+                json.dumps(
+                    {
+                        "task_id": "q1",
+                        "condition": "agent_rag",
+                        "solution_steps": "work",
+                        "final_answer": "B",
+                        "error": None,
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            report = prepare_image_judge_input(
+                manifest,
+                results,
+                root,
+                output,
+                require_all=True,
+            )
+            record = json.loads(output.read_text(encoding="utf-8"))
+
+            self.assertEqual(report["reference_kinds"], {"text": 0, "image": 1})
+            self.assertIsNone(record["question_text"])
+            self.assertTrue(Path(record["question_image_url"]).is_absolute())
+            self.assertTrue(Path(record["reference_image_url"]).is_absolute())
+            self.assertEqual(record["answer_type"], "multiple_choice")
+            self.assertEqual(record["setup"], "textbook_retrieval")
 
 
 if __name__ == "__main__":

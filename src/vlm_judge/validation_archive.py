@@ -21,6 +21,8 @@ from .sources import QUESTION_TYPE_MAP, _require_openpyxl
 
 
 EXTRACTION_PROMPT_VERSION = "validation-transcription-v1"
+IMAGE_ONLY_QUESTION = "(soru görselde)"
+REFERENCE_IMAGE_ONLY = "[REFERENCE_IMAGE_ONLY]"
 
 EXTRACTION_SYSTEM_PROMPT = """You transcribe Turkish school tasks from screenshots.
 
@@ -84,6 +86,58 @@ def _is_local_image_ref(value: str) -> bool:
 
 def _normalized_image_ref(value: str) -> str:
     return value.replace("\\", "/")
+
+
+def _manifest_image_ref(
+    record: dict[str, Any],
+    *,
+    canonical_key: str,
+    merged_key: str,
+    required: bool = False,
+) -> str | None:
+    """Read image paths from either the legacy or merged manifest contract."""
+    value = _clean(record.get(canonical_key) or record.get(merged_key))
+    if not value:
+        if required:
+            raise ValueError(
+                f"task {record.get('task_id')!r} is missing "
+                f"{canonical_key}/{merged_key}"
+            )
+        return None
+    return _normalized_image_ref(value)
+
+
+def _question_image_ref(record: dict[str, Any]) -> str:
+    value = _manifest_image_ref(
+        record,
+        canonical_key="question_image_path",
+        merged_key="question_image",
+        required=True,
+    )
+    assert value is not None
+    return value
+
+
+def _reference_image_ref(record: dict[str, Any]) -> str | None:
+    return _manifest_image_ref(
+        record,
+        canonical_key="reference_image_path",
+        merged_key="reference_answer_image",
+    )
+
+
+def _manifest_asset(data_root: Path, value: str, *, label: str) -> Path:
+    """Resolve a manifest asset while keeping it inside the merged dataset."""
+    relative = Path(value)
+    if relative.is_absolute():
+        raise ValueError(f"{label} must be relative to data_root: {value}")
+    root = data_root.resolve()
+    candidate = (root / relative).resolve()
+    if root not in candidate.parents:
+        raise ValueError(f"{label} escapes data_root: {value}")
+    if not candidate.is_file():
+        raise FileNotFoundError(f"{label} does not exist: {candidate}")
+    return candidate
 
 
 def _validated_asset(root: Path, value: str) -> Path | None:
@@ -311,12 +365,22 @@ class ValidationExtractor:
         self.data_root = data_root
 
     def extract(self, record: dict[str, Any]) -> dict[str, Any]:
-        question_path = self.data_root / str(record["question_image_path"])
+        question_ref = _question_image_ref(record)
+        question_path = _manifest_asset(
+            self.data_root,
+            question_ref,
+            label="question image",
+        )
         image_urls = [_data_url(question_path)]
         image_labels = ["question image"]
-        reference_image = record.get("reference_image_path")
+        reference_image = _reference_image_ref(record)
         if reference_image:
-            image_urls.append(_data_url(self.data_root / str(reference_image)))
+            reference_path = _manifest_asset(
+                self.data_root,
+                reference_image,
+                label="reference image",
+            )
+            image_urls.append(_data_url(reference_path))
             image_labels.append("trusted reference-answer image")
         trusted_text = str(record.get("reference_answer") or "")
         user_prompt = (
@@ -339,7 +403,7 @@ class ValidationExtractor:
             reference_request = JudgeRequest(
                 REFERENCE_EXTRACTION_SYSTEM_PROMPT,
                 "Transcribe this trusted completed answer image.",
-                (_data_url(self.data_root / str(reference_image)),),
+                (_data_url(reference_path),),
                 ("trusted completed answer image",),
             )
             reference_response = self.backend.complete(reference_request)
@@ -446,7 +510,7 @@ def build_validation_tasks(
             ):
                 skipped.append(task_id)
                 continue
-            image_path = str(source["question_image_path"])
+            image_path = _question_image_ref(source)
             mime_type = mimetypes.guess_type(image_path)[0] or "image/png"
             task = {
                 "task_id": task_id,
@@ -476,5 +540,83 @@ def build_validation_tasks(
         "written": written,
         "skipped": len(skipped),
         "skipped_task_ids": skipped,
+        "output": str(output_path),
+    }
+
+
+def build_image_only_validation_tasks(
+    manifest_path: Path,
+    data_root: Path,
+    output_path: Path,
+) -> dict[str, Any]:
+    """Build one MLA task per question screenshot without OCR or transcription.
+
+    Text references remain in the task contract for deterministic metrics. When
+    the trusted reference is an image, a sentinel satisfies the shared Task
+    schema; the actual reference image is attached only to the judge.
+    """
+    manifest = read_records(manifest_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    seen_task_ids: set[str] = set()
+    seen_question_images: set[str] = set()
+    reference_kinds: Counter[str] = Counter()
+
+    with output_path.open("w", encoding="utf-8", newline="\n") as destination:
+        for source in manifest:
+            task_id = str(source.get("task_id") or "").strip()
+            if not task_id:
+                raise ValueError("validation manifest contains a record without task_id")
+            if task_id in seen_task_ids:
+                raise ValueError(f"duplicate task_id in validation manifest: {task_id}")
+            seen_task_ids.add(task_id)
+
+            question_image = _question_image_ref(source)
+            _manifest_asset(data_root, question_image, label=f"{task_id} question image")
+            if question_image in seen_question_images:
+                raise ValueError(
+                    f"question image is assigned to multiple tasks: {question_image}"
+                )
+            seen_question_images.add(question_image)
+
+            reference_answer = _clean(source.get("reference_answer"))
+            reference_image = _reference_image_ref(source)
+            if reference_image:
+                _manifest_asset(data_root, reference_image, label=f"{task_id} reference image")
+            if reference_answer:
+                task_reference = reference_answer
+                reference_kinds["text"] += 1
+            elif reference_image:
+                task_reference = REFERENCE_IMAGE_ONLY
+                reference_kinds["image"] += 1
+            else:
+                raise ValueError(f"task {task_id} has no trusted reference")
+
+            mime_type = mimetypes.guess_type(question_image)[0] or "image/png"
+            task = {
+                "task_id": task_id,
+                "subject": str(source.get("subject") or "unknown"),
+                "grade": source.get("grade"),
+                "question": IMAGE_ONLY_QUESTION,
+                "question_images": [
+                    {
+                        "image_id": f"{task_id}_question",
+                        "format": "file_path",
+                        "data": question_image,
+                        "mime_type": mime_type,
+                        "caption": None,
+                    }
+                ],
+                "reference_answer": task_reference,
+                "answer_type": str(source.get("answer_type") or "free_form"),
+                "reference_solution": None,
+            }
+            destination.write(json.dumps(task, ensure_ascii=False) + "\n")
+
+    return {
+        "manifest_records": len(manifest),
+        "written": len(seen_task_ids),
+        "unique_question_images": len(seen_question_images),
+        "reference_kinds": dict(reference_kinds),
+        "uses_question_transcriptions": False,
         "output": str(output_path),
     }

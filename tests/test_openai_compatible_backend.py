@@ -89,6 +89,19 @@ class OpenAICompatibleBackendTests(unittest.TestCase):
             self.assertTrue(value.startswith("data:image/png;base64,"))
             self.assertEqual(cache.url, "https://yadi.sk/i/example")
 
+    def test_data_url_mode_reads_local_image_without_remote_cache(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            image_path = Path(directory) / "question.png"
+            image_path.write_bytes(b"local-png")
+            backend = OpenAICompatibleBackend(
+                "http://127.0.0.1:1/v1",
+                "Qwen-VL-mock",
+                image_mode="data_url",
+                image_cache_dir=Path(directory) / "cache",
+            )
+            value = backend._image_reference(str(image_path))
+            self.assertTrue(value.startswith("data:image/png;base64,"))
+
 
 if __name__ == "__main__":
     unittest.main()

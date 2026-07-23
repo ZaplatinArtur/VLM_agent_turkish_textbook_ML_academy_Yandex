@@ -289,6 +289,23 @@ MLA_CONCURRENCY=4 \
 bash scripts/run_rag_evaluation.sh
 ```
 
+### Photo-only validation
+
+Для объединённого validation-архива есть отдельный прогон по всем 198
+уникальным изображениям вопросов:
+
+```bash
+DATA_ROOT=outputs/validation_merged_20260723 \
+bash scripts/run_image_rag_evaluation.sh
+```
+
+`validation_image_tasks.jsonl` строится прямо из manifest без OCR. Решающий
+агент получает только оригинальный screenshot вопроса. После B0/RAG-прогонов
+мультимодальный judge получает тот же screenshot, ответ агента и доверенный
+эталон: текст для 118 задач или отдельное изображение ответа для 80 задач.
+Эталон никогда не передаётся решающему агенту. Итоговый отчёт находится в
+`reports/validation_images_full/summary.{json,md}`.
+
 ## Перенос на мощное железо по SSH
 
 Код не содержит локальных путей и ключей — вся конфигурация в `.env`.

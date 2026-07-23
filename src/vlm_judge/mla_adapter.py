@@ -8,6 +8,11 @@ from pathlib import Path
 from typing import Any
 
 from .ingest import read_records
+from .validation_archive import (
+    _manifest_asset,
+    _question_image_ref,
+    _reference_image_ref,
+)
 
 
 CONDITION_TO_SETUP = {
@@ -23,6 +28,12 @@ _ANSWER_TYPE_TO_BASELINE = {
     "multi_answer": "free_form",
     "open_ended": "free_form",
     "unknown": "free_form",
+}
+_ANSWER_TYPE_TO_JUDGE = {
+    "choice": "multiple_choice",
+    "numeric": "numeric",
+    "short_text": "short_text",
+    "free_form": "open_ended",
 }
 _MARKDOWN_ATTACHMENT = re.compile(r"!\[[^\]]*\]\(attachment://[^)]+\)")
 
@@ -120,6 +131,92 @@ def prepare_text_judge_input(
         "results": len(results),
         "written": written,
         "agent_failures": failures,
+        "missing_result_ids": missing_result_ids,
+        "output": str(output_path),
+    }
+
+
+def prepare_image_judge_input(
+    manifest_path: Path,
+    results_path: Path,
+    data_root: Path,
+    output_path: Path,
+    *,
+    require_all: bool = False,
+) -> dict[str, Any]:
+    """Join solver outputs to original question/reference images for VLM judging."""
+    manifest = read_records(manifest_path)
+    results = read_records(results_path)
+    manifest_by_id = _unique_by_task(manifest, "validation manifest")
+    results_by_id = _unique_by_task(results, "results")
+    unknown_result_ids = sorted(set(results_by_id) - set(manifest_by_id))
+    missing_result_ids = sorted(set(manifest_by_id) - set(results_by_id))
+    if unknown_result_ids:
+        raise ValueError(f"results contain unknown task_ids: {unknown_result_ids[:10]}")
+    if require_all and missing_result_ids:
+        raise ValueError(f"tasks without solver results: {missing_result_ids[:10]}")
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    written = 0
+    failures = 0
+    reference_kinds: dict[str, int] = {"text": 0, "image": 0}
+    with output_path.open("w", encoding="utf-8", newline="\n") as destination:
+        for source in manifest:
+            task_id = str(source["task_id"])
+            result = results_by_id.get(task_id)
+            if result is None:
+                continue
+
+            question_image = _manifest_asset(
+                data_root,
+                _question_image_ref(source),
+                label=f"{task_id} question image",
+            )
+            reference_answer = str(source.get("reference_answer") or "").strip() or None
+            reference_image_ref = _reference_image_ref(source)
+            reference_image = (
+                _manifest_asset(
+                    data_root,
+                    reference_image_ref,
+                    label=f"{task_id} reference image",
+                )
+                if reference_image_ref
+                else None
+            )
+            if reference_answer is None and reference_image is None:
+                raise ValueError(f"task {task_id} has no trusted reference")
+            reference_kinds["text" if reference_answer is not None else "image"] += 1
+
+            condition = str(result.get("condition") or "unknown")
+            if result.get("error"):
+                failures += 1
+            answer_type = _ANSWER_TYPE_TO_JUDGE.get(
+                str(source.get("answer_type") or "free_form"),
+                "unknown",
+            )
+            record = {
+                "task_id": task_id,
+                "candidate_answer": candidate_text_from_solve_result(result),
+                "subject": str(source.get("subject") or "unknown"),
+                "grade": source.get("grade"),
+                "answer_type": answer_type,
+                "setup": CONDITION_TO_SETUP.get(condition, condition),
+                "question_text": None,
+                "question_image_url": str(question_image),
+                "reference_answer": reference_answer,
+                "reference_image_url": str(reference_image) if reference_image else None,
+                "acceptable_answers": [],
+                "metadata": {},
+            }
+            destination.write(json.dumps(record, ensure_ascii=False) + "\n")
+            written += 1
+
+    return {
+        "manifest_records": len(manifest),
+        "results": len(results),
+        "written": written,
+        "agent_failures": failures,
+        "reference_kinds": reference_kinds,
         "missing_result_ids": missing_result_ids,
         "output": str(output_path),
     }

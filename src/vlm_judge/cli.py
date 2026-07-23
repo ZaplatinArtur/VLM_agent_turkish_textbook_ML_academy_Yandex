@@ -20,7 +20,11 @@ from .gold import apply_verified_gold
 from .metrics import deterministic_match
 from .ingest import import_candidates, read_records
 from .judge_audit import audit_judge_run
-from .mla_adapter import build_seed_text_tasks, prepare_text_judge_input
+from .mla_adapter import (
+    build_seed_text_tasks,
+    prepare_image_judge_input,
+    prepare_text_judge_input,
+)
 from .pipeline import prepare_request_records
 from .retrieval import build_bm25_index, index_info, search_bm25
 from .retrieval_eval import evaluate_retrieval, prepare_qrels_template
@@ -31,6 +35,7 @@ from .sources import prepare_sources
 from .text_judge import evaluate_text_records
 from .validation import parse_run_specs, validate_experiment_runs
 from .validation_archive import (
+    build_image_only_validation_tasks,
     build_validation_manifest,
     build_validation_seed_manifest,
     build_validation_tasks,
@@ -160,6 +165,18 @@ def _prepare_mla_judge_input(args: argparse.Namespace) -> int:
     return 0
 
 
+def _prepare_image_judge_input(args: argparse.Namespace) -> int:
+    report = prepare_image_judge_input(
+        Path(args.manifest),
+        Path(args.results),
+        Path(args.data_root),
+        Path(args.output),
+        require_all=args.require_all,
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0
+
+
 def _build_seed_text_tasks(args: argparse.Namespace) -> int:
     report = build_seed_text_tasks(Path(args.input), Path(args.output))
     print(json.dumps(report, ensure_ascii=False))
@@ -221,6 +238,16 @@ def _build_validation_tasks(args: argparse.Namespace) -> int:
         Path(args.extractions),
         Path(args.output),
         require_all=args.require_all,
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0
+
+
+def _build_image_validation_tasks(args: argparse.Namespace) -> int:
+    report = build_image_only_validation_tasks(
+        Path(args.manifest),
+        Path(args.data_root),
+        Path(args.output),
     )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
@@ -380,6 +407,7 @@ def _run_judge(args: argparse.Namespace) -> int:
         use_response_format=not args.no_response_format,
         image_mode=args.image_mode,
         image_cache_dir=Path(args.image_cache_dir),
+        enable_thinking=False if args.disable_thinking else None,
     )
     items = [EvaluationItem.from_dict(record) for record in read_records(Path(args.input))]
     if args.limit is not None:
@@ -568,6 +596,17 @@ def build_parser() -> argparse.ArgumentParser:
     mla_judge_input.add_argument("--require-all", action="store_true")
     mla_judge_input.set_defaults(handler=_prepare_mla_judge_input)
 
+    image_judge_input = commands.add_parser(
+        "prepare-image-judge-input",
+        help="join solver results to original validation question/reference images",
+    )
+    image_judge_input.add_argument("--manifest", required=True)
+    image_judge_input.add_argument("--results", required=True)
+    image_judge_input.add_argument("--data-root", required=True)
+    image_judge_input.add_argument("--output", required=True)
+    image_judge_input.add_argument("--require-all", action="store_true")
+    image_judge_input.set_defaults(handler=_prepare_image_judge_input)
+
     seed_tasks = commands.add_parser(
         "build-seed-text-tasks",
         help="extract text-only MLA tasks from the real legacy failure sample",
@@ -612,6 +651,15 @@ def build_parser() -> argparse.ArgumentParser:
     validation_tasks.add_argument("--output", required=True)
     validation_tasks.add_argument("--require-all", action="store_true")
     validation_tasks.set_defaults(handler=_build_validation_tasks)
+
+    image_validation_tasks = commands.add_parser(
+        "build-image-validation-tasks",
+        help="build MLA tasks from every original question image without OCR",
+    )
+    image_validation_tasks.add_argument("--manifest", required=True)
+    image_validation_tasks.add_argument("--data-root", required=True)
+    image_validation_tasks.add_argument("--output", required=True)
+    image_validation_tasks.set_defaults(handler=_build_image_validation_tasks)
 
     pairs = commands.add_parser("prepare-pairs", help="build blinded LMArena-style A/B records")
     pairs.add_argument("--input", action="append", required=True)
@@ -735,6 +783,11 @@ def build_parser() -> argparse.ArgumentParser:
     judge.add_argument("--image-mode", choices=["url", "data_url"], default="url")
     judge.add_argument("--image-cache-dir", default="artifacts/cache/judge_images")
     judge.add_argument("--no-response-format", action="store_true")
+    judge.add_argument(
+        "--disable-thinking",
+        action="store_true",
+        help="ask compatible Qwen chat templates to skip hidden reasoning",
+    )
     judge.add_argument("--cache-dir", default="artifacts/cache/judge")
     judge.add_argument("--prompt-version", default="judge-v2")
     judge.add_argument("--max-attempts", type=int, default=2)

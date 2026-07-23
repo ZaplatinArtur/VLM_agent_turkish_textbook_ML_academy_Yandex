@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import json
+import mimetypes
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
@@ -92,6 +93,15 @@ class OpenAICompatibleBackend:
     def _image_reference(self, url: str) -> str:
         if self.image_mode == "url":
             return url
+        if url.startswith("data:"):
+            return url
+        local_path = Path(url)
+        if local_path.is_file():
+            content_type = mimetypes.guess_type(local_path.name)[0] or "application/octet-stream"
+            if not content_type.startswith("image/"):
+                raise ValueError(f"local attachment is not an image: {local_path}")
+            encoded = base64.b64encode(local_path.read_bytes()).decode("ascii")
+            return f"data:{content_type};base64,{encoded}"
         if self._image_cache is None:
             raise RuntimeError("image cache is not initialized")
         data, content_type = self._image_cache.get(url)

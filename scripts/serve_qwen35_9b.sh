@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Some bare GPU hosts provide the CUDA runtime but not nvcc. Disable only the
+# FlashInfer sampling JIT; attention, vision, and tool calling remain enabled.
+export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
+
 # OpenAI-compatible Qwen server for mla_baseline. The shorter default context
 # keeps the KV cache practical for one A100; homework prompts do not need the
 # model's full native 262k context window.

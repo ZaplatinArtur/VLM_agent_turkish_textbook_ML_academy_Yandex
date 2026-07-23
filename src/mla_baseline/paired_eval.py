@@ -49,7 +49,11 @@ def _ratio(numerator: int, denominator: int) -> float | None:
 
 def _is_auto_evaluable(task: dict[str, Any]) -> bool:
     reference = str(task.get("reference_answer") or "")
-    return not reference.startswith("http") and task.get("answer_type") != "free_form"
+    return (
+        not reference.startswith("http")
+        and not reference.startswith("[REFERENCE_IMAGE")
+        and task.get("answer_type") != "free_form"
+    )
 
 
 def _automatic_score(
@@ -71,6 +75,9 @@ def _judge_score(record: dict[str, Any] | None) -> bool | None:
     verdict = record.get("verdict")
     if not isinstance(verdict, dict):
         return None
+    strict_correct = verdict.get("strict_correct")
+    if isinstance(strict_correct, bool):
+        return strict_correct
     score = verdict.get("score")
     if isinstance(score, bool) or score not in (0, 1):
         return None

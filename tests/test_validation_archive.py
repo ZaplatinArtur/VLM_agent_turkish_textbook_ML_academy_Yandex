@@ -8,6 +8,8 @@ from PIL import Image
 from vlm_judge.ingest import read_records
 from vlm_judge.validation_archive import (
     _parse_extraction,
+    ValidationExtractor,
+    build_image_only_validation_tasks,
     build_validation_manifest,
     build_validation_tasks,
 )
@@ -19,8 +21,8 @@ except ImportError:  # pragma: no cover - optional sources dependency
     Workbook = None
 
 
-@unittest.skipIf(Workbook is None, "openpyxl is not installed")
 class ValidationArchiveTests(unittest.TestCase):
+    @unittest.skipIf(Workbook is None, "openpyxl is not installed")
     def test_hidden_mapping_columns_become_local_tasks(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -121,6 +123,95 @@ class ValidationArchiveTests(unittest.TestCase):
         self.assertEqual(parsed["reference_answer"], "A")
         with self.assertRaises(ValueError):
             _parse_extraction('{"question_text":"Q", "reference_answer":"A"}')
+
+    def test_merged_manifest_aliases_support_question_and_reference_images(self) -> None:
+        class FakeResponse:
+            text = json.dumps(
+                {
+                    "question_text": "Merged question?",
+                    "reference_answer": "42",
+                    "reference_solution": "Visible worked solution",
+                }
+            )
+            model = "Qwen/Qwen3.5-9B"
+            metadata = {}
+
+        class FakeBackend:
+            model = "Qwen/Qwen3.5-9B"
+
+            def __init__(self) -> None:
+                self.requests = []
+
+            def complete(self, request):
+                self.requests.append(request)
+                return FakeResponse()
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            images = root / "images"
+            images.mkdir()
+            for name in ("question.png", "answer.png"):
+                Image.new("RGB", (8, 8), "white").save(images / name)
+
+            record = {
+                "task_id": "merged_001",
+                "subject": "Math",
+                "grade": 8,
+                "question_image": "images/question.png",
+                "reference_answer": None,
+                "reference_answer_image": "images/answer.png",
+                "answer_type": "free_form",
+            }
+            backend = FakeBackend()
+            extracted = ValidationExtractor(backend, root).extract(record)
+
+            self.assertEqual(extracted["reference_answer"], "42")
+            self.assertEqual(len(backend.requests), 1)
+            self.assertEqual(len(backend.requests[0].image_urls), 2)
+
+            manifest_path = root / "manifest.jsonl"
+            manifest_path.write_text(
+                json.dumps(record, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+            extractions_path = root / "extractions.jsonl"
+            extractions_path.write_text(
+                json.dumps(extracted, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+            tasks_path = root / "tasks.jsonl"
+            report = build_validation_tasks(
+                manifest_path,
+                extractions_path,
+                tasks_path,
+                require_all=True,
+            )
+            task = read_records(tasks_path)[0]
+
+            self.assertEqual(report["written"], 1)
+            self.assertEqual(
+                task["question_images"][0]["data"],
+                "images/question.png",
+            )
+            self.assertEqual(task["reference_answer"], "42")
+
+            image_tasks_path = root / "image_tasks.jsonl"
+            image_report = build_image_only_validation_tasks(
+                manifest_path,
+                root,
+                image_tasks_path,
+            )
+            image_task = read_records(image_tasks_path)[0]
+
+            self.assertEqual(image_report["written"], 1)
+            self.assertFalse(image_report["uses_question_transcriptions"])
+            self.assertEqual(image_report["reference_kinds"], {"image": 1})
+            self.assertEqual(image_task["question"], "(soru görselde)")
+            self.assertEqual(image_task["reference_answer"], "[REFERENCE_IMAGE_ONLY]")
+            self.assertEqual(
+                image_task["question_images"][0]["data"],
+                "images/question.png",
+            )
 
 
 if __name__ == "__main__":
