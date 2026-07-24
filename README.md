@@ -97,6 +97,15 @@ vlm-judge prepare-adjudication --dataset artifacts/runs/no_tools.jsonl `
 
 # Final hybrid/exact/judge views, paired deltas, bootstrap intervals, and coverage audit.
 vlm-judge aggregate --input artifacts/runs/scored_records.jsonl --output artifacts/reports/summary.json
+
+# Multiple setups can be aggregated together. Corrected rerun rows override
+# matching task_id/setup units without counting them twice.
+vlm-judge aggregate `
+  --input reports/judge_out_b0.jsonl `
+  --input reports/judge_out_b1dr.jsonl `
+  --overlay reports/judge_out_b0_delta.jsonl `
+  --overlay reports/judge_out_b1dr_delta.jsonl `
+  --output reports/judge_agg_b0_vs_b1dr.json
 ```
 
 ## Prepared calibration assets

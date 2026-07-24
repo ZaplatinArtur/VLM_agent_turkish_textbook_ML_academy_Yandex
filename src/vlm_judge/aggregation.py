@@ -9,6 +9,20 @@ from typing import Any, Iterable
 from .schema import JudgeVerdict
 
 
+def _binary_judge_score(verdict: dict[str, Any]) -> tuple[bool, float, str] | None:
+    """Parse the strict text-binary verdict without masking malformed rubric verdicts."""
+    if set(verdict) != {"score", "rationale"}:
+        return None
+    score = verdict.get("score")
+    rationale = verdict.get("rationale")
+    if isinstance(score, bool) or not isinstance(score, int) or score not in {0, 1}:
+        return None
+    if not isinstance(rationale, str):
+        return None
+    correct = bool(score)
+    return correct, 4.0 if correct else 0.0, "judge_binary"
+
+
 def _score_detail(
     record: dict[str, Any],
     *,
@@ -28,15 +42,17 @@ def _score_detail(
     verdict = record.get("verdict")
     judge_score: tuple[bool | None, float | None, str] | None = None
     if isinstance(verdict, dict):
-        try:
-            parsed = JudgeVerdict.from_dict(verdict)
-        except (KeyError, TypeError, ValueError):
-            judge_score = None, None, "evaluation_failure"
-        else:
-            if parsed.label == "unjudgeable":
-                judge_score = None, None, "unjudgeable_reference"
+        judge_score = _binary_judge_score(verdict)
+        if judge_score is None:
+            try:
+                parsed = JudgeVerdict.from_dict(verdict)
+            except (KeyError, TypeError, ValueError):
+                judge_score = None, None, "evaluation_failure"
             else:
-                judge_score = parsed.strict_correct, float(parsed.score), "judge"
+                if parsed.label == "unjudgeable":
+                    judge_score = None, None, "unjudgeable_reference"
+                else:
+                    judge_score = parsed.strict_correct, float(parsed.score), "judge"
 
     if strategy == "deterministic":
         return deterministic_score or (None, None, "not_applicable")

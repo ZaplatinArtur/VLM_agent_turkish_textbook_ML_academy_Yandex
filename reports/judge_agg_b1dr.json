@@ -3,36 +3,48 @@
   "by_setup": {
     "b1_deep_routed": {
       "records": 298,
-      "scored": 0,
+      "scored": 298,
       "unjudgeable": 0,
-      "evaluation_failures": 298,
+      "evaluation_failures": 0,
       "not_applicable": 0,
       "agent_failures_counted_incorrect": 0,
       "score_sources": {
-        "evaluation_failure": 298
+        "judge_binary": 298
       },
-      "strict_accuracy": null,
-      "strict_accuracy_ci95": null,
-      "mean_score_0_4": null,
-      "mean_score_ci95": null
+      "strict_accuracy": 0.6577181208053692,
+      "strict_accuracy_ci95": [
+        0.6040268456375839,
+        0.7080536912751678
+      ],
+      "mean_score_0_4": 2.6308724832214767,
+      "mean_score_ci95": [
+        2.4161073825503356,
+        2.8322147651006713
+      ]
     }
   },
   "metric_views": {
     "hybrid_primary": {
       "b1_deep_routed": {
         "records": 298,
-        "scored": 0,
+        "scored": 298,
         "unjudgeable": 0,
-        "evaluation_failures": 298,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 298
+          "judge_binary": 298
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.6577181208053692,
+        "strict_accuracy_ci95": [
+          0.6040268456375839,
+          0.7080536912751678
+        ],
+        "mean_score_0_4": 2.6308724832214767,
+        "mean_score_ci95": [
+          2.4161073825503356,
+          2.8322147651006713
+        ]
       }
     },
     "deterministic_only": {
@@ -55,18 +67,24 @@
     "judge_only": {
       "b1_deep_routed": {
         "records": 298,
-        "scored": 0,
+        "scored": 298,
         "unjudgeable": 0,
-        "evaluation_failures": 298,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 298
+          "judge_binary": 298
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.6577181208053692,
+        "strict_accuracy_ci95": [
+          0.6040268456375839,
+          0.7080536912751678
+        ],
+        "mean_score_0_4": 2.6308724832214767,
+        "mean_score_ci95": [
+          2.4161073825503356,
+          2.8322147651006713
+        ]
       }
     }
   },
@@ -74,205 +92,277 @@
     "ATATÜRKÇÜLÜK": {
       "b1_deep_routed": {
         "records": 1,
-        "scored": 0,
+        "scored": 1,
         "unjudgeable": 0,
-        "evaluation_failures": 1,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 1
+          "judge_binary": 1
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.0,
+        "strict_accuracy_ci95": [
+          0.0,
+          0.0
+        ],
+        "mean_score_0_4": 0.0,
+        "mean_score_ci95": [
+          0.0,
+          0.0
+        ]
       }
     },
     "Biology": {
       "b1_deep_routed": {
         "records": 19,
-        "scored": 0,
+        "scored": 19,
         "unjudgeable": 0,
-        "evaluation_failures": 19,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 19
+          "judge_binary": 19
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.5789473684210527,
+        "strict_accuracy_ci95": [
+          0.3684210526315789,
+          0.7894736842105263
+        ],
+        "mean_score_0_4": 2.3157894736842106,
+        "mean_score_ci95": [
+          1.4736842105263157,
+          3.1578947368421053
+        ]
       }
     },
     "Chemistry": {
       "b1_deep_routed": {
         "records": 32,
-        "scored": 0,
+        "scored": 32,
         "unjudgeable": 0,
-        "evaluation_failures": 32,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 32
+          "judge_binary": 32
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.84375,
+        "strict_accuracy_ci95": [
+          0.71875,
+          0.96875
+        ],
+        "mean_score_0_4": 3.375,
+        "mean_score_ci95": [
+          2.875,
+          3.875
+        ]
       }
     },
     "English": {
       "b1_deep_routed": {
         "records": 9,
-        "scored": 0,
+        "scored": 9,
         "unjudgeable": 0,
-        "evaluation_failures": 9,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 9
+          "judge_binary": 9
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.5555555555555556,
+        "strict_accuracy_ci95": [
+          0.2222222222222222,
+          0.8888888888888888
+        ],
+        "mean_score_0_4": 2.2222222222222223,
+        "mean_score_ci95": [
+          0.8888888888888888,
+          3.5555555555555554
+        ]
       }
     },
     "Geography": {
       "b1_deep_routed": {
         "records": 14,
-        "scored": 0,
+        "scored": 14,
         "unjudgeable": 0,
-        "evaluation_failures": 14,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 14
+          "judge_binary": 14
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.7857142857142857,
+        "strict_accuracy_ci95": [
+          0.5714285714285714,
+          1.0
+        ],
+        "mean_score_0_4": 3.142857142857143,
+        "mean_score_ci95": [
+          2.2857142857142856,
+          4.0
+        ]
       }
     },
     "History": {
       "b1_deep_routed": {
         "records": 10,
-        "scored": 0,
+        "scored": 10,
         "unjudgeable": 0,
-        "evaluation_failures": 10,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 10
+          "judge_binary": 10
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.6,
+        "strict_accuracy_ci95": [
+          0.3,
+          0.9
+        ],
+        "mean_score_0_4": 2.4,
+        "mean_score_ci95": [
+          1.2,
+          3.6
+        ]
       }
     },
     "Math": {
       "b1_deep_routed": {
         "records": 163,
-        "scored": 0,
+        "scored": 163,
         "unjudgeable": 0,
-        "evaluation_failures": 163,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 163
+          "judge_binary": 163
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.6441717791411042,
+        "strict_accuracy_ci95": [
+          0.5705521472392638,
+          0.7177914110429447
+        ],
+        "mean_score_0_4": 2.576687116564417,
+        "mean_score_ci95": [
+          2.2822085889570554,
+          2.871165644171779
+        ]
       }
     },
     "Philosophy": {
       "b1_deep_routed": {
         "records": 2,
-        "scored": 0,
+        "scored": 2,
         "unjudgeable": 0,
-        "evaluation_failures": 2,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 2
+          "judge_binary": 2
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.5,
+        "strict_accuracy_ci95": [
+          0.0,
+          1.0
+        ],
+        "mean_score_0_4": 2.0,
+        "mean_score_ci95": [
+          0.0,
+          4.0
+        ]
       }
     },
     "Physics": {
       "b1_deep_routed": {
         "records": 19,
-        "scored": 0,
+        "scored": 19,
         "unjudgeable": 0,
-        "evaluation_failures": 19,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 19
+          "judge_binary": 19
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.7894736842105263,
+        "strict_accuracy_ci95": [
+          0.5789473684210527,
+          0.9473684210526315
+        ],
+        "mean_score_0_4": 3.1578947368421053,
+        "mean_score_ci95": [
+          2.3157894736842106,
+          3.789473684210526
+        ]
       }
     },
     "Science": {
       "b1_deep_routed": {
         "records": 5,
-        "scored": 0,
+        "scored": 5,
         "unjudgeable": 0,
-        "evaluation_failures": 5,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 5
+          "judge_binary": 5
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.2,
+        "strict_accuracy_ci95": [
+          0.0,
+          0.6
+        ],
+        "mean_score_0_4": 0.8,
+        "mean_score_ci95": [
+          0.0,
+          2.4
+        ]
       }
     },
     "Sociology": {
       "b1_deep_routed": {
         "records": 3,
-        "scored": 0,
+        "scored": 3,
         "unjudgeable": 0,
-        "evaluation_failures": 3,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 3
+          "judge_binary": 3
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.6666666666666666,
+        "strict_accuracy_ci95": [
+          0.0,
+          1.0
+        ],
+        "mean_score_0_4": 2.6666666666666665,
+        "mean_score_ci95": [
+          0.0,
+          4.0
+        ]
       }
     },
     "Turkish language and literature": {
       "b1_deep_routed": {
         "records": 21,
-        "scored": 0,
+        "scored": 21,
         "unjudgeable": 0,
-        "evaluation_failures": 21,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 21
+          "judge_binary": 21
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.5714285714285714,
+        "strict_accuracy_ci95": [
+          0.38095238095238093,
+          0.7619047619047619
+        ],
+        "mean_score_0_4": 2.2857142857142856,
+        "mean_score_ci95": [
+          1.5238095238095237,
+          3.0476190476190474
+        ]
       }
     }
   },
@@ -280,69 +370,93 @@
     "choice": {
       "b1_deep_routed": {
         "records": 236,
-        "scored": 0,
+        "scored": 236,
         "unjudgeable": 0,
-        "evaluation_failures": 236,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 236
+          "judge_binary": 236
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.7330508474576272,
+        "strict_accuracy_ci95": [
+          0.673728813559322,
+          0.788135593220339
+        ],
+        "mean_score_0_4": 2.9322033898305087,
+        "mean_score_ci95": [
+          2.694915254237288,
+          3.152542372881356
+        ]
       }
     },
     "free_form": {
       "b1_deep_routed": {
         "records": 3,
-        "scored": 0,
+        "scored": 3,
         "unjudgeable": 0,
-        "evaluation_failures": 3,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 3
+          "judge_binary": 3
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.3333333333333333,
+        "strict_accuracy_ci95": [
+          0.0,
+          1.0
+        ],
+        "mean_score_0_4": 1.3333333333333333,
+        "mean_score_ci95": [
+          0.0,
+          4.0
+        ]
       }
     },
     "numeric": {
       "b1_deep_routed": {
         "records": 13,
-        "scored": 0,
+        "scored": 13,
         "unjudgeable": 0,
-        "evaluation_failures": 13,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 13
+          "judge_binary": 13
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.6153846153846154,
+        "strict_accuracy_ci95": [
+          0.38461538461538464,
+          0.8461538461538461
+        ],
+        "mean_score_0_4": 2.4615384615384617,
+        "mean_score_ci95": [
+          1.5384615384615385,
+          3.3846153846153846
+        ]
       }
     },
     "short_text": {
       "b1_deep_routed": {
         "records": 46,
-        "scored": 0,
+        "scored": 46,
         "unjudgeable": 0,
-        "evaluation_failures": 46,
+        "evaluation_failures": 0,
         "not_applicable": 0,
         "agent_failures_counted_incorrect": 0,
         "score_sources": {
-          "evaluation_failure": 46
+          "judge_binary": 46
         },
-        "strict_accuracy": null,
-        "strict_accuracy_ci95": null,
-        "mean_score_0_4": null,
-        "mean_score_ci95": null
+        "strict_accuracy": 0.30434782608695654,
+        "strict_accuracy_ci95": [
+          0.17391304347826086,
+          0.43478260869565216
+        ],
+        "mean_score_0_4": 1.2173913043478262,
+        "mean_score_ci95": [
+          0.6956521739130435,
+          1.7391304347826086
+        ]
       }
     }
   },
