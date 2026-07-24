@@ -14,23 +14,41 @@ import urllib.request
 
 from ..config import Settings
 
+# лейблы предметов в корпусе — ascii-слаги нижнего регистра ("turkce",
+# "matematik"); модель же шлёт "Türkçe"/"Matematik" — нормализуем
+_TR_ASCII = str.maketrans("çğıöşüÇĞİÖŞÜ", "cgiosucgiosu")
+
+
+def _norm_subject(value: str) -> str:
+    return value.translate(_TR_ASCII).casefold().strip()
+
+
+def _post_search(settings: Settings, body: dict) -> dict:
+    req = urllib.request.Request(
+        f"{settings.textbook_search_url.rstrip('/')}/api/search",
+        data=json.dumps(body).encode(),
+        headers={"Content-Type": "application/json",
+                 "User-Agent": "mla-baseline/0.1"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return json.loads(resp.read())
+
 
 def textbook_search(settings: Settings, query: str, top_k: int | None = None,
                     subject: str | None = None, grade: int | str | None = None,
                     mode: str = "or") -> str:
     body: dict = {"query": query, "top_k": top_k or settings.rag_top_k, "mode": mode}
     if subject:
-        body["subject"] = subject
+        body["subject"] = _norm_subject(str(subject))
     if grade is not None and grade != "":
         body["grade"] = grade
     try:
-        req = urllib.request.Request(
-            f"{settings.textbook_search_url.rstrip('/')}/api/search",
-            data=json.dumps(body).encode(),
-            headers={"Content-Type": "application/json",
-                     "User-Agent": "mla-baseline/0.1"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.loads(resp.read())
+        data = _post_search(settings, body)
+        hits = data.get("hits") or []
+        if not hits and ("subject" in body or "grade" in body):
+            # фильтры точные, а корпус — только 1-8 классы и слаг-лейблы:
+            # пустой результат с фильтрами перепроверяем без них
+            data = _post_search(settings, {k: v for k, v in body.items()
+                                           if k in ("query", "top_k", "mode")})
     except Exception as exc:
         return f"Arama hatası: {type(exc).__name__}. Aramasız devam et."
 
@@ -47,7 +65,7 @@ def textbook_search(settings: Settings, query: str, top_k: int | None = None,
         src = " · ".join(str(x) for x in (
             h.get("book_id"), h.get("subject"),
             f"sayfa {h.get('page_number')}" if h.get("page_number") is not None else None,
-        ) if x)
+        ) if x) or str(h.get("page_id") or "")
         text = (h.get("text") or "").strip()[:remaining]
         remaining -= len(text)
         lines.append(f"[{i}] ({src or 'kaynak yok'}; chunk {h.get('chunk_id')})\n{text}")
