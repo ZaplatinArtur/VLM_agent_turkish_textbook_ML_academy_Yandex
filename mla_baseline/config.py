@@ -63,6 +63,12 @@ class Settings(BaseSettings):
     deep_search_pages: int = 8      # сколько URL читать целиком
     deep_search_chunks: int = 6     # сколько верхних фрагментов отдавать модели
 
+    # agent_rag: BM25-сервер команды ретрива (vlm_judge.retrieval_server)
+    textbook_search_url: str = "http://localhost:8770"
+    rag_top_k: int = 5              # фрагментов на запрос
+    rag_max_calls: int = 3          # лимит обращений к корпусу на задачу
+    rag_max_context_chars: int = 6000  # символов корпуса в контекст (контракт ретрива)
+
     # Трассировка в Langfuse. Ключи читаем из стандартных имён (без MLA_-префикса),
     # чтобы .env выглядел как в доке Langfuse; tracing.py прокинет их в SDK.
     langfuse_enabled: bool = False

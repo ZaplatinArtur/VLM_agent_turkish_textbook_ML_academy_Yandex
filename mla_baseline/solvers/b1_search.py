@@ -19,6 +19,7 @@ from .b0_no_tools import B0NoTools
 
 class B1Search(B0NoTools):
     condition = "b1_search"
+    tool_note_key = "b1_tool_note"  # какая тул-политика уходит в системный промпт
 
     def __init__(self, settings: Settings):
         super().__init__(settings)
@@ -27,7 +28,7 @@ class B1Search(B0NoTools):
     def build_messages(self, task: Task) -> list:
         messages = super().build_messages(task)
         # тот же системный промпт + примечание об инструменте
-        system = messages[0].content + self.prompt["b1_tool_note"]
+        system = messages[0].content + self.prompt[self.tool_note_key]
         return [SystemMessage(content=system), *messages[1:]]
 
     def _run_tool(self, name: str, args: dict, seen: set[str]) -> str:

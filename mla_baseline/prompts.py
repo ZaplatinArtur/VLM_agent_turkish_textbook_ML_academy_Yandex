@@ -84,6 +84,23 @@ Artık düşünme. Taslağındaki en güçlü adaya karar ver ve YALNIZCA istene
 formatında nihai cevabını ver. Emin olmasan bile en olası cevabı seç.\
 """
 
+# Политика RAG-тула (agent_rag): по мотивам retrieval_tool_contract.md
+# команды ретрива — искать теорию/формулы/разобранные примеры, не саму задачу.
+AGENT_RAG_TOOL_NOTE_V1 = """
+
+Onaylı ders kitabı korpusunda arama yapan search_textbooks aracın var. Teori, \
+formül, tanım veya çözümlü örnek gerektiğinde kullan; sonuçlar sana araç \
+mesajı olarak döner, onlardan yararlanıp çözümü kendin tamamla.
+
+Arama kuralları:
+- Kısa Türkçe sorgu yaz: konu + işlem/formül/ayırt edici terimler.
+- Sorunun kendisini veya hazır çözümünü ARAMA — soru metnini kopyalama.
+- Ders/sınıf biliniyorsa subject/grade süzgeçlerini ekle; bilmiyorsan boş bırak.
+- Aynı sorguyu tekrar etme; en fazla birkaç arama yap, sonra mevcut bilgiyle çöz.
+- Bulunan sayfa birebir aynı alıştırma gibi görünse bile sayıları ve birimleri \
+kendi sorunla karşılaştırmadan cevabını kopyalama.\
+"""
+
 PROMPTS = {
     "v1": {
         "system": SYSTEM_PROMPT_V1,
@@ -92,6 +109,7 @@ PROMPTS = {
         "wrapup": WRAPUP_V1,
         "last_resort": LAST_RESORT_V1,
         "b1_tool_note": B1_TOOL_NOTE_V1,
+        "agent_tool_note": AGENT_RAG_TOOL_NOTE_V1,
     },
     "v2_cot": {
         "system": SYSTEM_PROMPT_V2_COT,
@@ -100,5 +118,6 @@ PROMPTS = {
         "wrapup": WRAPUP_V1,
         "last_resort": LAST_RESORT_V1,
         "b1_tool_note": B1_TOOL_NOTE_V1,
+        "agent_tool_note": AGENT_RAG_TOOL_NOTE_V1,
     },
 }
