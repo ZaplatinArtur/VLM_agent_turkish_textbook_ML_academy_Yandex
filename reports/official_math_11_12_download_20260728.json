@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-28",
+  "status": "downloaded_and_imported_to_remote_staging",
+  "host": "158.160.38.37",
+  "policy": {
+    "source_type": "official_MEB_OGM",
+    "usage": "internal educational research",
+    "redistribution": false,
+    "overwrite_existing": false,
+    "atomic_publish": true
+  },
+  "books": [
+    {
+      "grade": 11,
+      "subject": "math",
+      "source_url": "https://ogmmateryal.eba.gov.tr/panel/upload/pdf/hopon1npid4.pdf",
+      "remote_path": "/home/m.kulyamin/textbook_kb_v2/sources/ogm_core/grade_11/math/matematik_11.pdf",
+      "bytes": 71660942,
+      "sha256": "099384b6ab01fbdc22f7dc6fb6c178f0fed207c5a30bbbda01a85d1a13217d87",
+      "header": "%PDF-1.6",
+      "eof_marker_present": true,
+      "ingest": {
+        "slug": "ogm-11-sinif-matematik-ders-kitabi-2023",
+        "pages": 318,
+        "native_text_pages": 318,
+        "native_text_ratio": 1.0,
+        "total_characters": 1188907,
+        "rendered_images": 318,
+        "jsonl_records": 318,
+        "jsonl_sha256": "9a30eee1db277d9ae9e1cb89e2fa91a0e40eb9b7cd47dfdbb6b1b0d075f147b4"
+      }
+    },
+    {
+      "grade": 12,
+      "subject": "math",
+      "source_url": "https://ogmmateryal.eba.gov.tr/panel/upload/pdf/2mnrwexu0kf.pdf",
+      "remote_path": "/home/m.kulyamin/textbook_kb_v2/sources/ogm_core/grade_12/math/matematik_12.pdf",
+      "bytes": 53160132,
+      "sha256": "614b6f99b838e04473b0cebdcb091ec68ca8b95761e004bfc68f11efb49d3389",
+      "header": "%PDF-1.6",
+      "eof_marker_present": true,
+      "ingest": {
+        "slug": "ogm-12-sinif-matematik-ders-kitabi-2023",
+        "pages": 402,
+        "native_text_pages": 402,
+        "native_text_ratio": 1.0,
+        "total_characters": 1115237,
+        "rendered_images": 402,
+        "jsonl_records": 402,
+        "jsonl_sha256": "b0c8c648f9ca505ef8ee3e29cf144999c1d24ca0b0352d4dd0d90ad507c500f3"
+      }
+    }
+  ],
+  "ingest": {
+    "output_root": "/home/m.kulyamin/textbook_kb_v2/official_pdf_batch_math11_12_v1",
+    "container_names": [
+      "textbook-import-math11-20260728-v3",
+      "textbook-import-math12-20260728-v3"
+    ],
+    "gpu_used": false,
+    "validation_contract": "scripts/import_official_textbook_pdf.py",
+    "engine": "PyMuPDF 1.26.3",
+    "status": "validated"
+  }
+}

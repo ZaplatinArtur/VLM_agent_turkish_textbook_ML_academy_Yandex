@@ -1,0 +1,34 @@
+{
+  "calls": 50,
+  "hits": 215,
+  "empty_calls": 7,
+  "calls_with_subject_match": 43,
+  "call_subject_match_rate": 0.86,
+  "top1_subject_match_rate": 0.86,
+  "hit_subject_match_rate": 1.0,
+  "card_chars": {
+    "median": 1249,
+    "p10": 468.0,
+    "under_100": 0,
+    "under_100_rate": 0.0
+  },
+  "retrieval_text_chars": {
+    "median": 239,
+    "under_100_rate": 0.0465
+  },
+  "knowledge_kinds": {
+    "exercise": 167,
+    "theory": 34,
+    "worked_example": 14
+  },
+  "relation_hit_rates": {
+    "has_theory": 0.8372,
+    "has_example": 0.307,
+    "has_solution": 0.2
+  },
+  "latency_ms": {
+    "median": 1198.038,
+    "p90": 1225.76,
+    "mean": 1544.706
+  }
+}

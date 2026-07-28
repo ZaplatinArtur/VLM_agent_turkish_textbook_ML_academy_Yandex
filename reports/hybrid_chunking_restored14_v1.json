@@ -1,0 +1,282 @@
+{
+  "input_dir": "artifacts\\corpus\\restored_books_v1",
+  "output_dir": "artifacts\\hybrid_chunks_restored14_v1",
+  "books": 14,
+  "pages": 2486,
+  "units": 12981,
+  "pages_with_exercises": 1331,
+  "unit_kinds": {
+    "exercise": 3821,
+    "instruction": 8,
+    "solution": 5808,
+    "theory": 3060,
+    "worked_example": 284
+  },
+  "units_per_page": 5.222,
+  "low_confidence_units": 334,
+  "oversized_units": 288,
+  "unit_length_chars": {
+    "mean": 579.3,
+    "median": 227,
+    "p90": 1518,
+    "max": 155211
+  },
+  "runtime_seconds": 12.706,
+  "books_detail": [
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "pages": 202,
+      "units": 645,
+      "pages_with_exercises": 48,
+      "unit_kinds": {
+        "exercise": 148,
+        "solution": 280,
+        "theory": 214,
+        "worked_example": 3
+      }
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-ata-yayincilik",
+      "pages": 208,
+      "units": 1037,
+      "pages_with_exercises": 95,
+      "unit_kinds": {
+        "exercise": 359,
+        "solution": 420,
+        "theory": 252,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "pages": 256,
+      "units": 1039,
+      "pages_with_exercises": 91,
+      "unit_kinds": {
+        "exercise": 219,
+        "solution": 440,
+        "theory": 358,
+        "worked_example": 22
+      }
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "pages": 224,
+      "units": 754,
+      "pages_with_exercises": 50,
+      "unit_kinds": {
+        "exercise": 177,
+        "solution": 297,
+        "theory": 275,
+        "worked_example": 5
+      }
+    },
+    {
+      "book": "4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-ferman-yayinlari",
+      "pages": 208,
+      "units": 1465,
+      "pages_with_exercises": 167,
+      "unit_kinds": {
+        "exercise": 424,
+        "instruction": 8,
+        "solution": 723,
+        "theory": 282,
+        "worked_example": 28
+      }
+    },
+    {
+      "book": "6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-dortel-yayinlari",
+      "pages": 142,
+      "units": 677,
+      "pages_with_exercises": 84,
+      "unit_kinds": {
+        "exercise": 229,
+        "solution": 292,
+        "theory": 153,
+        "worked_example": 3
+      }
+    },
+    {
+      "book": "6-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-ders-kitapi",
+      "pages": 196,
+      "units": 1750,
+      "pages_with_exercises": 121,
+      "unit_kinds": {
+        "exercise": 511,
+        "solution": 860,
+        "theory": 235,
+        "worked_example": 144
+      }
+    },
+    {
+      "book": "7-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-erkad-yayinlari",
+      "pages": 93,
+      "units": 405,
+      "pages_with_exercises": 23,
+      "unit_kinds": {
+        "exercise": 91,
+        "solution": 210,
+        "theory": 102,
+        "worked_example": 2
+      }
+    },
+    {
+      "book": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-anka-yayinlari",
+      "pages": 133,
+      "units": 656,
+      "pages_with_exercises": 76,
+      "unit_kinds": {
+        "exercise": 215,
+        "solution": 284,
+        "theory": 149,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-gezegen-yayinlari",
+      "pages": 150,
+      "units": 831,
+      "pages_with_exercises": 121,
+      "unit_kinds": {
+        "exercise": 297,
+        "solution": 369,
+        "theory": 160,
+        "worked_example": 5
+      }
+    },
+    {
+      "book": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 146,
+      "units": 870,
+      "pages_with_exercises": 83,
+      "unit_kinds": {
+        "exercise": 217,
+        "solution": 379,
+        "theory": 257,
+        "worked_example": 17
+      }
+    },
+    {
+      "book": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-nev-yayinlari",
+      "pages": 152,
+      "units": 832,
+      "pages_with_exercises": 119,
+      "unit_kinds": {
+        "exercise": 299,
+        "solution": 350,
+        "theory": 174,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "pages": 148,
+      "units": 709,
+      "pages_with_exercises": 80,
+      "unit_kinds": {
+        "exercise": 222,
+        "solution": 331,
+        "theory": 153,
+        "worked_example": 3
+      }
+    },
+    {
+      "book": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-semih-ofset-s-e-k-yayinlari",
+      "pages": 228,
+      "units": 1311,
+      "pages_with_exercises": 173,
+      "unit_kinds": {
+        "exercise": 413,
+        "solution": 573,
+        "theory": 296,
+        "worked_example": 29
+      }
+    }
+  ],
+  "samples": [
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 1,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 2,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 3,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 4,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 5,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 6,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 7,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 8,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 9,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 10,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Bu sayfada henüz çözüm bulunmamaktadır."
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 11,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Merhaba sevgili 4. sınıf öğrencim! Ben senin Fen Bilimleri öğretmeninim. Bugün seninle birlikte bu sayfadaki soruları çözeceğiz. Hazır mısın? Başlayalım o zaman! **Hazırlık Çalışması** Ahmet, gökyüzünü izlemeyi çok severdi. Dakikalarca, hatta bazen saatlerce gökyüzünü izler, özgürce uçan kuşları incelerdi. Kimisinin iri, kimisinin ufak kanatları vardı. Gökyüzünde kanatlarıyla süzülerek dolaşıyorlardı. Acaba kuşlar nasıl bu kadar rahat uçabiliyordu? Ahmet’in en büyük hayali uçmaktı. Yıllarca bıkıp usanmadan uçmanın yollarını aradı. Defalarca deneme yaptı. Farklı maddelerden kanatlar yaparak uçmayı denedi. Bu uğurda çok defa düştü ve canı acıdı. Taktığı kanatlar bazen onu uçurmaya yetmiy"
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "page": 12,
+      "kind": "solution",
+      "confidence": 0.94,
+      "text": "Çözüm Merhaba sevgili 4. sınıf öğrencileri! Ben sizin Fen Bilimleri öğretmeniniz. Bugün elimize gelen bu harika görseldeki soruları birlikte çözeceğiz. Hazırsanız başlayalım! Bu metinde aşağıdaki araçlardan hangisinin icadından bahsedilmemektedir?"
+    }
+  ]
+}

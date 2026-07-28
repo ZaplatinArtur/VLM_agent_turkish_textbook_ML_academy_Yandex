@@ -19,8 +19,9 @@ class RetrievalPipeline:
             query: str,
             k: int,
             subject: str | None = None,
+            grade: int | str | None = None,
     ) -> list[RetrievedChunk]:
         chunks: list[RetrievedChunk] = []
         for ranker in self.rankers:
-            chunks = ranker.rank(query, chunks, subject=subject)
+            chunks = ranker.rank(query, chunks, subject=subject, grade=grade)
         return chunks[:k]

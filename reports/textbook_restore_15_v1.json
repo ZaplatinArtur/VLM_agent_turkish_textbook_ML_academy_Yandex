@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "ingest_method": "canonical_odevjet_page_export_v1",
+  "input_pages": "artifacts\\corpus\\pages.jsonl",
+  "input_pages_sha256": "38844732c6f284df6316be74ff20dd0ad8959bbd72d11d0ddc05beed84bf11fb",
+  "manifest": "configs\\textbook_restore_15_v1.json",
+  "manifest_sha256": "5acf2f74f50a3643a436bfaf93cd5a151ad6dcc8efdf8f473d4b91b250923bdb",
+  "books": 14,
+  "pages": 2486,
+  "validation": [
+    {
+      "book_id": "1264",
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "grade": 4,
+      "subject": "science",
+      "expected_pages": 202,
+      "exported_pages": 202,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 202,
+      "nonempty_text_pages": 202,
+      "image_pages": 202,
+      "low_information_pages": 118
+    },
+    {
+      "book_id": "48369",
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-ata-yayincilik",
+      "grade": 4,
+      "subject": "science",
+      "expected_pages": 208,
+      "exported_pages": 208,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 208,
+      "nonempty_text_pages": 208,
+      "image_pages": 208,
+      "low_information_pages": 75
+    },
+    {
+      "book_id": "1262",
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "grade": 4,
+      "subject": "science",
+      "expected_pages": 256,
+      "exported_pages": 256,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 256,
+      "nonempty_text_pages": 256,
+      "image_pages": 256,
+      "low_information_pages": 111
+    },
+    {
+      "book_id": "1265",
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "grade": 4,
+      "subject": "science",
+      "expected_pages": 224,
+      "exported_pages": 224,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 224,
+      "nonempty_text_pages": 224,
+      "image_pages": 224,
+      "low_information_pages": 146
+    },
+    {
+      "book_id": "4799",
+      "slug": "4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-ferman-yayinlari",
+      "grade": 4,
+      "subject": "social studies",
+      "expected_pages": 208,
+      "exported_pages": 208,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 208,
+      "nonempty_text_pages": 208,
+      "image_pages": 208,
+      "low_information_pages": 26
+    },
+    {
+      "book_id": "46081",
+      "slug": "6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-dortel-yayinlari",
+      "grade": 6,
+      "subject": "religious culture and ethics",
+      "expected_pages": 142,
+      "exported_pages": 142,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 142,
+      "nonempty_text_pages": 142,
+      "image_pages": 142,
+      "low_information_pages": 55
+    },
+    {
+      "book_id": "22214",
+      "slug": "6-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-ders-kitapi",
+      "grade": 6,
+      "subject": "english",
+      "expected_pages": 196,
+      "exported_pages": 196,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 196,
+      "nonempty_text_pages": 196,
+      "image_pages": 196,
+      "low_information_pages": 66
+    },
+    {
+      "book_id": "48206",
+      "slug": "7-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-erkad-yayinlari",
+      "grade": 7,
+      "subject": "religious culture and ethics",
+      "expected_pages": 93,
+      "exported_pages": 93,
+      "page_count_mismatch": false,
+      "min_page": 68,
+      "max_page": 160,
+      "nonempty_text_pages": 93,
+      "image_pages": 93,
+      "low_information_pages": 55
+    },
+    {
+      "book_id": "47914",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-anka-yayinlari",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "expected_pages": 133,
+      "exported_pages": 133,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 133,
+      "nonempty_text_pages": 133,
+      "image_pages": 133,
+      "low_information_pages": 56
+    },
+    {
+      "book_id": "47762",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-gezegen-yayinlari",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "expected_pages": 150,
+      "exported_pages": 150,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 150,
+      "nonempty_text_pages": 150,
+      "image_pages": 150,
+      "low_information_pages": 27
+    },
+    {
+      "book_id": "47614",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "expected_pages": 146,
+      "exported_pages": 146,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 146,
+      "nonempty_text_pages": 146,
+      "image_pages": 146,
+      "low_information_pages": 60
+    },
+    {
+      "book_id": "48049",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-nev-yayinlari",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "expected_pages": 152,
+      "exported_pages": 152,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 152,
+      "nonempty_text_pages": 152,
+      "image_pages": 152,
+      "low_information_pages": 30
+    },
+    {
+      "book_id": "47464",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "expected_pages": 148,
+      "exported_pages": 148,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 148,
+      "nonempty_text_pages": 148,
+      "image_pages": 148,
+      "low_information_pages": 65
+    },
+    {
+      "book_id": "30241",
+      "slug": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-semih-ofset-s-e-k-yayinlari",
+      "grade": 8,
+      "subject": "history",
+      "expected_pages": 228,
+      "exported_pages": 228,
+      "page_count_mismatch": false,
+      "min_page": 1,
+      "max_page": 228,
+      "nonempty_text_pages": 228,
+      "image_pages": 228,
+      "low_information_pages": 44
+    }
+  ],
+  "outputs": [
+    {
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "path": "artifacts\\corpus\\restored_books_v1\\4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi.jsonl",
+      "sha256": "6b15a99c368907b3f1a761d899327254342adf500731fe3208aa2b4cf4996c68",
+      "bytes": 892559
+    },
+    {
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-ata-yayincilik",
+      "path": "artifacts\\corpus\\restored_books_v1\\4-sinif-fen-bilimleri-ders-kitabi-cevaplari-ata-yayincilik.jsonl",
+      "sha256": "c6f7ffc74d684af379bd120bc6b72ac590b0319d8c857993d1abe6888dcdd3e3",
+      "bytes": 1264592
+    },
+    {
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\4-sinif-fen-bilimleri-ders-kitabi-cevaplari-pasifik-yayinlari.jsonl",
+      "sha256": "47621a3ded08be6a592200b92f610d72a7d4e312aef329d4ad2dbf1148ca38bc",
+      "bytes": 970132
+    },
+    {
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "path": "artifacts\\corpus\\restored_books_v1\\4-sinif-fen-bilimleri-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik.jsonl",
+      "sha256": "f56becf962e46100920826ba60de92133eb1991725fe9c481496cfc6cfb0fedb",
+      "bytes": 699113
+    },
+    {
+      "slug": "4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-ferman-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-ferman-yayinlari.jsonl",
+      "sha256": "40d7200ca5a55db46f06f61c60e53faad58a35ef6d6d080d5d1b8952a5d11420",
+      "bytes": 1473906
+    },
+    {
+      "slug": "6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-dortel-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-dortel-yayinlari.jsonl",
+      "sha256": "3332cca933c25fa63069422651f336e390c90fcd11b36c2664441db7f6d80aac",
+      "bytes": 575917
+    },
+    {
+      "slug": "6-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-ders-kitapi",
+      "path": "artifacts\\corpus\\restored_books_v1\\6-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-ders-kitapi.jsonl",
+      "sha256": "8956f747606082ce53ca376015943aaad9052a95d0c95f46ffc129b4535c12ee",
+      "bytes": 1107373
+    },
+    {
+      "slug": "7-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-erkad-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\7-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-erkad-yayinlari.jsonl",
+      "sha256": "4d0eb1c7befa56b93bbb8bde3d84ad3fde4e3db05b8e9862f554ce098a6787ce",
+      "bytes": 395367
+    },
+    {
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-anka-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-anka-yayinlari.jsonl",
+      "sha256": "7bf48ef917f34f87172de02dae1096c801fae17796adda88fb2f1ac0a7d1be77",
+      "bytes": 542765
+    },
+    {
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-gezegen-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-gezegen-yayinlari.jsonl",
+      "sha256": "0560ab62829166fd2fbfc52f0083e242ce592e0bb5a0f7b46e5458e4416f380e",
+      "bytes": 797709
+    },
+    {
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari.jsonl",
+      "sha256": "6ef6093518722c6fbc5bccc7540eef9c4043d6690c564d13b2dba9f4f114d631",
+      "bytes": 619507
+    },
+    {
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-nev-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-nev-yayinlari.jsonl",
+      "sha256": "692fff7ff06dcaaa652855c221073b648eec763566390b07d6dd4203b510d4a4",
+      "bytes": 789481
+    },
+    {
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "path": "artifacts\\corpus\\restored_books_v1\\8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik.jsonl",
+      "sha256": "6eed1b00ccd7318e80141b861576dcef3dbfa52c95fbcee8b30821ece91daad6",
+      "bytes": 594588
+    },
+    {
+      "slug": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-semih-ofset-s-e-k-yayinlari",
+      "path": "artifacts\\corpus\\restored_books_v1\\8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-semih-ofset-s-e-k-yayinlari.jsonl",
+      "sha256": "a2ec559c498816ae047a452b9b04d332d52e07605d7ec2c9678fa6cde55d750c",
+      "bytes": 1264655
+    }
+  ]
+}

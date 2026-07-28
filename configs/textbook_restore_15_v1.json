@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "catalog_name": "historical_odevjet_missing_15",
+  "corpus_snapshot": "2026-07-13",
+  "created_from": "artifacts/corpus/pages.jsonl",
+  "usage": "private educational research corpus; do not redistribute source pages",
+  "source_terms_url": "https://www.odevjet.com/kullanim-sartlari",
+  "books": [
+    {
+      "book_id": "1264",
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinevi",
+      "grade": 4,
+      "subject": "science",
+      "publisher": "Anka Yayınevi",
+      "expected_pages": 202,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/4-sinif/fen-bilimleri/anka-yayinevi-ders-kitabi-cevaplari/",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "48369",
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-ata-yayincilik",
+      "grade": 4,
+      "subject": "science",
+      "publisher": "Ata Yayıncılık",
+      "expected_pages": 208,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/4-sinif-fen-bilimleri-ders-kitabi-cevaplari-ata-yayincilik.html",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "1262",
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "grade": 4,
+      "subject": "science",
+      "publisher": "Pasifik Yayınları",
+      "expected_pages": 256,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/4-sinif/fen-bilimleri/pasifik-yayinlari-ders-kitabi-cevaplari/",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "1265",
+      "slug": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "grade": 4,
+      "subject": "science",
+      "publisher": "SDR İpekyolu Yayıncılık",
+      "expected_pages": 224,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/4-sinif/fen-bilimleri/sdr-ipekyolu-yayincilik-ders-kitabi-cevaplari/",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "4799",
+      "slug": "4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-ferman-yayinlari",
+      "grade": 4,
+      "subject": "social studies",
+      "publisher": "Ferman Yayınları",
+      "expected_pages": 208,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-ferman-yayinlari.html",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "46081",
+      "slug": "6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-dortel-yayinlari",
+      "grade": 6,
+      "subject": "religious culture and ethics",
+      "publisher": "Dörtel Yayınları",
+      "expected_pages": 142,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-doga-yayinlari.html",
+      "source_alias": "legacy landing uses doga; page assets use dortel",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "22214",
+      "slug": "6-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-ders-kitapi",
+      "grade": 6,
+      "subject": "english",
+      "publisher": "MEB Yayınları",
+      "edition_note": "That's It; historical edition",
+      "expected_pages": 196,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/6-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-ders-kitabi.html",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "48206",
+      "slug": "7-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-erkad-yayinlari",
+      "grade": 7,
+      "subject": "religious culture and ethics",
+      "publisher": "Erkad Yayınları",
+      "expected_pages": 93,
+      "source_expected_pages": 160,
+      "available_page_range": [
+        68,
+        160
+      ],
+      "missing_page_ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/7-sinif/din-kulturu/erkad-yayinlari-ders-kitabi-cevaplari/",
+      "index_policy": "include_partial",
+      "ingest_source": "existing_canonical_pages",
+      "followup": "recover pages 1-67 only from an authorized source"
+    },
+    {
+      "book_id": "47914",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-anka-yayinlari",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "publisher": "Anka Yayınları",
+      "expected_pages": 133,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/8-sinif/din-kulturu/anka-yayinlari-ders-kitabi-cevaplari/",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "47762",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-gezegen-yayinlari",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "publisher": "Gezegen Yayınları",
+      "expected_pages": 150,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/8-sinif/din-kulturu/gezegen-yayinlari-ders-kitabi-cevaplari/",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "47614",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "publisher": "MEB Yayınları",
+      "edition_note": "historical 146-page edition; do not merge with current official PDF",
+      "expected_pages": 146,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/8-sinif/din-kulturu/meb-yayinlari-ders-kitabi-cevaplari/",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "48049",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-nev-yayinlari",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "publisher": "Nev Yayınları",
+      "expected_pages": 152,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/8-sinif/din-kulturu/nev-yayinlari-ders-kitabi-cevaplari/",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "47464",
+      "slug": "8-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "grade": 8,
+      "subject": "religious culture and ethics",
+      "publisher": "SDR İpekyolu Yayıncılık",
+      "expected_pages": 148,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/8-sinif/din-kulturu/sdr-ipekyolu-yayincilik-ders-kitabi-cevaplari/",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    },
+    {
+      "book_id": "30241",
+      "slug": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-semih-ofset-s-e-k-yayinlari",
+      "grade": 8,
+      "subject": "history",
+      "publisher": "Semih Ofset S.E.K. Yayınları",
+      "expected_pages": 228,
+      "corpus_snapshot": "2026-07-13",
+      "source_url": "https://www.odevjet.com/8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-semih-ofset-sek-yayinlari.html",
+      "index_policy": "include",
+      "ingest_source": "existing_canonical_pages"
+    }
+  ],
+  "quarantined_books": [
+    {
+      "book_id": "42425",
+      "slug": "2-sinif-hayat-bilgisi-ders-kitabi-cevaplari-yildirim-yayinlari",
+      "grade": 2,
+      "subject": "life sciences",
+      "publisher": "Yıldırım Yayınları",
+      "local_pages": 187,
+      "local_low_information_pages": 187,
+      "pdf_pages": 188,
+      "source_url": "https://www.odevjet.com/2-sinif-hayat-bilgisi-ders-kitabi-cevaplari-yildirim-yayinlari/",
+      "official_notice": "https://dhgm.meb.gov.tr/tebligler-dergisi/2022/2778_Agustos_2022.pdf",
+      "index_policy": "quarantine",
+      "reason": "all local pages are placeholders and the edition was removed from the approved textbook list; legal and curriculum review required"
+    }
+  ]
+}

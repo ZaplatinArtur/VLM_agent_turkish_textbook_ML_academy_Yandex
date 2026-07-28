@@ -1,0 +1,2672 @@
+{
+  "input_dir": "/home/a.zaplatin/VLM_agent_turkish_textbook_ML_academy_Yandex/data/chunks/jsonl",
+  "output_dir": "artifacts/hybrid_chunks_v3",
+  "books": 200,
+  "pages": 42981,
+  "units": 151576,
+  "pages_with_exercises": 25074,
+  "unit_kinds": {
+    "answer_key": 143,
+    "exercise": 59875,
+    "instruction": 147,
+    "other": 10981,
+    "solution": 3052,
+    "theory": 72880,
+    "worked_example": 4498
+  },
+  "units_per_page": 3.527,
+  "low_confidence_units": 17627,
+  "oversized_units": 175,
+  "unit_length_chars": {
+    "mean": 260.4,
+    "median": 115.0,
+    "p90": 683,
+    "max": 6647
+  },
+  "runtime_seconds": 47.487,
+  "books_detail": [
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "pages": 208,
+      "units": 437,
+      "pages_with_exercises": 50,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 62,
+        "other": 94,
+        "theory": 265,
+        "worked_example": 15
+      }
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ihsan-yayincilik",
+      "pages": 208,
+      "units": 511,
+      "pages_with_exercises": 84,
+      "unit_kinds": {
+        "exercise": 119,
+        "instruction": 11,
+        "other": 78,
+        "solution": 2,
+        "theory": 288,
+        "worked_example": 13
+      }
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-kok-e-yayinlari",
+      "pages": 205,
+      "units": 331,
+      "pages_with_exercises": 54,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 73,
+        "other": 6,
+        "theory": 247,
+        "worked_example": 3
+      }
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 128,
+      "units": 313,
+      "pages_with_exercises": 28,
+      "unit_kinds": {
+        "exercise": 59,
+        "other": 54,
+        "theory": 184,
+        "worked_example": 16
+      }
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 129,
+      "units": 281,
+      "pages_with_exercises": 27,
+      "unit_kinds": {
+        "exercise": 45,
+        "other": 51,
+        "theory": 184,
+        "worked_example": 1
+      }
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "pages": 208,
+      "units": 466,
+      "pages_with_exercises": 63,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 79,
+        "other": 88,
+        "theory": 278,
+        "worked_example": 20
+      }
+    },
+    {
+      "book": "1-sinif-matematik-ders-kitabi-cevaplari-acilim-yayinlari",
+      "pages": 208,
+      "units": 663,
+      "pages_with_exercises": 107,
+      "unit_kinds": {
+        "exercise": 183,
+        "other": 78,
+        "theory": 285,
+        "worked_example": 117
+      }
+    },
+    {
+      "book": "1-sinif-matematik-ders-kitabi-cevaplari-dizin-yayincilik",
+      "pages": 208,
+      "units": 702,
+      "pages_with_exercises": 120,
+      "unit_kinds": {
+        "answer_key": 3,
+        "exercise": 219,
+        "other": 93,
+        "theory": 376,
+        "worked_example": 11
+      }
+    },
+    {
+      "book": "1-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 192,
+      "units": 387,
+      "pages_with_exercises": 32,
+      "unit_kinds": {
+        "exercise": 55,
+        "instruction": 1,
+        "other": 17,
+        "theory": 297,
+        "worked_example": 17
+      }
+    },
+    {
+      "book": "1-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 160,
+      "units": 360,
+      "pages_with_exercises": 37,
+      "unit_kinds": {
+        "exercise": 52,
+        "instruction": 1,
+        "other": 29,
+        "theory": 253,
+        "worked_example": 25
+      }
+    },
+    {
+      "book": "1-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 208,
+      "units": 676,
+      "pages_with_exercises": 143,
+      "unit_kinds": {
+        "answer_key": 4,
+        "exercise": 280,
+        "other": 37,
+        "theory": 354,
+        "worked_example": 1
+      }
+    },
+    {
+      "book": "1-sinif-matematik-ders-kitabi-cevaplari-mhg-yayinlari",
+      "pages": 208,
+      "units": 512,
+      "pages_with_exercises": 104,
+      "unit_kinds": {
+        "exercise": 171,
+        "other": 46,
+        "theory": 287,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "1-sinif-turkce-ders-kitabi-cevaplari-ada-matbaacilik-yayincilik",
+      "pages": 112,
+      "units": 274,
+      "pages_with_exercises": 34,
+      "unit_kinds": {
+        "exercise": 62,
+        "other": 54,
+        "theory": 153,
+        "worked_example": 5
+      }
+    },
+    {
+      "book": "1-sinif-turkce-ders-kitabi-cevaplari-bilim-ve-kultur-yayinlari",
+      "pages": 133,
+      "units": 333,
+      "pages_with_exercises": 68,
+      "unit_kinds": {
+        "exercise": 116,
+        "other": 46,
+        "theory": 170,
+        "worked_example": 1
+      }
+    },
+    {
+      "book": "1-sinif-turkce-ders-kitabi-cevaplari-cem-yayinlari",
+      "pages": 143,
+      "units": 226,
+      "pages_with_exercises": 34,
+      "unit_kinds": {
+        "exercise": 45,
+        "other": 14,
+        "theory": 167
+      }
+    },
+    {
+      "book": "1-sinif-turkce-ders-kitabi-cevaplari-ilke-yayinlari",
+      "pages": 158,
+      "units": 396,
+      "pages_with_exercises": 78,
+      "unit_kinds": {
+        "exercise": 133,
+        "other": 29,
+        "theory": 225,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "1-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 158,
+      "units": 255,
+      "pages_with_exercises": 10,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 13,
+        "instruction": 2,
+        "other": 9,
+        "theory": 210,
+        "worked_example": 19
+      }
+    },
+    {
+      "book": "1-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 168,
+      "units": 295,
+      "pages_with_exercises": 26,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 34,
+        "other": 4,
+        "theory": 242,
+        "worked_example": 14
+      }
+    },
+    {
+      "book": "2-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ata-yayincilik",
+      "pages": 208,
+      "units": 550,
+      "pages_with_exercises": 111,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 197,
+        "other": 30,
+        "theory": 317,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "2-sinif-hayat-bilgisi-ders-kitabi-cevaplari-besgen-yayincilik",
+      "pages": 227,
+      "units": 559,
+      "pages_with_exercises": 121,
+      "unit_kinds": {
+        "exercise": 245,
+        "other": 25,
+        "solution": 3,
+        "theory": 280,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "2-sinif-hayat-bilgisi-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 124,
+      "units": 288,
+      "pages_with_exercises": 29,
+      "unit_kinds": {
+        "exercise": 48,
+        "other": 60,
+        "theory": 164,
+        "worked_example": 16
+      }
+    },
+    {
+      "book": "2-sinif-hayat-bilgisi-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 129,
+      "units": 296,
+      "pages_with_exercises": 37,
+      "unit_kinds": {
+        "exercise": 58,
+        "other": 52,
+        "solution": 3,
+        "theory": 179,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "2-sinif-hayat-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 271,
+      "units": 865,
+      "pages_with_exercises": 163,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 343,
+        "other": 19,
+        "theory": 499,
+        "worked_example": 2
+      }
+    },
+    {
+      "book": "2-sinif-hayat-bilgisi-ders-kitabi-cevaplari-sdr-dikey-yayinlari",
+      "pages": 256,
+      "units": 713,
+      "pages_with_exercises": 121,
+      "unit_kinds": {
+        "exercise": 196,
+        "other": 14,
+        "theory": 501,
+        "worked_example": 2
+      }
+    },
+    {
+      "book": "2-sinif-ingilizce-ders-kitabi-cevaplari-bilim-ve-kultur-yayinlari",
+      "pages": 176,
+      "units": 322,
+      "pages_with_exercises": 87,
+      "unit_kinds": {
+        "exercise": 110,
+        "other": 43,
+        "theory": 169
+      }
+    },
+    {
+      "book": "2-sinif-ingilizce-ders-kitabi-cevaplari-hecce-yayinlari",
+      "pages": 176,
+      "units": 292,
+      "pages_with_exercises": 62,
+      "unit_kinds": {
+        "exercise": 74,
+        "other": 53,
+        "theory": 165
+      }
+    },
+    {
+      "book": "2-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-calisma-kitabi",
+      "pages": 61,
+      "units": 125,
+      "pages_with_exercises": 14,
+      "unit_kinds": {
+        "exercise": 25,
+        "other": 5,
+        "theory": 95
+      }
+    },
+    {
+      "book": "2-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 115,
+      "units": 217,
+      "pages_with_exercises": 50,
+      "unit_kinds": {
+        "exercise": 71,
+        "theory": 146
+      }
+    },
+    {
+      "book": "2-sinif-ingilizce-ders-kitabi-cevaplari-sozcu-yayincilik",
+      "pages": 173,
+      "units": 223,
+      "pages_with_exercises": 55,
+      "unit_kinds": {
+        "exercise": 62,
+        "other": 1,
+        "theory": 160
+      }
+    },
+    {
+      "book": "2-sinif-matematik-ders-kitabi-cevaplari-anka-yayinlari",
+      "pages": 309,
+      "units": 1112,
+      "pages_with_exercises": 213,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 450,
+        "other": 56,
+        "solution": 14,
+        "theory": 532,
+        "worked_example": 58
+      }
+    },
+    {
+      "book": "2-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 181,
+      "units": 350,
+      "pages_with_exercises": 59,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 107,
+        "other": 6,
+        "solution": 5,
+        "theory": 226,
+        "worked_example": 5
+      }
+    },
+    {
+      "book": "2-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 203,
+      "units": 426,
+      "pages_with_exercises": 63,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 107,
+        "other": 10,
+        "solution": 1,
+        "theory": 301,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "2-sinif-matematik-ders-kitabi-cevaplari-mhg-yayinlari",
+      "pages": 289,
+      "units": 803,
+      "pages_with_exercises": 180,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 331,
+        "other": 18,
+        "solution": 11,
+        "theory": 433,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "2-sinif-matematik-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "pages": 240,
+      "units": 870,
+      "pages_with_exercises": 129,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 246,
+        "other": 102,
+        "solution": 6,
+        "theory": 482,
+        "worked_example": 32
+      }
+    },
+    {
+      "book": "2-sinif-matematik-ders-kitabi-cevaplari-tekno-arti-yayinlari",
+      "pages": 288,
+      "units": 888,
+      "pages_with_exercises": 137,
+      "unit_kinds": {
+        "exercise": 278,
+        "other": 21,
+        "theory": 420,
+        "worked_example": 169
+      }
+    },
+    {
+      "book": "2-sinif-turkce-ders-kitabi-cevaplari-ada-matbaacilik-yayincilik",
+      "pages": 266,
+      "units": 711,
+      "pages_with_exercises": 125,
+      "unit_kinds": {
+        "exercise": 187,
+        "other": 121,
+        "theory": 398,
+        "worked_example": 5
+      }
+    },
+    {
+      "book": "2-sinif-turkce-ders-kitabi-cevaplari-bilim-ve-kultur-yayinlari",
+      "pages": 292,
+      "units": 943,
+      "pages_with_exercises": 131,
+      "unit_kinds": {
+        "answer_key": 5,
+        "exercise": 305,
+        "other": 167,
+        "solution": 2,
+        "theory": 457,
+        "worked_example": 7
+      }
+    },
+    {
+      "book": "2-sinif-turkce-ders-kitabi-cevaplari-ilke-yayinlari",
+      "pages": 320,
+      "units": 922,
+      "pages_with_exercises": 180,
+      "unit_kinds": {
+        "exercise": 381,
+        "other": 84,
+        "solution": 1,
+        "theory": 448,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "2-sinif-turkce-ders-kitabi-cevaplari-koza-yayinlari",
+      "pages": 317,
+      "units": 612,
+      "pages_with_exercises": 158,
+      "unit_kinds": {
+        "exercise": 246,
+        "instruction": 1,
+        "other": 11,
+        "theory": 344,
+        "worked_example": 10
+      }
+    },
+    {
+      "book": "2-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 183,
+      "units": 493,
+      "pages_with_exercises": 101,
+      "unit_kinds": {
+        "exercise": 186,
+        "other": 11,
+        "solution": 1,
+        "theory": 290,
+        "worked_example": 5
+      }
+    },
+    {
+      "book": "2-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 185,
+      "units": 448,
+      "pages_with_exercises": 98,
+      "unit_kinds": {
+        "exercise": 165,
+        "other": 7,
+        "theory": 270,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "3-sinif-fen-bilimleri-ders-kitabi-cevaplari-anka-yayinlari",
+      "pages": 175,
+      "units": 537,
+      "pages_with_exercises": 60,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 145,
+        "other": 100,
+        "solution": 1,
+        "theory": 278,
+        "worked_example": 11
+      }
+    },
+    {
+      "book": "3-sinif-fen-bilimleri-ders-kitabi-cevaplari-cem-yayinlari",
+      "pages": 256,
+      "units": 852,
+      "pages_with_exercises": 168,
+      "unit_kinds": {
+        "exercise": 366,
+        "other": 59,
+        "theory": 396,
+        "worked_example": 31
+      }
+    },
+    {
+      "book": "3-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari-1",
+      "pages": 256,
+      "units": 956,
+      "pages_with_exercises": 117,
+      "unit_kinds": {
+        "exercise": 295,
+        "other": 46,
+        "theory": 603,
+        "worked_example": 12
+      }
+    },
+    {
+      "book": "3-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 238,
+      "units": 609,
+      "pages_with_exercises": 125,
+      "unit_kinds": {
+        "exercise": 262,
+        "other": 29,
+        "theory": 312,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "3-sinif-fen-bilimleri-ders-kitabi-cevaplari-sdr-dikey-yayinlari",
+      "pages": 227,
+      "units": 590,
+      "pages_with_exercises": 79,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 148,
+        "other": 122,
+        "theory": 301,
+        "worked_example": 17
+      }
+    },
+    {
+      "book": "3-sinif-fen-bilimleri-ders-kitabi-cevaplari-tuna-yayinlari",
+      "pages": 216,
+      "units": 918,
+      "pages_with_exercises": 110,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 210,
+        "other": 172,
+        "solution": 1,
+        "theory": 507,
+        "worked_example": 27
+      }
+    },
+    {
+      "book": "3-sinif-hayat-bilgisi-ders-kitabi-cevaplari-dizin-yayincilik",
+      "pages": 194,
+      "units": 574,
+      "pages_with_exercises": 81,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 175,
+        "other": 37,
+        "theory": 351,
+        "worked_example": 10
+      }
+    },
+    {
+      "book": "3-sinif-hayat-bilgisi-ders-kitabi-cevaplari-evren-yayinlari",
+      "pages": 224,
+      "units": 586,
+      "pages_with_exercises": 111,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 190,
+        "other": 95,
+        "theory": 283,
+        "worked_example": 17
+      }
+    },
+    {
+      "book": "3-sinif-hayat-bilgisi-ders-kitabi-cevaplari-meb-yayinlari-1",
+      "pages": 233,
+      "units": 784,
+      "pages_with_exercises": 132,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 375,
+        "other": 30,
+        "solution": 8,
+        "theory": 349,
+        "worked_example": 21
+      }
+    },
+    {
+      "book": "3-sinif-hayat-bilgisi-ders-kitabi-cevaplari-meb-yayinlari-2",
+      "pages": 200,
+      "units": 521,
+      "pages_with_exercises": 121,
+      "unit_kinds": {
+        "exercise": 221,
+        "instruction": 1,
+        "other": 22,
+        "theory": 272,
+        "worked_example": 5
+      }
+    },
+    {
+      "book": "3-sinif-hayat-bilgisi-ders-kitabi-cevaplari-meb-yayinlari-calisma-kitabi-1-kitap",
+      "pages": 135,
+      "units": 339,
+      "pages_with_exercises": 61,
+      "unit_kinds": {
+        "exercise": 116,
+        "other": 42,
+        "solution": 2,
+        "theory": 177,
+        "worked_example": 2
+      }
+    },
+    {
+      "book": "3-sinif-hayat-bilgisi-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "pages": 192,
+      "units": 744,
+      "pages_with_exercises": 121,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 268,
+        "other": 19,
+        "solution": 1,
+        "theory": 451,
+        "worked_example": 3
+      }
+    },
+    {
+      "book": "3-sinif-hayat-bilgisi-ders-kitabi-cevaplari-sdr-ipekyolu-yayinlari",
+      "pages": 233,
+      "units": 601,
+      "pages_with_exercises": 132,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 213,
+        "other": 66,
+        "theory": 317,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "3-sinif-hayat-bilgisi-ders-kitabi-cevaplari-tuna-yayinlari",
+      "pages": 208,
+      "units": 595,
+      "pages_with_exercises": 64,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 120,
+        "other": 93,
+        "theory": 376,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "3-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 123,
+      "units": 213,
+      "pages_with_exercises": 31,
+      "unit_kinds": {
+        "exercise": 36,
+        "other": 12,
+        "theory": 165
+      }
+    },
+    {
+      "book": "3-sinif-ingilizce-ders-kitabi-cevaplari-sdr-dikey-yayinlari",
+      "pages": 207,
+      "units": 382,
+      "pages_with_exercises": 102,
+      "unit_kinds": {
+        "exercise": 124,
+        "other": 62,
+        "theory": 196
+      }
+    },
+    {
+      "book": "3-sinif-ingilizce-ders-kitabi-cevaplari-tutku-yayinlari",
+      "pages": 222,
+      "units": 337,
+      "pages_with_exercises": 93,
+      "unit_kinds": {
+        "exercise": 109,
+        "other": 14,
+        "theory": 214
+      }
+    },
+    {
+      "book": "3-sinif-ingilizce-ders-kitabi-cevaplari-yildirim-yayinlari",
+      "pages": 193,
+      "units": 484,
+      "pages_with_exercises": 115,
+      "unit_kinds": {
+        "exercise": 195,
+        "other": 42,
+        "theory": 247
+      }
+    },
+    {
+      "book": "3-sinif-matematik-ders-kitabi-cevaplari-ada-yayinlari",
+      "pages": 288,
+      "units": 1179,
+      "pages_with_exercises": 173,
+      "unit_kinds": {
+        "exercise": 378,
+        "other": 133,
+        "solution": 29,
+        "theory": 630,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "3-sinif-matematik-ders-kitabi-cevaplari-ekoyay-yayinlari",
+      "pages": 286,
+      "units": 1322,
+      "pages_with_exercises": 167,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 417,
+        "other": 168,
+        "solution": 20,
+        "theory": 711,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "3-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 258,
+      "units": 1031,
+      "pages_with_exercises": 163,
+      "unit_kinds": {
+        "exercise": 409,
+        "other": 32,
+        "solution": 22,
+        "theory": 507,
+        "worked_example": 61
+      }
+    },
+    {
+      "book": "3-sinif-matematik-ders-kitabi-cevaplari-tuna-matbacilik-yayinlari",
+      "pages": 273,
+      "units": 1566,
+      "pages_with_exercises": 217,
+      "unit_kinds": {
+        "exercise": 660,
+        "other": 73,
+        "solution": 201,
+        "theory": 455,
+        "worked_example": 177
+      }
+    },
+    {
+      "book": "3-sinif-turkce-ders-kitabi-cevaplari-gizem-yayinlari",
+      "pages": 224,
+      "units": 811,
+      "pages_with_exercises": 150,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 439,
+        "other": 79,
+        "solution": 1,
+        "theory": 283,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "3-sinif-turkce-ders-kitabi-cevaplari-ilke-yayinlari",
+      "pages": 308,
+      "units": 884,
+      "pages_with_exercises": 163,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 369,
+        "other": 40,
+        "solution": 1,
+        "theory": 462,
+        "worked_example": 11
+      }
+    },
+    {
+      "book": "3-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 299,
+      "units": 916,
+      "pages_with_exercises": 199,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 422,
+        "other": 93,
+        "theory": 390,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "3-sinif-turkce-ders-kitabi-cevaplari-sdr-ipekyolu-yayinlari",
+      "pages": 308,
+      "units": 745,
+      "pages_with_exercises": 157,
+      "unit_kinds": {
+        "exercise": 247,
+        "other": 121,
+        "theory": 368,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "3-sinif-turkce-ders-kitabi-cevaplari-sonuc-yayinlari",
+      "pages": 300,
+      "units": 619,
+      "pages_with_exercises": 112,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 200,
+        "other": 65,
+        "solution": 1,
+        "theory": 350,
+        "worked_example": 1
+      }
+    },
+    {
+      "book": "4-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-anka-yayinlari",
+      "pages": 126,
+      "units": 392,
+      "pages_with_exercises": 64,
+      "unit_kinds": {
+        "exercise": 118,
+        "other": 57,
+        "theory": 213,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "4-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 133,
+      "units": 385,
+      "pages_with_exercises": 57,
+      "unit_kinds": {
+        "exercise": 110,
+        "other": 6,
+        "theory": 266,
+        "worked_example": 3
+      }
+    },
+    {
+      "book": "4-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-sdr-ipekyolu-yayinlari",
+      "pages": 144,
+      "units": 477,
+      "pages_with_exercises": 62,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 134,
+        "other": 77,
+        "theory": 260,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "4-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-tutku-yayincilik",
+      "pages": 136,
+      "units": 363,
+      "pages_with_exercises": 53,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 106,
+        "other": 8,
+        "solution": 1,
+        "theory": 240,
+        "worked_example": 7
+      }
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 218,
+      "units": 789,
+      "pages_with_exercises": 142,
+      "unit_kinds": {
+        "answer_key": 3,
+        "exercise": 337,
+        "other": 18,
+        "solution": 8,
+        "theory": 380,
+        "worked_example": 43
+      }
+    },
+    {
+      "book": "4-sinif-fen-bilimleri-ders-kitabi-cevaplari-sozcu-yayinlari",
+      "pages": 188,
+      "units": 721,
+      "pages_with_exercises": 132,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 386,
+        "instruction": 7,
+        "other": 39,
+        "solution": 24,
+        "theory": 256,
+        "worked_example": 7
+      }
+    },
+    {
+      "book": "4-sinif-ingilizce-ders-kitabi-cevaplari-cem-yayinlari",
+      "pages": 164,
+      "units": 404,
+      "pages_with_exercises": 109,
+      "unit_kinds": {
+        "exercise": 192,
+        "other": 33,
+        "theory": 179
+      }
+    },
+    {
+      "book": "4-sinif-ingilizce-ders-kitabi-cevaplari-fcm-yayincilik",
+      "pages": 192,
+      "units": 650,
+      "pages_with_exercises": 116,
+      "unit_kinds": {
+        "exercise": 240,
+        "other": 58,
+        "theory": 352
+      }
+    },
+    {
+      "book": "4-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 146,
+      "units": 385,
+      "pages_with_exercises": 77,
+      "unit_kinds": {
+        "exercise": 205,
+        "other": 13,
+        "theory": 167
+      }
+    },
+    {
+      "book": "4-sinif-ingilizce-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "pages": 192,
+      "units": 511,
+      "pages_with_exercises": 111,
+      "unit_kinds": {
+        "exercise": 181,
+        "other": 8,
+        "theory": 322
+      }
+    },
+    {
+      "book": "4-sinif-ingilizce-ders-kitabi-cevaplari-sdr-dikey-yayinlari",
+      "pages": 182,
+      "units": 380,
+      "pages_with_exercises": 103,
+      "unit_kinds": {
+        "exercise": 202,
+        "other": 6,
+        "theory": 172
+      }
+    },
+    {
+      "book": "4-sinif-matematik-ders-kitabi-cevaplari-ada-yayinlari",
+      "pages": 270,
+      "units": 1075,
+      "pages_with_exercises": 183,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 410,
+        "other": 36,
+        "theory": 525,
+        "worked_example": 102
+      }
+    },
+    {
+      "book": "4-sinif-matematik-ders-kitabi-cevaplari-ata-yayinlari",
+      "pages": 299,
+      "units": 1233,
+      "pages_with_exercises": 177,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 398,
+        "other": 118,
+        "solution": 25,
+        "theory": 533,
+        "worked_example": 157
+      }
+    },
+    {
+      "book": "4-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-calisma-kitabi-1",
+      "pages": 176,
+      "units": 795,
+      "pages_with_exercises": 142,
+      "unit_kinds": {
+        "exercise": 381,
+        "other": 22,
+        "solution": 24,
+        "theory": 367,
+        "worked_example": 1
+      }
+    },
+    {
+      "book": "4-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 304,
+      "units": 1200,
+      "pages_with_exercises": 211,
+      "unit_kinds": {
+        "exercise": 417,
+        "other": 50,
+        "solution": 16,
+        "theory": 563,
+        "worked_example": 154
+      }
+    },
+    {
+      "book": "4-sinif-matematik-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "pages": 278,
+      "units": 1169,
+      "pages_with_exercises": 152,
+      "unit_kinds": {
+        "exercise": 332,
+        "other": 31,
+        "solution": 16,
+        "theory": 670,
+        "worked_example": 120
+      }
+    },
+    {
+      "book": "4-sinif-matematik-ders-kitabi-cevaplari-sevgi-yayinlari",
+      "pages": 249,
+      "units": 1188,
+      "pages_with_exercises": 156,
+      "unit_kinds": {
+        "exercise": 433,
+        "other": 103,
+        "solution": 30,
+        "theory": 618,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-hecce-yayinlari",
+      "pages": 208,
+      "units": 794,
+      "pages_with_exercises": 150,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 359,
+        "other": 92,
+        "theory": 329,
+        "worked_example": 13
+      }
+    },
+    {
+      "book": "4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 206,
+      "units": 684,
+      "pages_with_exercises": 102,
+      "unit_kinds": {
+        "exercise": 140,
+        "other": 103,
+        "theory": 437,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "4-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-tuna-matbaacilik",
+      "pages": 208,
+      "units": 661,
+      "pages_with_exercises": 90,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 205,
+        "instruction": 1,
+        "other": 127,
+        "solution": 1,
+        "theory": 313,
+        "worked_example": 12
+      }
+    },
+    {
+      "book": "4-sinif-turkce-ders-kitabi-cevaplari-koza-yayinlari",
+      "pages": 272,
+      "units": 874,
+      "pages_with_exercises": 172,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 366,
+        "other": 115,
+        "solution": 2,
+        "theory": 376,
+        "worked_example": 13
+      }
+    },
+    {
+      "book": "4-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-1",
+      "pages": 263,
+      "units": 862,
+      "pages_with_exercises": 190,
+      "unit_kinds": {
+        "exercise": 401,
+        "other": 47,
+        "solution": 2,
+        "theory": 386,
+        "worked_example": 26
+      }
+    },
+    {
+      "book": "4-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-2",
+      "pages": 265,
+      "units": 943,
+      "pages_with_exercises": 169,
+      "unit_kinds": {
+        "exercise": 482,
+        "other": 21,
+        "theory": 424,
+        "worked_example": 16
+      }
+    },
+    {
+      "book": "4-sinif-turkce-ders-kitabi-cevaplari-ozgun-yayinlari-2",
+      "pages": 242,
+      "units": 848,
+      "pages_with_exercises": 144,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 381,
+        "other": 13,
+        "solution": 2,
+        "theory": 444,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "4-sinif-turkce-ders-kitabi-cevaplari-tuna-yayinlari",
+      "pages": 273,
+      "units": 1118,
+      "pages_with_exercises": 205,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 644,
+        "instruction": 27,
+        "other": 79,
+        "solution": 2,
+        "theory": 341,
+        "worked_example": 23
+      }
+    },
+    {
+      "book": "5-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-anka-yayinlari",
+      "pages": 127,
+      "units": 373,
+      "pages_with_exercises": 65,
+      "unit_kinds": {
+        "exercise": 113,
+        "other": 10,
+        "theory": 235,
+        "worked_example": 15
+      }
+    },
+    {
+      "book": "5-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-lisans-yayincilik",
+      "pages": 144,
+      "units": 444,
+      "pages_with_exercises": 65,
+      "unit_kinds": {
+        "exercise": 113,
+        "other": 14,
+        "theory": 293,
+        "worked_example": 24
+      }
+    },
+    {
+      "book": "5-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari-1",
+      "pages": 142,
+      "units": 379,
+      "pages_with_exercises": 63,
+      "unit_kinds": {
+        "exercise": 119,
+        "other": 7,
+        "theory": 241,
+        "worked_example": 12
+      }
+    },
+    {
+      "book": "5-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 192,
+      "units": 851,
+      "pages_with_exercises": 123,
+      "unit_kinds": {
+        "exercise": 290,
+        "instruction": 44,
+        "other": 72,
+        "theory": 407,
+        "worked_example": 38
+      }
+    },
+    {
+      "book": "5-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 152,
+      "units": 447,
+      "pages_with_exercises": 48,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 90,
+        "other": 5,
+        "theory": 333,
+        "worked_example": 18
+      }
+    },
+    {
+      "book": "5-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 166,
+      "units": 543,
+      "pages_with_exercises": 55,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 131,
+        "other": 5,
+        "theory": 390,
+        "worked_example": 16
+      }
+    },
+    {
+      "book": "5-sinif-fen-bilimleri-ders-kitabi-cevaplari-sdr-dikey-yayinlari",
+      "pages": 223,
+      "units": 698,
+      "pages_with_exercises": 95,
+      "unit_kinds": {
+        "exercise": 166,
+        "other": 8,
+        "theory": 508,
+        "worked_example": 16
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-basaran-yayinlari",
+      "pages": 176,
+      "units": 439,
+      "pages_with_exercises": 100,
+      "unit_kinds": {
+        "exercise": 190,
+        "other": 10,
+        "theory": 239
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-calisma-kitabi",
+      "pages": 65,
+      "units": 296,
+      "pages_with_exercises": 40,
+      "unit_kinds": {
+        "exercise": 143,
+        "other": 5,
+        "theory": 148
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-multi-english-1-kitap",
+      "pages": 203,
+      "units": 743,
+      "pages_with_exercises": 139,
+      "unit_kinds": {
+        "exercise": 378,
+        "other": 64,
+        "theory": 301
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-multi-english-2-kitap",
+      "pages": 183,
+      "units": 695,
+      "pages_with_exercises": 128,
+      "unit_kinds": {
+        "exercise": 356,
+        "other": 43,
+        "theory": 296
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-work-book-1-kitap",
+      "pages": 76,
+      "units": 345,
+      "pages_with_exercises": 58,
+      "unit_kinds": {
+        "exercise": 194,
+        "other": 4,
+        "theory": 147
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-work-book-2-kitap",
+      "pages": 76,
+      "units": 299,
+      "pages_with_exercises": 56,
+      "unit_kinds": {
+        "exercise": 190,
+        "other": 2,
+        "theory": 107
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 174,
+      "units": 561,
+      "pages_with_exercises": 106,
+      "unit_kinds": {
+        "exercise": 300,
+        "other": 49,
+        "theory": 212
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-ozgun-yayinlari",
+      "pages": 176,
+      "units": 601,
+      "pages_with_exercises": 122,
+      "unit_kinds": {
+        "exercise": 347,
+        "other": 25,
+        "theory": 229
+      }
+    },
+    {
+      "book": "5-sinif-ingilizce-ders-kitabi-cevaplari-pasifik-yayinlari",
+      "pages": 176,
+      "units": 567,
+      "pages_with_exercises": 108,
+      "unit_kinds": {
+        "exercise": 267,
+        "other": 41,
+        "theory": 259
+      }
+    },
+    {
+      "book": "5-sinif-matematik-ders-kitabi-cevaplari-koza-yayinlari",
+      "pages": 272,
+      "units": 1305,
+      "pages_with_exercises": 182,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 579,
+        "other": 128,
+        "solution": 37,
+        "theory": 558,
+        "worked_example": 2
+      }
+    },
+    {
+      "book": "5-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 171,
+      "units": 739,
+      "pages_with_exercises": 121,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 254,
+        "other": 11,
+        "solution": 72,
+        "theory": 340,
+        "worked_example": 61
+      }
+    },
+    {
+      "book": "5-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 189,
+      "units": 830,
+      "pages_with_exercises": 139,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 298,
+        "instruction": 2,
+        "other": 28,
+        "solution": 86,
+        "theory": 364,
+        "worked_example": 51
+      }
+    },
+    {
+      "book": "5-sinif-matematik-ders-kitabi-cevaplari-ozgun-yayinlari",
+      "pages": 262,
+      "units": 1283,
+      "pages_with_exercises": 204,
+      "unit_kinds": {
+        "exercise": 590,
+        "other": 60,
+        "solution": 19,
+        "theory": 612,
+        "worked_example": 2
+      }
+    },
+    {
+      "book": "5-sinif-matematik-ders-kitabi-cevaplari-tuna-yayinlari",
+      "pages": 305,
+      "units": 1952,
+      "pages_with_exercises": 207,
+      "unit_kinds": {
+        "exercise": 623,
+        "other": 75,
+        "solution": 312,
+        "theory": 617,
+        "worked_example": 325
+      }
+    },
+    {
+      "book": "5-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-anadol-yayincilik",
+      "pages": 208,
+      "units": 637,
+      "pages_with_exercises": 114,
+      "unit_kinds": {
+        "exercise": 265,
+        "other": 44,
+        "theory": 308,
+        "worked_example": 20
+      }
+    },
+    {
+      "book": "5-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-ata-yayincilik",
+      "pages": 192,
+      "units": 824,
+      "pages_with_exercises": 120,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 251,
+        "other": 60,
+        "solution": 2,
+        "theory": 495,
+        "worked_example": 14
+      }
+    },
+    {
+      "book": "5-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-e-kare-yayinlari",
+      "pages": 208,
+      "units": 1011,
+      "pages_with_exercises": 146,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 370,
+        "other": 10,
+        "solution": 1,
+        "theory": 587,
+        "worked_example": 42
+      }
+    },
+    {
+      "book": "5-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 154,
+      "units": 545,
+      "pages_with_exercises": 99,
+      "unit_kinds": {
+        "exercise": 200,
+        "instruction": 11,
+        "other": 26,
+        "solution": 3,
+        "theory": 288,
+        "worked_example": 17
+      }
+    },
+    {
+      "book": "5-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 150,
+      "units": 496,
+      "pages_with_exercises": 99,
+      "unit_kinds": {
+        "exercise": 187,
+        "instruction": 10,
+        "other": 29,
+        "solution": 9,
+        "theory": 235,
+        "worked_example": 26
+      }
+    },
+    {
+      "book": "5-sinif-turkce-ders-kitabi-cevaplari-anittepe-yayinlari",
+      "pages": 252,
+      "units": 1091,
+      "pages_with_exercises": 190,
+      "unit_kinds": {
+        "exercise": 664,
+        "other": 95,
+        "solution": 1,
+        "theory": 326,
+        "worked_example": 5
+      }
+    },
+    {
+      "book": "5-sinif-turkce-ders-kitabi-cevaplari-koza-yayinlari",
+      "pages": 255,
+      "units": 940,
+      "pages_with_exercises": 190,
+      "unit_kinds": {
+        "exercise": 428,
+        "instruction": 1,
+        "other": 56,
+        "theory": 418,
+        "worked_example": 37
+      }
+    },
+    {
+      "book": "5-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 181,
+      "units": 591,
+      "pages_with_exercises": 118,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 265,
+        "other": 42,
+        "solution": 2,
+        "theory": 272,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "5-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 160,
+      "units": 561,
+      "pages_with_exercises": 113,
+      "unit_kinds": {
+        "answer_key": 3,
+        "exercise": 279,
+        "other": 22,
+        "theory": 248,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-fcm-yayincilik",
+      "pages": 134,
+      "units": 507,
+      "pages_with_exercises": 82,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 164,
+        "instruction": 2,
+        "other": 74,
+        "theory": 256,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 157,
+      "units": 668,
+      "pages_with_exercises": 75,
+      "unit_kinds": {
+        "exercise": 169,
+        "other": 30,
+        "solution": 1,
+        "theory": 459,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "6-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-sdr-ipekyolu-yayincilik",
+      "pages": 150,
+      "units": 532,
+      "pages_with_exercises": 88,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 179,
+        "other": 80,
+        "theory": 259,
+        "worked_example": 13
+      }
+    },
+    {
+      "book": "6-sinif-fen-bilimleri-ders-kitabi-cevaplari-adim-adim-yayinlari",
+      "pages": 272,
+      "units": 1227,
+      "pages_with_exercises": 157,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 387,
+        "other": 135,
+        "solution": 4,
+        "theory": 668,
+        "worked_example": 31
+      }
+    },
+    {
+      "book": "6-sinif-fen-bilimleri-ders-kitabi-cevaplari-anadol-yayincilik",
+      "pages": 284,
+      "units": 1120,
+      "pages_with_exercises": 183,
+      "unit_kinds": {
+        "exercise": 393,
+        "other": 163,
+        "theory": 530,
+        "worked_example": 34
+      }
+    },
+    {
+      "book": "6-sinif-fen-bilimleri-ders-kitabi-cevaplari-gun-yayinlari",
+      "pages": 288,
+      "units": 1347,
+      "pages_with_exercises": 209,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 460,
+        "other": 141,
+        "solution": 9,
+        "theory": 715,
+        "worked_example": 20
+      }
+    },
+    {
+      "book": "6-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 186,
+      "units": 533,
+      "pages_with_exercises": 74,
+      "unit_kinds": {
+        "exercise": 160,
+        "other": 6,
+        "theory": 343,
+        "worked_example": 24
+      }
+    },
+    {
+      "book": "6-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 131,
+      "units": 379,
+      "pages_with_exercises": 63,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 112,
+        "other": 8,
+        "theory": 239,
+        "worked_example": 19
+      }
+    },
+    {
+      "book": "6-sinif-fen-bilimleri-ders-kitabi-cevaplari-sevgi-yayinlari",
+      "pages": 288,
+      "units": 1046,
+      "pages_with_exercises": 194,
+      "unit_kinds": {
+        "exercise": 564,
+        "other": 13,
+        "solution": 18,
+        "theory": 430,
+        "worked_example": 21
+      }
+    },
+    {
+      "book": "6-sinif-ingilizce-ders-kitabi-cevaplari-hecce-yayinlari",
+      "pages": 192,
+      "units": 759,
+      "pages_with_exercises": 154,
+      "unit_kinds": {
+        "exercise": 535,
+        "other": 34,
+        "theory": 190
+      }
+    },
+    {
+      "book": "6-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-work-book",
+      "pages": 80,
+      "units": 238,
+      "pages_with_exercises": 65,
+      "unit_kinds": {
+        "exercise": 153,
+        "other": 2,
+        "theory": 83
+      }
+    },
+    {
+      "book": "6-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 123,
+      "units": 361,
+      "pages_with_exercises": 80,
+      "unit_kinds": {
+        "exercise": 171,
+        "other": 5,
+        "theory": 185
+      }
+    },
+    {
+      "book": "6-sinif-ingilizce-ders-kitabi-cevaplari-monopol-yayinlari",
+      "pages": 192,
+      "units": 529,
+      "pages_with_exercises": 116,
+      "unit_kinds": {
+        "exercise": 266,
+        "other": 10,
+        "theory": 253
+      }
+    },
+    {
+      "book": "6-sinif-ingilizce-ders-kitabi-cevaplari-ozgun-yayinlari",
+      "pages": 186,
+      "units": 702,
+      "pages_with_exercises": 131,
+      "unit_kinds": {
+        "exercise": 423,
+        "other": 34,
+        "theory": 245
+      }
+    },
+    {
+      "book": "6-sinif-matematik-ders-kitabi-cevaplari-ata-yayinlari",
+      "pages": 280,
+      "units": 1390,
+      "pages_with_exercises": 215,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 521,
+        "other": 29,
+        "solution": 84,
+        "theory": 604,
+        "worked_example": 150
+      }
+    },
+    {
+      "book": "6-sinif-matematik-ders-kitabi-cevaplari-doga-yayinlari",
+      "pages": 344,
+      "units": 1375,
+      "pages_with_exercises": 199,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 489,
+        "other": 78,
+        "solution": 27,
+        "theory": 773,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "6-sinif-matematik-ders-kitabi-cevaplari-koza-yayinlari",
+      "pages": 246,
+      "units": 1303,
+      "pages_with_exercises": 208,
+      "unit_kinds": {
+        "exercise": 754,
+        "other": 33,
+        "solution": 8,
+        "theory": 468,
+        "worked_example": 40
+      }
+    },
+    {
+      "book": "6-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 222,
+      "units": 863,
+      "pages_with_exercises": 160,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 364,
+        "instruction": 1,
+        "other": 18,
+        "solution": 54,
+        "theory": 422,
+        "worked_example": 3
+      }
+    },
+    {
+      "book": "6-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 166,
+      "units": 537,
+      "pages_with_exercises": 122,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 225,
+        "instruction": 1,
+        "other": 11,
+        "solution": 51,
+        "theory": 240,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "6-sinif-matematik-ders-kitabi-cevaplari-ogun-yayinlar",
+      "pages": 364,
+      "units": 1186,
+      "pages_with_exercises": 225,
+      "unit_kinds": {
+        "exercise": 574,
+        "other": 55,
+        "solution": 5,
+        "theory": 493,
+        "worked_example": 59
+      }
+    },
+    {
+      "book": "6-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-anadol-yayinlari",
+      "pages": 288,
+      "units": 1121,
+      "pages_with_exercises": 177,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 459,
+        "other": 135,
+        "solution": 2,
+        "theory": 503,
+        "worked_example": 21
+      }
+    },
+    {
+      "book": "6-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-evos-yayinlari",
+      "pages": 288,
+      "units": 1072,
+      "pages_with_exercises": 173,
+      "unit_kinds": {
+        "exercise": 412,
+        "other": 142,
+        "solution": 6,
+        "theory": 470,
+        "worked_example": 42
+      }
+    },
+    {
+      "book": "6-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 187,
+      "units": 519,
+      "pages_with_exercises": 97,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 162,
+        "instruction": 8,
+        "other": 23,
+        "solution": 3,
+        "theory": 302,
+        "worked_example": 20
+      }
+    },
+    {
+      "book": "6-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 116,
+      "units": 399,
+      "pages_with_exercises": 71,
+      "unit_kinds": {
+        "exercise": 148,
+        "instruction": 12,
+        "other": 20,
+        "solution": 2,
+        "theory": 196,
+        "worked_example": 21
+      }
+    },
+    {
+      "book": "6-sinif-turkce-ders-kitabi-cevaplari-anka-yayinlari",
+      "pages": 268,
+      "units": 1095,
+      "pages_with_exercises": 198,
+      "unit_kinds": {
+        "exercise": 689,
+        "other": 3,
+        "solution": 1,
+        "theory": 395,
+        "worked_example": 7
+      }
+    },
+    {
+      "book": "6-sinif-turkce-ders-kitabi-cevaplari-ata-yayinlari",
+      "pages": 248,
+      "units": 901,
+      "pages_with_exercises": 169,
+      "unit_kinds": {
+        "answer_key": 4,
+        "exercise": 508,
+        "other": 18,
+        "solution": 5,
+        "theory": 351,
+        "worked_example": 15
+      }
+    },
+    {
+      "book": "6-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 176,
+      "units": 578,
+      "pages_with_exercises": 113,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 228,
+        "instruction": 1,
+        "other": 70,
+        "solution": 1,
+        "theory": 262,
+        "worked_example": 15
+      }
+    },
+    {
+      "book": "6-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 161,
+      "units": 611,
+      "pages_with_exercises": 102,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 242,
+        "other": 66,
+        "solution": 6,
+        "theory": 282,
+        "worked_example": 14
+      }
+    },
+    {
+      "book": "6-sinif-turkce-ders-kitabi-cevaplari-yildirim-yayinlari",
+      "pages": 289,
+      "units": 1160,
+      "pages_with_exercises": 222,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 659,
+        "other": 24,
+        "solution": 4,
+        "theory": 455,
+        "worked_example": 16
+      }
+    },
+    {
+      "book": "7-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-fcm-yayincilik",
+      "pages": 154,
+      "units": 476,
+      "pages_with_exercises": 62,
+      "unit_kinds": {
+        "exercise": 131,
+        "other": 71,
+        "theory": 265,
+        "worked_example": 9
+      }
+    },
+    {
+      "book": "7-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-gun-yayinlari",
+      "pages": 144,
+      "units": 598,
+      "pages_with_exercises": 72,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 142,
+        "other": 100,
+        "theory": 341,
+        "worked_example": 13
+      }
+    },
+    {
+      "book": "7-sinif-din-kulturu-ve-ahlak-bilgisi-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 158,
+      "units": 660,
+      "pages_with_exercises": 82,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 223,
+        "other": 89,
+        "theory": 330,
+        "worked_example": 17
+      }
+    },
+    {
+      "book": "7-sinif-fen-bilimleri-ders-kitabi-cevaplari-aydin-yayinlari",
+      "pages": 225,
+      "units": 1044,
+      "pages_with_exercises": 125,
+      "unit_kinds": {
+        "exercise": 296,
+        "other": 26,
+        "solution": 3,
+        "theory": 703,
+        "worked_example": 16
+      }
+    },
+    {
+      "book": "7-sinif-fen-bilimleri-ders-kitabi-cevaplari-ferman-yayinlari",
+      "pages": 256,
+      "units": 1076,
+      "pages_with_exercises": 168,
+      "unit_kinds": {
+        "exercise": 442,
+        "other": 105,
+        "solution": 3,
+        "theory": 508,
+        "worked_example": 18
+      }
+    },
+    {
+      "book": "7-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 228,
+      "units": 756,
+      "pages_with_exercises": 122,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 253,
+        "other": 22,
+        "theory": 464,
+        "worked_example": 16
+      }
+    },
+    {
+      "book": "7-sinif-fen-bilimleri-ders-kitabi-cevaplari-tutku-yayinlari",
+      "pages": 256,
+      "units": 930,
+      "pages_with_exercises": 182,
+      "unit_kinds": {
+        "exercise": 438,
+        "other": 93,
+        "solution": 4,
+        "theory": 365,
+        "worked_example": 30
+      }
+    },
+    {
+      "book": "7-sinif-fen-bilimleri-ders-kitabi-cevaplari-yildirim-yayinlari",
+      "pages": 240,
+      "units": 952,
+      "pages_with_exercises": 158,
+      "unit_kinds": {
+        "exercise": 458,
+        "other": 120,
+        "solution": 1,
+        "theory": 363,
+        "worked_example": 10
+      }
+    },
+    {
+      "book": "7-sinif-ingilizce-ders-kitabi-cevaplari-bilim-ve-kultur-yayinlari",
+      "pages": 176,
+      "units": 910,
+      "pages_with_exercises": 148,
+      "unit_kinds": {
+        "exercise": 425,
+        "other": 28,
+        "theory": 457
+      }
+    },
+    {
+      "book": "7-sinif-ingilizce-ders-kitabi-cevaplari-kok-e-yayinlari",
+      "pages": 192,
+      "units": 880,
+      "pages_with_exercises": 152,
+      "unit_kinds": {
+        "exercise": 357,
+        "other": 53,
+        "theory": 470
+      }
+    },
+    {
+      "book": "7-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-ders-kitabi",
+      "pages": 201,
+      "units": 971,
+      "pages_with_exercises": 139,
+      "unit_kinds": {
+        "exercise": 544,
+        "other": 49,
+        "theory": 378
+      }
+    },
+    {
+      "book": "7-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-work-book",
+      "pages": 83,
+      "units": 435,
+      "pages_with_exercises": 64,
+      "unit_kinds": {
+        "exercise": 293,
+        "other": 9,
+        "theory": 133
+      }
+    },
+    {
+      "book": "7-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 150,
+      "units": 515,
+      "pages_with_exercises": 108,
+      "unit_kinds": {
+        "exercise": 319,
+        "other": 21,
+        "theory": 175
+      }
+    },
+    {
+      "book": "7-sinif-ingilizce-ders-kitabi-cevaplari-sdr-ipekyolu-yayinlari",
+      "pages": 186,
+      "units": 743,
+      "pages_with_exercises": 132,
+      "unit_kinds": {
+        "exercise": 425,
+        "other": 52,
+        "theory": 266
+      }
+    },
+    {
+      "book": "7-sinif-ingilizce-ders-kitabi-cevaplari-yildirim-yayinlari",
+      "pages": 137,
+      "units": 573,
+      "pages_with_exercises": 102,
+      "unit_kinds": {
+        "exercise": 332,
+        "other": 50,
+        "theory": 191
+      }
+    },
+    {
+      "book": "7-sinif-matematik-ders-kitabi-cevaplari-berkay-yayinlari",
+      "pages": 256,
+      "units": 1571,
+      "pages_with_exercises": 201,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 572,
+        "other": 49,
+        "solution": 222,
+        "theory": 542,
+        "worked_example": 184
+      }
+    },
+    {
+      "book": "7-sinif-matematik-ders-kitabi-cevaplari-edat-yayinlari",
+      "pages": 320,
+      "units": 1181,
+      "pages_with_exercises": 199,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 420,
+        "other": 59,
+        "solution": 49,
+        "theory": 645,
+        "worked_example": 7
+      }
+    },
+    {
+      "book": "7-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 270,
+      "units": 1649,
+      "pages_with_exercises": 207,
+      "unit_kinds": {
+        "exercise": 685,
+        "other": 27,
+        "solution": 273,
+        "theory": 654,
+        "worked_example": 10
+      }
+    },
+    {
+      "book": "7-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-ekoyay-yayinlari",
+      "pages": 252,
+      "units": 955,
+      "pages_with_exercises": 132,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 355,
+        "other": 115,
+        "theory": 457,
+        "worked_example": 27
+      }
+    },
+    {
+      "book": "7-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 297,
+      "units": 1001,
+      "pages_with_exercises": 148,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 300,
+        "other": 94,
+        "solution": 1,
+        "theory": 597,
+        "worked_example": 7
+      }
+    },
+    {
+      "book": "7-sinif-sosyal-bilgiler-ders-kitabi-cevaplari-yildirim-yayinlari",
+      "pages": 289,
+      "units": 1034,
+      "pages_with_exercises": 146,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 284,
+        "other": 163,
+        "solution": 2,
+        "theory": 557,
+        "worked_example": 27
+      }
+    },
+    {
+      "book": "7-sinif-turkce-ders-kitabi-cevaplari-dortel-yayinlari",
+      "pages": 254,
+      "units": 1083,
+      "pages_with_exercises": 179,
+      "unit_kinds": {
+        "exercise": 563,
+        "other": 84,
+        "solution": 1,
+        "theory": 415,
+        "worked_example": 20
+      }
+    },
+    {
+      "book": "7-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-1-kitap",
+      "pages": 272,
+      "units": 863,
+      "pages_with_exercises": 179,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 500,
+        "other": 15,
+        "solution": 3,
+        "theory": 336,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "7-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari-2-kitap",
+      "pages": 264,
+      "units": 1369,
+      "pages_with_exercises": 207,
+      "unit_kinds": {
+        "answer_key": 6,
+        "exercise": 703,
+        "other": 23,
+        "solution": 1,
+        "theory": 632,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "7-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 266,
+      "units": 909,
+      "pages_with_exercises": 154,
+      "unit_kinds": {
+        "exercise": 460,
+        "other": 50,
+        "solution": 1,
+        "theory": 391,
+        "worked_example": 7
+      }
+    },
+    {
+      "book": "7-sinif-turkce-ders-kitabi-cevaplari-ozgun-yayinlari",
+      "pages": 256,
+      "units": 1067,
+      "pages_with_exercises": 176,
+      "unit_kinds": {
+        "exercise": 450,
+        "other": 97,
+        "solution": 1,
+        "theory": 506,
+        "worked_example": 13
+      }
+    },
+    {
+      "book": "8-sinif-fen-bilimleri-ders-kitabi-cevaplari-ata-yayinlari",
+      "pages": 272,
+      "units": 1030,
+      "pages_with_exercises": 167,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 424,
+        "other": 41,
+        "solution": 19,
+        "theory": 518,
+        "worked_example": 27
+      }
+    },
+    {
+      "book": "8-sinif-fen-bilimleri-ders-kitabi-cevaplari-hecce-yayinlari",
+      "pages": 321,
+      "units": 1359,
+      "pages_with_exercises": 167,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 526,
+        "other": 182,
+        "solution": 4,
+        "theory": 618,
+        "worked_example": 28
+      }
+    },
+    {
+      "book": "8-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 291,
+      "units": 981,
+      "pages_with_exercises": 163,
+      "unit_kinds": {
+        "exercise": 312,
+        "instruction": 1,
+        "other": 139,
+        "solution": 1,
+        "theory": 498,
+        "worked_example": 30
+      }
+    },
+    {
+      "book": "8-sinif-fen-bilimleri-ders-kitabi-cevaplari-sdr-dikey-yayinlari",
+      "pages": 292,
+      "units": 1377,
+      "pages_with_exercises": 180,
+      "unit_kinds": {
+        "exercise": 472,
+        "other": 209,
+        "theory": 670,
+        "worked_example": 26
+      }
+    },
+    {
+      "book": "8-sinif-ingilizce-ders-kitabi-cevaplari-bilim-ve-kultur-yayinlari",
+      "pages": 172,
+      "units": 664,
+      "pages_with_exercises": 143,
+      "unit_kinds": {
+        "exercise": 379,
+        "other": 25,
+        "theory": 260
+      }
+    },
+    {
+      "book": "8-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-1",
+      "pages": 173,
+      "units": 621,
+      "pages_with_exercises": 121,
+      "unit_kinds": {
+        "exercise": 350,
+        "other": 51,
+        "theory": 220
+      }
+    },
+    {
+      "book": "8-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari-calisma-kitabi",
+      "pages": 120,
+      "units": 413,
+      "pages_with_exercises": 88,
+      "unit_kinds": {
+        "exercise": 282,
+        "other": 11,
+        "theory": 120
+      }
+    },
+    {
+      "book": "8-sinif-ingilizce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 160,
+      "units": 679,
+      "pages_with_exercises": 116,
+      "unit_kinds": {
+        "exercise": 352,
+        "other": 21,
+        "theory": 306
+      }
+    },
+    {
+      "book": "8-sinif-ingilizce-ders-kitabi-cevaplari-tutku-yayinlari",
+      "pages": 174,
+      "units": 797,
+      "pages_with_exercises": 133,
+      "unit_kinds": {
+        "exercise": 512,
+        "other": 43,
+        "theory": 242
+      }
+    },
+    {
+      "book": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-bir-yay-yayinlari",
+      "pages": 223,
+      "units": 827,
+      "pages_with_exercises": 118,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 229,
+        "other": 152,
+        "solution": 6,
+        "theory": 431,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-ders-destek-yayinlari",
+      "pages": 241,
+      "units": 854,
+      "pages_with_exercises": 116,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 258,
+        "instruction": 1,
+        "other": 25,
+        "theory": 563,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 238,
+      "units": 1111,
+      "pages_with_exercises": 155,
+      "unit_kinds": {
+        "exercise": 336,
+        "other": 182,
+        "solution": 2,
+        "theory": 590,
+        "worked_example": 1
+      }
+    },
+    {
+      "book": "8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-nev-kitap-yayinlari",
+      "pages": 229,
+      "units": 702,
+      "pages_with_exercises": 123,
+      "unit_kinds": {
+        "exercise": 230,
+        "other": 81,
+        "theory": 387,
+        "worked_example": 4
+      }
+    },
+    {
+      "book": "8-sinif-matematik-ders-kitabi-cevaplari-ada-yayinlari",
+      "pages": 327,
+      "units": 1554,
+      "pages_with_exercises": 229,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 601,
+        "other": 107,
+        "solution": 270,
+        "theory": 559,
+        "worked_example": 15
+      }
+    },
+    {
+      "book": "8-sinif-matematik-ders-kitabi-cevaplari-berkay-yayinlari",
+      "pages": 288,
+      "units": 1574,
+      "pages_with_exercises": 227,
+      "unit_kinds": {
+        "answer_key": 3,
+        "exercise": 589,
+        "other": 33,
+        "solution": 248,
+        "theory": 462,
+        "worked_example": 239
+      }
+    },
+    {
+      "book": "8-sinif-matematik-ders-kitabi-cevaplari-kok-e-yayincilik",
+      "pages": 328,
+      "units": 1365,
+      "pages_with_exercises": 219,
+      "unit_kinds": {
+        "answer_key": 2,
+        "exercise": 623,
+        "other": 31,
+        "solution": 206,
+        "theory": 483,
+        "worked_example": 20
+      }
+    },
+    {
+      "book": "8-sinif-matematik-ders-kitabi-cevaplari-koza-yayinlari",
+      "pages": 277,
+      "units": 1071,
+      "pages_with_exercises": 183,
+      "unit_kinds": {
+        "exercise": 526,
+        "other": 31,
+        "solution": 7,
+        "theory": 501,
+        "worked_example": 6
+      }
+    },
+    {
+      "book": "8-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 367,
+      "units": 1497,
+      "pages_with_exercises": 239,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 478,
+        "other": 57,
+        "solution": 184,
+        "theory": 591,
+        "worked_example": 186
+      }
+    },
+    {
+      "book": "8-sinif-matematik-ders-kitabi-cevaplari-sonuc-yayinlari",
+      "pages": 347,
+      "units": 1574,
+      "pages_with_exercises": 272,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 573,
+        "other": 35,
+        "solution": 213,
+        "theory": 532,
+        "worked_example": 220
+      }
+    },
+    {
+      "book": "8-sinif-turkce-ders-kitabi-cevaplari-ferman-yayinlari",
+      "pages": 304,
+      "units": 1020,
+      "pages_with_exercises": 170,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 476,
+        "other": 139,
+        "theory": 389,
+        "worked_example": 15
+      }
+    },
+    {
+      "book": "8-sinif-turkce-ders-kitabi-cevaplari-hecce-yayinlari",
+      "pages": 302,
+      "units": 986,
+      "pages_with_exercises": 171,
+      "unit_kinds": {
+        "answer_key": 1,
+        "exercise": 458,
+        "other": 131,
+        "theory": 388,
+        "worked_example": 8
+      }
+    },
+    {
+      "book": "8-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari",
+      "pages": 296,
+      "units": 1133,
+      "pages_with_exercises": 179,
+      "unit_kinds": {
+        "exercise": 422,
+        "other": 192,
+        "solution": 2,
+        "theory": 502,
+        "worked_example": 15
+      }
+    }
+  ],
+  "samples": [
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 21,
+      "kind": "exercise",
+      "confidence": 0.8564,
+      "text": "söyleyiniz. Aşoğıdq sınıfta bulunan ders araç ve gerec_leri ile şeref köşesi tanıtılmıştır. İnceleginiz. î—ğ K Tahta silgisi — Pano Yazı tahtası Kitaplık Öğrenci sırası Sınıfımızda bulunan sıra ve masalar, pcmolcır/ yazı tahtası, tahta kalemi, tahta silgisi, kitoplık ders araç 9ereçlerindendir. Sınıfımızda ders araç gereçlerinin yanı sıra bir de şeref köşesi bulunur. Şeref köşesğnde Türk bogroğı, Atatürkün fotoğ— rafı, İstiklâl Marşı ve Atatürkün Gençliğe Hitabesi bulunur. SİZ de sınıfınızdo bulunon ders aradç ve gereç— oğ lerinin neler olduğunu sögleginiz. (U 21"
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 26,
+      "kind": "exercise",
+      "confidence": 0.88,
+      "text": "hcıngi bölümüne 9itmelidir'? Ok ile gösteriniz."
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 32,
+      "kind": "exercise",
+      "confidence": 0.855,
+      "text": "porken kullandıkları malzemelere birer örnek çiziniz. Temizlik görevlisi"
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 38,
+      "kind": "worked_example",
+      "confidence": 0.72,
+      "text": "larındaki kutucukları örnekteki 9ibi işoretleginiz."
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 43,
+      "kind": "exercise",
+      "confidence": 0.87,
+      "text": "görseli işaretleyiniz. işoreiiediğiniz görseli boyayınız."
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 44,
+      "kind": "exercise",
+      "confidence": 0.88,
+      "text": "moiıgız. Ogun oynaMANIN sizin İçin önemi nedir? Sögie— ÇU YinİZ. 44"
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 49,
+      "kind": "worked_example",
+      "confidence": 0.78,
+      "text": "kullanılan araç ve gereçleri belirletjerek örnek- teki 9ibi işoretleginiz."
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 50,
+      "kind": "exercise",
+      "confidence": 0.7729,
+      "text": "Verilen çalışmaları yapınız. İ Aşağıdokilerden hongisi tanışırken kullandığımız doğru ifa- delerdendir? İşoretleginizı En sevdiğim renk pembedir. Merhaba, ben Selçuk. l—(_x.î\" HGHÖI ogun ognogalım! , Aşoığıdokilerden hongisi sınıfta bulunan eşgolordon değildir? İşcıretleginiz. 50"
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 52,
+      "kind": "exercise",
+      "confidence": 0.8625,
+      "text": "10. Bagrok töreni sırasında nasıl davranmamız gerektiğini söıjleginiz. Ha İstek ve ihtigoçiorımızı ifade ederken kullanılması gereken nezaket sözcüklerini sögleginiz."
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 52,
+      "kind": "exercise",
+      "confidence": 0.96,
+      "text": "12. Okul size neler kazandırdı? Sögleginiz. 52"
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 57,
+      "kind": "worked_example",
+      "confidence": 0.855,
+      "text": "og Ailenizdeki iş bölümlerine örnekler veriniz. SA 57"
+    },
+    {
+      "book": "1-sinif-hayat-bilgisi-ders-kitabi-cevaplari-ardic-yayinlari",
+      "page": 63,
+      "kind": "exercise",
+      "confidence": 0.8067,
+      "text": "Arkadaşlar. aile bireglerimize istek ve ihtigudorı— mızı bildirirken “lütfen, rica ederim, sakıncası yoksa teşekkür ederim” gibi nezaket ifadelerini kullanmalı- yız. Evde, aile üyelerimizin odalarına girmeden önce kup&urım çalmalı, içeri girmek için izin isîemeligiz. Siz de bildi- ğiniz nezaket sözlerini söyleyiniz. e?â 63"
+    }
+  ]
+}

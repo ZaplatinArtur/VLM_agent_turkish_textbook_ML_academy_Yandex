@@ -18,6 +18,7 @@ class Index:
             self,
             subject: str | None = None,
             textbook: str | None = None,
+            grade: int | str | None = None,
     ) -> list[RetrievedChunk]:
         """Возвращает чанки, опционально суженные по предмету и/или книге.
 
@@ -33,6 +34,12 @@ class Index:
             ]
         if textbook is not None:
             chunks = [c for c in chunks if c.metadata.get("textbook") == textbook]
+        if grade is not None:
+            chunks = [
+                chunk
+                for chunk in chunks
+                if str(chunk.metadata.get("grade")) == str(grade)
+            ]
         return chunks
 
     def get_by_id(self, chunk_id: str) -> RetrievedChunk | None:

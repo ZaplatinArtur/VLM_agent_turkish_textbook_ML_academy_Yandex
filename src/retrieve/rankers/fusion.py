@@ -24,17 +24,30 @@ class ReciprocalRankFusion(Ranker):
         self.rrf_k = rrf_k
         self.weights = list(weights) if weights is not None else [1.0] * len(rankers)
 
+    def build(self) -> None:
+        for ranker in self.rankers:
+            build = getattr(ranker, "build", None)
+            if callable(build):
+                build()
+
+    def persist(self) -> None:
+        for ranker in self.rankers:
+            persist = getattr(ranker, "persist", None)
+            if callable(persist):
+                persist()
+
     def rank(
             self,
             query: str,
             chunks: list[RetrievedChunk] | None = None,
             subject: str | None = None,
+            grade: int | str | None = None,
     ) -> list[RetrievedChunk]:
         scores = {}
         seen = {}
         for ranker, weight in zip(self.rankers, self.weights):
             for position, chunk in enumerate(
-                    ranker.rank(query, chunks, subject=subject), start=1
+                    ranker.rank(query, chunks, subject=subject, grade=grade), start=1
             ):
                 scores[chunk.chunk_id] = (
                         scores.get(chunk.chunk_id, 0.0) + weight / (self.rrf_k + position)

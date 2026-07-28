@@ -61,7 +61,19 @@ class DenseRanker(Ranker):
     def persist(self) -> None:
         if self.index_dir is None or not isinstance(self._store, FaissVectorStore):
             return
-        save_index(self.index_dir, self._store, self._embedder_name)
+        book_ids = [
+            str(
+                chunk.metadata.get("textbook")
+                or chunk.chunk_id.split(":", 1)[0]
+            )
+            for chunk in self.index.get()
+        ]
+        save_index(
+            self.index_dir,
+            self._store,
+            self._embedder_name,
+            book_ids=book_ids,
+        )
 
     def invalidate(self) -> None:
         self._built = False
@@ -86,14 +98,20 @@ class DenseRanker(Ranker):
             query: str,
             chunks: list[RetrievedChunk] | None = None,
             subject: str | None = None,
+            grade: int | str | None = None,
     ) -> list[RetrievedChunk]:
         if not self._built:
             self.build()
         if self._store is None:
             return []
         allowed_ids = None  # None == поиск везде
-        if subject is not None:
-            allowed_ids = {chunk.chunk_id for chunk in self.index.get(subject)}
+        if subject is not None or grade is not None:
+            filtered = (
+                self.index.get(subject)
+                if grade is None
+                else self.index.get(subject=subject, grade=grade)
+            )
+            allowed_ids = {chunk.chunk_id for chunk in filtered}
         if chunks:
             subset_ids = {chunk.chunk_id for chunk in chunks}
             allowed_ids = subset_ids if allowed_ids is None else allowed_ids & subset_ids

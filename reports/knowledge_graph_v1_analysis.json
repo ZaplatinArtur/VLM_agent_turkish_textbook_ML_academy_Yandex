@@ -1,0 +1,47 @@
+{
+  "nodes": 151576,
+  "edges": 114594,
+  "exercises": 59875,
+  "relation_counts": {
+    "theory_for": 102149,
+    "worked_example_for": 9729,
+    "solution_of": 2716
+  },
+  "linked_exercise_anchors": {
+    "theory_for": 54000,
+    "worked_example_for": 9729,
+    "solution_of": 1950
+  },
+  "exercise_coverage": {
+    "theory_for": 0.9019,
+    "worked_example_for": 0.1625,
+    "solution_of": 0.0326
+  },
+  "agent_safe_solutions": {
+    "linked_exercises": 1627,
+    "coverage": 0.0272,
+    "minimum_confidence": 0.8
+  },
+  "edge_methods": {
+    "theory_for:nearby_theory": 89751,
+    "theory_for:same_section": 12398,
+    "worked_example_for:nearby_worked_example": 9729,
+    "solution_of:explicit_exercise_id": 1874,
+    "solution_of:nearest_exercise": 754,
+    "solution_of:task_number": 88
+  },
+  "confidence": {
+    "theory_for": {
+      "mean": 0.7018,
+      "median": 0.68
+    },
+    "worked_example_for": {
+      "mean": 0.72,
+      "median": 0.72
+    },
+    "solution_of": {
+      "mean": 0.8802,
+      "median": 1.0
+    }
+  }
+}

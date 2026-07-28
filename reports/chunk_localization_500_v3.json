@@ -1,0 +1,18 @@
+{
+  "diagnostic": "Exact/near-exact exercise localization on pages longer than the embedding model's 128-token limit; not a downstream QA metric.",
+  "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "queries": 500,
+  "page_candidates": 42148,
+  "unit_candidates": 151576,
+  "page_chunking": {
+    "hit_at_1": 0.298,
+    "hit_at_5": 0.37,
+    "mrr_at_5": 0.3234
+  },
+  "hybrid_task_chunking": {
+    "hit_at_1": 0.996,
+    "hit_at_5": 1.0,
+    "mrr_at_5": 0.9974
+  },
+  "runtime_seconds": 87.423
+}

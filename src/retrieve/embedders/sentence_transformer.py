@@ -1,3 +1,5 @@
+import threading
+
 from sentence_transformers import SentenceTransformer
 
 from .base import Embedder, SymmetricTextEmbedder
@@ -10,11 +12,14 @@ class SentenceTransformerEmbedder(SymmetricTextEmbedder, Embedder):
         self.model_name = model_name
         self.batch_size = batch_size
         self._model = None
+        self._model_lock = threading.Lock()
 
     @property
     def model(self):
         if self._model is None:
-            self._model = SentenceTransformer(self.model_name)
+            with self._model_lock:
+                if self._model is None:
+                    self._model = SentenceTransformer(self.model_name)
         return self._model
 
     def encode(self, texts: list[str]) -> list[list[float]]:

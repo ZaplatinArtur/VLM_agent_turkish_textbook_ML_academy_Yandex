@@ -6,8 +6,19 @@ from typing import Any
 
 from .base import Ranker
 from .fusion import DEFAULT_RRF_K, ReciprocalRankFusion
+from .graph import GraphExpansionRanker
+from .lexical import BM25Ranker
+from .rerank import KnowledgeReranker
 
-__all__ = ["DEFAULT_RRF_K", "DenseRanker", "Ranker", "ReciprocalRankFusion"]
+__all__ = [
+    "BM25Ranker",
+    "DEFAULT_RRF_K",
+    "DenseRanker",
+    "GraphExpansionRanker",
+    "KnowledgeReranker",
+    "Ranker",
+    "ReciprocalRankFusion",
+]
 
 
 def __getattr__(name: str) -> Any:

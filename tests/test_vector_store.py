@@ -37,6 +37,12 @@ def test_explicit_kind_overrides_size():
     assert isinstance(make_index(16, IndexKind.FLAT, size_hint=10**9), faiss.IndexFlat)
 
 
+def test_environment_can_force_exact_store(monkeypatch):
+    monkeypatch.setenv("MLA_FAISS_INDEX_KIND", "flat")
+    store = make_store(vs.FLAT_MAX_VECTORS + 1, dim=2)
+    assert store.is_exact
+
+
 def test_unknown_kind_is_rejected():
     with pytest.raises(ValueError):
         make_index(16, "quantum")  # type: ignore[arg-type]

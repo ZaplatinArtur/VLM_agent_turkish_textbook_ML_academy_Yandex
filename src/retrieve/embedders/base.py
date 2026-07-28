@@ -18,7 +18,12 @@ class SymmetricTextEmbedder(ABC):
     def embed_chunks(self, chunks: list[RetrievedChunk]) -> list[list[float]]:
         if not chunks:
             return []
-        return self.encode([chunk.text for chunk in chunks])
+        return self.encode(
+            [
+                str(chunk.metadata.get("retrieval_text") or chunk.text)
+                for chunk in chunks
+            ]
+        )
 
     def embed_query(self, query: str) -> list[float]:
         return self.encode([query])[0]

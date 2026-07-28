@@ -9,14 +9,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 from collections import Counter
+from pathlib import Path
 from typing import Any
 
 from paths import CHUNKS_JSONL_DIR, INDEX_DIR
-
-from .parsing import get_retrieved_chunks
-
 
 def corpus_inventory(chunks: list[Any]) -> dict[str, Any]:
     chunk_ids = [str(chunk.chunk_id) for chunk in chunks]
@@ -59,7 +58,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--k", type=int, default=5)
     args = parser.parse_args(argv)
 
-    chunks = get_retrieved_chunks()
+    graph_dir_value = os.environ.get("MLA_KNOWLEDGE_GRAPH_DIR", "").strip()
+    graph_dir = Path(graph_dir_value).expanduser() if graph_dir_value else None
+    if (
+        graph_dir is not None
+        and (graph_dir / "nodes.jsonl").is_file()
+        and (graph_dir / "edges.jsonl").is_file()
+    ):
+        from .graph import KnowledgeGraph
+
+        chunks = KnowledgeGraph.load(graph_dir).searchable_nodes()
+    else:
+        from .parsing import get_retrieved_chunks
+
+        chunks = get_retrieved_chunks()
     inventory = corpus_inventory(chunks)
     print(json.dumps({"corpus": inventory}, ensure_ascii=False, indent=2))
     if not chunks:

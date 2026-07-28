@@ -8,6 +8,7 @@
 import hashlib
 import json
 import time
+from collections.abc import Iterable
 from pathlib import Path
 
 from .vector_store import FaissVectorStore
@@ -29,12 +30,19 @@ def save_index(
         directory: Path | str,
         store: FaissVectorStore,
         embedder_name: str,
+        book_ids: Iterable[str] | None = None,
 ) -> dict:
     """Сохраняет снимок стора и манифест. Возвращает записанный манифест."""
     directory = Path(directory)
     store.save(directory)
     # chunk_id = "<book-slug>:<page>", книга — часть до первого двоеточия.
-    books = {chunk_id.split(":", 1)[0] for chunk_id in store.chunk_ids}
+    # Legacy page chunks use "<book-slug>:<page>". Educational graph nodes
+    # have opaque "edu_*" ids, so their textbook ids must come from metadata.
+    books = (
+        {str(book_id) for book_id in book_ids}
+        if book_ids is not None
+        else {chunk_id.split(":", 1)[0] for chunk_id in store.chunk_ids}
+    )
     manifest = {
         "n_vectors": store.size,
         "n_chunks": len(store.chunk_ids),

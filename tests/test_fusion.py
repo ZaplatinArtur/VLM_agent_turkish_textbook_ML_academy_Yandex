@@ -16,7 +16,7 @@ class StubRanker:
         self.received: list[RetrievedChunk] | None = None
         self.received_subject: str | None = None
 
-    def rank(self, query, chunks=None, subject=None):
+    def rank(self, query, chunks=None, subject=None, grade=None):
         self.received = None if chunks is None else list(chunks)
         self.received_subject = subject
         return [make_chunk(chunk_id) for chunk_id in self.order]

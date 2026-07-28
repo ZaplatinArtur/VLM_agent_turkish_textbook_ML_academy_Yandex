@@ -38,6 +38,22 @@ def test_manifest_records_counts(tmp_path):
     assert load_manifest(tmp_path)["corpus_hash"] == manifest["corpus_hash"]
 
 
+def test_manifest_accepts_explicit_books_for_opaque_graph_node_ids(tmp_path):
+    store = FaissVectorStore.from_vectors(
+        ["edu_a", "edu_b", "edu_c"],
+        [[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]],
+    )
+
+    manifest = save_index(
+        tmp_path,
+        store,
+        "embedder-x",
+        book_ids=["textbook-a", "textbook-a", "textbook-b"],
+    )
+
+    assert manifest["n_books"] == 2
+
+
 def test_roundtrip_preserves_search(tmp_path):
     save_index(tmp_path, make_store(), "m")
     loaded = load_index(tmp_path, ["bookA:1", "bookA:2", "bookB:1"], "m")
