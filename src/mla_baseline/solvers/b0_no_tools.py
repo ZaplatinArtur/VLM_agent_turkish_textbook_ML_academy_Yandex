@@ -63,10 +63,10 @@ class B0NoTools(Solver):
             HumanMessage(content=content),
         ]
 
-    def _invoke_kwargs(self) -> dict:
+    def _invoke_kwargs(self, response_schema: dict | None = None) -> dict:
         from ..schemas import SolveOutput
 
-        schema = SolveOutput.model_json_schema()
+        schema = response_schema or SolveOutput.model_json_schema()
         mode = self.settings.structured_mode
         if mode == "response_format":
             return {
@@ -88,6 +88,7 @@ class B0NoTools(Solver):
         structured: bool = True,
         max_tokens: int | None = None,
         think: bool = True,
+        response_schema: dict | None = None,
     ) -> str:
         """Один вызов модели с общей трассировкой и подсчётом токенов."""
 
@@ -114,7 +115,7 @@ class B0NoTools(Solver):
                     "langfuse_tags": [self.condition, self.settings.prompt_version],
                 },
             },
-            **(self._invoke_kwargs() if structured else {}),
+            **(self._invoke_kwargs(response_schema) if structured else {}),
         )
         meta = response.usage_metadata or {}
         usage.input_tokens = (usage.input_tokens or 0) + (meta.get("input_tokens") or 0)

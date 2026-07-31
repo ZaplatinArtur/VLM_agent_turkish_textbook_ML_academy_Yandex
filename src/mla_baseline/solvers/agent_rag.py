@@ -6,12 +6,18 @@ import json
 import time
 from typing import Any
 
-from langchain_core.messages import SystemMessage, ToolMessage
+from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 
 from ..config import Settings
 from ..contracts import Task
 from ..parsing import parse_solve_output
-from ..schemas import SolveResult, ToolCallLog, Usage
+from ..schemas import (
+    CompactSolveOutput,
+    FinalAnswerOnly,
+    SolveResult,
+    ToolCallLog,
+    Usage,
+)
 from ..tools import (
     LocalTextbookSearchClient,
     TextbookSearchBackend,
@@ -111,6 +117,64 @@ class AgentRag(B0NoTools):
             separators=(",", ":"),
         )
 
+    def _force_final_answer(
+        self,
+        messages: list,
+        task: Task,
+        usage: Usage,
+    ) -> str:
+        """Disable tools and require one schema-constrained final response."""
+        final_messages = [
+            *messages,
+            HumanMessage(
+                content=(
+                    "Artık araç çağırma. Mevcut soru ve arama sonuçlarıyla karar ver. "
+                    "reasoning alanını yazma. solution_steps en fazla üç kısa cümle "
+                    "olsun. YALNIZCA solution_steps ve final_answer alanlarını içeren "
+                    "kısa nihai JSON nesnesini döndür."
+                )
+            ),
+        ]
+        try:
+            return self._invoke(
+                final_messages,
+                task,
+                usage,
+                max_tokens=512,
+                think=False,
+                response_schema=CompactSolveOutput.model_json_schema(),
+            )
+        except Exception as exc:
+            if "LengthFinishReason" not in type(exc).__name__:
+                raise
+
+        answer_only_messages = [
+            *messages,
+            HumanMessage(
+                content=(
+                    "Uzun çözüm yazma. YALNIZCA final_answer alanını içeren tek "
+                    "satırlık JSON döndür. Çoktan seçmeli soruda değer yalnızca "
+                    "A, B, C, D veya E harfi olsun."
+                )
+            ),
+        ]
+        raw = self._invoke(
+            answer_only_messages,
+            task,
+            usage,
+            max_tokens=128,
+            think=False,
+            response_schema=FinalAnswerOnly.model_json_schema(),
+        )
+        answer = FinalAnswerOnly.model_validate_json(raw)
+        return json.dumps(
+            {
+                "solution_steps": "Soru ve getirilen ders kitabı bağlamına göre sonuç belirlendi.",
+                "final_answer": answer.final_answer,
+            },
+            ensure_ascii=False,
+        )
+
     def solve(self, task: Task) -> SolveResult:
         messages = self.build_messages(task)
         usage = Usage()
@@ -120,11 +184,14 @@ class AgentRag(B0NoTools):
         raw: str | None = None
         parsed = None
         error: str | None = None
+        forced = False
 
         started = time.perf_counter()
         try:
-            # One initial model response, up to N tool rounds, and one final answer.
-            for _ in range(self.settings.retrieval_max_calls + 2):
+            # Tool-enabled rounds are bounded. Any malformed final response,
+            # duplicate call, or exhausted tool budget is followed by one
+            # tool-disabled, schema-constrained final response.
+            for _ in range(self.settings.retrieval_max_calls + 1):
                 response = self.agent_llm.invoke(messages)
                 self._add_usage(usage, response)
                 messages.append(response)
@@ -134,9 +201,14 @@ class AgentRag(B0NoTools):
                     raw = self._response_text(response)
                     parsed = parse_solve_output(raw)
                     if parsed is None:
-                        error = "parse_error"
+                        raw = self._force_final_answer(messages, task, usage)
+                        forced = True
+                        parsed = parse_solve_output(raw)
+                        if parsed is None:
+                            error = "parse_error"
                     break
 
+                executed_this_round = 0
                 for index, call in enumerate(requested_calls):
                     name = str(call.get("name") or "")
                     arguments = call.get("args")
@@ -162,6 +234,7 @@ class AgentRag(B0NoTools):
                     else:
                         seen_calls.add(call_key)
                         executed_calls += 1
+                        executed_this_round += 1
                         try:
                             output = str(self.search_tool.invoke(arguments))
                         except Exception as exc:
@@ -183,8 +256,23 @@ class AgentRag(B0NoTools):
                             name=name or None,
                         )
                     )
+
+                if (
+                    executed_calls >= self.settings.retrieval_max_calls
+                    or executed_this_round == 0
+                ):
+                    raw = self._force_final_answer(messages, task, usage)
+                    forced = True
+                    parsed = parse_solve_output(raw)
+                    if parsed is None:
+                        error = "parse_error"
+                    break
             else:
-                error = "agent_step_limit"
+                raw = self._force_final_answer(messages, task, usage)
+                forced = True
+                parsed = parse_solve_output(raw)
+                if parsed is None:
+                    error = "parse_error"
         except Exception as exc:
             error = f"{type(exc).__name__}: {exc}"
 
@@ -198,6 +286,7 @@ class AgentRag(B0NoTools):
             solution_steps=parsed.solution_steps if parsed else None,
             reasoning=parsed.reasoning if parsed else None,
             raw_response=raw,
+            forced_answer=forced,
             generation={
                 "temperature": self.settings.temperature,
                 "top_p": self.settings.top_p,
@@ -206,6 +295,7 @@ class AgentRag(B0NoTools):
                 "max_tokens": self.settings.max_tokens,
                 "structured_mode": self.settings.structured_mode,
                 "enable_thinking": self.settings.enable_thinking,
+                "agent_strategy": "bounded_tools_then_structured_final_v2",
             },
             tool_calls=tool_logs,
             usage=usage,

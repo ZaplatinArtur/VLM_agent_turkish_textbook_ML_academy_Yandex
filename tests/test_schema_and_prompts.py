@@ -57,6 +57,26 @@ class SchemaAndPromptTests(unittest.TestCase):
         verdict = parse_judge_verdict(raw)
         self.assertTrue(verdict.strict_correct)
 
+    def test_long_rationale_is_truncated_without_losing_score(self) -> None:
+        raw = json.dumps(
+            {
+                "label": "incorrect",
+                "score": 0,
+                "strict_correct": False,
+                "final_answer_correct": False,
+                "reasoning_correct": False,
+                "complete": True,
+                "confidence": 0.9,
+                "error_types": ["wrong_answer"],
+                "rationale": "x" * 2000,
+                "reference_quality_issue": False,
+            }
+        )
+        verdict = parse_judge_verdict(raw)
+        self.assertEqual(verdict.score, 0)
+        self.assertEqual(len(verdict.rationale), 1200)
+        self.assertTrue(verdict.rationale.endswith("..."))
+
     def test_task_identifier_cannot_leak_synthetic_expected_label(self) -> None:
         item = EvaluationItem(
             task_id="m1__wrong_concise__textbook_retrieval",

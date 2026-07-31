@@ -11,20 +11,28 @@ from mla_baseline.tools import LocalTextbookSearchClient
 
 
 class FakeLlm:
-    def __init__(self, responses: list[AIMessage]) -> None:
+    def __init__(self, responses: list[AIMessage | Exception]) -> None:
         self.responses = list(responses)
         self.invocations: list[list[Any]] = []
+        self.invoke_kwargs: list[dict[str, Any]] = []
         self.bound_tools: list[Any] = []
 
     def bind_tools(self, tools: list[Any]) -> "FakeLlm":
         self.bound_tools = tools
         return self
 
-    def invoke(self, messages: list[Any]) -> AIMessage:
+    def bind(self, **kwargs: Any) -> "FakeLlm":
+        return self
+
+    def invoke(self, messages: list[Any], **kwargs: Any) -> AIMessage:
         self.invocations.append(list(messages))
+        self.invoke_kwargs.append(kwargs)
         if not self.responses:
             raise AssertionError("fake LLM has no response left")
-        return self.responses.pop(0)
+        response = self.responses.pop(0)
+        if isinstance(response, Exception):
+            raise response
+        return response
 
 
 class FakeSearchClient:
@@ -55,12 +63,12 @@ class FakeSearchClient:
 
 
 def _settings(**overrides: Any) -> Settings:
-    return Settings(
-        _env_file=None,
-        model_name="fake-qwen",
-        structured_mode="none",
+    values = {
+        "model_name": "fake-qwen",
+        "structured_mode": "none",
         **overrides,
-    )
+    }
+    return Settings(_env_file=None, **values)
 
 
 def _task() -> Task:
@@ -166,13 +174,12 @@ def test_agent_enforces_tool_call_limit_and_still_accepts_final_answer() -> None
     llm = FakeLlm(
         [
             _tool_call("dikdörtgen alan", call_id="call-1"),
-            _tool_call("geometri alan örnekleri", call_id="call-2"),
             _final_answer(),
         ]
     )
     search_client = FakeSearchClient()
     solver = AgentRag(
-        _settings(retrieval_max_calls=1),
+        _settings(retrieval_max_calls=1, structured_mode="response_format"),
         llm=llm,
         search_client=search_client,  # type: ignore[arg-type]
     )
@@ -182,7 +189,59 @@ def test_agent_enforces_tool_call_limit_and_still_accepts_final_answer() -> None
     assert result.error is None
     assert result.final_answer == "24 cm²"
     assert len(search_client.calls) == 1
-    assert "tool call limit reached" in (result.tool_calls[1].error or "")
+    assert len(result.tool_calls) == 1
+    assert result.forced_answer is True
+    response_format = llm.invoke_kwargs[-1]["response_format"]["json_schema"]
+    assert set(response_format["schema"]["properties"]) == {
+        "solution_steps",
+        "final_answer",
+    }
+
+
+def test_agent_repairs_malformed_final_response_without_tools() -> None:
+    llm = FakeLlm(
+        [
+            AIMessage(content="The answer is probably 24."),
+            _final_answer(),
+        ]
+    )
+    solver = AgentRag(
+        _settings(),
+        llm=llm,
+        search_client=FakeSearchClient(),  # type: ignore[arg-type]
+    )
+
+    result = solver.solve(_task())
+
+    assert result.error is None
+    assert result.final_answer == "24 cm²"
+    assert result.forced_answer is True
+
+
+def test_agent_falls_back_to_answer_only_after_compact_length_limit() -> None:
+    class LengthFinishReasonError(Exception):
+        pass
+
+    llm = FakeLlm(
+        [
+            _tool_call("dikdörtgen alan", call_id="call-1"),
+            LengthFinishReasonError("compact response reached its limit"),
+            AIMessage(content='{"final_answer":"24 cm²"}'),
+        ]
+    )
+    solver = AgentRag(
+        _settings(retrieval_max_calls=1, structured_mode="response_format"),
+        llm=llm,
+        search_client=FakeSearchClient(),  # type: ignore[arg-type]
+    )
+
+    result = solver.solve(_task())
+
+    assert result.error is None
+    assert result.final_answer == "24 cm²"
+    assert result.forced_answer is True
+    answer_schema = llm.invoke_kwargs[-1]["response_format"]["json_schema"]["schema"]
+    assert set(answer_schema["properties"]) == {"final_answer"}
 
 
 def test_agent_prompt_does_not_leak_reference_fields() -> None:

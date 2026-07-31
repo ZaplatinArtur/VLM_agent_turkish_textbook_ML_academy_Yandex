@@ -1,6 +1,6 @@
 """Схемы бейзлайнов: что должна вернуть модель и что мы отдаём судье."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SolveOutput(BaseModel):
@@ -9,6 +9,32 @@ class SolveOutput(BaseModel):
     reasoning: str | None = None
     solution_steps: str
     final_answer: str
+
+
+class CompactSolveOutput(BaseModel):
+    """Short tool-disabled final response used after the RAG loop."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    solution_steps: str = Field(
+        max_length=800,
+        description="At most three short Turkish sentences.",
+    )
+    final_answer: str = Field(
+        max_length=120,
+        description="Only the concise final answer; one choice letter when applicable.",
+    )
+
+
+class FinalAnswerOnly(BaseModel):
+    """Last-resort schema when even the compact solution reaches its limit."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    final_answer: str = Field(
+        max_length=120,
+        description="Only the concise final answer; one choice letter when applicable.",
+    )
 
 
 class Usage(BaseModel):
