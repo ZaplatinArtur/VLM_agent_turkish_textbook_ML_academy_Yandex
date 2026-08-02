@@ -20,6 +20,18 @@ The package combines deterministic exact metrics, a blinded multimodal LLM judge
 
 The math gold answers are often annotated images. Judge requests therefore support both a question image and a reference-answer image. Setup labels are removed from model prompts and hidden by default in the human interface.
 
+## Desktop analytics application
+
+The source code for the **VLM Analytics** desktop application is maintained in
+[`apps/vlm-analytics`](apps/vlm-analytics/README.md). It imports benchmark runs
+and judge outputs into a local SQLite database and provides dashboards for
+accuracy, subject slices, token usage, latency, audit results, and chunking
+experiments.
+
+Only source code, dependency files, build instructions, and tests are tracked.
+Generated `.exe` files, local databases, synchronization caches, and imported
+benchmark artifacts are intentionally excluded from Git.
+
 ## Install and test
 
 ```powershell
