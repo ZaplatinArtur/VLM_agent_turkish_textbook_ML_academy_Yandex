@@ -20,6 +20,9 @@ from urllib.parse import urlparse
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from odevjet_boilerplate import clean_text  # noqa: E402
+
 BASE_URL = "https://www.odevjet.com"
 HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) mla-corpus/0.1"}
 TIMEOUT = (10, 30)
@@ -27,13 +30,7 @@ WORKERS = 8
 SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 
 # шаблонные строки темы сайта — на каждой странице, в корпус не нужны
-BOILERPLATE_LINE_MARKERS = (
-    "anlık görüntüleyici", "henüz görsel eklenmemiş",
-    "onaylanmış öğrenci çözümü yok", "ilk çözümü sen paylaş",
-    "kendi çözümünü paylaş", "jpg, png veya webp",
-    "yalnızca kontrol ve öğrenme amacıyla", "velilerimiz de bu içerikleri",
-    "fotoğrafını yükle", "çerez", "gizlilik politikası",
-)
+# (списки и логика — в odevjet_boilerplate, общем с чисткой корпуса)
 
 _local = threading.local()
 
@@ -96,16 +93,7 @@ def extract(page_html: str) -> tuple[str, list[str]]:
     text = re.sub(r"<(script|style|form|nav|footer).*?</\1>", " ", body, flags=re.S)
     text = re.sub(r"<[^>]+>", "\n", text)
     text = html_lib.unescape(text)
-    lines = []
-    for line in text.splitlines():
-        line = re.sub(r"\s+", " ", line).strip()
-        if not line:
-            continue
-        low = line.casefold()
-        if any(mark in low for mark in BOILERPLATE_LINE_MARKERS):
-            continue
-        lines.append(line)
-    return "\n".join(lines), imgs
+    return clean_text(text), imgs
 
 
 def scrape_page(slug: str, grade, subject, page_no: int, url: str) -> dict:

@@ -64,6 +64,13 @@ Arama kuralları:
 - Aynı sorguyu tekrar etme; sonuç yetersizse aramadan kendi bilginle çöz.\
 """
 
+# Переход к ответу: тул снят (лимит/дубль/попытка «вызвать» финал), модель
+# должна закрыть задачу тем, что уже собрала.
+FINISH_NOW_V1 = """\
+Araç kullanımı bitti; yeni arama yapamazsın. Elindeki bilgilerle çözümü \
+tamamla ve YALNIZCA istenen JSON formatında nihai cevabını ver.\
+"""
+
 # Несгораемый микро-финал: последняя ступень, когда даже структурный wrap-up
 # вырождается. Никакого JSON — только сам ответ, JSON собираем сами.
 LAST_RESORT_V1 = """\
@@ -108,6 +115,7 @@ PROMPTS = {
         "user_text": USER_TEXT_V1,
         "wrapup": WRAPUP_V1,
         "last_resort": LAST_RESORT_V1,
+        "finish_now": FINISH_NOW_V1,
         "b1_tool_note": B1_TOOL_NOTE_V1,
         "agent_tool_note": AGENT_RAG_TOOL_NOTE_V1,
     },
@@ -117,6 +125,7 @@ PROMPTS = {
         "user_text": USER_TEXT_V1,
         "wrapup": WRAPUP_V1,
         "last_resort": LAST_RESORT_V1,
+        "finish_now": FINISH_NOW_V1,
         "b1_tool_note": B1_TOOL_NOTE_V1,
         "agent_tool_note": AGENT_RAG_TOOL_NOTE_V1,
     },

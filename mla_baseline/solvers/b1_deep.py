@@ -13,14 +13,5 @@ from .b1_search import B1Search
 class B1Deep(B1Search):
     condition = "b1_deep"
 
-    def _run_tool(self, name: str, args: dict, seen: set[str]) -> str:
-        if name != "web_search":
-            return f"Bilinmeyen araç: {name}"
-        query = str(args.get("query") or "").strip()
-        if not query:
-            return "Boş sorgu. query parametresini doldur veya aramadan çöz."
-        if query.casefold() in seen:
-            return ("Bu sorguyu zaten yaptın, sonuçlar yukarıda. "
-                    "Yeni arama yapma; mevcut bilgiyle çözümü tamamla.")
-        seen.add(query.casefold())
-        return deep_search(self.settings, query)
+    def _search(self, args: dict) -> str:
+        return deep_search(self.settings, str(args["query"]))

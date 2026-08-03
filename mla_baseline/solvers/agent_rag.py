@@ -20,23 +20,21 @@ class AgentRag(B1Search):
         super().__init__(settings)
         self.llm_tools = self.llm.bind(tools=[TEXTBOOK_TOOL_SCHEMA])
 
-    def _run_tool(self, name: str, args: dict, seen: set[str]) -> str:
-        if name != "search_textbooks":
-            return f"Bilinmeyen araç: {name}"
-        query = str(args.get("query") or "").strip()
-        if not query:
-            return "Boş sorgu. query parametresini doldur veya aramadan çöz."
-        key = json.dumps({"q": query.casefold(), "s": args.get("subject"),
-                          "g": args.get("grade"), "m": args.get("mode")},
-                         ensure_ascii=False, sort_keys=True)
-        if key in seen:
-            return ("Bu sorguyu zaten yaptın, sonuçlar yukarıda. "
-                    "Yeni arama yapma; mevcut bilgiyle çözümü tamamla.")
-        if len(seen) >= self.settings.rag_max_calls:
-            return ("Arama limitine ulaştın. Eldeki kanıtlarla çözümü tamamla.")
-        seen.add(key)
+    # дисциплина цикла (лимит, дедуп, реакция на несуществующий тул) — в B1Search;
+    # здесь только сам источник и ключ дедупликации с учётом фильтров
+    tool_name = "search_textbooks"
+
+    def _dedup_key(self, args: dict) -> str:
+        return json.dumps({"q": str(args["query"]).casefold(), "s": args.get("subject"),
+                           "g": args.get("grade"), "m": args.get("mode")},
+                          ensure_ascii=False, sort_keys=True)
+
+    def _max_calls(self) -> int:
+        return self.settings.rag_max_calls
+
+    def _search(self, args: dict) -> str:
         return textbook_search(
-            self.settings, query,
+            self.settings, str(args["query"]),
             top_k=args.get("top_k"),
             subject=args.get("subject"),
             grade=args.get("grade"),
