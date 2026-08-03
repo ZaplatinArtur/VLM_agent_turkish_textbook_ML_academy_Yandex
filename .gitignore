@@ -7,6 +7,8 @@ data/images/
 .idea/
 
 # локальные данные и артефакты, не для репозитория
+# корпус ÖdevJet: 38 МБ gzip, забран с a100-2 перед потерей доступа (2026-07-31)
+data/corpus_backup/*.gz
 /images/
 *.zip
 *.xlsx
