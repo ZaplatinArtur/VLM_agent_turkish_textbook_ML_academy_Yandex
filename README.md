@@ -20,6 +20,18 @@ The package combines deterministic exact metrics, a blinded multimodal LLM judge
 
 The math gold answers are often annotated images. Judge requests therefore support both a question image and a reference-answer image. Setup labels are removed from model prompts and hidden by default in the human interface.
 
+## Desktop analytics application
+
+The source code for the **VLM Analytics** desktop application is maintained in
+[`apps/vlm-analytics`](apps/vlm-analytics/README.md). It imports benchmark runs
+and judge outputs into a local SQLite database and provides dashboards for
+accuracy, subject slices, token usage, latency, audit results, and chunking
+experiments.
+
+Only source code, dependency files, build instructions, and tests are tracked.
+Generated `.exe` files, local databases, synchronization caches, and imported
+benchmark artifacts are intentionally excluded from Git.
+
 ## Install and test
 
 ```powershell
@@ -97,6 +109,15 @@ vlm-judge prepare-adjudication --dataset artifacts/runs/no_tools.jsonl `
 
 # Final hybrid/exact/judge views, paired deltas, bootstrap intervals, and coverage audit.
 vlm-judge aggregate --input artifacts/runs/scored_records.jsonl --output artifacts/reports/summary.json
+
+# Multiple setups can be aggregated together. Corrected rerun rows override
+# matching task_id/setup units without counting them twice.
+vlm-judge aggregate `
+  --input reports/judge_out_b0.jsonl `
+  --input reports/judge_out_b1dr.jsonl `
+  --overlay reports/judge_out_b0_delta.jsonl `
+  --overlay reports/judge_out_b1dr_delta.jsonl `
+  --output reports/judge_agg_b0_vs_b1dr.json
 ```
 
 ## Prepared calibration assets

@@ -87,6 +87,48 @@ class AggregationTests(unittest.TestCase):
         self.assertEqual(comparison["paired_tasks"], 1)
         self.assertEqual(comparison["web_search_wins"], 1)
 
+    def test_text_binary_verdicts_are_aggregated(self) -> None:
+        records = [
+            {
+                "task_id": "q1",
+                "setup": "no_tools",
+                "subject": "Math",
+                "answer_type": "open_ended",
+                "verdict": {"score": 1, "rationale": "matches"},
+            },
+            {
+                "task_id": "q2",
+                "setup": "no_tools",
+                "subject": "Math",
+                "answer_type": "open_ended",
+                "verdict": {"score": 0, "rationale": "does not match"},
+            },
+        ]
+
+        result = aggregate_results(records)
+        summary = result["by_setup"]["no_tools"]
+
+        self.assertEqual(summary["scored"], 2)
+        self.assertEqual(summary["evaluation_failures"], 0)
+        self.assertEqual(summary["score_sources"], {"judge_binary": 2})
+        self.assertEqual(summary["strict_accuracy"], 0.5)
+        self.assertEqual(summary["mean_score_0_4"], 2.0)
+
+    def test_malformed_text_binary_verdict_is_an_evaluation_failure(self) -> None:
+        records = [
+            {
+                "task_id": "q1",
+                "setup": "no_tools",
+                "verdict": {"score": 2, "rationale": "invalid binary score"},
+            },
+        ]
+
+        result = aggregate_results(records)
+        summary = result["by_setup"]["no_tools"]
+
+        self.assertEqual(summary["scored"], 0)
+        self.assertEqual(summary["evaluation_failures"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

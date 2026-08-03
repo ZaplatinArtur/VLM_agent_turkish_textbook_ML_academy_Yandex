@@ -1,0 +1,40 @@
+.venv/
+build/
+dist/
+*.spec
+*.db
+*.db-shm
+*.db-wal
+.sync_cache/
+sync_cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.idea/
+.vscode/
+
+# Local benchmark data, judge caches and audit material.  The repository
+# contains the application code only; these artifacts may contain model
+# outputs, textbook images, or machine-specific paths.
+audit_source/
+audit_work/
+v2_274_bundle/
+v2_274_app_bundle/
+hybrid_chunking_274_bundle/
+artifacts/
+
+# Packaged applications and local credentials.
+*.exe
+*.zip
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+
+# Benchmark-specific one-off import/adjudication scripts kept locally.  Some
+# contain manual labels or assumptions tied to a private evaluation corpus;
+# they are not part of the desktop application source distribution.
+/import_*.py
+/manual_audit_labels.py
+/prepare_*.py

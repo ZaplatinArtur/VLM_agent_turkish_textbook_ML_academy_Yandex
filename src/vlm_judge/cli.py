@@ -5,6 +5,7 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 from .adjudication import build_adjudication_context
 from .aggregation import aggregate_results
@@ -106,16 +107,70 @@ def _prepare_requests(args: argparse.Namespace) -> int:
     return 0
 
 
+def _aggregate_record_key(record: dict[str, Any]) -> tuple[str, str]:
+    task_id = str(record.get("task_id") or "").strip()
+    setup = str(record.get("setup") or "").strip()
+    if not task_id or not setup:
+        raise ValueError("aggregate records require non-empty task_id and setup")
+    return task_id, setup
+
+
+def _load_aggregate_records(
+    input_paths: list[Path],
+    overlay_paths: list[Path],
+) -> tuple[list[dict[str, Any]], int]:
+    records = [
+        record
+        for path in input_paths
+        for record in read_records(path)
+    ]
+    if not overlay_paths:
+        return records, 0
+
+    positions: dict[tuple[str, str], int] = {}
+    for index, record in enumerate(records):
+        key = _aggregate_record_key(record)
+        if key in positions:
+            raise ValueError(
+                f"cannot apply overlays to duplicate base aggregate unit: {key[0]}::{key[1]}"
+            )
+        positions[key] = index
+
+    replacements = 0
+    seen_overlay_keys: set[tuple[str, str]] = set()
+    for path in overlay_paths:
+        for record in read_records(path):
+            key = _aggregate_record_key(record)
+            if key in seen_overlay_keys:
+                raise ValueError(f"duplicate aggregate overlay unit: {key[0]}::{key[1]}")
+            seen_overlay_keys.add(key)
+            if key not in positions:
+                raise ValueError(f"aggregate overlay has no base unit: {key[0]}::{key[1]}")
+            records[positions[key]] = record
+            replacements += 1
+    return records, replacements
+
+
 def _aggregate(args: argparse.Namespace) -> int:
-    with Path(args.input).open("r", encoding="utf-8") as handle:
-        records = [json.loads(line) for line in handle if line.strip()]
+    input_paths = [Path(value) for value in args.input]
+    overlay_paths = [Path(value) for value in args.overlay]
+    records, replacements = _load_aggregate_records(input_paths, overlay_paths)
     result = aggregate_results(records)
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", encoding="utf-8") as handle:
         json.dump(result, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
-    print(json.dumps({"records": len(records), "output": str(output)}, ensure_ascii=False))
+    print(
+        json.dumps(
+            {
+                "records": len(records),
+                "overlay_replacements": replacements,
+                "output": str(output),
+            },
+            ensure_ascii=False,
+        )
+    )
     return 0
 
 
@@ -559,7 +614,18 @@ def build_parser() -> argparse.ArgumentParser:
     requests.set_defaults(handler=_prepare_requests)
 
     aggregate = commands.add_parser("aggregate", help="aggregate scored records by setup and subject")
-    aggregate.add_argument("--input", required=True)
+    aggregate.add_argument(
+        "--input",
+        action="append",
+        required=True,
+        help="scored JSONL input; repeat to aggregate multiple setups",
+    )
+    aggregate.add_argument(
+        "--overlay",
+        action="append",
+        default=[],
+        help="corrected JSONL rows that replace matching task_id/setup units",
+    )
     aggregate.add_argument("--output", required=True)
     aggregate.set_defaults(handler=_aggregate)
 
