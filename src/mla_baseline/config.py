@@ -49,9 +49,9 @@ class Settings(BaseSettings):
     # Optional HTTP retrieval adapter. AgentRag uses direct local retrieval by default.
     retrieval_base_url: str = "http://127.0.0.1:8770"
     retrieval_timeout_s: float = 10.0
-    retrieval_top_k: int = 5
+    retrieval_top_k: int = Field(default=5, ge=1, le=20)
     retrieval_max_context_chars: int = 6_000
-    retrieval_max_calls: int = 3
+    retrieval_max_calls: int = Field(default=2, ge=1, le=2)
 
     # B1: веб-поиск через self-hosted SearXNG.
     searxng_url: str = "http://localhost:8080"

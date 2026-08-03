@@ -13,6 +13,7 @@ from mla_baseline.tools import (
     create_search_textbooks_tool,
     format_search_result_for_model,
 )
+from retrieve.confidence import Relevance, RelevanceVerdict
 from schemas.retrieve import RetrievedChunk
 
 
@@ -50,7 +51,7 @@ def _search_payload(*hits: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def test_local_search_calls_textbook_retrieve_without_http() -> None:
+def test_local_search_calls_checked_retrieval_without_http() -> None:
     calls: list[dict[str, Any]] = []
 
     def fake_retriever(
@@ -58,9 +59,9 @@ def test_local_search_calls_textbook_retrieve_without_http() -> None:
         *,
         k: int,
         subject: str | None,
-    ) -> list[RetrievedChunk]:
+    ) -> tuple[list[RetrievedChunk], RelevanceVerdict]:
         calls.append({"query": query, "k": k, "subject": subject})
-        return [
+        chunks = [
             RetrievedChunk(
                 chunk_id="book-1:42",
                 text="Dikdörtgenin alanı iki kenarın çarpımıdır.",
@@ -79,6 +80,11 @@ def test_local_search_calls_textbook_retrieve_without_http() -> None:
                 metadata={"subject": "math", "grade": 6},
             ),
         ]
+        return chunks, RelevanceVerdict(
+            relevance=Relevance.CONFIDENT,
+            top_score=0.91,
+            reason="test confident hit",
+        )
 
     client = LocalTextbookSearchClient(retriever=fake_retriever)
     result = client.search(
@@ -90,6 +96,13 @@ def test_local_search_calls_textbook_retrieve_without_http() -> None:
 
     assert calls == [{"query": "dikdörtgen alanı", "k": 5, "subject": "math"}]
     assert result["returned"] == 1
+    assert result["retrieved"] == 1
+    assert result["relevance"] == {
+        "label": "confident",
+        "is_useful": True,
+        "top_score": 0.91,
+        "reason": "уверенное попадание",
+    }
     assert result["hits"] == [
         {
             "chunk_id": "book-1:42",
@@ -108,6 +121,37 @@ def test_local_search_calls_textbook_retrieve_without_http() -> None:
             "page_number": 42,
         }
     ]
+
+
+def test_local_search_hides_weak_chunks_from_model() -> None:
+    def weak_retriever(
+        query: str,
+        *,
+        k: int,
+        subject: str | None,
+    ) -> tuple[list[RetrievedChunk], RelevanceVerdict]:
+        return [
+            RetrievedChunk(
+                chunk_id="weak:1",
+                text="This text must not reach the model.",
+                score=0.2,
+                metadata={"subject": "math"},
+            )
+        ], RelevanceVerdict(
+            relevance=Relevance.WEAK,
+            top_score=0.2,
+            reason="below threshold",
+        )
+
+    result = LocalTextbookSearchClient(retriever=weak_retriever).search("geometri")
+    formatted = json.loads(format_search_result_for_model(result))
+
+    assert result["retrieved"] == 1
+    assert result["returned"] == 0
+    assert result["hits"] == []
+    assert result["relevance"]["label"] == "weak"
+    assert formatted["relevance"]["label"] == "weak"
+    assert "This text must not reach the model" not in json.dumps(formatted)
 
 
 def test_local_search_reports_retriever_failure() -> None:
@@ -230,17 +274,21 @@ def test_langchain_tool_turns_retrieval_failure_into_model_visible_result() -> N
 
     assert result["returned"] == 0
     assert result["hits"] == []
+    assert result["relevance"]["label"] == "error"
     assert "retrieval request failed" in result["error"]
 
 
-def test_langchain_tool_exposes_expected_name_and_schema() -> None:
+def test_langchain_tool_uses_configured_top_k_and_hides_it_from_model() -> None:
     client = TextbookSearchClient(
         session=FakeSession(FakeResponse(_search_payload())),  # type: ignore[arg-type]
     )
-    search_tool = create_search_textbooks_tool(client)
+    search_tool = create_search_textbooks_tool(client, top_k=2)
+
+    search_tool.invoke({"query": "geometri"})
 
     schema = search_tool.args_schema.model_json_schema()
 
     assert search_tool.name == "search_textbooks"
-    assert schema["properties"]["top_k"]["maximum"] == 20
+    assert "top_k" not in schema["properties"]
     assert set(schema["properties"]["mode"]["enum"]) == {"or", "and"}
+    assert client.session.calls[0]["json"]["top_k"] == 2  # type: ignore[attr-defined]

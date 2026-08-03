@@ -50,12 +50,6 @@ Every hit contains `chunk_id`, text, rank, BM25 score, page/book identifiers, su
           "type": "string",
           "description": "Short semantic query in the task language: topic plus operation, formula, or distinctive exercise terms. Do not paste the entire prompt."
         },
-        "top_k": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 20,
-          "default": 5
-        },
         "subject": {
           "type": "string",
           "description": "Raw corpus subject label when known. Omit rather than guess."
@@ -76,18 +70,20 @@ Every hit contains `chunk_id`, text, rank, BM25 score, page/book identifiers, su
 }
 ```
 
-The adapter for an agent calls `POST http://127.0.0.1:8770/api/search` with the function arguments and returns the JSON response unchanged.
+The agent fixes `top_k` through `MLA_RETRIEVAL_TOP_K`; the model cannot override
+it. The adapter adds that value when it calls the local retriever or
+`POST http://127.0.0.1:8770/api/search`.
 
 ## Recommended agent policy
 
-1. Inspect the screenshot and identify subject, grade if visible, topic, requested output, and uncertain facts.
-2. Call once with a compact high-recall `or` query and `top_k=5`.
-3. If results are noisy, reformulate with distinctive terms, add a confirmed subject/grade filter, or use `and`. Do not repeat an identical call.
-4. Use retrieved material to derive and verify the answer. A solution-site page may contain errors or answer a neighboring exercise.
-5. If a hit appears to be the exact exercise, compare all numbers, units, diagrams, and page context before using its answer.
-6. Keep a trace of query, filters, latency, returned chunk IDs, and which chunks were actually used. This is required for setup validation and ablations.
+1. Extract `image_evidence`, the normalized question, topic, unknown concepts, and a compact `retrieval_query` from the screenshot. The screenshot remains the source of truth.
+2. Build the first query only from the topic and unknown concepts. Do not copy task-specific numbers, answer choices, or the whole question. `top_k` is fixed by the experiment.
+3. If `relevance` is `weak` or `empty`, reformulate once with distinctive terms or add a confirmed subject/grade filter. Do not repeat an identical call. Do not search again after `confident`.
+4. Compare confident hits with the image evidence before exposing them to the answer-generation step. Remove chunks that contradict the task's numbers, units, entities, diagram, choices, or requested output.
+5. Recheck the candidate answer against the original screenshot. Retrieved material may support a formula or definition but cannot override the image.
+6. Keep a trace of query, filters, latency, returned chunk IDs, `exit_reason`, `image_evidence`, `retrieval_relevance`, `retrieval_conflict`, and `answer_source`. This is required for setup validation and ablations.
 
-Suggested limits for the first experiment: at most three search calls, at most five hits exposed per call, and at most 6,000 retrieved characters added to model context. These values should be varied as explicit retrieval hyperparameters later.
+Suggested limits for the first experiment: at most two search calls (the second only after weak/empty retrieval), at most five hits exposed per call, and at most 6,000 retrieved characters added to model context. These values should be varied as explicit retrieval hyperparameters later.
 
 ## Current measured baseline
 

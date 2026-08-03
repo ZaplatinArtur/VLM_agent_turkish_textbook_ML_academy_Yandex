@@ -64,13 +64,41 @@ seçmeli sorularda sadece şık harfi (A, B, C, D veya E).
 
 RAG_TOOL_POLICY_V1 = """\
 Elinde search_textbooks adlı bir ders kitabı arama aracı var.
+- Görsel soru, sayılar, birimler, şekiller ve şıklar için birincil doğruluk kaynağıdır.
+- Sana yapılandırılmış görsel kanıt verilirse ilk aramada yalnızca oradaki retrieval_query değerini kullan.
 - Müfredata özgü bir formül, tanım, yöntem veya benzer çözülmüş örnek yararlıysa aracı kullan.
 - Arama sorgusunu kısa tut; konu, işlem ve ayırt edici terimleri yaz. Sorunun tamamını kopyalama.
-- İlk aramada yüksek kapsama için mode="or" ve top_k=5 kullan.
-- Aynı sorguyu tekrar etme. Sonuçlar yetersizse sorguyu en fazla iki kez yeniden formüle et.
+- Sonuç sayısı deney ayarlarında sabittir; top_k parametresi gönderme.
+- relevance="confident" ise kanıtı kullan ve yeniden arama yapma.
+- relevance="weak" veya "empty" ise sorguyu en fazla bir kez yeniden formüle et.
+- Aynı sorguyu farklı büyük/küçük harf veya noktalama ile tekrar etme.
 - Arama sonucu yalnızca kanıttır. Sayıları, birimleri ve şekilleri asıl soruyla karşılaştır.
 - Arama başarısızsa veya sonuç yoksa soruyu kendi bilginle çözmeye devam et.
 - Son mesajında araç çağrısı yapma; yalnızca istenen çözüm JSON'unu döndür.
+"""
+
+IMAGE_EVIDENCE_PROMPT_V1 = """\
+Görev görselini çözmeden önce yapılandırılmış olarak oku. Görsel birincil doğruluk kaynağıdır.
+YALNIZCA şu alanları içeren JSON döndür:
+- image_evidence: görselde açıkça bulunan sayılar, birimler, varlıklar, şekiller, şıklar ve istenen şey;
+- question: görseldeki sorunun kısa ve eksiksiz yeniden yazımı;
+- topic: ders konusu;
+- unknown_concepts: çözüm için ders kitabından aranabilecek formül, tanım veya yöntemler.
+topic ve unknown_concepts içine sorunun tamamını, özel sayıları, şıkları veya tahmini cevabı koyma.
+"""
+
+RETRIEVAL_CONFLICT_PROMPT_V1 = """\
+Görev görseli birincil doğruluk kaynağıdır. Yapılandırılmış görsel kanıtla getirilen ders kitabı
+parçalarını karşılaştır. Görseldeki sayıları, birimleri, varlıkları, şekli, şıkları veya sorulan
+şeyi değiştiren parçaları çelişkili say. Yalnızca conflicting_chunk_ids ve kısa reason alanlarını
+içeren JSON döndür. Genel formül veya tanım farklı bir örnek sayı içeriyorsa, bunu tek başına
+çelişki sayma.
+"""
+
+IMAGE_FINAL_VERIFICATION_PROMPT_V1 = """\
+Nihai cevabı tekrar doğrudan görev görseliyle kontrol et. Görseldeki sayılar, birimler, şekiller,
+şıklar ve asıl soru her türlü retrieval bağlamından üstündür. Aday cevap görselle uyuşmuyorsa
+düzelt. YALNIZCA solution_steps ve final_answer alanlarını içeren kısa JSON döndür.
 """
 
 B1_TOOL_NOTE_V1 = """
@@ -106,6 +134,9 @@ def _prompt(system: str) -> dict[str, object]:
     return {
         "system": system,
         "rag_tool_policy": RAG_TOOL_POLICY_V1,
+        "image_evidence": IMAGE_EVIDENCE_PROMPT_V1,
+        "retrieval_conflict": RETRIEVAL_CONFLICT_PROMPT_V1,
+        "image_final_verification": IMAGE_FINAL_VERIFICATION_PROMPT_V1,
         "answer_type_hints": ANSWER_TYPE_HINTS_V1,
         "user_text": USER_TEXT_V1,
         "b1_tool_note": B1_TOOL_NOTE_V1,

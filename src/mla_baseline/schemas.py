@@ -37,6 +37,26 @@ class FinalAnswerOnly(BaseModel):
     )
 
 
+class ImageTaskEvidence(BaseModel):
+    """Structured facts extracted from the authoritative task image."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    image_evidence: list[str]
+    question: str
+    topic: str = Field(min_length=1, max_length=200)
+    unknown_concepts: list[str]
+
+
+class RetrievalConflictCheck(BaseModel):
+    """Chunk IDs whose content contradicts the task image."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    conflicting_chunk_ids: list[str]
+    reason: str
+
+
 class Usage(BaseModel):
     input_tokens: int | None = None
     output_tokens: int | None = None
@@ -49,6 +69,7 @@ class ToolCallLog(BaseModel):
     result_preview: str | None = None
     returned_chunk_ids: list[str] = Field(default_factory=list)
     latency_ms: float | None = None
+    relevance: dict | None = None
     error: str | None = None
 
 
@@ -64,6 +85,11 @@ class SolveResult(BaseModel):
     reasoning: str | None = None
     forced_answer: bool = False
     raw_response: str | None = None
+    exit_reason: str | None = None
+    image_evidence: list[str] = Field(default_factory=list)
+    retrieval_relevance: str | None = None
+    retrieval_conflict: bool | None = None
+    answer_source: str | None = None
     generation: dict = Field(default_factory=dict)
     tool_calls: list[ToolCallLog] = Field(default_factory=list)
     usage: Usage = Field(default_factory=Usage)

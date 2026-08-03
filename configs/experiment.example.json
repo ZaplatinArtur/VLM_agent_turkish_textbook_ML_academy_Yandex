@@ -31,7 +31,7 @@
       "retrieval_config_hash": "fill",
       "retriever": "bm25-fts5-v1",
       "top_k": 5,
-      "maximum_calls": 3,
+      "maximum_calls": 2,
       "maximum_context_characters": 6000
     }
   },

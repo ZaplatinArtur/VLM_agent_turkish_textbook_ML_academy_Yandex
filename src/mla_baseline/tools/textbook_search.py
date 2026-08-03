@@ -20,8 +20,8 @@ class TextbookSearchError(RuntimeError):
     """The retrieval service could not return a valid search result."""
 
 
-class TextbookSearchInput(BaseModel):
-    """Arguments exposed to the model as the tool JSON schema."""
+class TextbookSearchQuery(BaseModel):
+    """Query fields shared by the fixed-budget tool and backend client."""
 
     query: str = Field(
         min_length=2,
@@ -31,7 +31,6 @@ class TextbookSearchInput(BaseModel):
             "or distinctive exercise terms. Do not paste the entire task."
         ),
     )
-    top_k: int = Field(default=5, ge=1, le=20)
     subject: str | None = None
     grade: int | str | None = None
     mode: Literal["or", "and"] = "or"
@@ -40,6 +39,12 @@ class TextbookSearchInput(BaseModel):
     @classmethod
     def strip_strings(cls, value: Any) -> Any:
         return value.strip() if isinstance(value, str) else value
+
+
+class TextbookSearchInput(TextbookSearchQuery):
+    """Validated request sent to a retrieval backend."""
+
+    top_k: int = Field(default=5, ge=1, le=20)
 
 
 class TextbookSearchBackend(Protocol):
@@ -61,18 +66,29 @@ class LocalTextbookSearchClient:
 
     def __init__(
         self,
-        retriever: Callable[..., list[Any]] | None = None,
+        retriever: Callable[..., Any] | None = None,
     ) -> None:
         # The default import is intentionally lazy: importing the agent should
         # not load FAISS or sentence-transformers before the tool is called.
         self._retriever = retriever
 
-    def _get_retriever(self) -> Callable[..., list[Any]]:
+    def _get_retriever(self) -> Callable[..., Any]:
         if self._retriever is None:
-            from retrieve.service import textbook_retrieve
+            from retrieve.service import textbook_retrieve_checked
 
-            self._retriever = textbook_retrieve
+            self._retriever = textbook_retrieve_checked
         return self._retriever
+
+    @staticmethod
+    def _relevance_payload(verdict: Any) -> dict[str, Any]:
+        relevance = getattr(verdict, "relevance", None)
+        label = getattr(relevance, "value", relevance)
+        return {
+            "label": str(label),
+            "is_useful": bool(getattr(verdict, "is_useful", False)),
+            "top_score": getattr(verdict, "top_score", None),
+            "reason": str(getattr(verdict, "reason", "")),
+        }
 
     @staticmethod
     def _as_payload(chunk: Any) -> dict[str, Any]:
@@ -130,13 +146,22 @@ class LocalTextbookSearchClient:
         fetch_k = arguments.top_k if arguments.grade is None else arguments.top_k * 5
         started = time.perf_counter()
         try:
-            chunks = self._get_retriever()(
+            retrieved = self._get_retriever()(
                 arguments.query,
                 k=fetch_k,
                 subject=arguments.subject,
             )
         except Exception as exc:
             raise TextbookSearchError(f"local retrieval failed: {exc}") from exc
+
+        if isinstance(retrieved, tuple) and len(retrieved) == 2:
+            chunks, verdict = retrieved
+        else:
+            chunks = retrieved
+            from retrieve.confidence import assess_relevance
+
+            verdict = assess_relevance(chunks)
+        chunks = list(chunks)
 
         if arguments.grade is not None:
             chunks = [
@@ -146,16 +171,28 @@ class LocalTextbookSearchClient:
                 == str(arguments.grade)
             ]
         chunks = chunks[: arguments.top_k]
-        hits = [self._as_hit(chunk, rank) for rank, chunk in enumerate(chunks, 1)]
+        if arguments.grade is not None:
+            from retrieve.confidence import assess_relevance
+
+            verdict = assess_relevance(chunks)
+        relevance = self._relevance_payload(verdict)
+        visible_chunks = chunks if relevance["is_useful"] else []
+        hits = [
+            self._as_hit(chunk, rank)
+            for rank, chunk in enumerate(visible_chunks, 1)
+        ]
         return {
             "query": arguments.query,
+            "top_k": arguments.top_k,
             "mode": arguments.mode,
             "filters": {
                 "subject": arguments.subject,
                 "grade": arguments.grade,
             },
             "latency_ms": round((time.perf_counter() - started) * 1_000, 3),
+            "retrieved": len(chunks),
             "returned": len(hits),
+            "relevance": relevance,
             "hits": hits,
         }
 
@@ -231,6 +268,20 @@ class TextbookSearchClient:
         normalized = dict(payload)
         normalized["hits"] = hits[: arguments.top_k]
         normalized["returned"] = len(normalized["hits"])
+        normalized["retrieved"] = int(payload.get("retrieved", len(hits)))
+        normalized["top_k"] = arguments.top_k
+        if not isinstance(normalized.get("relevance"), dict):
+            useful = bool(normalized["hits"])
+            normalized["relevance"] = {
+                "label": "confident" if useful else "empty",
+                "is_useful": useful,
+                "top_score": None,
+                "reason": (
+                    "HTTP backend returned hits"
+                    if useful
+                    else "HTTP backend returned no hits"
+                ),
+            }
         return normalized
 
 
@@ -278,12 +329,15 @@ def format_search_result_for_model(
 
     compact_result = {
         "query": result.get("query"),
+        "top_k": result.get("top_k"),
         "mode": result.get("mode"),
         "filters": result.get("filters"),
         "latency_ms": result.get("latency_ms"),
+        "retrieved": result.get("retrieved", len(source_hits)),
         "server_returned": result.get("returned", len(source_hits)),
         "returned": len(compact_hits),
         "omitted_hits": max(0, len(source_hits) - len(compact_hits)),
+        "relevance": result.get("relevance"),
         "hits": compact_hits,
     }
     return json.dumps(compact_result, ensure_ascii=False, separators=(",", ":"))
@@ -292,13 +346,17 @@ def format_search_result_for_model(
 def create_search_textbooks_tool(
     client: TextbookSearchBackend,
     *,
+    top_k: int = 5,
     max_text_chars: int = 6_000,
 ) -> BaseTool:
     """Create the LangChain tool without making any network call."""
 
+    if not 1 <= top_k <= 20:
+        raise ValueError("top_k must be between 1 and 20")
+
     @tool(
         "search_textbooks",
-        args_schema=TextbookSearchInput,
+        args_schema=TextbookSearchQuery,
         description=(
             "Search the approved Turkish textbook corpus for theory, formulas, "
             "worked examples, or a matching exercise. Retrieved text is evidence, "
@@ -307,7 +365,6 @@ def create_search_textbooks_tool(
     )
     def search_textbooks(
         query: str,
-        top_k: int = 5,
         subject: str | None = None,
         grade: int | str | None = None,
         mode: Literal["or", "and"] = "or",
@@ -322,7 +379,19 @@ def create_search_textbooks_tool(
             )
         except TextbookSearchError as exc:
             return json.dumps(
-                {"error": str(exc), "returned": 0, "hits": []},
+                {
+                    "error": str(exc),
+                    "top_k": top_k,
+                    "retrieved": 0,
+                    "returned": 0,
+                    "relevance": {
+                        "label": "error",
+                        "is_useful": False,
+                        "top_score": None,
+                        "reason": str(exc),
+                    },
+                    "hits": [],
+                },
                 ensure_ascii=False,
                 separators=(",", ":"),
             )
