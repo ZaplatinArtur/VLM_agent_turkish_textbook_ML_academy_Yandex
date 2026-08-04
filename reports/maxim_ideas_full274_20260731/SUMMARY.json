@@ -1,0 +1,446 @@
+{
+  "artifact_sha256": {
+    "artifacts/baselines/basic_page_rag_v1/agent_rag_274.jsonl": "62bc952c3802308bc0fbf8d8dc1f82ec523a3ab1e3264bae87a5f8828021d75d",
+    "artifacts/baselines/basic_page_rag_v1/agent_rag_judge.jsonl": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4",
+    "artifacts/baselines/basic_page_rag_v1/validation_274.jsonl": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "artifacts/baselines/no_tools_v1/b0_no_tools_raw.jsonl": "496236da966ed68aa81af3d33da1c40b85c5a11b342de253ada244f97320de8f",
+    "reports/maxim_ideas_full274_20260731/decompose_reasoning_first_v2/solver.jsonl": "0e469a5bebc1412cf672e0ae6b708b6eb0c16eb23fd4f2516edfa6c982bce92b",
+    "reports/maxim_ideas_full274_20260731/direct_reasoning_first_v2/solver.jsonl": "3333694cf69266440ff3edf0438fa56eda1b411fb33119b11fffd178e9bebcbf",
+    "reports/maxim_ideas_full274_20260731/element_chunking_proxy_v1/result.json": "7413181046b783366ec7b354e3a41f69c68eb3641957135af9f869d68b6c9019",
+    "reports/maxim_ideas_full274_20260731/graph253_v1/solver.jsonl": "65a069d1d51088af6363339da5dd7e01a9512f26013bf05c5b044c233bad59eb",
+    "reports/maxim_ideas_full274_20260731/parallel8_reasoning_first_v2/solver.jsonl": "6115effd03d7eac3e11e9726ecd9822802a04f235a0b361e1863b9bc7e221023",
+    "scripts/score_maxim_full274.py": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf"
+  },
+  "benchmark": {
+    "deterministic_rows": 177,
+    "image_judge_rows": 97,
+    "math_rows": 139,
+    "non_math_rows": 135,
+    "rows": 274,
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+  },
+  "headline": {
+    "best_point_estimate_idea": "parallel8_rf_v2",
+    "best_practical_idea": "decompose_rf_v2",
+    "general_upgrade_found": false,
+    "reason": "Decomposition and parallel8 improve the 274-task point estimate only because of Math; every Maksim treatment remains below page-RAG on the 135 non-Math tasks. Parallel8 adds one answer over decomposition while using 4.39x its solver tokens."
+  },
+  "limitations": [
+    "All p-values are exploratory, unadjusted two-sided exact McNemar tests from one benchmark run.",
+    "Math is 139/274 tasks, so overall gains can hide regressions on the 135 non-Math tasks.",
+    "Element-level result is OCR/text MiniLM+HNSW; ColPali/ColQwen was unavailable and remains untested.",
+    "Graph253 has solution_of edges but include_solutions=false; the unsafe full solution variant was not tested.",
+    "Frozen no-tools is a strong historical long-reasoning reference, not a matched control: 16,384-token v2_cot versus 1,536-token, thinking-off RF-v2 and an older image-judge lineage.",
+    "The frozen page baseline is output-locked by SHA; the exact historical retrieval index/code environment is not fully reconstructible from Git.",
+    "Gold/reference fields were unavailable during generation and were read only by the post-generation scorer/judge."
+  ],
+  "matched_comparisons": {
+    "decompose_vs_direct": {
+      "control_correct": 137,
+      "fixed": 33,
+      "math": {
+        "control_correct": 65,
+        "fixed": 18,
+        "mcnemar_exact_two_sided_p": 0.07551869750022888,
+        "regressed": 8,
+        "treatment_correct": 75
+      },
+      "mcnemar_exact_two_sided_p": 0.09837064844049181,
+      "non_math": {
+        "control_correct": 72,
+        "fixed": 15,
+        "mcnemar_exact_two_sided_p": 0.7011080384254456,
+        "regressed": 12,
+        "treatment_correct": 75
+      },
+      "regressed": 20,
+      "treatment_correct": 150
+    },
+    "parallel8_vs_decompose": {
+      "control_correct": 150,
+      "fixed": 26,
+      "mcnemar_exact_two_sided_p": 1.0,
+      "regressed": 25,
+      "token_ratio": 4.389,
+      "treatment_correct": 151
+    },
+    "parallel8_vs_direct": {
+      "control_correct": 137,
+      "fixed": 32,
+      "math": {
+        "control_correct": 65,
+        "fixed": 19,
+        "mcnemar_exact_two_sided_p": 0.006610751152038574,
+        "regressed": 5,
+        "treatment_correct": 79
+      },
+      "mcnemar_exact_two_sided_p": 0.06490864707227217,
+      "non_math": {
+        "control_correct": 72,
+        "fixed": 13,
+        "mcnemar_exact_two_sided_p": 1.0,
+        "regressed": 13,
+        "treatment_correct": 72
+      },
+      "regressed": 18,
+      "treatment_correct": 151
+    }
+  },
+  "method_status": {
+    "decompose_rf_v2": "full274_tested",
+    "element_proxy": "proxy_only_not_colpali",
+    "graph253": "safe_partial_solutions_disabled",
+    "parallel8_rf_v2": "full274_tested"
+  },
+  "owner": "Максим",
+  "rows": [
+    {
+      "combined_solver_tokens": 4662595,
+      "display": "Basic page-RAG (frozen)",
+      "id": "page_rag",
+      "logical_model_calls": null,
+      "math": {
+        "accuracy": 0.446043,
+        "correct": 62,
+        "n": 139
+      },
+      "non_math": {
+        "accuracy": 0.585185,
+        "correct": 79,
+        "n": 135
+      },
+      "overall": {
+        "accuracy": 0.514599,
+        "correct": 141,
+        "n": 274
+      },
+      "vs_page": {
+        "delta_correct": 0,
+        "fixed": 0,
+        "mcnemar_exact_two_sided_p": 1.0,
+        "regressed": 0
+      }
+    },
+    {
+      "combined_solver_tokens": 1496110,
+      "display": "No-tools long reasoning (frozen)",
+      "id": "no_tools_frozen",
+      "logical_model_calls": null,
+      "math": {
+        "accuracy": 0.755396,
+        "correct": 105,
+        "n": 139
+      },
+      "non_math": {
+        "accuracy": 0.637037,
+        "correct": 86,
+        "n": 135
+      },
+      "overall": {
+        "accuracy": 0.69708,
+        "correct": 191,
+        "n": 274
+      },
+      "vs_page": {
+        "delta_correct": 50,
+        "fixed": 75,
+        "mcnemar_exact_two_sided_p": 5.636282034205402e-07,
+        "regressed": 25
+      }
+    },
+    {
+      "combined_solver_tokens": 297961,
+      "display": "Direct reasoning-first v2",
+      "id": "direct_rf_v2",
+      "logical_model_calls": 274,
+      "math": {
+        "accuracy": 0.467626,
+        "correct": 65,
+        "n": 139
+      },
+      "non_math": {
+        "accuracy": 0.533333,
+        "correct": 72,
+        "n": 135
+      },
+      "overall": {
+        "accuracy": 0.5,
+        "correct": 137,
+        "n": 274
+      },
+      "vs_page": {
+        "delta_correct": -4,
+        "fixed": 34,
+        "mcnemar_exact_two_sided_p": 0.723948145746914,
+        "regressed": 38
+      }
+    },
+    {
+      "combined_solver_tokens": 3858723,
+      "display": "Идея 1: element-level proxy",
+      "id": "element_proxy",
+      "logical_model_calls": null,
+      "math": {
+        "accuracy": 0.402878,
+        "correct": 56,
+        "n": 139
+      },
+      "non_math": {
+        "accuracy": 0.496296,
+        "correct": 67,
+        "n": 135
+      },
+      "overall": {
+        "accuracy": 0.448905,
+        "correct": 123,
+        "n": 274
+      },
+      "vs_page": {
+        "delta_correct": -18,
+        "fixed": 22,
+        "mcnemar_exact_two_sided_p": 0.030015864349067292,
+        "regressed": 40
+      }
+    },
+    {
+      "combined_solver_tokens": 647833,
+      "display": "Идея 2: decomposition",
+      "id": "decompose_rf_v2",
+      "logical_model_calls": 548,
+      "math": {
+        "accuracy": 0.539568,
+        "correct": 75,
+        "n": 139
+      },
+      "non_math": {
+        "accuracy": 0.555556,
+        "correct": 75,
+        "n": 135
+      },
+      "overall": {
+        "accuracy": 0.547445,
+        "correct": 150,
+        "n": 274
+      },
+      "vs_page": {
+        "delta_correct": 9,
+        "fixed": 40,
+        "mcnemar_exact_two_sided_p": 0.3424709984198679,
+        "regressed": 31
+      }
+    },
+    {
+      "combined_solver_tokens": 2843423,
+      "display": "Идея 3: 8× reasoning + judge",
+      "id": "parallel8_rf_v2",
+      "logical_model_calls": 2466,
+      "math": {
+        "accuracy": 0.568345,
+        "correct": 79,
+        "n": 139
+      },
+      "non_math": {
+        "accuracy": 0.533333,
+        "correct": 72,
+        "n": 135
+      },
+      "overall": {
+        "accuracy": 0.551095,
+        "correct": 151,
+        "n": 274
+      },
+      "vs_page": {
+        "delta_correct": 10,
+        "fixed": 40,
+        "mcnemar_exact_two_sided_p": 0.2819789217936561,
+        "regressed": 30
+      }
+    },
+    {
+      "combined_solver_tokens": 8865562,
+      "display": "Идея 4: Graph253",
+      "id": "graph253",
+      "logical_model_calls": null,
+      "math": {
+        "accuracy": 0.410072,
+        "correct": 57,
+        "n": 139
+      },
+      "non_math": {
+        "accuracy": 0.533333,
+        "correct": 72,
+        "n": 135
+      },
+      "overall": {
+        "accuracy": 0.470803,
+        "correct": 129,
+        "n": 274
+      },
+      "vs_page": {
+        "delta_correct": -12,
+        "fixed": 27,
+        "mcnemar_exact_two_sided_p": 0.1752857944430353,
+        "regressed": 39
+      }
+    }
+  ],
+  "schema_version": "maxim-ideas-full274-summary-v1",
+  "subjects": [
+    {
+      "correct": {
+        "decompose_rf_v2": 0,
+        "direct_rf_v2": 1,
+        "element_proxy": 1,
+        "graph253": 1,
+        "no_tools_frozen": 0,
+        "page_rag": 1,
+        "parallel8_rf_v2": 0
+      },
+      "n": 1,
+      "subject": "ATATÜRKÇÜLÜK"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 8,
+        "direct_rf_v2": 7,
+        "element_proxy": 8,
+        "graph253": 7,
+        "no_tools_frozen": 11,
+        "page_rag": 8,
+        "parallel8_rf_v2": 6
+      },
+      "n": 19,
+      "subject": "Biology"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 19,
+        "direct_rf_v2": 19,
+        "element_proxy": 19,
+        "graph253": 19,
+        "no_tools_frozen": 20,
+        "page_rag": 19,
+        "parallel8_rf_v2": 17
+      },
+      "n": 32,
+      "subject": "Chemistry"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 7,
+        "direct_rf_v2": 6,
+        "element_proxy": 6,
+        "graph253": 7,
+        "no_tools_frozen": 5,
+        "page_rag": 7,
+        "parallel8_rf_v2": 4
+      },
+      "n": 9,
+      "subject": "English"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 8,
+        "direct_rf_v2": 6,
+        "element_proxy": 6,
+        "graph253": 9,
+        "no_tools_frozen": 12,
+        "page_rag": 11,
+        "parallel8_rf_v2": 10
+      },
+      "n": 14,
+      "subject": "Geography"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 4,
+        "direct_rf_v2": 5,
+        "element_proxy": 5,
+        "graph253": 4,
+        "no_tools_frozen": 5,
+        "page_rag": 6,
+        "parallel8_rf_v2": 6
+      },
+      "n": 10,
+      "subject": "History"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 75,
+        "direct_rf_v2": 65,
+        "element_proxy": 56,
+        "graph253": 57,
+        "no_tools_frozen": 105,
+        "page_rag": 62,
+        "parallel8_rf_v2": 79
+      },
+      "n": 139,
+      "subject": "Math"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 2,
+        "direct_rf_v2": 2,
+        "element_proxy": 1,
+        "graph253": 1,
+        "no_tools_frozen": 1,
+        "page_rag": 2,
+        "parallel8_rf_v2": 1
+      },
+      "n": 2,
+      "subject": "Philosophy"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 13,
+        "direct_rf_v2": 12,
+        "element_proxy": 10,
+        "graph253": 10,
+        "no_tools_frozen": 14,
+        "page_rag": 12,
+        "parallel8_rf_v2": 14
+      },
+      "n": 19,
+      "subject": "Physics"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 1,
+        "direct_rf_v2": 1,
+        "element_proxy": 1,
+        "graph253": 1,
+        "no_tools_frozen": 3,
+        "page_rag": 2,
+        "parallel8_rf_v2": 1
+      },
+      "n": 5,
+      "subject": "Science"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 2,
+        "direct_rf_v2": 2,
+        "element_proxy": 2,
+        "graph253": 2,
+        "no_tools_frozen": 2,
+        "page_rag": 2,
+        "parallel8_rf_v2": 2
+      },
+      "n": 3,
+      "subject": "Sociology"
+    },
+    {
+      "correct": {
+        "decompose_rf_v2": 11,
+        "direct_rf_v2": 11,
+        "element_proxy": 8,
+        "graph253": 11,
+        "no_tools_frozen": 13,
+        "page_rag": 9,
+        "parallel8_rf_v2": 11
+      },
+      "n": 21,
+      "subject": "Turkish language and literature"
+    }
+  ]
+}

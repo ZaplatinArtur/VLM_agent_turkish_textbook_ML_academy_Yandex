@@ -1,0 +1,236 @@
+{
+  "schema_version": "maxim-independent-winner-audit-v1",
+  "audited_at_utc": "2026-08-03T16:13:35.0850280Z",
+  "audit_scope": "reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation_orchestrated/score.json",
+  "status": "pass_with_attribution_and_provenance_caveats",
+  "verdicts": {
+    "metric_integrity": "pass",
+    "claim_193_of_274_on_this_frozen_protocol": "supported",
+    "claim_as_new_paired_rag_improvement": "not_supported_rag_selected_zero",
+    "claim_as_untouched_heldout_generalization": "not_supported_benchmark_reused_adaptively",
+    "direct_gold_leakage_found": false,
+    "historical_no_rag_generation_cryptographically_attested": false
+  },
+  "score": {
+    "correct": 193,
+    "n": 274,
+    "accuracy_exact": 0.7043795620437956,
+    "accuracy_reported": 0.70438,
+    "deterministic": {
+      "correct": 132,
+      "n": 177
+    },
+    "image_judge": {
+      "correct": 61,
+      "n": 97
+    },
+    "recomputed_correct": 193,
+    "outcome_mismatches": 0
+  },
+  "row_integrity": {
+    "benchmark_rows": 274,
+    "benchmark_unique_task_ids": 274,
+    "solver_rows": 274,
+    "solver_unique_task_ids": 274,
+    "score_outcomes": 274,
+    "score_unique_task_ids": 274,
+    "solver_order_matches_benchmark": true,
+    "outcome_order_matches_benchmark": true,
+    "deterministic_rows": 177,
+    "image_judge_rows": 97,
+    "partition_overlap": 0,
+    "partition_union": 274,
+    "fresh_judge_unique_request_ids": 97,
+    "fresh_judge_unique_cache_keys": 97,
+    "fresh_to_matched_semantic_mismatches": 0,
+    "request_id_reconstruction_mismatches": 0
+  },
+  "composition": {
+    "rows": 274,
+    "rag_selected": 0,
+    "no_rag_selected": 274,
+    "routes": {
+      "same_answer_default_no_rag": 141,
+      "semantic_gate_default_no_rag": 100,
+      "unsafe_or_missing_context_default_no_rag": 33
+    },
+    "verifier_rows": 100,
+    "valid_negative_verdicts": 99,
+    "runner_errors": 1,
+    "runner_error_task_ids": [
+      "val_0197"
+    ],
+    "in_memory_recomposition_mismatches": 0,
+    "no_rag_source_row_hash_mismatches": 0,
+    "page_rag_source_row_hash_mismatches": 0
+  },
+  "content_identity": {
+    "answer_bearing_fields": [
+      "task_id",
+      "model",
+      "final_answer",
+      "solution_steps",
+      "reasoning",
+      "forced_answer",
+      "raw_response",
+      "tool_calls",
+      "usage",
+      "error"
+    ],
+    "solver_vs_frozen_no_rag": {
+      "exact_semantic_payload_equal": 274,
+      "n": 274,
+      "differences": [
+        "condition",
+        "prompt_version",
+        "added generation.semantic_support_composition metadata",
+        "JSON key ordering"
+      ]
+    },
+    "solver_vs_subject_router": {
+      "math": {
+        "exact_semantic_payload_equal": 139,
+        "final_answer_equal": 139,
+        "n": 139
+      },
+      "non_math": {
+        "exact_semantic_payload_equal": 0,
+        "final_answer_equal": 88,
+        "final_answer_different": 47,
+        "n": 135
+      }
+    }
+  },
+  "comparison_vs_subject_router": {
+    "router_score": {
+      "correct": 182,
+      "n": 274,
+      "accuracy": 0.6642335766423357
+    },
+    "new_score": {
+      "correct": 193,
+      "n": 274,
+      "accuracy": 0.7043795620437956
+    },
+    "net_correct": 11,
+    "math": {
+      "new_correct": 103,
+      "router_correct": 103,
+      "n": 139,
+      "fixed": 0,
+      "regressed": 0,
+      "net": 0
+    },
+    "non_math": {
+      "new_correct": 90,
+      "router_correct": 79,
+      "n": 135,
+      "fixed": 19,
+      "regressed": 8,
+      "net": 11,
+      "fixed_task_ids": [
+        "val_0025",
+        "val_0035",
+        "val_0036",
+        "val_0090",
+        "val_0096",
+        "val_0097",
+        "val_0114",
+        "val_0119",
+        "val_0120",
+        "val_0127",
+        "val_0147",
+        "val_0148",
+        "val_0154",
+        "val_0155",
+        "val_0166",
+        "val_0168",
+        "val_0177",
+        "val_0184",
+        "val_0191"
+      ],
+      "regressed_task_ids": [
+        "val_0089",
+        "val_0124",
+        "val_0126",
+        "val_0129",
+        "val_0132",
+        "val_0150",
+        "val_0196",
+        "val_0197"
+      ]
+    },
+    "all_changed_outcomes_have_different_final_answer": true
+  },
+  "gold_isolation": {
+    "verifier_queue_rows": 100,
+    "forbidden_field_violations": 0,
+    "request_hash_mismatches": 0,
+    "preregistered_before_verifier_generation": true,
+    "solver_top_level_gold_fields": 0,
+    "no_rag_source_top_level_gold_fields": 0,
+    "current_tracked_b0_solver_sends_reference_fields_to_model": false,
+    "historical_remote_run_manifest_has_exact_command_config_code_hashes": false,
+    "conclusion": "no observable gold/reference leakage; historical source provenance is incomplete"
+  },
+  "judge": {
+    "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+    "prompt_version": "judge-v2",
+    "model": "Qwen/Qwen3.5-9B",
+    "backend_config_sha256": "e3f71b4af7fa8ad8a6db755d43bdf4a895d087b701436c105da8c5416804fbd9",
+    "rows_with_exact_backend_hash": 97,
+    "fresh_rows": 97,
+    "cache_hits": 0,
+    "errors": 0,
+    "adapter_sha256": {
+      "prompts.py": "84a1342612ca1fce9db9b7d4adfc4215b3d24e77f60d49a47635a47cc190b8d5",
+      "pipeline.py": "d61a248dd5d078924475c819ef824c5e2dc1e587683b2cd84844bb01f72f2f73",
+      "schema.py": "d86fed78c297d0479d00ceb2d54fad502dfbfe8b49cd7be08fed2d25fc7a4e7c"
+    },
+    "weight_revision_or_container_digest_attested": false
+  },
+  "historical_no_rag_context": {
+    "old_score_correct": 191,
+    "old_score_n": 274,
+    "old_judge_lineage": "presentation-hybrid-v1",
+    "new_matched_score_correct": 193,
+    "image_verdict_flips_old_to_new": {
+      "fixed": 13,
+      "regressed": 11,
+      "net": 2
+    },
+    "interpretation": "the +2 versus the old no-rag report is a judge-lineage change, not a solver change"
+  },
+  "hashes": {
+    "benchmark": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "frozen_no_rag_source": "496236da966ed68aa81af3d33da1c40b85c5a11b342de253ada244f97320de8f",
+    "subject_router_solver": "34da8ef69619a8ba1f184cdfd1e6dcaf0fbdbdd1bfc50c711244a68f7d26a574",
+    "subject_router_score": "5c50cc2bb882d0c83386d324fafe0470433172845b4ebb5e787d41d288ad306f",
+    "preregistered_profile": "67fb456fde408581c2af77a9aca6d0033b82d1459c45db106dcd8b0c72b60f03",
+    "preparation_manifest": "534ee1028b18a44069ad3d0b306a2c37ee197e68ed19823ba3bb19015a435d0f",
+    "verifier_queue": "ada53eecbdbab157a12ec838b1d76d3f6d4dd3f5f265777a028c693eeffde387",
+    "verifier_results": "4ca5c66d2f49d7404b4e9a328411b5355332597188f95dfe4cdb399db9043b24",
+    "composition_manifest": "74d79c4e7659f1b1088444ecccc3e4563a554cb74e10784c8fe01dc674c32472",
+    "solver": "41e8ee9c191a312377b4997798509cd89d4fb39e6e84eff2da1f829005ce5c90",
+    "evaluation_manifest": "36a008c2738467269d43cca78389478e51b82c0f7d9c7d948d56e37dc62fac6c",
+    "fresh_judge_input": "64c7a71332f73fc2c8c326e3b12b3bbf61c40a2db6544e2ab2143cbb60754dea",
+    "fresh_judge_result": "f089f49edc174c39e61e118624f2ec384da4ef3034698e4622aefd3abe7ca34e",
+    "matched_image_judge": "28f3d107a0840970e0f82c46157cd85c0f6200f82e1cf105ff39409e58c636b5",
+    "orchestration_manifest": "f57cda8d9b6198016154b6d80c8fbc3b8008792f6b37a1d062c49ccac932f4ad",
+    "finalization_manifest": "e3d778972d9657380ccdc717156b407f7c111dd6cb3f0d13bb1056ad1edc5554",
+    "score_json": "77932f8ef6af9e10df1d79b607902ff54a3144b3c1c17be300ce406a35f2a462",
+    "score_markdown": "97334cad571897f2bbe5cf296a6379f500aa01edebda23448a754f8ecf310fb0",
+    "scorer": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf"
+  },
+  "recursive_manifest_path_sha_checks": {
+    "checked": 35,
+    "mismatches": 0
+  },
+  "caveats": [
+    "The score is attributable to the frozen no-rag control, not to RAG or semantic-support selection.",
+    "The benchmark has been reused adaptively and is not an untouched held-out estimate.",
+    "The historical no-rag remote generation lacks a complete immutable run manifest.",
+    "The judge backend hash does not attest model weight revision or container digest.",
+    "The old 191/274 no-rag report used a different judge lineage; the new 193/274 includes a net +2 judge-lineage effect."
+  ]
+}

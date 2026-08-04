@@ -1,0 +1,45 @@
+{
+  "schema_version": "maxim-cache-only-frozen-judge-evaluation-audit-v1",
+  "status": "PASS_FINAL_ZERO_MODEL_CALL_EVALUATION",
+  "condition": "maxim_blind_ensemble_v2default_v3_repair_v1",
+  "resource_policy": {
+    "external_gpu_used_for_this_evaluation": false,
+    "external_endpoint_calls": 0,
+    "local_model_calls": 0,
+    "cache_only": true
+  },
+  "judge_execution": {
+    "rows": 97,
+    "cache_hits": 97,
+    "cache_misses": 0,
+    "attempts_sum": 0,
+    "error_rows": 0,
+    "valid_verdict_rows": 97,
+    "runner_sha256": "1b1c6341a262ac01c082661bc9eeab279db7b1e75f8c8126020741c8cc55b23c",
+    "orchestrator_sha256": "b8b21519e7a2f55101eb58a5dedbc5192cd585c1bf87679a18474feebe665a5b"
+  },
+  "cache_seed": {
+    "target_rows": 97,
+    "seeded_rows": 97,
+    "missing_rows": 0,
+    "fresh_model_call_rows": 0,
+    "by_source": {
+      "maxim_final_meta_verifier_v2_choice_token_compat_v21": 96,
+      "maxim_final_meta_verifier_v3_choice_token_compat_v31": 1
+    }
+  },
+  "result": {
+    "correct": 205,
+    "total": 274,
+    "accuracy": 0.748175,
+    "final": true
+  },
+  "artifacts": {
+    "preregistration_sha256": "0647f1c2861770590b6d5371664740babddb5f7bda00a76d90f67d71212d1efa",
+    "cache_seed_audit_sha256": "3ad14f5bf35dd88c698b483cfe77aea00ec44ef0704980b5102b7d1183b17ec4",
+    "judge_result_sha256": "049aaf3588f9af1bf7ed34b88f16e65d2cfbd32ccf82ee03f2271661818cfbb0",
+    "orchestration_sha256": "ecc7cad8f4e272e028d800c0b4c6be32c6c63f84bb2045da9d13f621a8218508",
+    "finalization_manifest_sha256": "ece150f477ffd1a58e8130352eec6cc858648eb400a54e29b87d7ca29caa549f",
+    "score_sha256": "0550b1b59b6f9680ad8e7462c1b30fc6c97960bd16fa82576a3f917192fbb24a"
+  }
+}

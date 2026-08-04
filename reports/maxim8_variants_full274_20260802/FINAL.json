@@ -1,0 +1,692 @@
+{
+  "baseline": {
+    "id": "basic_page_rag",
+    "judge": {
+      "evidence": {
+        "artifact": {
+          "deterministic_rows": 177,
+          "profiled_judge_rows": 97,
+          "rows": 274,
+          "unique_task_ids": 274
+        },
+        "image_judge_sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4",
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "artifact",
+        "validated": true
+      },
+      "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+      "matched": true
+    },
+    "kind": "baseline",
+    "matched_bounds": null,
+    "math": {
+      "accuracy": 0.446043,
+      "correct": 62,
+      "n": 139
+    },
+    "name": "Basic page-RAG",
+    "non_math": {
+      "accuracy": 0.585185,
+      "correct": 79,
+      "n": 135
+    },
+    "operational": {
+      "combined_tokens": 4662595,
+      "model_calls": null
+    },
+    "overall": {
+      "accuracy": 0.514599,
+      "correct": 141,
+      "n": 274
+    },
+    "pre_judge_bounds": null,
+    "progress": null,
+    "sources": {
+      "judge_artifact": {
+        "exists": true,
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\artifacts\\baselines\\basic_page_rag_v1\\agent_rag_judge.jsonl",
+        "sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4"
+      },
+      "judge_manifest": null,
+      "manifest": null,
+      "matched_score": {
+        "exists": true,
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_ideas_full274_20260731\\scorer_frozen_replay.json",
+        "sha256": "8252121d4037e2a7f01c4b743af4d113b69e83875195fb9a8f43a24988846335"
+      },
+      "operational_manifest": null,
+      "replay_score": null,
+      "selected_score": {
+        "exists": true,
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_ideas_full274_20260731\\scorer_frozen_replay.json",
+        "sha256": "8252121d4037e2a7f01c4b743af4d113b69e83875195fb9a8f43a24988846335"
+      }
+    },
+    "status": "exact",
+    "vs_baseline": {
+      "delta_correct": 0,
+      "fixed": 0,
+      "regressed": 0
+    }
+  },
+  "baseline_reference": {
+    "accuracy": 0.514599,
+    "correct": 141,
+    "n": 274
+  },
+  "benchmark": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\artifacts\\baselines\\basic_page_rag_v1\\validation_274.jsonl",
+    "rows": 274,
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+  },
+  "config": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\final_report_config.json",
+    "sha256": "19542da2eed4287596244ca71bc5d5cfa24144dbdf9e9f418b3a0b09e932469d"
+  },
+  "ideas": [
+    {
+      "id": "solver_critic_repair",
+      "judge": {
+        "evidence": {
+          "artifact": {
+            "deterministic_rows": 0,
+            "profiled_judge_rows": 97,
+            "rows": 97,
+            "unique_task_ids": 97
+          },
+          "image_judge_sha256": "b6fbefa3e04a03578e469a16fee53fbd0ca10bf7ccf6a37a32a9b959897d3e17",
+          "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+          "method": "artifact",
+          "validated": true
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true
+      },
+      "kind": "idea",
+      "matched_bounds": null,
+      "math": {
+        "accuracy": 0.568345,
+        "correct": 79,
+        "n": 139
+      },
+      "name": "Solver - Critic - Repair",
+      "non_math": {
+        "accuracy": 0.555556,
+        "correct": 75,
+        "n": 135
+      },
+      "operational": {
+        "combined_tokens": 1307934,
+        "model_calls": 797
+      },
+      "overall": {
+        "accuracy": 0.562044,
+        "correct": 154,
+        "n": 274
+      },
+      "pre_judge_bounds": null,
+      "progress": null,
+      "sources": {
+        "judge_artifact": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\solver_critic_repair\\matched_image97_judge.jsonl",
+          "sha256": "b6fbefa3e04a03578e469a16fee53fbd0ca10bf7ccf6a37a32a9b959897d3e17"
+        },
+        "judge_manifest": null,
+        "manifest": null,
+        "matched_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\solver_critic_repair\\score.json",
+          "sha256": "10ac64bc3145ab5710f5268edb4bf7ecef4961ab291f36179a4f6d23fa7e9c9b"
+        },
+        "operational_manifest": null,
+        "replay_score": null,
+        "selected_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\solver_critic_repair\\score.json",
+          "sha256": "10ac64bc3145ab5710f5268edb4bf7ecef4961ab291f36179a4f6d23fa7e9c9b"
+        }
+      },
+      "status": "exact",
+      "vs_baseline": {
+        "delta_correct": 13,
+        "fixed": 52,
+        "regressed": 39
+      }
+    },
+    {
+      "id": "selective_rag_metadata",
+      "judge": {
+        "evidence": {
+          "artifact": {
+            "deterministic_rows": 0,
+            "profiled_judge_rows": 97,
+            "rows": 97,
+            "unique_task_ids": 97
+          },
+          "image_judge_sha256": "e01f140ded294a6554163f0d28b8b8d4fba5cd7b25c77f1a20ca59ae3ce2700a",
+          "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+          "method": "artifact",
+          "validated": true
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true
+      },
+      "kind": "idea",
+      "matched_bounds": null,
+      "math": {
+        "accuracy": 0.546763,
+        "correct": 76,
+        "n": 139
+      },
+      "name": "Selective RAG (retrieval reliability gate)",
+      "non_math": {
+        "accuracy": 0.659259,
+        "correct": 89,
+        "n": 135
+      },
+      "operational": {
+        "combined_tokens": 6158705,
+        "model_calls": 548
+      },
+      "overall": {
+        "accuracy": 0.60219,
+        "correct": 165,
+        "n": 274
+      },
+      "pre_judge_bounds": null,
+      "progress": null,
+      "sources": {
+        "judge_artifact": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\selective_rag_metadata\\matched_image97_judge.jsonl",
+          "sha256": "e01f140ded294a6554163f0d28b8b8d4fba5cd7b25c77f1a20ca59ae3ce2700a"
+        },
+        "judge_manifest": null,
+        "manifest": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\selective_rag_metadata\\evaluation_manifest.json",
+          "sha256": "194d61b5a0f3f493fb5ccdad5b7242e529a39708b3e802e2db012d570b6e571c"
+        },
+        "matched_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\selective_rag_metadata\\matched_score.json",
+          "sha256": "9e90e69a01a17f16ca72d0571a486ce5432382210376e2cd4f66a37edc31f332"
+        },
+        "operational_manifest": null,
+        "replay_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\selective_rag_metadata\\mixed_replay_score.json",
+          "sha256": "f5b5e493e7ca7af8f0cedab600f679aa69f504fb4cb21db8fefc68146874913b"
+        },
+        "selected_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\selective_rag_metadata\\matched_score.json",
+          "sha256": "9e90e69a01a17f16ca72d0571a486ce5432382210376e2cd4f66a37edc31f332"
+        }
+      },
+      "status": "exact",
+      "vs_baseline": {
+        "delta_correct": 24,
+        "fixed": 31,
+        "regressed": 7
+      }
+    },
+    {
+      "id": "subject_router",
+      "judge": {
+        "evidence": {
+          "artifact": {
+            "deterministic_rows": 0,
+            "profiled_judge_rows": 97,
+            "rows": 97,
+            "unique_task_ids": 97
+          },
+          "image_judge_sha256": "432bbddfe9509d9bdc67e79c568f747a2f20468ea00f7e2e1755e55dc55aca77",
+          "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+          "method": "artifact",
+          "validated": true
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true
+      },
+      "kind": "idea",
+      "matched_bounds": null,
+      "math": {
+        "accuracy": 0.741007,
+        "correct": 103,
+        "n": 139
+      },
+      "name": "Router by task type",
+      "non_math": {
+        "accuracy": 0.585185,
+        "correct": 79,
+        "n": 135
+      },
+      "operational": {
+        "combined_tokens": 3009395,
+        "model_calls": null
+      },
+      "overall": {
+        "accuracy": 0.664234,
+        "correct": 182,
+        "n": 274
+      },
+      "pre_judge_bounds": null,
+      "progress": null,
+      "sources": {
+        "judge_artifact": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\subject_router\\matched_image97_judge.jsonl",
+          "sha256": "432bbddfe9509d9bdc67e79c568f747a2f20468ea00f7e2e1755e55dc55aca77"
+        },
+        "judge_manifest": null,
+        "manifest": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\subject_router\\evaluation_manifest.json",
+          "sha256": "a9ee1687af9bda5ebba1f6a6cc00e79bdb97a14160b9641fd3738b624ed11cab"
+        },
+        "matched_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\subject_router\\matched_score.json",
+          "sha256": "5c50cc2bb882d0c83386d324fafe0470433172845b4ebb5e787d41d288ad306f"
+        },
+        "operational_manifest": null,
+        "replay_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\subject_router\\mixed_replay_score.json",
+          "sha256": "5ee30f55fb1731e19a86db37ac563f3b7b69bb48ba32c15017e1ad6da195fe87"
+        },
+        "selected_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\subject_router\\matched_score.json",
+          "sha256": "5c50cc2bb882d0c83386d324fafe0470433172845b4ebb5e787d41d288ad306f"
+        }
+      },
+      "status": "exact",
+      "vs_baseline": {
+        "delta_correct": 41,
+        "fixed": 48,
+        "regressed": 7
+      }
+    },
+    {
+      "id": "parallel_consensus",
+      "judge": {
+        "evidence": {
+          "artifact": {
+            "deterministic_rows": 0,
+            "profiled_judge_rows": 97,
+            "rows": 97,
+            "unique_task_ids": 97
+          },
+          "image_judge_sha256": "ebf4b8be834f3d0df60b7b8def4a62583bd48d377177f4c352e8537d0a3c1848",
+          "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+          "method": "artifact",
+          "validated": true
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true
+      },
+      "kind": "idea",
+      "matched_bounds": null,
+      "math": {
+        "accuracy": 0.532374,
+        "correct": 74,
+        "n": 139
+      },
+      "name": "8-way answer clustering / consensus",
+      "non_math": {
+        "accuracy": 0.481481,
+        "correct": 65,
+        "n": 135
+      },
+      "operational": {
+        "combined_tokens": 2843423,
+        "model_calls": 2466
+      },
+      "overall": {
+        "accuracy": 0.507299,
+        "correct": 139,
+        "n": 274
+      },
+      "pre_judge_bounds": null,
+      "progress": null,
+      "sources": {
+        "judge_artifact": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\parallel_consensus\\matched_image97_judge.jsonl",
+          "sha256": "ebf4b8be834f3d0df60b7b8def4a62583bd48d377177f4c352e8537d0a3c1848"
+        },
+        "judge_manifest": null,
+        "manifest": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\parallel_consensus\\evaluation_manifest.json",
+          "sha256": "2f49f57b98b0153df0d59b28471075b1f7b2876a2e485231764e3530edaf2517"
+        },
+        "matched_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\parallel_consensus\\matched_score.json",
+          "sha256": "8955844dede3c03bb5938755f8eafde6555bd9e88b2de92e173d8b12640cd7f9"
+        },
+        "operational_manifest": null,
+        "replay_score": null,
+        "selected_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\parallel_consensus\\matched_score.json",
+          "sha256": "8955844dede3c03bb5938755f8eafde6555bd9e88b2de92e173d8b12640cd7f9"
+        }
+      },
+      "status": "exact",
+      "vs_baseline": {
+        "delta_correct": -2,
+        "fixed": 32,
+        "regressed": 34
+      }
+    },
+    {
+      "id": "calculator_sympy",
+      "judge": {
+        "evidence": {
+          "artifact": {
+            "deterministic_rows": 0,
+            "profiled_judge_rows": 97,
+            "rows": 97,
+            "unique_task_ids": 97
+          },
+          "image_judge_sha256": "69dcf520c735543ddcb49958ca656c1d2a8aa16f96222a42679381ee2952774a",
+          "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+          "method": "artifact",
+          "validated": true
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true
+      },
+      "kind": "idea",
+      "matched_bounds": null,
+      "math": {
+        "accuracy": 0.460432,
+        "correct": 64,
+        "n": 139
+      },
+      "name": "Calculator / SymPy verification",
+      "non_math": {
+        "accuracy": 0.585185,
+        "correct": 79,
+        "n": 135
+      },
+      "operational": {
+        "combined_tokens": 4846139,
+        "model_calls": 125
+      },
+      "overall": {
+        "accuracy": 0.521898,
+        "correct": 143,
+        "n": 274
+      },
+      "pre_judge_bounds": null,
+      "progress": null,
+      "sources": {
+        "judge_artifact": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\calculator_sympy\\matched_image97_judge.jsonl",
+          "sha256": "69dcf520c735543ddcb49958ca656c1d2a8aa16f96222a42679381ee2952774a"
+        },
+        "judge_manifest": null,
+        "manifest": null,
+        "matched_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\calculator_sympy\\score.json",
+          "sha256": "04a30f628930b935387330a00ef57f8fde71047ec38b8a53730bc3111cd46bc6"
+        },
+        "operational_manifest": null,
+        "replay_score": null,
+        "selected_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\calculator_sympy\\score.json",
+          "sha256": "04a30f628930b935387330a00ef57f8fde71047ec38b8a53730bc3111cd46bc6"
+        }
+      },
+      "status": "exact",
+      "vs_baseline": {
+        "delta_correct": 2,
+        "fixed": 2,
+        "regressed": 0
+      }
+    },
+    {
+      "id": "two_pass_transcription",
+      "judge": {
+        "evidence": {
+          "artifact": {
+            "deterministic_rows": 0,
+            "profiled_judge_rows": 97,
+            "rows": 97,
+            "unique_task_ids": 97
+          },
+          "image_judge_sha256": "afda98e3cc7c15d8920c4c325496c3591df09ba298844f81e0e8749c19853a33",
+          "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+          "method": "artifact",
+          "validated": true
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true
+      },
+      "kind": "idea",
+      "matched_bounds": null,
+      "math": {
+        "accuracy": 0.539568,
+        "correct": 75,
+        "n": 139
+      },
+      "name": "Two-pass transcription and solve",
+      "non_math": {
+        "accuracy": 0.525926,
+        "correct": 71,
+        "n": 135
+      },
+      "operational": {
+        "combined_tokens": 689448,
+        "model_calls": 546
+      },
+      "overall": {
+        "accuracy": 0.532847,
+        "correct": 146,
+        "n": 274
+      },
+      "pre_judge_bounds": null,
+      "progress": null,
+      "sources": {
+        "judge_artifact": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\two_pass_transcription\\matched_image97_judge.jsonl",
+          "sha256": "afda98e3cc7c15d8920c4c325496c3591df09ba298844f81e0e8749c19853a33"
+        },
+        "judge_manifest": null,
+        "manifest": null,
+        "matched_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\two_pass_transcription\\score.json",
+          "sha256": "22118875d09574ea4a1a1426663133b49348c1c125889682f71214193a41d6b9"
+        },
+        "operational_manifest": null,
+        "replay_score": null,
+        "selected_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\two_pass_transcription\\score.json",
+          "sha256": "22118875d09574ea4a1a1426663133b49348c1c125889682f71214193a41d6b9"
+        }
+      },
+      "status": "exact",
+      "vs_baseline": {
+        "delta_correct": 5,
+        "fixed": 44,
+        "regressed": 39
+      }
+    },
+    {
+      "id": "answer_canonicalization",
+      "judge": {
+        "evidence": {
+          "artifact": {
+            "deterministic_rows": 177,
+            "profiled_judge_rows": 97,
+            "rows": 274,
+            "unique_task_ids": 274
+          },
+          "image_judge_sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4",
+          "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+          "method": "artifact",
+          "validated": true
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true
+      },
+      "kind": "idea",
+      "matched_bounds": null,
+      "math": {
+        "accuracy": 0.446043,
+        "correct": 62,
+        "n": 139
+      },
+      "name": "Answer canonicalization",
+      "non_math": {
+        "accuracy": 0.585185,
+        "correct": 79,
+        "n": 135
+      },
+      "operational": {
+        "combined_tokens": 4662595,
+        "model_calls": null
+      },
+      "overall": {
+        "accuracy": 0.514599,
+        "correct": 141,
+        "n": 274
+      },
+      "pre_judge_bounds": null,
+      "progress": null,
+      "sources": {
+        "judge_artifact": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\artifacts\\baselines\\basic_page_rag_v1\\agent_rag_judge.jsonl",
+          "sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4"
+        },
+        "judge_manifest": null,
+        "manifest": null,
+        "matched_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\answer_canonicalization\\score.json",
+          "sha256": "5ae6af3bb9324b89aa365e06f7335cbce9a43b289332114cd81943e464951589"
+        },
+        "operational_manifest": null,
+        "replay_score": null,
+        "selected_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\offline_v1_evaluation\\answer_canonicalization\\score.json",
+          "sha256": "5ae6af3bb9324b89aa365e06f7335cbce9a43b289332114cd81943e464951589"
+        }
+      },
+      "status": "exact",
+      "vs_baseline": {
+        "delta_correct": 0,
+        "fixed": 0,
+        "regressed": 0
+      }
+    },
+    {
+      "id": "error_memory",
+      "judge": {
+        "evidence": {
+          "artifact": {
+            "deterministic_rows": 0,
+            "profiled_judge_rows": 97,
+            "rows": 97,
+            "unique_task_ids": 97
+          },
+          "image_judge_sha256": "ad6067aafd65e35395ec0f80332a58c2e10634292c7ff3a966a6a4c5fccabb34",
+          "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+          "method": "artifact",
+          "validated": true
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true
+      },
+      "kind": "idea",
+      "matched_bounds": null,
+      "math": {
+        "accuracy": 0.582734,
+        "correct": 81,
+        "n": 139
+      },
+      "name": "Frozen memory of common error patterns",
+      "non_math": {
+        "accuracy": 0.548148,
+        "correct": 74,
+        "n": 135
+      },
+      "operational": {
+        "combined_tokens": 396248,
+        "model_calls": 271
+      },
+      "overall": {
+        "accuracy": 0.565693,
+        "correct": 155,
+        "n": 274
+      },
+      "pre_judge_bounds": null,
+      "progress": null,
+      "sources": {
+        "judge_artifact": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\error_memory\\matched_image97_judge.jsonl",
+          "sha256": "ad6067aafd65e35395ec0f80332a58c2e10634292c7ff3a966a6a4c5fccabb34"
+        },
+        "judge_manifest": null,
+        "manifest": null,
+        "matched_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\error_memory\\score.json",
+          "sha256": "9e1780f5e71216508f7b2993a7b5d5d0c98a53953bbacff82031702d0c0db703"
+        },
+        "operational_manifest": null,
+        "replay_score": null,
+        "selected_score": {
+          "exists": true,
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim8_variants_full274_20260802\\online_v1_evaluation\\error_memory\\score.json",
+          "sha256": "9e1780f5e71216508f7b2993a7b5d5d0c98a53953bbacff82031702d0c0db703"
+        }
+      },
+      "status": "exact",
+      "vs_baseline": {
+        "delta_correct": 14,
+        "fixed": 47,
+        "regressed": 33
+      }
+    }
+  ],
+  "matched_judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+  "matched_judge_profile": {
+    "backend": "openai-compatible",
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+    "max_tokens": 900,
+    "model": "Qwen/Qwen3.5-9B",
+    "prompt_version": "judge-v2",
+    "seed": 20260714,
+    "temperature": 0.0,
+    "use_response_format": true
+  },
+  "schema_version": "maxim8-final-report-v1",
+  "scorer": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\scripts\\score_maxim_full274.py",
+    "sha256": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf"
+  },
+  "status_counts": {
+    "exact": 8,
+    "partial": 0,
+    "pending": 0,
+    "replay": 0
+  }
+}

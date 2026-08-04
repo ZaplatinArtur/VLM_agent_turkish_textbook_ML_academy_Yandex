@@ -1,0 +1,1402 @@
+{
+  "benchmark": {
+    "rows": 274,
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+  },
+  "branches": [
+    {
+      "accuracy": 0.5620437956204379,
+      "correct": 154,
+      "denominator": 274,
+      "finalization_manifest": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/solver_critic_repair/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "0abcfaf722934e6c05e1e438eb6264984b73b5beafe1f4e84c3f9f54f14c8f15"
+      },
+      "id": "solver_critic_repair",
+      "label": "Solver - Critic - Repair",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/solver_critic_repair/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "b6fbefa3e04a03578e469a16fee53fbd0ca10bf7ccf6a37a32a9b959897d3e17"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/solver_critic_repair/score.json",
+        "sha256": "10ac64bc3145ab5710f5268edb4bf7ecef4961ab291f36179a4f6d23fa7e9c9b"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.6021897810218978,
+      "correct": 165,
+      "denominator": 274,
+      "id": "selective_rag_metadata",
+      "label": "Selective RAG (retrieval reliability gate)",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/selective_rag_metadata/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "e01f140ded294a6554163f0d28b8b8d4fba5cd7b25c77f1a20ca59ae3ce2700a"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/selective_rag_metadata/matched_score.json",
+        "sha256": "9e90e69a01a17f16ca72d0571a486ce5432382210376e2cd4f66a37edc31f332"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.6642335766423357,
+      "correct": 182,
+      "denominator": 274,
+      "id": "subject_router",
+      "label": "Frozen subject router",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/subject_router/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "432bbddfe9509d9bdc67e79c568f747a2f20468ea00f7e2e1755e55dc55aca77"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/subject_router/matched_score.json",
+        "sha256": "5c50cc2bb882d0c83386d324fafe0470433172845b4ebb5e787d41d288ad306f"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.5072992700729927,
+      "correct": 139,
+      "denominator": 274,
+      "id": "parallel_consensus",
+      "label": "8-way answer clustering / consensus",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/parallel_consensus/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "ebf4b8be834f3d0df60b7b8def4a62583bd48d377177f4c352e8537d0a3c1848"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/parallel_consensus/matched_score.json",
+        "sha256": "8955844dede3c03bb5938755f8eafde6555bd9e88b2de92e173d8b12640cd7f9"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.5218978102189781,
+      "correct": 143,
+      "denominator": 274,
+      "finalization_manifest": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/calculator_sympy/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "7ec381c36772574561847113ca593e9558afdab47cbc5bd464d21ec2c05afb55"
+      },
+      "id": "calculator_sympy",
+      "label": "Calculator / SymPy verification",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/calculator_sympy/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "69dcf520c735543ddcb49958ca656c1d2a8aa16f96222a42679381ee2952774a"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/calculator_sympy/score.json",
+        "sha256": "04a30f628930b935387330a00ef57f8fde71047ec38b8a53730bc3111cd46bc6"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.5328467153284672,
+      "correct": 146,
+      "denominator": 274,
+      "finalization_manifest": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/two_pass_transcription/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "4db3db9c221788b17af0b98ebba3060fbb5239f964fca70ce0fcd0a57a53cddd"
+      },
+      "id": "two_pass_transcription",
+      "label": "Two-pass transcription and solve",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/two_pass_transcription/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "afda98e3cc7c15d8920c4c325496c3591df09ba298844f81e0e8749c19853a33"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/two_pass_transcription/score.json",
+        "sha256": "22118875d09574ea4a1a1426663133b49348c1c125889682f71214193a41d6b9"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.5145985401459854,
+      "correct": 141,
+      "denominator": 274,
+      "id": "answer_canonicalization",
+      "label": "Answer canonicalization",
+      "lineage_verification": {
+        "artifact": {
+          "image_judge_rows": 97,
+          "path": "artifacts/baselines/basic_page_rag_v1/agent_rag_judge.jsonl",
+          "rows": 274,
+          "sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_exact_frozen_baseline_judge"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/answer_canonicalization/score.json",
+        "sha256": "5ae6af3bb9324b89aa365e06f7335cbce9a43b289332114cd81943e464951589"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.5656934306569343,
+      "correct": 155,
+      "denominator": 274,
+      "finalization_manifest": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/error_memory/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "59fd0a9f71f5c185b7ee88ca8e17517ed8c5ad32525ae3552ff73b2ac0155715"
+      },
+      "id": "error_memory",
+      "label": "Frozen memory of common error patterns",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/error_memory/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "ad6067aafd65e35395ec0f80332a58c2e10634292c7ff3a966a6a4c5fccabb34"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/error_memory/score.json",
+        "sha256": "9e1780f5e71216508f7b2993a7b5d5d0c98a53953bbacff82031702d0c0db703"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.6897810218978102,
+      "correct": 189,
+      "denominator": 274,
+      "finalization_manifest": {
+        "path": "reports/maxim_blind_disagreement_verifier_v1_20260803/finalized/raw_selector/finalization_manifest.json",
+        "schema_version": "maxim-blind-disagreement-verifier-v1",
+        "sha256": "9186492dc086925c0a0f9a72ea4c5bb4aeeb795bba4e39c91ec9108b074bb56c"
+      },
+      "id": "blind_verifier_raw_selector",
+      "label": "Blind disagreement verifier (preregistered raw selector)",
+      "lineage_verification": {
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "explicit_and_sidecar",
+        "sidecar": {
+          "path": "reports/maxim_blind_disagreement_verifier_v1_20260803/finalized/raw_selector/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "aa51ed4365a40e74f8670d4bfad586f80981e9aefdb77daed4c8a905730e8816"
+        }
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_blind_disagreement_verifier_v1_20260803/finalized/raw_selector/score.json",
+        "sha256": "3197c5d9044176f560fc3aade8bc23457f141c46a8dcea24dd074c72dd83c1a3"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.5948905109489051,
+      "correct": 163,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_active_vision_v1_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "6f7fecaec9822136448cc93cc8a9b5620851a762a061c4444197a5a66b03bb7a"
+        },
+        "path": "reports/maxim_active_vision_v1_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "19aa998b900d807cff8221891dae6558d7fffbe35c369bc21774d0cfca13fed8"
+      },
+      "id": "active_vision",
+      "label": "Active vision: localize, crop, sketch, solve",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_active_vision_v1_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "8112e0c73de089c4b571dedbe32b837b32d9c94756a5d2b13810cbc0566d7138"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_active_vision_v1_20260803/evaluation/score.json",
+        "sha256": "bafd2ff3d2f4415f868e46bb64a4b98fcdee5066cf27714fcff518b5d17ad821"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.708029197080292,
+      "correct": 194,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "289a1332a5986860041b22966e41e47d050186ea652d0b9c2d3264d35dc7a188"
+        },
+        "path": "reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "a9cabd2fd1350aad6d6549479eea25ecf19047cb9a133a9a2b098a8c8857e2d4"
+      },
+      "id": "query_active_crop_v2",
+      "label": "Query-conditioned active crop verifier v2",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "ee2acb62cb80496b240597a3a039dfacac3198d52b25c805653f85f617d38557"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/score.json",
+        "sha256": "fe7af97028dc51d2ce23ce0b2779d6ff5661af032929223b8e6067a8ded6b374"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.6313868613138686,
+      "correct": 173,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_native_thinking_math_router_v4_20260803/evaluation_matched/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "26787b2b341ba5c41a2f78f4e6247d703d9e7d3f00d572993770a4ce345e5359"
+        },
+        "path": "reports/maxim_native_thinking_math_router_v4_20260803/evaluation_matched/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "b948b94d231c57083ba47947b4d81dbdbad7ac9d25f77e3ce636cbe52f108ff2"
+      },
+      "id": "native_thinking_v4",
+      "label": "Native thinking math router v4",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_native_thinking_math_router_v4_20260803/evaluation_matched/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "affa87d7a28f6d9e2e0d6247efddf9224d98ac8cc0806217e843ea2346c804f6"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_native_thinking_math_router_v4_20260803/evaluation_matched/score.json",
+        "sha256": "c1b90d27f1d4a0bd25d6a3fbf010aa0e30855b317af709881abb9d0cc83273e2"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.6715328467153284,
+      "correct": 184,
+      "denominator": 274,
+      "evaluation_gold_access": true,
+      "id": "crossfit_subject_router_oof",
+      "label": "Cross-fit subject router (OOF estimate; non-final)",
+      "preregistered": true,
+      "promotion_eligible": false,
+      "reason": "OOF same-benchmark estimate; not an external holdout final",
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_crossfit_router_v1_20260803/score.json",
+        "sha256": "914ecc2cd42aac1871b169a5f55ae3036015e6e8787f3cdc2b38acff4b0a6433"
+      },
+      "result_kind": "oof_estimate",
+      "status": "non_final",
+      "validity": "out_of_fold_crossfit_same_benchmark_not_external_holdout"
+    },
+    {
+      "accuracy": 0.4562043795620438,
+      "correct": 125,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_tiled_vision_v1_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "2ba256de40bc1a146fe110cc52a948b7956fc742057542b7024dd104b4da906c"
+        },
+        "path": "reports/maxim_tiled_vision_v1_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "6606b11c909e4f3d692b17e795514be278f339fce6734b0f5597cbce2c5e2f13"
+      },
+      "id": "tiled_vision",
+      "label": "Overlapping tiled vision",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_tiled_vision_v1_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "f504b506a49fbf364e9daf61cd52f78afdfacbdfb74f05461b117bfe3d153f0e"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [
+        {
+          "path": "reports/maxim_tiled_vision_v1_20260803/evaluation/previous-final-20260803T171730Z-b2b41b4b/score.json",
+          "reason": "image-judge artifact SHA256 mismatch",
+          "sha256": "ff6b2e0320d584afd26c0852a3be5d175a73900f629b9c3e49779c3029d7f707"
+        }
+      ],
+      "report": {
+        "path": "reports/maxim_tiled_vision_v1_20260803/evaluation/score.json",
+        "sha256": "7217a2104e0231b93689e5b573bcd6d6129af7f9b501cd41151e32066f483a83"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.572992700729927,
+      "correct": 157,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_native_thinking_math_router_v5_20260803/evaluation_orchestrated/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "7fb0c651216d3ff7056bef1ec5cb8c51e680cd213d3d1019b13d750aa880fd07"
+        },
+        "path": "reports/maxim_native_thinking_math_router_v5_20260803/evaluation_orchestrated/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "4207a27c618f402a39d967b8e57869ed1b4e11856ac76cdc24b9d9b6622fbd11"
+      },
+      "id": "budgeted_thinking_v5",
+      "label": "Budgeted thinking math router v5",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_native_thinking_math_router_v5_20260803/evaluation_orchestrated/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "5f908e802282c98fa869ab004f89444dcb334b5a5a17f4919e3d5d349cc6b540"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_native_thinking_math_router_v5_20260803/evaluation_orchestrated/score.json",
+        "sha256": "163118466004ad7b06e49dead4844258d6aca1619e8482a9ac6b7afa78f070fd"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.4233576642335766,
+      "correct": 116,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_structural_evidence_rag_v1_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "b34e4e1032a22da6261963985271d41d101b10738ce5e642bfa9f2e3c0803666"
+        },
+        "path": "reports/maxim_structural_evidence_rag_v1_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "aa59c96ab31a934e9ee4ba653b5613e94a737cdfbb5045bb97050225cc3618e9"
+      },
+      "id": "structural_rag",
+      "label": "Structural element RAG",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_structural_evidence_rag_v1_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "636dc842f2f6e9503a3b10def40a72270eaf1d22a7032192b9d597b6ed86f094"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_structural_evidence_rag_v1_20260803/evaluation/score.json",
+        "sha256": "29763fffcb3bf361b8560c2c68eb6249716150ea61efc8c424035b78805badec"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.551094890510949,
+      "correct": 151,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_mi_rag_v1_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "58286892a8ece2d250bdd540f9eec6fa0d8336f11bcbd3d64dc561973f956113"
+        },
+        "path": "reports/maxim_mi_rag_v1_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "aa0338838e2c959482fc89389b496f05661c2ad27cf3f385cce68416efe94e5a"
+      },
+      "id": "mi_rag",
+      "label": "Multi-iteration RAG",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_mi_rag_v1_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "38ae4302565037fb94e336d21063527b9921f9391b9acee33bab7c78865413d3"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_mi_rag_v1_20260803/evaluation/score.json",
+        "sha256": "a319f3885aa2908f3f7b65c5ea07d52e0c1a2017ce899b6d6ddf23a131e5a313"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7043795620437956,
+      "correct": 193,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation_orchestrated/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "f57cda8d9b6198016154b6d80c8fbc3b8008792f6b37a1d062c49ccac932f4ad"
+        },
+        "path": "reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation_orchestrated/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "e3d778972d9657380ccdc717156b407f7c111dd6cb3f0d13bb1056ad1edc5554"
+      },
+      "id": "paired_rag_norag_semantic_support",
+      "label": "Frozen no-tools (semantic gate selected RAG 0/274)",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation_orchestrated/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "28f3d107a0840970e0f82c46157cd85c0f6200f82e1cf105ff39409e58c636b5"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation_orchestrated/score.json",
+        "sha256": "77932f8ef6af9e10df1d79b607902ff54a3144b3c1c17be300ce406a35f2a462"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.5364963503649635,
+      "correct": 147,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_literal_parallel8_lowconf_v1_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "d956a82edea9e4c0445be58d286dfabaa971e0b98ca9e0352dbb0d0a0ff14246"
+        },
+        "path": "reports/maxim_literal_parallel8_lowconf_v1_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "172ccb6bcb0a20d003853058c9d4ae3192059651ac72171cabc65a64ec92bbd8"
+      },
+      "id": "literal_parallel8_lowconf_arbiter",
+      "label": "Literal parallel-8 consensus with low-confidence arbiter",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_literal_parallel8_lowconf_v1_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "e0dce8f298f605d771357104afb1e564eadf1579b2588d7ecce56808539c0912"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_literal_parallel8_lowconf_v1_20260803/evaluation/score.json",
+        "sha256": "84bc5d4d58dc692f9755705d7986e37d7241a6f8dd606a185624797e5d56eb4c"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.656934306569343,
+      "correct": 180,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_stronger27_hard86_20260803/evaluation_orchestrated/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "127c35d6342e5cb588589445afed7bab1c8c2060dbbc47b0b2de0561be2ca5cd"
+        },
+        "path": "reports/maxim_stronger27_hard86_20260803/evaluation_orchestrated/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "4b90d9d5cb67ae173266b8224cbc250154c602424fbdb62abf54299001940db9"
+      },
+      "id": "stronger_27b_hard86_composite",
+      "label": "Qwen3.5-27B hard86 composite",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_stronger27_hard86_20260803/evaluation_orchestrated/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "e4d7f7d216cd3b7caec278d7665a13953867181858a96737c20e250a0710c14c"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_stronger27_hard86_20260803/evaluation_orchestrated/score.json",
+        "sha256": "e91339c01c54effd654b1f913d03836d11224ea02070456e82e0a79491023746"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.6934306569343066,
+      "correct": 190,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_stronger27_direct_full274_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "9f36ae5bcf07fdc042921eaca5d7dd2507ac43f0fce087af789e44ef79149e48"
+        },
+        "path": "reports/maxim_stronger27_direct_full274_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "1c4598901e01bb82815afd1b1492cc678f8d5e191fef7b409a9a109cc8c10de9"
+      },
+      "id": "stronger_27b_direct",
+      "label": "Qwen3.5-27B direct full274",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_stronger27_direct_full274_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "324c26af6037fcfc6b9f0849331f421e5b3c54f54bd2849c6afe36f117b75a17"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_stronger27_direct_full274_20260803/evaluation/score.json",
+        "sha256": "985556543c3e865ff9319756ee6c138f6c06775b854db1de8a49547e038342e5"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7408759124087592,
+      "correct": 203,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_final_meta_verifier_v2_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "3fc4cf970dc4d930ebbb5fee5a052692733cda1542b4bd58be353fab84ae713d"
+        },
+        "path": "reports/maxim_final_meta_verifier_v2_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "2c560a76ff64ed1fe435e2fd1d68aed7ff8f11352a09aab2da44f3932fcf3142"
+      },
+      "id": "final_meta_verifier_v2",
+      "label": "Frozen 10-way final meta-verifier v2",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_final_meta_verifier_v2_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "9bebc0cb2906398d76580b14d621d9e1264bd13f2705804253947a39cece759e"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_final_meta_verifier_v2_20260803/evaluation/score.json",
+        "sha256": "436ac2eaa80e6bdbcc6c43f7a76b48dfb59f0a3b7e6b9fdb9a8e55f592c0c6cb"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7226277372262774,
+      "correct": 198,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_final_meta_verifier_v3_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "2e90a44363d4f059c3a4c3ca43a5e698f4e13fc68c7b526d49e387767db4f362"
+        },
+        "path": "reports/maxim_final_meta_verifier_v3_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "4447758bf5cfb36087c3c91b061b8ce529442eff32a7f8e2d68845bd38e7bcc6"
+      },
+      "id": "final_meta_verifier_v3",
+      "label": "Frozen 12-way final meta-verifier v3",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_final_meta_verifier_v3_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "d19732b13f807272c3ddab94324223d1b6675f6342ccc318c5a3f53b310814b3"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_final_meta_verifier_v3_20260803/evaluation/score.json",
+        "sha256": "f98687e4202a267d01cf78312e53c1fdf22dac24279d736200addae1ea29b081"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.35766423357664234,
+      "correct": 98,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "8596e2031b407cab544437934b992d575d144ff4f7f6b41903123f97a9c4a0b4"
+        },
+        "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "02ee802f190151b3bae2aeef733fc5e19134d0dc3bb9edce28b4bd6be0904ef2"
+      },
+      "id": "parser_augmented_solver_v1",
+      "label": "PaddleOCR-VL structured parser + Qwen3.5-9B solver",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "477ec8ca0463987b64a6f81e586db15a541cb02924f33668d02ac375961e6ca7"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/evaluation/score.json",
+        "sha256": "ee722d46be78e33aac005a0078963d1a9cde400e87452f0013e22f3bebc04ef0"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7043795620437956,
+      "correct": 193,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_evidence_gap_seeker_inspector_v1_final_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "5b2ae229e8ab93dd273c3ff1e7b2d71150f85415b15e7cb54f4aaf827da125cc"
+        },
+        "path": "reports/maxim_evidence_gap_seeker_inspector_v1_final_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "0246c5ed12098274a82ff989fbb5dcb12fd42268c7565e067d5265fadf197834"
+      },
+      "id": "evidence_gap_seeker_inspector_v1",
+      "label": "Evidence-gap Seeker to Inspector",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_evidence_gap_seeker_inspector_v1_final_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "3abd2ddd7699e9429f9c6f4210128f8ce3c414f8c7edfa5429c5253de190e913"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_evidence_gap_seeker_inspector_v1_final_20260803/evaluation/score.json",
+        "sha256": "1fe44437dc4dded9a5d38fdc72903cc742443099cdb1ff563a31f5190c90102e"
+      },
+      "status": "final"
+    },
+    {
+      "id": "element_aware_rag_v2",
+      "label": "Element-aware base dense RAG v2 control",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "id": "bge_m3_hardneg_rag_v1",
+      "label": "BGE-M3 whole-book hard-negative RAG",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "id": "qwen35_docvqa_sft_v1",
+      "label": "Qwen3.5-9B DocVQA LoRA",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "accuracy": 0.708029197080292,
+      "correct": 194,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_visual_sketchpad_v2_20260803/evaluation_cached_union_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "7475130038b0e253acec213563dfd60c73710bc4154b3ff2c780080eea6353e8"
+        },
+        "path": "reports/maxim_visual_sketchpad_v2_20260803/evaluation_cached_union_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "3318d1d3d3461925a2a39bb6055fd02fe111896f8756bd94d4d4f66b4759997a"
+      },
+      "id": "visual_sketchpad_v2",
+      "label": "Conservative Visual Sketchpad v2",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_visual_sketchpad_v2_20260803/evaluation_cached_union_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "8581b2b022266846d2a1df62bda2e478388629e64ac7dd2ce2066c094ec98a39"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_visual_sketchpad_v2_20260803/evaluation_cached_union_v1/score.json",
+        "sha256": "214d47c86c7f35fb2732a99c781820225fcc53ce2e5668fb54555a3829fccb53"
+      },
+      "status": "final"
+    },
+    {
+      "id": "element_sparse_graph_v3",
+      "label": "Element-aware sparse BM25 plus graph RAG v3",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "id": "element_dense_sparse_graph_base_v3",
+      "label": "Element-aware dense sparse graph RAG v3",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "accuracy": 0.35766423357664234,
+      "correct": 98,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_conservative_v2/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "57fd8bd94101df4d08f12d5258eb77ca12dad4bef7d2188fcf3f53c037dacd64"
+        },
+        "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_conservative_v2/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "3ed879d3154397c12f8f7b9604a8d5e0ff42e664fc6c1719cf27ccb15a952847"
+      },
+      "id": "parser_augmented_conservative_v2",
+      "label": "Parser-augmented solver with generic saturation and repetition gate",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_conservative_v2/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "547dacd7520c05465de9c0ce34b11cdf96385f8eac47a6d0a27c275a2cde6e17"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_conservative_v2/evaluation/score.json",
+        "sha256": "05f734098946a6715418f6f39cf37ff6372a2a5a28bad189bc6d63cb1f709bfb"
+      },
+      "status": "final"
+    },
+    {
+      "id": "dual_granularity_page_element_rrf_base_v1",
+      "label": "Dual-granularity page and element RRF RAG",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "accuracy": 0.7445255474452555,
+      "correct": 204,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_final_meta_verifier_v2_choice_token_compat_v21_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "16dd9b338f7db31b4f475a27f92d7586504bd6bdf7c601755c5cec891456d77f"
+        },
+        "path": "reports/maxim_final_meta_verifier_v2_choice_token_compat_v21_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "ed5323ccfb8595a9c6fd867bf62c78c9b72706b6e04e3259042367cca2eb927b"
+      },
+      "id": "final_meta_verifier_v2_choice_token_compat_v21",
+      "label": "Meta-verifier v2.1 numeric choice-token compatibility",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_final_meta_verifier_v2_choice_token_compat_v21_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "bd299c20c7f42147bc2ffb4fb9d5703f250e7fb430ef3e21be6df4683a1b1b0c"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_final_meta_verifier_v2_choice_token_compat_v21_20260803/evaluation/score.json",
+        "sha256": "64f42117dde176136cf028152916752eaa81eca3f0d9316c396f93fb81e41182"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7262773722627737,
+      "correct": 199,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_final_meta_verifier_v3_choice_token_compat_v31_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "c7c555783b84301bfae8741ba60276d7d7aa96bc37eb9cdeaf4da2983be1bf7e"
+        },
+        "path": "reports/maxim_final_meta_verifier_v3_choice_token_compat_v31_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "dd45c684186227c54d215201f9c1b3574cc35c593f6be81e5fac2d0197efd17c"
+      },
+      "id": "final_meta_verifier_v3_choice_token_compat_v31",
+      "label": "Meta-verifier v3.1 numeric choice-token compatibility",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_final_meta_verifier_v3_choice_token_compat_v31_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "1442bd821194f06972e7df1bf6ca6308fedaee48dd824b0b00402021a9340ef9"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_final_meta_verifier_v3_choice_token_compat_v31_20260803/evaluation/score.json",
+        "sha256": "7903c1fac1a1a21205693679a3c30e9a9616021d27ff76a181f1fd753dee0a2b"
+      },
+      "status": "final"
+    },
+    {
+      "id": "pairwise_selector_v1",
+      "label": "Synthetic whole-book pairwise selector",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_failclosed_v1",
+      "label": "Fail-closed synthetic pairwise selector: V2.1 default vs Active-Crop override",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_semantic_adapter_v11",
+      "label": "Fail-closed V2.1 vs Active-Crop selector trained on explicit semantic adapters v1.1",
+      "preregistered": true,
+      "reason": "superseded before any source/model calls; excluded from ranking and never eligible for a final score",
+      "rejected_candidates": [],
+      "result_kind": "superseded_before_calls",
+      "source_call_count": 0,
+      "status": "non_final",
+      "supersession_attestation": {
+        "path": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_v11_20260804/superseded_before_calls_attestation.json",
+        "schema_version": "maxim-pairwise-semantic-adapter-v11-superseded-before-calls-attestation-v1",
+        "sha256": "44167aad62f3d0e4ec732ba5687dc14025df160bf903df1dce844c4dc7925cb9",
+        "status": "SUPERSEDED_BEFORE_CALLS"
+      },
+      "terminal_state": "SUPERSEDED_BEFORE_CALLS",
+      "validity": {
+        "attestation_path_and_sha256_verified": true,
+        "source_call_count_verified_zero": true
+      }
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_semantic_adapter_runtime_pinned_v12",
+      "label": "Superseded-before-calls runtime-pinned semantic adapter v1.2",
+      "preregistered": true,
+      "reason": "superseded before any source/model calls; excluded from ranking and never eligible for a final score",
+      "rejected_candidates": [],
+      "result_kind": "superseded_before_calls",
+      "source_call_count": 0,
+      "status": "non_final",
+      "supersession_attestation": {
+        "path": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_pinned_v12_20260804/superseded_before_calls_attestation.json",
+        "schema_version": "maxim-pairwise-semantic-adapter-runtime-pinned-v12-superseded-before-calls-attestation-v1",
+        "sha256": "990961ec21d4be4ce8950ec5ce9968f22ab769ea847d9c8008ef543a4a14913b",
+        "status": "SUPERSEDED_BEFORE_CALLS"
+      },
+      "terminal_state": "SUPERSEDED_BEFORE_CALLS",
+      "validity": {
+        "attestation_path_and_sha256_verified": true,
+        "source_call_count_verified_zero": true
+      }
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_semantic_adapter_runtime_exact_v13",
+      "label": "Superseded-before-calls runtime-exact semantic adapter v1.3",
+      "preregistered": true,
+      "reason": "superseded before any source/model calls; excluded from ranking and never eligible for a final score",
+      "rejected_candidates": [],
+      "result_kind": "superseded_before_calls",
+      "source_call_count": 0,
+      "status": "non_final",
+      "supersession_attestation": {
+        "path": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_exact_v13_20260804/superseded_before_calls_attestation.json",
+        "schema_version": "maxim-pairwise-semantic-adapter-runtime-exact-v13-superseded-before-calls-attestation-v1",
+        "sha256": "a659653e3478efdfb37fd5fb1b90b9153aba27dbe14df73a49cf892ff3e23711",
+        "status": "SUPERSEDED_BEFORE_CALLS"
+      },
+      "terminal_state": "SUPERSEDED_BEFORE_CALLS",
+      "validity": {
+        "attestation_path_and_sha256_verified": true,
+        "source_call_count_verified_zero": true
+      }
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14",
+      "label": "Active runtime-closure semantic adapter v1.4 with exact seven-module staged import closure",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "id": "pairwise_tfidf_logreg_v21_active_crop_failclosed_v1",
+      "label": "Frozen CPU TF-IDF/logistic pairwise selector: V2.1 default vs Active-Crop override",
+      "preregistered": true,
+      "reason": "no finalized matched-judge report found",
+      "rejected_candidates": [],
+      "status": "pending"
+    },
+    {
+      "accuracy": 0.7481751824817519,
+      "correct": 205,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/evaluation_cached_reuse_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "ecc7cad8f4e272e028d800c0b4c6be32c6c63f84bb2045da9d13f621a8218508"
+        },
+        "path": "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/evaluation_cached_reuse_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "ece150f477ffd1a58e8130352eec6cc858648eb400a54e29b87d7ca29caa549f"
+      },
+      "id": "blind_ensemble_v2default_v3_repair_v1",
+      "label": "Gold-blind V2.1 default with conservative V3.1 repair",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/evaluation_cached_reuse_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "d197ac207479001f36bee2f87c31f5476f674cb8cd1a316aeac3c36494d22c9e"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/evaluation_cached_reuse_v1/score.json",
+        "sha256": "0550b1b59b6f9680ad8e7462c1b30fc6c97960bd16fa82576a3f917192fbb24a"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7445255474452555,
+      "correct": 204,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_blind_ensemble_v2default_active_repair_v1_20260804/evaluation_cached_reuse_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "702c3d6b3bc0d88e82fe71ed936253d95833f138da7723acd55333621c2f9473"
+        },
+        "path": "reports/maxim_blind_ensemble_v2default_active_repair_v1_20260804/evaluation_cached_reuse_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "bcc0d20f5c334159070f6696c11ffda9fff664360a4559d9e4eab253bd0566eb"
+      },
+      "id": "blind_ensemble_v2default_active_repair_v1",
+      "label": "Gold-blind V2.1 default with conservative Active-Crop repair",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_blind_ensemble_v2default_active_repair_v1_20260804/evaluation_cached_reuse_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "28bb2b46d9fcc5d4e61613e159465fa5c694eb3eb3e05a9800acaab8bf326aff"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_blind_ensemble_v2default_active_repair_v1_20260804/evaluation_cached_reuse_v1/score.json",
+        "sha256": "80e2f522c03e93b28b67be04a35d458f93d6f633a7b0d1f7cc48bd2aac237358"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7445255474452555,
+      "correct": 204,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_blind_ensemble_v2default_triple_agreement_v1_20260804/evaluation_cached_reuse_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "05355a04a0ff5dc02423f8628252b8b2c88cdf7a87597f01cc3a4aff9277a233"
+        },
+        "path": "reports/maxim_blind_ensemble_v2default_triple_agreement_v1_20260804/evaluation_cached_reuse_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "41b5d9efd754358415339602b65a75890fcfaca93ebf74cbc9c06b6e3a84211f"
+      },
+      "id": "blind_ensemble_v2default_triple_agreement_v1",
+      "label": "Gold-blind V2.1 default with strict triple-agreement repair",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_blind_ensemble_v2default_triple_agreement_v1_20260804/evaluation_cached_reuse_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "641864a0d0e6252a916295acfbd2a9e1a6041ae53fdf798acba8d287a0927f83"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_blind_ensemble_v2default_triple_agreement_v1_20260804/evaluation_cached_reuse_v1/score.json",
+        "sha256": "81ec64edad7d8aa21c11a3a4faaf2e5e9fc4b741be7043a75827981e9fe4face"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.6934306569343066,
+      "correct": 190,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_evidence_gap_seeker_inspector_v1_fact_intent_compat_v11_20260803/evaluation/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "4e5654cb5e946627e24ff5d097d18870e168ac10436d4685658098ad23ce8d20"
+        },
+        "path": "reports/maxim_evidence_gap_seeker_inspector_v1_fact_intent_compat_v11_20260803/evaluation/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "b2a1769786a1bfc028f5d8b19b83c1846c3523add6678e9e6d13c72595633007"
+      },
+      "id": "evidence_gap_fact_intent_compat_v11",
+      "label": "Evidence-gap fact-intent compatibility v1.1",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_evidence_gap_seeker_inspector_v1_fact_intent_compat_v11_20260803/evaluation/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "0fdcbbf223d503b1f6f5857cc7b9d8b0f742eea7b6dda4f39b0923d6bcb50a36"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_evidence_gap_seeker_inspector_v1_fact_intent_compat_v11_20260803/evaluation/score.json",
+        "sha256": "7d0bd99dd00cb2765f56ecfaadd9ecabbf13b54e5b11481e4327f54c9250c076"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7445255474452555,
+      "correct": 204,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_pair/evaluation_cached_reuse_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "0b1b592df92018c155d4bee624fbcafc50cd9ad11017866b83ad90a387cb293a"
+        },
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_pair/evaluation_cached_reuse_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "7e3eca3fa3490e3402c7e86dbaba03ad34128f1721d9fff716d372a1da011a56"
+      },
+      "id": "consensus_repair_v31_active_pair_v1",
+      "label": "Outcome-blind consensus repair: V3.1 and Active-Crop pair",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_pair/evaluation_cached_reuse_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "7b628e2d9139793d0fd0bc12bb2aefb8f57a8150529f0dac50d23da7a956595b"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_pair/evaluation_cached_reuse_v1/score.json",
+        "sha256": "71f0eaf40a16574bd6cb79072b82e43d6d5acb01a1afc4f5e39669f98fcc1b89"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7445255474452555,
+      "correct": 204,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_no_tools_pair/evaluation_cached_reuse_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "8df2cfbd9caea50c2857231590773c4e1fa3b01b378ddf9ffa9586ff1561d22c"
+        },
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_no_tools_pair/evaluation_cached_reuse_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "59a751a44c5fb35cb6b466ff1809073f466ed7f8e1b426be180bb1e84a9e70a6"
+      },
+      "id": "consensus_repair_v31_no_tools_pair_v1",
+      "label": "Outcome-blind consensus repair: V3.1 and no-tools pair",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_no_tools_pair/evaluation_cached_reuse_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "1c99a2acfc32133b696cb257974095d69977fa15d7420ad42f1a35a3f47b87de"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_no_tools_pair/evaluation_cached_reuse_v1/score.json",
+        "sha256": "24913917abc4e61e1d5215c7061dc1843f01303b3184f74b6a4c324ca5737861"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7116788321167883,
+      "correct": 195,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/active_no_tools_pair/evaluation_cached_reuse_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "3c654d66709d34596645c060fafdc6b95fdc532e03868afc92cf10ee68d5e2b8"
+        },
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/active_no_tools_pair/evaluation_cached_reuse_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "e2b8c634297ccac6b3e7525fe6195d71f5f07cad317baeaae3bf1cb0a1f4cacd"
+      },
+      "id": "consensus_repair_active_no_tools_pair_v1",
+      "label": "Outcome-blind consensus repair: Active-Crop and no-tools pair",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/active_no_tools_pair/evaluation_cached_reuse_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "246f31a46449518483cd318aa81d51c84c0cf50d4218d6291f2034eb79a8cc8f"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/active_no_tools_pair/evaluation_cached_reuse_v1/score.json",
+        "sha256": "ba44f07ea2c8bb31c1783e7f297d133917518586a1fc4f309c96be89e695d1d2"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.7445255474452555,
+      "correct": 204,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_no_tools_triple/evaluation_cached_reuse_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "df95de9dbafae43f00fee60cc29adb83d8b52709c1fa6adbe690f0bdd8ee3de1"
+        },
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_no_tools_triple/evaluation_cached_reuse_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "950e077980b3f2607c39e15278b422645102b37ec9ce0e9d5beb813b0b51d593"
+      },
+      "id": "consensus_repair_v31_active_no_tools_triple_v1",
+      "label": "Outcome-blind consensus repair: V3.1, Active-Crop, and no-tools triple",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_no_tools_triple/evaluation_cached_reuse_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "ae971cfba3a920d761b5cd33bba6f5cd5736ec40d6c10e36a2ae1a5b424d421e"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_no_tools_triple/evaluation_cached_reuse_v1/score.json",
+        "sha256": "2e5d6e101692adbe033806a308db28e3616c114ed71bd1a3830e076a3ad3dc79"
+      },
+      "status": "final"
+    },
+    {
+      "accuracy": 0.708029197080292,
+      "correct": 194,
+      "denominator": 274,
+      "finalization_manifest": {
+        "orchestration": {
+          "frozen_lineage_verified": true,
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/two_of_three_majority/evaluation_cached_reuse_v1/postgeneration_orchestration_v1.json",
+          "schema_version": "full274-postgeneration-orchestration-v1",
+          "sha256": "452a55679186a5eaa29f50cb7acb8ab54cd6c51e42d374ce472784b1cdaf43b6"
+        },
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/two_of_three_majority/evaluation_cached_reuse_v1/finalization_manifest.json",
+        "schema_version": "maxim-online-finalization-v1",
+        "sha256": "707e970917aa6d3cc5c52bb095415fb921ab8a5195bcc7fce8c11feaa83f762b"
+      },
+      "id": "consensus_repair_two_of_three_majority_v1",
+      "label": "Outcome-blind consensus repair: unique two-of-three majority",
+      "lineage_verification": {
+        "artifact": {
+          "path": "reports/maxim_consensus_repair_sweep_v1_20260804/two_of_three_majority/evaluation_cached_reuse_v1/matched_image97_judge.jsonl",
+          "rows": 97,
+          "sha256": "94e2cdf9f48565117a14d08adf59fcb1ccc78c543aeed5f4ca08b7023713127e"
+        },
+        "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "method": "derived_from_image_judge_jsonl"
+      },
+      "preregistered": true,
+      "rejected_candidates": [],
+      "report": {
+        "path": "reports/maxim_consensus_repair_sweep_v1_20260804/two_of_three_majority/evaluation_cached_reuse_v1/score.json",
+        "sha256": "ae00fc0c3069b5381ad6a3c2e819e1bd22987cfefc9d9a949058c1d04f2161ee"
+      },
+      "status": "final"
+    }
+  ],
+  "judge": {
+    "image_judge_rows": 97,
+    "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714"
+  },
+  "policy": {
+    "accepted_artifacts": [
+      "matched_score.json",
+      "score.json with hash-valid finalization manifest",
+      "canonical postgeneration score.json with exact hash-bound orchestration",
+      "exact frozen-baseline replay score.json"
+    ],
+    "missing_preregistered_branch_status": "pending",
+    "rejects": [
+      "bounds",
+      "partial",
+      "interim",
+      "in_sample"
+    ],
+    "requires_exact_274_task_outcomes": true,
+    "superseded_before_calls_status": "non_final",
+    "superseded_requires_zero_calls_and_hash_valid_attestation": true
+  },
+  "registry": {
+    "path": "reports/maxim_full274_results_ledger_v1_20260803/registry.json",
+    "sha256": "175ca1852fce6ed0f921697464e79d6a09206d7ffe404139eec61ab1f32c165a"
+  },
+  "schema_version": "maxim-full274-results-ledger-v1",
+  "summary": {
+    "best_final": {
+      "accuracy": 0.7481751824817519,
+      "correct": 205,
+      "denominator": 274,
+      "id": "blind_ensemble_v2default_v3_repair_v1"
+    },
+    "branches": 51,
+    "conflict": 0,
+    "final": 37,
+    "non_final": 4,
+    "pending": 10,
+    "rejected_candidates": 1
+  }
+}

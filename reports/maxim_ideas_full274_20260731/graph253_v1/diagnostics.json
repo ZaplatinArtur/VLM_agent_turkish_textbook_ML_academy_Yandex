@@ -1,0 +1,1104 @@
+{
+  "schema_version": "maxim-graph253-full274-diagnostics-v1",
+  "idea_owner": "Максим",
+  "idea": "knowledge graph over educational elements; link the query to similar tasks, theory and worked examples",
+  "created_from_local_artifacts_only": true,
+  "benchmark": {
+    "n": 274,
+    "subjects": {
+      "ATATÜRKÇÜLÜK": 1,
+      "Biology": 19,
+      "Chemistry": 32,
+      "English": 9,
+      "Geography": 14,
+      "History": 10,
+      "Math": 139,
+      "Philosophy": 2,
+      "Physics": 19,
+      "Science": 5,
+      "Sociology": 3,
+      "Turkish language and literature": 21
+    },
+    "score_partition": {
+      "deterministic": 177,
+      "image_judge": 97
+    },
+    "benchmark_sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "fixed_denominator": 274,
+    "gold_used_for_generation": false,
+    "mcnemar_definition": "two-sided exact binomial test over discordant pairs; no multiplicity correction"
+  },
+  "graph_corpus": {
+    "books": 253,
+    "nodes": 212317,
+    "searchable_nodes": 185462,
+    "edges": 157390,
+    "exercises": 80630,
+    "node_kinds": {
+      "theory": 98668,
+      "exercise": 80630,
+      "other": 15122,
+      "solution": 10867,
+      "worked_example": 6164,
+      "instruction": 699,
+      "answer_key": 167
+    },
+    "node_kind_count_derivation": "200-book base + 14 restored books + 39 official books; sums to graph manifest totals",
+    "node_kind_count_sources": {
+      "base_200": {
+        "path": "C:/Users/kmaxc/PycharmProjects/VLM_agent_turkish_textbook_ML_academy_Yandex/reports/hybrid_chunking_all_200_v2.json",
+        "sha256": "600c22a95ebbcd340fce9e1e6f2711bea0bf7dc5014ac423de94868764210c09"
+      },
+      "restored_14": {
+        "path": "C:/Users/kmaxc/PycharmProjects/VLM_agent_turkish_textbook_ML_academy_Yandex/reports/hybrid_chunking_restored14_v1.json",
+        "sha256": "0a6704d2aa9bb1366910177ab96bfbaa3d1ca808b121d055d448ae2c6d7ae9e4"
+      },
+      "official_39_and_merged_253": {
+        "path": "C:/Users/kmaxc/PycharmProjects/VLM_agent_turkish_textbook_ML_academy_Yandex/reports/official_textbook_graph_rag_progress_20260728.json",
+        "sha256": "fb35451749d8c6dfee8f415d66302cb3b618af6b790ece37cd7543fa092d5131"
+      }
+    },
+    "element_types": [
+      "theory",
+      "worked_example",
+      "exercise",
+      "solution",
+      "answer_key",
+      "instruction",
+      "other"
+    ],
+    "relations": {
+      "theory_for": 134462,
+      "worked_example_for": 14000,
+      "solution_of": 8928
+    },
+    "exercise_relation_coverage": {
+      "theory_for": 0.8767,
+      "worked_example_for": 0.1736,
+      "solution_of": 0.0683
+    },
+    "similar_to": "computed at query time, not materialized",
+    "index": {
+      "type": "IndexFlatIP",
+      "vectors": 185462,
+      "embedder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "corpus_hash": "c85ff00f949ea6529937bef49cedf01acc73c4b4bf320b33f4894d0ee73f93e7"
+    },
+    "artifact_sha256": {
+      "manifest": "5dbdc151832743fa269c311099dbf7da537628339518b42132cb410574590a47",
+      "nodes": "cb928f7992b659bc5c2120e9beb6f8fe6ca11c4db778d0b067ae26757f6e404d",
+      "edges": "5686c22723c27b0d4f716c2ed652d5a4600baae12a3ccf0c0374039faec07467",
+      "faiss_index": "3df16618ebb2fd46685496c834a527e204ddcbdf48353e3e3b0a943f7080d8fe"
+    }
+  },
+  "treatment_config": {
+    "model": "Qwen/Qwen3.5-9B",
+    "prompt_version": "v2_cot",
+    "temperature": 0.0,
+    "thinking": false,
+    "math_policy": "graph",
+    "dense_fetch_k": 80,
+    "lexical_fetch_k": 80,
+    "rerank_model": "BAAI/bge-reranker-v2-m3",
+    "rerank_top_n": 40,
+    "retrieval_top_k_default": 5,
+    "retrieval_max_calls": 3,
+    "retrieval_max_context_chars": 6000,
+    "relax_grade": false,
+    "include_solutions": false,
+    "question_inputs": {
+      "image": 274,
+      "text": 0,
+      "missing_images": 0
+    }
+  },
+  "score": {
+    "graph": {
+      "correct": 129,
+      "n": 274,
+      "accuracy": 0.470803
+    },
+    "control_totals": {
+      "page_rag": 141,
+      "element_proxy": 123,
+      "no_tools": 191
+    },
+    "paired_vs_controls": {
+      "page_rag": {
+        "overall": {
+          "n": 274,
+          "graph_correct": 129,
+          "control_correct": 141,
+          "delta_correct": -12,
+          "delta_pp": -4.38,
+          "fixed_by_graph": 27,
+          "regressed_by_graph": 39,
+          "both_correct": 102,
+          "both_wrong": 106,
+          "mcnemar_exact_two_sided_p": 0.175285794443
+        },
+        "math": {
+          "n": 139,
+          "graph_correct": 57,
+          "control_correct": 62,
+          "delta_correct": -5,
+          "delta_pp": -3.597,
+          "fixed_by_graph": 17,
+          "regressed_by_graph": 22,
+          "both_correct": 40,
+          "both_wrong": 60,
+          "mcnemar_exact_two_sided_p": 0.522397380497
+        },
+        "by_score_source": {
+          "deterministic": {
+            "n": 177,
+            "graph_correct": 89,
+            "control_correct": 96,
+            "delta_correct": -7,
+            "delta_pp": -3.955,
+            "fixed_by_graph": 18,
+            "regressed_by_graph": 25,
+            "both_correct": 71,
+            "both_wrong": 63,
+            "mcnemar_exact_two_sided_p": 0.360377652936
+          },
+          "image_judge": {
+            "n": 97,
+            "graph_correct": 40,
+            "control_correct": 45,
+            "delta_correct": -5,
+            "delta_pp": -5.155,
+            "fixed_by_graph": 9,
+            "regressed_by_graph": 14,
+            "both_correct": 31,
+            "both_wrong": 43,
+            "mcnemar_exact_two_sided_p": 0.404872894287
+          }
+        },
+        "by_subject": {
+          "ATATÜRKÇÜLÜK": {
+            "n": 1,
+            "graph_correct": 1,
+            "control_correct": 1,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 0,
+            "both_correct": 1,
+            "both_wrong": 0,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Biology": {
+            "n": 19,
+            "graph_correct": 7,
+            "control_correct": 8,
+            "delta_correct": -1,
+            "delta_pp": -5.263,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 1,
+            "both_correct": 7,
+            "both_wrong": 11,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Chemistry": {
+            "n": 32,
+            "graph_correct": 19,
+            "control_correct": 19,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 3,
+            "regressed_by_graph": 3,
+            "both_correct": 16,
+            "both_wrong": 10,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "English": {
+            "n": 9,
+            "graph_correct": 7,
+            "control_correct": 7,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 1,
+            "regressed_by_graph": 1,
+            "both_correct": 6,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Geography": {
+            "n": 14,
+            "graph_correct": 9,
+            "control_correct": 11,
+            "delta_correct": -2,
+            "delta_pp": -14.286,
+            "fixed_by_graph": 1,
+            "regressed_by_graph": 3,
+            "both_correct": 8,
+            "both_wrong": 2,
+            "mcnemar_exact_two_sided_p": 0.625
+          },
+          "History": {
+            "n": 10,
+            "graph_correct": 4,
+            "control_correct": 6,
+            "delta_correct": -2,
+            "delta_pp": -20.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 2,
+            "both_correct": 4,
+            "both_wrong": 4,
+            "mcnemar_exact_two_sided_p": 0.5
+          },
+          "Math": {
+            "n": 139,
+            "graph_correct": 57,
+            "control_correct": 62,
+            "delta_correct": -5,
+            "delta_pp": -3.597,
+            "fixed_by_graph": 17,
+            "regressed_by_graph": 22,
+            "both_correct": 40,
+            "both_wrong": 60,
+            "mcnemar_exact_two_sided_p": 0.522397380497
+          },
+          "Philosophy": {
+            "n": 2,
+            "graph_correct": 1,
+            "control_correct": 2,
+            "delta_correct": -1,
+            "delta_pp": -50.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 1,
+            "both_correct": 1,
+            "both_wrong": 0,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Physics": {
+            "n": 19,
+            "graph_correct": 10,
+            "control_correct": 12,
+            "delta_correct": -2,
+            "delta_pp": -10.526,
+            "fixed_by_graph": 2,
+            "regressed_by_graph": 4,
+            "both_correct": 8,
+            "both_wrong": 5,
+            "mcnemar_exact_two_sided_p": 0.6875
+          },
+          "Science": {
+            "n": 5,
+            "graph_correct": 1,
+            "control_correct": 2,
+            "delta_correct": -1,
+            "delta_pp": -20.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 1,
+            "both_correct": 1,
+            "both_wrong": 3,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Sociology": {
+            "n": 3,
+            "graph_correct": 2,
+            "control_correct": 2,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 0,
+            "both_correct": 2,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Turkish language and literature": {
+            "n": 21,
+            "graph_correct": 11,
+            "control_correct": 9,
+            "delta_correct": 2,
+            "delta_pp": 9.524,
+            "fixed_by_graph": 3,
+            "regressed_by_graph": 1,
+            "both_correct": 8,
+            "both_wrong": 9,
+            "mcnemar_exact_two_sided_p": 0.625
+          }
+        }
+      },
+      "element_proxy": {
+        "overall": {
+          "n": 274,
+          "graph_correct": 129,
+          "control_correct": 123,
+          "delta_correct": 6,
+          "delta_pp": 2.19,
+          "fixed_by_graph": 39,
+          "regressed_by_graph": 33,
+          "both_correct": 90,
+          "both_wrong": 112,
+          "mcnemar_exact_two_sided_p": 0.555997717761
+        },
+        "math": {
+          "n": 139,
+          "graph_correct": 57,
+          "control_correct": 56,
+          "delta_correct": 1,
+          "delta_pp": 0.719,
+          "fixed_by_graph": 19,
+          "regressed_by_graph": 18,
+          "both_correct": 38,
+          "both_wrong": 64,
+          "mcnemar_exact_two_sided_p": 1.0
+        },
+        "by_score_source": {
+          "deterministic": {
+            "n": 177,
+            "graph_correct": 89,
+            "control_correct": 86,
+            "delta_correct": 3,
+            "delta_pp": 1.695,
+            "fixed_by_graph": 24,
+            "regressed_by_graph": 21,
+            "both_correct": 65,
+            "both_wrong": 67,
+            "mcnemar_exact_two_sided_p": 0.765991824245
+          },
+          "image_judge": {
+            "n": 97,
+            "graph_correct": 40,
+            "control_correct": 37,
+            "delta_correct": 3,
+            "delta_pp": 3.093,
+            "fixed_by_graph": 15,
+            "regressed_by_graph": 12,
+            "both_correct": 25,
+            "both_wrong": 45,
+            "mcnemar_exact_two_sided_p": 0.701108038425
+          }
+        },
+        "by_subject": {
+          "ATATÜRKÇÜLÜK": {
+            "n": 1,
+            "graph_correct": 1,
+            "control_correct": 1,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 0,
+            "both_correct": 1,
+            "both_wrong": 0,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Biology": {
+            "n": 19,
+            "graph_correct": 7,
+            "control_correct": 8,
+            "delta_correct": -1,
+            "delta_pp": -5.263,
+            "fixed_by_graph": 2,
+            "regressed_by_graph": 3,
+            "both_correct": 5,
+            "both_wrong": 9,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Chemistry": {
+            "n": 32,
+            "graph_correct": 19,
+            "control_correct": 19,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 3,
+            "regressed_by_graph": 3,
+            "both_correct": 16,
+            "both_wrong": 10,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "English": {
+            "n": 9,
+            "graph_correct": 7,
+            "control_correct": 6,
+            "delta_correct": 1,
+            "delta_pp": 11.111,
+            "fixed_by_graph": 2,
+            "regressed_by_graph": 1,
+            "both_correct": 5,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Geography": {
+            "n": 14,
+            "graph_correct": 9,
+            "control_correct": 6,
+            "delta_correct": 3,
+            "delta_pp": 21.429,
+            "fixed_by_graph": 4,
+            "regressed_by_graph": 1,
+            "both_correct": 5,
+            "both_wrong": 4,
+            "mcnemar_exact_two_sided_p": 0.375
+          },
+          "History": {
+            "n": 10,
+            "graph_correct": 4,
+            "control_correct": 5,
+            "delta_correct": -1,
+            "delta_pp": -10.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 1,
+            "both_correct": 4,
+            "both_wrong": 5,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Math": {
+            "n": 139,
+            "graph_correct": 57,
+            "control_correct": 56,
+            "delta_correct": 1,
+            "delta_pp": 0.719,
+            "fixed_by_graph": 19,
+            "regressed_by_graph": 18,
+            "both_correct": 38,
+            "both_wrong": 64,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Philosophy": {
+            "n": 2,
+            "graph_correct": 1,
+            "control_correct": 1,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 0,
+            "both_correct": 1,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Physics": {
+            "n": 19,
+            "graph_correct": 10,
+            "control_correct": 10,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 3,
+            "regressed_by_graph": 3,
+            "both_correct": 7,
+            "both_wrong": 6,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Science": {
+            "n": 5,
+            "graph_correct": 1,
+            "control_correct": 1,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 1,
+            "regressed_by_graph": 1,
+            "both_correct": 0,
+            "both_wrong": 3,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Sociology": {
+            "n": 3,
+            "graph_correct": 2,
+            "control_correct": 2,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 0,
+            "both_correct": 2,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Turkish language and literature": {
+            "n": 21,
+            "graph_correct": 11,
+            "control_correct": 8,
+            "delta_correct": 3,
+            "delta_pp": 14.286,
+            "fixed_by_graph": 5,
+            "regressed_by_graph": 2,
+            "both_correct": 6,
+            "both_wrong": 8,
+            "mcnemar_exact_two_sided_p": 0.453125
+          }
+        }
+      },
+      "no_tools": {
+        "overall": {
+          "n": 274,
+          "graph_correct": 129,
+          "control_correct": 191,
+          "delta_correct": -62,
+          "delta_pp": -22.628,
+          "fixed_by_graph": 20,
+          "regressed_by_graph": 82,
+          "both_correct": 109,
+          "both_wrong": 63,
+          "mcnemar_exact_two_sided_p": 4.29e-10
+        },
+        "math": {
+          "n": 139,
+          "graph_correct": 57,
+          "control_correct": 105,
+          "delta_correct": -48,
+          "delta_pp": -34.532,
+          "fixed_by_graph": 7,
+          "regressed_by_graph": 55,
+          "both_correct": 50,
+          "both_wrong": 27,
+          "mcnemar_exact_two_sided_p": 2.43e-10
+        },
+        "by_score_source": {
+          "deterministic": {
+            "n": 177,
+            "graph_correct": 89,
+            "control_correct": 132,
+            "delta_correct": -43,
+            "delta_pp": -24.294,
+            "fixed_by_graph": 8,
+            "regressed_by_graph": 51,
+            "both_correct": 81,
+            "both_wrong": 37,
+            "mcnemar_exact_two_sided_p": 9.052e-09
+          },
+          "image_judge": {
+            "n": 97,
+            "graph_correct": 40,
+            "control_correct": 59,
+            "delta_correct": -19,
+            "delta_pp": -19.588,
+            "fixed_by_graph": 12,
+            "regressed_by_graph": 31,
+            "both_correct": 28,
+            "both_wrong": 26,
+            "mcnemar_exact_two_sided_p": 0.005401572655
+          }
+        },
+        "by_subject": {
+          "ATATÜRKÇÜLÜK": {
+            "n": 1,
+            "graph_correct": 1,
+            "control_correct": 0,
+            "delta_correct": 1,
+            "delta_pp": 100.0,
+            "fixed_by_graph": 1,
+            "regressed_by_graph": 0,
+            "both_correct": 0,
+            "both_wrong": 0,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Biology": {
+            "n": 19,
+            "graph_correct": 7,
+            "control_correct": 11,
+            "delta_correct": -4,
+            "delta_pp": -21.053,
+            "fixed_by_graph": 1,
+            "regressed_by_graph": 5,
+            "both_correct": 6,
+            "both_wrong": 7,
+            "mcnemar_exact_two_sided_p": 0.21875
+          },
+          "Chemistry": {
+            "n": 32,
+            "graph_correct": 19,
+            "control_correct": 20,
+            "delta_correct": -1,
+            "delta_pp": -3.125,
+            "fixed_by_graph": 2,
+            "regressed_by_graph": 3,
+            "both_correct": 17,
+            "both_wrong": 10,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "English": {
+            "n": 9,
+            "graph_correct": 7,
+            "control_correct": 5,
+            "delta_correct": 2,
+            "delta_pp": 22.222,
+            "fixed_by_graph": 3,
+            "regressed_by_graph": 1,
+            "both_correct": 4,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 0.625
+          },
+          "Geography": {
+            "n": 14,
+            "graph_correct": 9,
+            "control_correct": 12,
+            "delta_correct": -3,
+            "delta_pp": -21.429,
+            "fixed_by_graph": 1,
+            "regressed_by_graph": 4,
+            "both_correct": 8,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 0.375
+          },
+          "History": {
+            "n": 10,
+            "graph_correct": 4,
+            "control_correct": 5,
+            "delta_correct": -1,
+            "delta_pp": -10.0,
+            "fixed_by_graph": 2,
+            "regressed_by_graph": 3,
+            "both_correct": 2,
+            "both_wrong": 3,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Math": {
+            "n": 139,
+            "graph_correct": 57,
+            "control_correct": 105,
+            "delta_correct": -48,
+            "delta_pp": -34.532,
+            "fixed_by_graph": 7,
+            "regressed_by_graph": 55,
+            "both_correct": 50,
+            "both_wrong": 27,
+            "mcnemar_exact_two_sided_p": 2.43e-10
+          },
+          "Philosophy": {
+            "n": 2,
+            "graph_correct": 1,
+            "control_correct": 1,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 0,
+            "both_correct": 1,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Physics": {
+            "n": 19,
+            "graph_correct": 10,
+            "control_correct": 14,
+            "delta_correct": -4,
+            "delta_pp": -21.053,
+            "fixed_by_graph": 1,
+            "regressed_by_graph": 5,
+            "both_correct": 9,
+            "both_wrong": 4,
+            "mcnemar_exact_two_sided_p": 0.21875
+          },
+          "Science": {
+            "n": 5,
+            "graph_correct": 1,
+            "control_correct": 3,
+            "delta_correct": -2,
+            "delta_pp": -40.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 2,
+            "both_correct": 1,
+            "both_wrong": 2,
+            "mcnemar_exact_two_sided_p": 0.5
+          },
+          "Sociology": {
+            "n": 3,
+            "graph_correct": 2,
+            "control_correct": 2,
+            "delta_correct": 0,
+            "delta_pp": 0.0,
+            "fixed_by_graph": 0,
+            "regressed_by_graph": 0,
+            "both_correct": 2,
+            "both_wrong": 1,
+            "mcnemar_exact_two_sided_p": 1.0
+          },
+          "Turkish language and literature": {
+            "n": 21,
+            "graph_correct": 11,
+            "control_correct": 13,
+            "delta_correct": -2,
+            "delta_pp": -9.524,
+            "fixed_by_graph": 2,
+            "regressed_by_graph": 4,
+            "both_correct": 9,
+            "both_wrong": 6,
+            "mcnemar_exact_two_sided_p": 0.6875
+          }
+        }
+      }
+    }
+  },
+  "retrieval": {
+    "requested_calls": 588,
+    "tasks_with_calls": 274,
+    "calls_per_task_distribution": {
+      "1": 51,
+      "2": 132,
+      "3": 91
+    },
+    "executed_calls": 549,
+    "accepted_nonempty": 544,
+    "no_hits": 5,
+    "relevance_reasons": {
+      "accepted": 544,
+      "no_hits": 5
+    },
+    "duplicate_guard_rejections": 39,
+    "duplicate_guard_rejection_tasks": 39,
+    "top_k_requested": {
+      "5": 547,
+      "10": 2
+    },
+    "mode_requested": {
+      "or": 548,
+      "and": 1
+    },
+    "grade_filter": {
+      "null": 318,
+      "7": 30,
+      "12": 27,
+      "10": 83,
+      "5": 37,
+      "11": 25,
+      "6": 10,
+      "8": 9,
+      "9": 10
+    },
+    "returned_slots": 2704,
+    "unique_returned_card_ids": 1835,
+    "returned_count_distribution": {
+      "0": 5,
+      "4": 18,
+      "5": 524,
+      "6": 2
+    },
+    "returned_id_prefix": {
+      "graph": 2704
+    },
+    "repeated_slots_within_task_across_calls": 580,
+    "repeat_affected_calls": 213,
+    "repeat_affected_tasks": 173,
+    "preview_calls_exposing_unit_kind_knowledge_card": 222,
+    "underlying_anchor_kind_exposed": false,
+    "graph_paths_exposed": false,
+    "latency_ms": {
+      "n": 549,
+      "total": 15906439.803,
+      "mean": 28973.479,
+      "median": 29949.58,
+      "p95_nearest_rank": 38050.177,
+      "max": 78941.829
+    },
+    "top_score": {
+      "n": 544,
+      "min": 0.072397,
+      "mean": 0.425981,
+      "median": 0.333172,
+      "p05_nearest_rank": 0.102121,
+      "p95_nearest_rank": 0.914178,
+      "max": 0.969295
+    },
+    "task_max_top_score_by_correctness": {
+      "correct": {
+        "n": 126,
+        "mean": 0.526518,
+        "median": 0.581391
+      },
+      "incorrect": {
+        "n": 143,
+        "mean": 0.502148,
+        "median": 0.511168
+      }
+    },
+    "by_subject": {
+      "ATATÜRKÇÜLÜK": {
+        "tasks": 1,
+        "requested": 1,
+        "executed": 1,
+        "accepted_nonempty": 1,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 0,
+        "returned_slots": 5,
+        "latency_ms_median": 19356.73
+      },
+      "Biology": {
+        "tasks": 19,
+        "requested": 51,
+        "executed": 46,
+        "accepted_nonempty": 46,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 5,
+        "returned_slots": 230,
+        "latency_ms_median": 31326.089
+      },
+      "Chemistry": {
+        "tasks": 32,
+        "requested": 52,
+        "executed": 50,
+        "accepted_nonempty": 50,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 2,
+        "returned_slots": 243,
+        "latency_ms_median": 28029.57
+      },
+      "English": {
+        "tasks": 9,
+        "requested": 15,
+        "executed": 15,
+        "accepted_nonempty": 15,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 0,
+        "returned_slots": 74,
+        "latency_ms_median": 32395.551
+      },
+      "Geography": {
+        "tasks": 14,
+        "requested": 25,
+        "executed": 25,
+        "accepted_nonempty": 25,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 0,
+        "returned_slots": 124,
+        "latency_ms_median": 34767.292
+      },
+      "History": {
+        "tasks": 10,
+        "requested": 16,
+        "executed": 16,
+        "accepted_nonempty": 16,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 0,
+        "returned_slots": 81,
+        "latency_ms_median": 29668.559
+      },
+      "Math": {
+        "tasks": 139,
+        "requested": 334,
+        "executed": 310,
+        "accepted_nonempty": 310,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 24,
+        "returned_slots": 1544,
+        "latency_ms_median": 29242.484
+      },
+      "Philosophy": {
+        "tasks": 2,
+        "requested": 2,
+        "executed": 2,
+        "accepted_nonempty": 0,
+        "no_hits": 2,
+        "duplicate_guard_rejections": 0,
+        "returned_slots": 0,
+        "latency_ms_median": 16136.892
+      },
+      "Physics": {
+        "tasks": 19,
+        "requested": 46,
+        "executed": 41,
+        "accepted_nonempty": 41,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 5,
+        "returned_slots": 204,
+        "latency_ms_median": 31555.313
+      },
+      "Science": {
+        "tasks": 5,
+        "requested": 6,
+        "executed": 6,
+        "accepted_nonempty": 6,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 0,
+        "returned_slots": 30,
+        "latency_ms_median": 28632.592
+      },
+      "Sociology": {
+        "tasks": 3,
+        "requested": 3,
+        "executed": 3,
+        "accepted_nonempty": 0,
+        "no_hits": 3,
+        "duplicate_guard_rejections": 0,
+        "returned_slots": 0,
+        "latency_ms_median": 14953.575
+      },
+      "Turkish language and literature": {
+        "tasks": 21,
+        "requested": 37,
+        "executed": 34,
+        "accepted_nonempty": 34,
+        "no_hits": 0,
+        "duplicate_guard_rejections": 3,
+        "returned_slots": 169,
+        "latency_ms_median": 34280.317
+      }
+    }
+  },
+  "generation": {
+    "solver_errors": 0,
+    "missing_answers": 0,
+    "forced_answer": {
+      "total": 170,
+      "forced": {
+        "n": 170,
+        "correct": 66,
+        "accuracy": 0.388235,
+        "fixed_vs_page": 14,
+        "regressed_vs_page": 30
+      },
+      "structured": {
+        "n": 104,
+        "correct": 63,
+        "accuracy": 0.605769,
+        "fixed_vs_page": 13,
+        "regressed_vs_page": 9
+      }
+    },
+    "tokens": {
+      "combined_tokens_total": 8865562,
+      "input_token_rows": 274,
+      "input_tokens_mean_per_reported_row": 31461.828,
+      "input_tokens_total": 8620541,
+      "output_token_rows": 274,
+      "output_tokens_mean_per_reported_row": 894.237,
+      "output_tokens_total": 245021
+    },
+    "task_latency": {
+      "latency_s_max": 155.859,
+      "latency_s_mean": 83.757,
+      "latency_s_median": 87.17,
+      "latency_s_p95_nearest_rank": 131.961,
+      "latency_s_total": 22949.451,
+      "reported_rows": 274
+    },
+    "runner_wall_seconds": 2913.361,
+    "cost_usd": null,
+    "cost_note": "self-hosted vLLM; GPU/energy cost not recorded"
+  },
+  "image_judge": {
+    "rows": 97,
+    "strict_correct": {
+      "False": 57,
+      "True": 40
+    },
+    "label": {
+      "partially_correct": 26,
+      "incorrect": 29,
+      "fully_correct": 40,
+      "mostly_correct": 2
+    },
+    "final_answer_correct": {
+      "False": 54,
+      "True": 43
+    },
+    "reasoning_correct": {
+      "False": 55,
+      "True": 42
+    },
+    "complete": {
+      "False": 47,
+      "True": 50
+    },
+    "confidence": {
+      "0.95": 50,
+      "1.0": 33,
+      "0.9": 12,
+      "0.99": 2
+    },
+    "reference_quality_issue": {
+      "False": 95,
+      "True": 2
+    },
+    "error_types_nonexclusive": {
+      "missing_sub_answer": 11,
+      "incorrect_sub_answer": 2,
+      "incorrect_reasoning": 31,
+      "incorrect_final_answer": 27,
+      "calculation_error": 4,
+      "misinterpretation_of_question": 9,
+      "incorrect_calculation": 3,
+      "irrelevant_answer": 1,
+      "misinterpretation_of_task": 3,
+      "misinterpretation_of_pattern": 1,
+      "incomplete_solution": 1,
+      "wrong_final_answer": 5,
+      "misinterpretation_of_map": 1,
+      "incomplete_reasoning": 8,
+      "wrong_answer": 4,
+      "irrelevant_content": 1,
+      "missing_required_answer": 1,
+      "wrong_subject": 1,
+      "misinterpretation": 1,
+      "factual_error": 3,
+      "incomplete_analysis": 1,
+      "missing_required_part": 6,
+      "misinterpretation_of_reference": 1,
+      "geographical_misinterpretation": 1,
+      "incorrect_scale_calculation": 1,
+      "incorrect_area_calculation": 1,
+      "incomplete_answer": 4,
+      "missing_subanswers": 1,
+      "language_mismatch": 1,
+      "misclassification": 1,
+      "missing_required_analysis": 1,
+      "missing_answer": 2,
+      "missing_steps": 1,
+      "incorrect_classification": 1
+    },
+    "judge_errors": {
+      "None": 97
+    },
+    "attempts": {
+      "1": 97
+    },
+    "cache_hit": {
+      "False": 97
+    },
+    "finish_reason": {
+      "stop": 97
+    },
+    "usage_totals": {
+      "prompt_tokens": 161271,
+      "total_tokens": 180387,
+      "completion_tokens": 19116
+    },
+    "semantic_config": {
+      "temperature": 0.0,
+      "max_tokens": 900,
+      "seed": 20260714,
+      "response_format": true,
+      "thinking": false,
+      "image_mode": "data_url"
+    },
+    "execution_backend_config_hashes": [
+      "1caba4158b78bb4c9c2d6750c8d663d4e75195fdf23aafcbca71ff6605bb91d0"
+    ],
+    "model": "Qwen/Qwen3.5-9B"
+  },
+  "observability_limits": {
+    "returned_underlying_element_types": "not recoverable: trace keeps 1000-character result_preview and IDs only",
+    "actual_relation_expansions": "not recoverable: graph_paths absent from persisted solver trace",
+    "model_call_count": "not reported separately; solver usage contains token and task latency only"
+  },
+  "files": {
+    "reports/maxim_ideas_full274_20260731/graph253_v1/solver.jsonl": {
+      "bytes": 1642198,
+      "sha256": "65a069d1d51088af6363339da5dd7e01a9512f26013bf05c5b044c233bad59eb"
+    },
+    "reports/maxim_ideas_full274_20260731/graph253_v1/image97_judge.jsonl": {
+      "bytes": 188304,
+      "sha256": "89fd9287dd3de575c7ac8b487475281ca6a7693ce88dfada586c70dd8f7f3492"
+    },
+    "reports/maxim_ideas_full274_20260731/graph253_v1/score.json": {
+      "bytes": 170342,
+      "sha256": "9204a3be5baba81ccf2436a9b19c0d403c45228459ce14486dab4c5d68672365"
+    },
+    "reports/maxim_ideas_full274_20260731/graph253_v1/reports/generation_provenance.json": {
+      "bytes": 7566,
+      "sha256": "717c16684a89cf17a1bb991f97b886689885bc07de98e9574488928968985fc7"
+    },
+    "reports/maxim_ideas_full274_20260731/no_tools_control_score.json": {
+      "bytes": 167501,
+      "sha256": "e7852752d9fb141978f017d060ad6d7c4e8e10ec9a0999e85814f11ca3bb4b4d"
+    },
+    "reports/maxim_ideas_full274_20260731/element_chunking_proxy_v1/source_hybrid_rag_ab.json": {
+      "bytes": 56954,
+      "sha256": "139121eba16bb32ec9e5c53260894bdcd7af7497fee9118105b6e58965195b3f"
+    },
+    "artifacts/baselines/basic_page_rag_v1/agent_rag_judge.jsonl": {
+      "bytes": 311447,
+      "sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4"
+    }
+  }
+}
