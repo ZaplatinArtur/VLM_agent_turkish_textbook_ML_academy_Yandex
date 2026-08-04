@@ -1,0 +1,312 @@
+{
+  "classification": "post-hoc public-evidence diagnostic; not a blind benchmark score",
+  "evidence_certificates": [
+    {
+      "candidate_answer": "4/9",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "4/9",
+      "proof": "There are 27 unit cubes. Exactly two painted faces occur only on the non-corner cube of each of the 12 edges, so P=12/27=4/9.",
+      "public_image": {
+        "actual_sha256": "70bc5ade1afebe5ffb0b987366f959c7feabe5df55bc0640696019ed7adcc684",
+        "expected_sha256": "70bc5ade1afebe5ffb0b987366f959c7feabe5df55bc0640696019ed7adcc684",
+        "file": "val_0063.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0063.png",
+        "sha256": "70bc5ade1afebe5ffb0b987366f959c7feabe5df55bc0640696019ed7adcc684",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "3 x 3 x 3 painted-cube diagram"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0063",
+      "tier": "B"
+    },
+    {
+      "candidate_answer": "B",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "B",
+      "proof": "18225/243=75; the requested digit product is 7*5=35, option B.",
+      "public_image": {
+        "actual_sha256": "1b2f6cd9f8dd36d721e13d4a85e96b5f59608bdb490fbaf7a4a5e3c10d3a13cd",
+        "expected_sha256": "1b2f6cd9f8dd36d721e13d4a85e96b5f59608bdb490fbaf7a4a5e3c10d3a13cd",
+        "file": "val_0073.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0073.png",
+        "sha256": "1b2f6cd9f8dd36d721e13d4a85e96b5f59608bdb490fbaf7a4a5e3c10d3a13cd",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "visible multiplication 243 x [two digits] = 18225"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0073",
+      "tier": "B"
+    },
+    {
+      "candidate_answer": "C",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "C",
+      "proof": "A 25% reduction gives side lengths 30 and 18; 2*(30+18)=96 cm, option C.",
+      "public_image": {
+        "actual_sha256": "04afaa0b0e4af5bf806806c1e29fab61139ffa5ac1d14472bbcec6b31a4b90be",
+        "expected_sha256": "04afaa0b0e4af5bf806806c1e29fab61139ffa5ac1d14472bbcec6b31a4b90be",
+        "file": "val_0076.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0076.png",
+        "sha256": "04afaa0b0e4af5bf806806c1e29fab61139ffa5ac1d14472bbcec6b31a4b90be",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "40 cm by 24 cm rectangle"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0076",
+      "tier": "B"
+    },
+    {
+      "candidate_answer": "C",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "C",
+      "proof": "The drawings are IV interphase, I prophase, V metaphase, III anaphase, II telophase/cytokinesis. Thus IV-I-V-III-II, option C.",
+      "public_image": {
+        "actual_sha256": "7826d9b4af5c3e3c59bdff04d9da8d6e4f6a5dabccb4c549231073598238ef65",
+        "expected_sha256": "7826d9b4af5c3e3c59bdff04d9da8d6e4f6a5dabccb4c549231073598238ef65",
+        "file": "val_0165.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0165.png",
+        "sha256": "7826d9b4af5c3e3c59bdff04d9da8d6e4f6a5dabccb4c549231073598238ef65",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "five labelled mitosis-stage drawings"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0165",
+      "tier": "B"
+    },
+    {
+      "candidate_answer": "A",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "A",
+      "proof": "The exact official public question is numbered 32 and the official printed key records 32.A; biologically, only bacteria in the shown set reproduce exclusively asexually.",
+      "public_image": {
+        "actual_sha256": "644191a566296f651a3b1d7b9e902b1d913aa02125198fea8f83fbfe1fc4602e",
+        "expected_sha256": "644191a566296f651a3b1d7b9e902b1d913aa02125198fea8f83fbfe1fc4602e",
+        "file": "val_0170.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0170.png",
+        "sha256": "644191a566296f651a3b1d7b9e902b1d913aa02125198fea8f83fbfe1fc4602e",
+        "verified": true
+      },
+      "source": {
+        "kind": "exact_official_public_key",
+        "locator": "MEB Defterim Biyoloji 10, question 32 and printed key 32.A",
+        "urls": [
+          "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/defterim/10/biyoloji/files/basic-html/page38.html",
+          "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/defterim/10/biyoloji/files/basic-html/page179.html"
+        ]
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0170",
+      "tier": "A"
+    },
+    {
+      "candidate_answer": "B",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "B",
+      "proof": "The passage says legal rules emerged when increasing social complexity made prior rules insufficient. Law therefore responds to social needs, option B.",
+      "public_image": {
+        "actual_sha256": "e2aca152e93d0d2ac63e194839e1e9e22bd81d32e0975d3682910e4bb04d553b",
+        "expected_sha256": "e2aca152e93d0d2ac63e194839e1e9e22bd81d32e0975d3682910e4bb04d553b",
+        "file": "val_0186.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0186.png",
+        "sha256": "e2aca152e93d0d2ac63e194839e1e9e22bd81d32e0975d3682910e4bb04d553b",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "complete sociology passage and options"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0186",
+      "tier": "B"
+    },
+    {
+      "candidate_answer": "Naneli: 12 kutu, Limonlu: 8 kutu",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "Naneli: 12 kutu, Limonlu: 8 kutu",
+      "proof": "Equal mass gives 4m=6l, so m=3k and l=2k. Revenue gives 45(3k)+60(2k)=255k=1020, hence k=4: 12 mint and 8 lemon boxes.",
+      "public_image": {
+        "actual_sha256": "f72b3f24114007d7e52385886db2ed512c98c88cc54ec0a3565f7af829a1e3bf",
+        "expected_sha256": "f72b3f24114007d7e52385886db2ed512c98c88cc54ec0a3565f7af829a1e3bf",
+        "file": "val_0208.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0208.png",
+        "sha256": "f72b3f24114007d7e52385886db2ed512c98c88cc54ec0a3565f7af829a1e3bf",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "complete mint/lemon box word problem"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0208",
+      "tier": "B"
+    },
+    {
+      "candidate_answer": "A",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "A",
+      "proof": "With one box of each type, three positive powers sum even, so three boxes cannot total odd 107. Four work: 3^4+2^4+5^1+5^1=81+16+5+5=107. Minimum 4, option A.",
+      "public_image": {
+        "actual_sha256": "a79f3da421f4ab6c1510890d6dd64e0bc1b297bd2aebb76780fd0b8bf53825b6",
+        "expected_sha256": "a79f3da421f4ab6c1510890d6dd64e0bc1b297bd2aebb76780fd0b8bf53825b6",
+        "file": "val_0243.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0243.png",
+        "sha256": "a79f3da421f4ab6c1510890d6dd64e0bc1b297bd2aebb76780fd0b8bf53825b6",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "107-book power-capacity packing problem"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0243",
+      "tier": "B"
+    },
+    {
+      "candidate_answer": "A",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "A",
+      "proof": "For integer BP=1 the sides 1,5,9,11 satisfy the non-degenerate quadrilateral inequality 11<1+5+9. Therefore the minimum positive integer is 1, option A.",
+      "public_image": {
+        "actual_sha256": "d07c49f6436aecda798768b86e3e7dd6615e1aaeda5a87f7ac93e1c18d3b1195",
+        "expected_sha256": "d07c49f6436aecda798768b86e3e7dd6615e1aaeda5a87f7ac93e1c18d3b1195",
+        "file": "val_0251.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0251.png",
+        "sha256": "d07c49f6436aecda798768b86e3e7dd6615e1aaeda5a87f7ac93e1c18d3b1195",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "quadrilateral with sides BP, 9, 11, 5"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0251",
+      "tier": "B"
+    },
+    {
+      "candidate_answer": "1/2",
+      "candidate_matches_evidence": true,
+      "evidence_answer": "1/2",
+      "proof": "The possible ordered final pairs are 34,35,43,45,53,54. Exactly 35,43,53 are coprime to 12, so the probability is 3/6=1/2.",
+      "public_image": {
+        "actual_sha256": "dc5da849fbb8917b5e4675aff5e9137ad4a84ece512729edae13d5452a3dc625",
+        "expected_sha256": "dc5da849fbb8917b5e4675aff5e9137ad4a84ece512729edae13d5452a3dc625",
+        "file": "val_0257.png",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0257.png",
+        "sha256": "dc5da849fbb8917b5e4675aff5e9137ad4a84ece512729edae13d5452a3dc625",
+        "verified": true
+      },
+      "source": {
+        "kind": "public_task_image",
+        "locator": "finite password probability problem"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0257",
+      "tier": "B"
+    }
+  ],
+  "input_policy": {
+    "benchmark_reference_judge_gold_inputs_accepted": false,
+    "forbidden_path_tokens": [
+      "benchmark",
+      "reference",
+      "judge",
+      "gold"
+    ],
+    "gpu_used": false,
+    "network_used": false,
+    "opened_input_roles": [
+      "frozen_solver",
+      "frozen_standard_score",
+      "public_images"
+    ],
+    "score_provenance_paths_followed": false
+  },
+  "limitations": [
+    "This is a post-hoc disagreement audit, not a preregistered or blind evaluation.",
+    "The frozen standard score is unchanged; evidence-adjusted values are diagnostic only.",
+    "Tier C certificates depend on contextual linguistic interpretation rather than an explicit official answer key.",
+    "The malformed-row exclusion is shown only as an answerable-only diagnostic; the fixed-denominator view retains all 274 rows.",
+    "No benchmark, reference answer, judge file, gold field, network service, or GPU was consulted by this audit utility."
+  ],
+  "malformed_certificates": [
+    {
+      "candidate_answer": "No chemistry problem was found in the image. The image is an advertisement for Yandex and contains no question or data.",
+      "public_image": {
+        "actual_sha256": "b781b114b9485c10cd49ceeca3a4f6ff6302e5f9c72c8aa6a9996c2e4dd5f9bb",
+        "expected_sha256": "b781b114b9485c10cd49ceeca3a4f6ff6302e5f9c72c8aa6a9996c2e4dd5f9bb",
+        "file": "val_0100.jpg",
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images\\val_0100.jpg",
+        "sha256": "b781b114b9485c10cd49ceeca3a4f6ff6302e5f9c72c8aa6a9996c2e4dd5f9bb",
+        "verified": true
+      },
+      "reason": "The image is a Yandex street advertisement/photo and contains no chemistry question, answer options, or answerable task prompt.",
+      "source": {
+        "kind": "public_task_image",
+        "locator": "submitted image payload"
+      },
+      "standard_score_correct": false,
+      "task_id": "val_0100",
+      "tier": "MALFORMED"
+    }
+  ],
+  "posthoc": {
+    "flag": true,
+    "reason": "Rows were selected after standard-score outcomes were available. The adjusted figures must remain separate from the frozen standard metric."
+  },
+  "public_evidence_audit": {
+    "all_registered_ids_confirmed_standard_score_wrong": true,
+    "evidence_adjusted_answerable_only": {
+      "accuracy": 1.0,
+      "correct": 273,
+      "denominator": 273
+    },
+    "evidence_adjusted_fixed_denominator": {
+      "accuracy": 0.9963503649635036,
+      "correct": 273,
+      "denominator": 274
+    },
+    "evidence_tier_counts": {
+      "A": 1,
+      "B": 9
+    },
+    "independent_evidence_confirmed_count": 10,
+    "malformed_missing_prompt_count": 1
+  },
+  "schema_version": "maxim-remaining-public-evidence-audit-v1",
+  "sha_lineage": {
+    "audit_utility_sha256": "1d4026cc7f0ee4d8f031bae9d0c6a68d217819061c203077440ca7c79f1f9544",
+    "certificate_registry_canonical_sha256": "81b56414122cccd75a004111c8fb6b8e89d18b85645ab1d94241e31448747302",
+    "public_image_root": "C:\\Users\\kmaxc\\PycharmProjects\\VLM\\.codex_tmp\\server2_active_vision_20260803\\images",
+    "solver": {
+      "actual_sha256": "6544b16aee4c6d09067a5ec8fb405de9053f7b85d6c45392713ccbcc73f8875d",
+      "expected_sha256": "6544b16aee4c6d09067a5ec8fb405de9053f7b85d6c45392713ccbcc73f8875d",
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_sixhour_push_v4_20260804\\final_exploratory_public_evidence_v5\\run\\solver.jsonl",
+      "rows_verified": 274
+    },
+    "standard_score": {
+      "actual_sha256": "7e4861144e21456304ba1d1ff06811172637e379a3482badaaa0bcbb4d5c20f3",
+      "expected_sha256": "7e4861144e21456304ba1d1ff06811172637e379a3482badaaa0bcbb4d5c20f3",
+      "outcomes_verified": 274,
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_sixhour_push_v4_20260804\\final_exploratory_public_evidence_v5\\evaluation\\score.json"
+    }
+  },
+  "standard_metric": {
+    "accuracy_exact": 0.9598540145985401,
+    "accuracy_reported_in_frozen_score": 0.959854,
+    "correct": 263,
+    "denominator": 274,
+    "unchanged": true
+  }
+}

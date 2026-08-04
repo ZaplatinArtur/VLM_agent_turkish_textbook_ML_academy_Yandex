@@ -1,0 +1,26 @@
+row,author,pipeline_part,idea,correct,total,accuracy,math_correct,math_total,nonmath_correct,nonmath_total,honest_status
+7,Максим,Агент,Разбиение сложных задач на подзадачи,150,274,0.547445,75,139,75,135,gold-blind dev
+8,Максим,Агент,8 параллельных рассуждений и дополнительный судья,151,274,0.551095,79,139,72,135,gold-blind dev
+16,Максим,Чанкинг/Ретрив,Граф элементов теория-задача-решение,129,274,0.470803,57,139,72,135,gold-blind dev partial proxy
+19,Максим,Агент,Solver-Critic-Repair,154,274,0.562044,79,139,75,135,gold-blind dev
+20,Максим,Агент/RAG,Параллельный RAG и no-RAG с support gate,165,274,0.602190,76,139,89,135,gold-blind dev metadata proxy
+21,Максим,Агент,Роутер по типу задания,182,274,0.664234,103,139,79,135,gold-blind dev
+22,Максим,Агент,Кластеризация ответов и consensus,139,274,0.507299,74,139,65,135,gold-blind dev
+23,Максим,Агент/Тулы,Калькулятор и SymPy с проверками,143,274,0.521898,64,139,79,135,gold-blind dev
+24,Максим,Парсинг/Агент,Двухпроходная транскрипция и решение,146,274,0.532847,75,139,71,135,gold-blind dev
+25,Максим,Постпроцессинг,Канонизация ответа,141,274,0.514599,62,139,79,135,baseline replay
+26,Максим,Агент,Память типовых ошибок,155,274,0.565693,81,139,74,135,gold-blind dev
+27,,Бэйзлайн,Page-RAG,141,274,0.514599,62,139,79,135,baseline
+28,,Бэйзлайн,No-tools reasoning,191,274,0.697080,,,,,baseline
+29,Максим,Агент/RAG,RAG и no-RAG плюс семантический рейтинг,193,274,0.704380,103,139,90,135,attribution failure RAG selected 0/274
+30,Максим,Агент/Ансамбль,V2.1 default плюс консервативный V3.1 repair,205,274,0.748175,108,139,97,135,gold-blind dev-selected
+31,Максим,Агент/Ансамбль,V2.1 default плюс Active-Crop repair,204,274,0.744526,107,139,97,135,gold-blind dev ablation
+32,Максим,Агент/Ансамбль,Согласие V3.1 и Active-Crop,204,274,0.744526,109,139,95,135,gold-blind dev ablation
+33,Максим,Агент/Ансамбль,Согласие V3.1 и no-tools,204,274,0.744526,109,139,95,135,gold-blind dev ablation
+34,Максим,Агент/Ансамбль,Согласие Active-Crop и no-tools,195,274,0.711679,104,139,91,135,gold-blind dev ablation
+35,Максим,Агент/Ансамбль,Трехстороннее единогласие,204,274,0.744526,109,139,95,135,gold-blind dev ablation
+36,Максим,Агент/Ансамбль,Большинство двух из трех,194,274,0.708029,104,139,90,135,gold-blind dev ablation
+37,Максим,Агент/Тулы,Visual Sketchpad,194,274,0.708029,104,139,90,135,gold-blind dev
+38,Максим,Агент/RAG,Exact-match web routing,210,274,0.766423,108,139,102,135,post-hoc targeted
+39,Максим,Агент/RAG/Тулы,Exact web evidence плюс deterministic tools,228,274,0.832117,120,139,108,135,post-hoc targeted
+40,Максим,Агент/RAG/Тулы,Fail-closed lookup плюс executable checks,263,274,0.959854,132,139,131,135,invalid generalization forensic upper bound

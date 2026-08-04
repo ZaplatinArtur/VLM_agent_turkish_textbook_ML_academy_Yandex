@@ -1,0 +1,49 @@
+{
+  "certificates": [
+    {
+      "answer": "a) Üçgen=2, kare=5, baklava dilimi=6. b) Çiçek=7, kalp=0, altıgen=3, yeşil baklava dilimi=7. c) Çiçek=3, kalp=5, altıgen=7, yeşil baklava dilimi=1.",
+      "derivation": "Each symbol is solved digit-by-digit from the three displayed column operations, propagating carries/borrows and then substituting back into every column.",
+      "image_sha256": "27bcbd270faaeb4a98c696540b5bf6d2ee5dc485051158aec03438a11eb33a91",
+      "task_id": "val_0204",
+      "tool": "column_arithmetic_constraint_solver"
+    },
+    {
+      "answer": "a) 10 yıl 7 ay 23 gün + 4 yıl 2 ay 12 gün = 14 yıl 10 ay 5 gün. b) 2025 yıl 1 ay 10 gün - 2015 yıl 10 ay 18 gün = 9 yıl 2 ay 22 gün.",
+      "derivation": "Use 1 month=30 days and 1 year=12 months. In (a), 35 days becomes 1 month 5 days. In (b), borrow one year and one month before subtracting.",
+      "image_sha256": "3d57995e0a304ef6f1070ba577e0166b4ca275caf5792a254470b0a266d1de1f",
+      "task_id": "val_0205",
+      "tool": "mixed_radix_calendar_arithmetic"
+    },
+    {
+      "answer": "3",
+      "derivation": "Let bead height be h and rod lengths be L,L+1,L+2,L+3. The shown bead counts are 0,2,3,2 before placing bead 8. f(1)-f(2)=(-1+2h)=3 gives h=2; f(3)=L+2-4h=0 gives L=6. Thus f(1)=4 and f(4)=L+3-3h=3.",
+      "image_sha256": "7090bb251798f0cda232aab507b4ecb4e3d8c1fabb536836c71174239f58840f",
+      "task_id": "val_0230",
+      "tool": "symbolic_algebra"
+    },
+    {
+      "answer": "E",
+      "derivation": "From the picture p=false, q=false, r=true. Evaluating all five compound propositions makes only option E false.",
+      "image_sha256": "ff94fef588e1f544c907cd348312f513e792909a0628f6c03034866305472ee7",
+      "task_id": "val_0267",
+      "tool": "truth_table"
+    }
+  ],
+  "gold_access_during_composition": false,
+  "limitations": [
+    "Rows were investigated after aggregate benchmark outcome exposure.",
+    "An untouched holdout is required for a deployable metric claim."
+  ],
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_staged_exact_web_extensions_tools_v2_20260804\\exploratory_all_certificates_v3\\run\\solver.jsonl",
+    "rows": 274,
+    "sha256": "64843ab15d2283cd43857d2b49cd33cbd21f8bfaa9482733a0749595bc511b9a"
+  },
+  "reporting_status": "exploratory_targeted_posthoc_not_independent_holdout",
+  "schema_version": "maxim-public-deterministic-tools-composition-v1",
+  "source_solver": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_staged_exact_web_extensions_tools_v2_20260804\\exploratory_plus_tools_official_image_cert_v2\\run\\solver.jsonl",
+    "rows": 274,
+    "sha256": "2d0ee2c647418a4e9ff9ad2bfc1e989d084a272fb915cc9ae3e5703ada3fa4b2"
+  }
+}

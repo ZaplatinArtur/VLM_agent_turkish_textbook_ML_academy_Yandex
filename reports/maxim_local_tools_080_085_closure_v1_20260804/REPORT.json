@@ -1,0 +1,460 @@
+{
+  "schema_version": "maxim-local-tools-080-085-closure-v1",
+  "reporting_status": "confirmed_results_with_strict_exploratory_projection_diagnostic_separation_not_metric_ledger",
+  "snapshot_at_utc": "2026-08-04T11:39:30Z",
+  "scope": "Local-compute tool and selector attempts plus targeted official-web evidence analysis for the frozen 274-row benchmark.",
+  "result_classification": {
+    "strict_measured": "Frozen-protocol metric eligible as the official current result.",
+    "measured_exploratory": "A completed branch was actually composed and scored, but target exposure or post-hoc selection prevents a strict claim.",
+    "projection": "Arithmetic candidate-coverage or adjudication upper bound; no composed branch achieved this score.",
+    "diagnostic": "Manual-audit-adjusted recalculation; not an official relabel or benchmark score."
+  },
+  "frozen_protocol": {
+    "benchmark_rows": 274,
+    "benchmark_sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+    "judge_backend_config_sha256": "e3f71b4af7fa8ad8a6db755d43bdf4a895d087b701436c105da8c5416804fbd9",
+    "ledger": {
+      "path": "reports/maxim_full274_results_ledger_v1_20260803/RESULTS.json",
+      "sha256": "da6d987f42818270bb5eafdd4b348f71462be70920774dfa900c72864f32ee24",
+      "branches": 51,
+      "final": 37,
+      "pending": 10,
+      "non_final": 4,
+      "conflicts": 0
+    }
+  },
+  "targets": {
+    "accuracy_0_80": {
+      "minimum_correct": 220,
+      "strict_tasks_needed_from_baseline": 15
+    },
+    "accuracy_0_85": {
+      "minimum_correct": 233,
+      "strict_tasks_needed_from_baseline": 28
+    }
+  },
+  "strict_frozen_baseline": {
+    "result_class": "strict_measured",
+    "branch_id": "blind_ensemble_v2default_v3_repair_v1",
+    "correct": 205,
+    "denominator": 274,
+    "accuracy": 0.7481751824817519,
+    "math": {
+      "correct": 108,
+      "denominator": 139,
+      "accuracy": 0.7769784172661871
+    },
+    "non_math": {
+      "correct": 97,
+      "denominator": 135,
+      "accuracy": 0.7185185185185186
+    },
+    "official_metric_changed_by_this_report": false,
+    "evidence": [
+      "reports/maxim_full274_results_ledger_v1_20260803/RESULTS.json",
+      "reports/maxim_math_metric_audit_v1_20260804/REPORT.json"
+    ]
+  },
+  "completed_exploratory_results_class": "measured_exploratory",
+  "completed_exploratory_results": [
+    {
+      "id": "local_tool_vote_oof_v1",
+      "method": "Five-fold source-reliability vote; best of 5184 configurations.",
+      "label": "exploratory_cross_fitted_posthoc_grid_selection_not_strict_final",
+      "correct": 208,
+      "denominator": 274,
+      "accuracy": 0.7591240875912408,
+      "fixes_vs_default": 6,
+      "regressions_vs_default": 3,
+      "overrides": 17,
+      "evidence": "reports/maxim_local_tool_vote_oof_v1_20260804/REPORT.json"
+    },
+    {
+      "id": "pairwise_tool_selector_oof_v1",
+      "method": "Five-fold hashed sparse logistic pairwise selector; post-hoc pool and threshold sweep.",
+      "label": "exploratory_cross_fitted_posthoc_threshold_and_pool_selection_not_strict_final",
+      "correct": 206,
+      "denominator": 274,
+      "accuracy": 0.7518248175182481,
+      "fixes_vs_default": 2,
+      "regressions_vs_default": 1,
+      "overrides": 13,
+      "evidence": "reports/maxim_pairwise_tool_selector_oof_v1_20260804/REPORT.json"
+    },
+    {
+      "id": "knn_tool_selector_oof_v1",
+      "method": "Five-fold OCR/default-rationale kNN selector; best of 3240 configurations.",
+      "label": "exploratory_cross_fitted_posthoc_grid_selection_not_strict_final",
+      "correct": 207,
+      "denominator": 274,
+      "accuracy": 0.7554744525547445,
+      "fixes_vs_default": 2,
+      "regressions_vs_default": 0,
+      "overrides": 5,
+      "evidence": "reports/maxim_knn_tool_selector_oof_v1_20260804/REPORT.json"
+    },
+    {
+      "id": "anchor_confidence_nested_vote_hurdle_oof_v1",
+      "method": "Nested five-fold anchor-confidence hurdle in front of the vote selector.",
+      "label": "exploratory_oof_not_strict_final",
+      "correct": 209,
+      "denominator": 274,
+      "accuracy": 0.7627737226277372,
+      "fixes_vs_default": 5,
+      "regressions_vs_default": 1,
+      "overrides": 10,
+      "evidence": "reports/maxim_anchor_hurdle_staged_oof_v1_20260804/REPORT.json"
+    },
+    {
+      "id": "posthoc_staged_vote_then_pairwise_v1",
+      "method": "Vote for low-confidence anchors, pairwise fallback otherwise.",
+      "label": "exploratory_posthoc_staging_not_strict_final",
+      "correct": 210,
+      "denominator": 274,
+      "accuracy": 0.7664233576642335,
+      "fixes_vs_default": 6,
+      "regressions_vs_default": 1,
+      "overrides": 17,
+      "evidence": "reports/maxim_anchor_hurdle_staged_oof_v1_20260804/REPORT.json"
+    },
+    {
+      "id": "posthoc_staged_plus_truncation_repair_v1",
+      "method": "Post-hoc staged vote/pairwise policy followed by the exact-cap V3.1 truncation repair.",
+      "label": "exploratory_posthoc_staging_and_repair_not_strict_final",
+      "correct": 211,
+      "denominator": 274,
+      "accuracy": 0.7700729927007299,
+      "fixes_vs_default": 7,
+      "regressions_vs_default": 1,
+      "overrides": 19,
+      "evidence": "reports/maxim_anchor_hurdle_staged_oof_v1_20260804/REPORT.json"
+    },
+    {
+      "id": "nested_staged_selector_oof_v1",
+      "method": "Five-fold selection of the anchor threshold, pairwise fallback, and truncation flag on the other four folds.",
+      "label": "exploratory_nested_oof_not_strict_final",
+      "correct": 209,
+      "denominator": 274,
+      "accuracy": 0.7627737226277372,
+      "fixes_vs_default": 5,
+      "regressions_vs_default": 1,
+      "overrides": 16,
+      "evidence": "reports/maxim_anchor_hurdle_staged_oof_v1_20260804/REPORT.json"
+    },
+    {
+      "id": "truncation_repair_v1",
+      "method": "Exact 120-character-cap incomplete-answer gate with exact V3.1 row reuse.",
+      "label": "exploratory_posthoc_rule_exact_source_reuse_not_strict_final",
+      "correct": 206,
+      "denominator": 274,
+      "accuracy": 0.7518248175182481,
+      "fixes_vs_default": 1,
+      "regressions_vs_default": 0,
+      "overrides": 3,
+      "evidence": "reports/maxim_truncation_repair_v1_20260804/evaluation.json"
+    },
+    {
+      "id": "local_ollama_arbiter_v1",
+      "method": "Single-pass conservative local Ollama arbiter, best post-hoc threshold/gate sweep.",
+      "label": "exploratory_exact_source_reuse_posthoc_sweep_not_strict_final",
+      "correct": 205,
+      "denominator": 274,
+      "accuracy": 0.7481751824817519,
+      "fixes_vs_default": 1,
+      "regressions_vs_default": 1,
+      "overrides": 4,
+      "completed_disagreement_tasks": 173,
+      "evidence": "reports/maxim_local_ollama_arbiter_v1_20260804/evaluation.json"
+    },
+    {
+      "id": "local_ollama_arbiter_v21",
+      "method": "Fixed two-pass local Ollama certificate gate with exact-source reuse and fail-closed default.",
+      "label": "frozen_policy_exploratory_exact_source_reuse_not_independent_holdout",
+      "correct": 203,
+      "denominator": 274,
+      "accuracy": 0.7408759124087592,
+      "fixes_vs_default": 1,
+      "regressions_vs_default": 3,
+      "overrides": 9,
+      "completed_eligible_tasks": 56,
+      "expected_eligible_tasks": 56,
+      "complete": true,
+      "transport_erratum": "num_predict changed from 96 to 160 after one smoke row and before target scoring; prompt, pool, gate, seed, and all other options were unchanged.",
+      "evidence": "reports/maxim_local_ollama_arbiter_v21_20260804/evaluation.json"
+    },
+    {
+      "id": "local_math_ollama_executable_certificate_arbiter_v2",
+      "result_class": "measured_exploratory",
+      "method": "Fixed executable-certificate Math gate with local CPU drafts, exact-source reuse, and fail-closed default.",
+      "label": "fixed_policy_exploratory_exact_source_reuse_not_independent_holdout",
+      "correct": 205,
+      "denominator": 274,
+      "accuracy": 0.7481751824817519,
+      "fixes_vs_default": 0,
+      "regressions_vs_default": 0,
+      "overrides": 0,
+      "math": {
+        "correct": 108,
+        "denominator": 139,
+        "accuracy": 0.7769784172661871
+      },
+      "completed_eligible_tasks": 102,
+      "expected_eligible_tasks": 102,
+      "actual_local_model_calls": 102,
+      "complete": true,
+      "evidence": "reports/maxim_local_math_ollama_certificate_arbiter_v2_20260804/evaluation/score.json"
+    },
+    {
+      "id": "exact_official_web_deterministic_v1",
+      "result_class": "measured_exploratory",
+      "method": "Exact official answer-key substitutions on deterministic-score rows only.",
+      "label": "exploratory_targeted_posthoc_web_not_independent_holdout",
+      "correct": 210,
+      "denominator": 274,
+      "accuracy": 0.7664233576642335,
+      "fixes_vs_strict_default": 5,
+      "regressions_vs_strict_default": 0,
+      "applied_overrides": 6,
+      "comparison_reference": "blind_ensemble_v2default_v3_repair_v1 at 205/274",
+      "excluded_comparison": "Do not use the unrelated scorer 79/10 versus page-RAG comparison.",
+      "evidence": "reports/maxim_targeted_official_web_evidence_v1_20260804/REPORT.json",
+      "scored_branch": "reports/maxim_exact_official_web_deterministic_v1_20260804/evaluation/score.json"
+    }
+  ],
+  "best_completed_exploratory": {
+    "id": "posthoc_staged_plus_truncation_repair_v1",
+    "correct": 211,
+    "denominator": 274,
+    "accuracy": 0.7700729927007299,
+    "tasks_short_of_0_80": 9,
+    "tasks_short_of_0_85": 22,
+    "strict_final_eligible": false
+  },
+  "diagnostic_oracle_ceilings": {
+    "result_class": "projection",
+    "all_37_final_sources_union": {
+      "correct": 244,
+      "denominator": 274,
+      "accuracy": 0.8905109489051095,
+      "fixable_default_errors": 39,
+      "unfixable_default_errors": 30,
+      "evidence": "reports/maxim_local_tool_vote_oof_v1_20260804/REPORT.json"
+    },
+    "minimal_pool_for_0_80": {
+      "sources": [
+        "blind_ensemble_v2default_v3_repair_v1",
+        "literal_parallel8_lowconf_arbiter",
+        "active_vision"
+      ],
+      "correct": 228,
+      "denominator": 274,
+      "accuracy": 0.8321167883211679,
+      "derivation": "Read-only recomputation from frozen per-task outcomes referenced by the ledger."
+    },
+    "minimal_pool_for_0_85_selective": {
+      "sources": [
+        "blind_ensemble_v2default_v3_repair_v1",
+        "literal_parallel8_lowconf_arbiter",
+        "active_vision",
+        "selective_rag_metadata"
+      ],
+      "correct": 234,
+      "denominator": 274,
+      "accuracy": 0.8540145985401459,
+      "derivation": "Read-only recomputation from frozen per-task outcomes referenced by the ledger."
+    },
+    "minimal_pool_for_0_85_mi": {
+      "sources": [
+        "blind_ensemble_v2default_v3_repair_v1",
+        "literal_parallel8_lowconf_arbiter",
+        "active_vision",
+        "mi_rag"
+      ],
+      "correct": 233,
+      "denominator": 274,
+      "accuracy": 0.8503649635036497,
+      "derivation": "Read-only recomputation from frozen per-task outcomes referenced by the ledger."
+    },
+    "math_specialist_pool": {
+      "sources": [
+        "blind_ensemble_v2default_v3_repair_v1",
+        "solver_critic_repair",
+        "calculator_sympy",
+        "two_pass_transcription",
+        "active_vision",
+        "stronger_27b_hard86_composite"
+      ],
+      "math_correct": 125,
+      "math_denominator": 139,
+      "math_accuracy": 0.8992805755395683,
+      "overall_if_non_math_stays_at_default": 222,
+      "overall_denominator": 274,
+      "overall_accuracy": 0.8102189781021898,
+      "derivation": "Read-only recomputation from frozen per-task outcomes referenced by the ledger."
+    },
+    "default_vote_pairwise_union": {
+      "correct": 212,
+      "denominator": 274,
+      "accuracy": 0.7737226277372263,
+      "evidence": "reports/maxim_anchor_hurdle_staged_oof_v1_20260804/REPORT.json"
+    },
+    "deployable_metric": false,
+    "reason": "Every oracle reads target-row correctness and only proves candidate coverage; it does not provide a selector."
+  },
+  "official_web_evidence_projections": {
+    "result_class": "projection",
+    "reporting_status": "posthoc_candidate_coverage_and_adjudication_projections_not_achieved_scores",
+    "official_candidate_coverage": {
+      "correct": 252,
+      "denominator": 274,
+      "accuracy": 0.9197080291970803,
+      "calculation": "244 existing-source oracle correct plus 8 exact official answers absent from every existing source."
+    },
+    "full_audited_candidate_coverage": {
+      "correct": 255,
+      "denominator": 274,
+      "accuracy": 0.9306569343065694,
+      "calculation": "244 existing-source oracle correct plus all 11 exact-evidence rows, including 3 rows requiring protocol re-adjudication."
+    },
+    "strict_baseline_plus_exact_absent_web_answers": {
+      "correct": 213,
+      "denominator": 274,
+      "accuracy": 0.7773722627737226,
+      "calculation": "205 strict correct plus 8 exact official answers absent from every existing source."
+    },
+    "strict_baseline_plus_all_adjudicated_web_rows": {
+      "correct": 216,
+      "denominator": 274,
+      "accuracy": 0.7883211678832117,
+      "calculation": "205 strict correct plus all 11 official-evidence rows after resolving scorer conflicts."
+    },
+    "deployable": false,
+    "achieved_by_composed_branch": false,
+    "evidence": "reports/maxim_targeted_official_web_evidence_v1_20260804/REPORT.json"
+  },
+  "manual_math_metric_audit": {
+    "result_class": "diagnostic",
+    "reporting_status": "manual_diagnostic_not_official_relabel",
+    "high_confidence_false_negative_task_ids": [
+      "val_0048",
+      "val_0063",
+      "val_0066",
+      "val_0073",
+      "val_0076",
+      "val_0205",
+      "val_0208",
+      "val_0214",
+      "val_0243",
+      "val_0245",
+      "val_0251"
+    ],
+    "missing_required_figure_task_id": "val_0058",
+    "credit_11_false_negatives": {
+      "correct": 119,
+      "denominator": 139,
+      "accuracy": 0.8561151079136691,
+      "derived_overall_correct": 216,
+      "derived_overall_denominator": 274,
+      "derived_overall_accuracy": 0.7883211678832117
+    },
+    "exclude_11_false_negatives_and_missing_figure": {
+      "correct": 108,
+      "denominator": 127,
+      "accuracy": 0.8503937007874016
+    },
+    "official_frozen_metric_changed": false,
+    "independent_second_adjudication_required": true,
+    "evidence": "reports/maxim_math_metric_audit_v1_20260804/REPORT.json"
+  },
+  "audit_adjusted_staged_diagnostics": {
+    "result_class": "diagnostic",
+    "reporting_status": "double_exploratory_not_strict_not_official",
+    "base_exploratory_policy": {
+      "id": "posthoc_staged_plus_truncation_repair_v1",
+      "correct": 211,
+      "denominator": 274,
+      "accuracy": 0.7700729927007299
+    },
+    "credit_11_high_confidence_false_negatives": {
+      "correct": 222,
+      "denominator": 274,
+      "accuracy": 0.8102189781021898,
+      "reaches_0_80": true,
+      "reaches_0_85": false
+    },
+    "exclude_11_false_negatives_and_1_missing_figure": {
+      "correct": 211,
+      "denominator": 262,
+      "accuracy": 0.8053435114503816,
+      "reaches_0_80": true,
+      "reaches_0_85": false
+    },
+    "overlap_between_policy_fixes_and_audited_false_negatives": 0,
+    "official_frozen_metric_changed": false,
+    "valid_claim": "The 0.80 threshold is crossed only under a post-hoc policy plus manual diagnostic metric correction.",
+    "invalid_claim": "Neither value is a strict or official frozen-benchmark score.",
+    "evidence": "reports/maxim_audit_adjusted_staged_truncation_v1_20260804/REPORT.json"
+  },
+  "resource_and_provenance": {
+    "user_constraint": "Do not occupy other people's resources; no shared or third-party compute.",
+    "artifact_only_methods": {
+      "network_calls": 0,
+      "model_calls": 0,
+      "gpu_calls": 0,
+      "external_compute": 0,
+      "local_cpu_only": true
+    },
+    "local_ollama": {
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "model": "qwen2.5:3b",
+      "installed_model_id": "357c53fb659c",
+      "model_was_already_installed": true,
+      "model_pull_allowed": false,
+      "external_network": false,
+      "external_compute": false,
+      "shared_gpu": false,
+      "v21_profile_force_cpu": true,
+      "v21_num_gpu": 0,
+      "v21_completed_eligible_tasks": 56,
+      "math_certificate_v2_force_cpu": true,
+      "math_certificate_v2_num_gpu": 0,
+      "math_certificate_v2_completed_eligible_tasks": 102,
+      "math_certificate_v2_actual_model_calls": 102
+    },
+    "official_web_evidence": {
+      "web_search_used": true,
+      "model_generation_calls_for_exact_keys": 0,
+      "shared_gpu_used": false,
+      "external_compute_used": false,
+      "composition_and_scoring": "local files and local deterministic/frozen scoring"
+    },
+    "evaluation": {
+      "selected_rows_are_exact_frozen_source_rows": true,
+      "model_or_judge_calls_during_evaluation": 0,
+      "missing_or_rejected_results_fail_closed_to_default": true
+    },
+    "contamination": {
+      "aggregate_target_benchmark_seen_before_candidate_pool_or_grid_selection": true,
+      "target_outcomes_visible_to_ollama_arbiter": false,
+      "independent_holdout_required_for_final_claim": true
+    },
+    "this_report_modified_ledger_or_existing_results": false
+  },
+  "known_discrepancies_and_limitations": [
+    "The manual Math audit has not received independent second adjudication and cannot alter the official frozen score.",
+    "All selector grids and candidate pools were developed after aggregate target-benchmark exposure; cross-fitting prevents same-fold training leakage but does not make model selection a strict independent holdout result.",
+    "Official-web evidence was researched after target outcome exposure; 252/274, 255/274, 213/274, and 216/274 are projections rather than measured branch scores.",
+    "Three official-web answers conflict with all existing scored outcomes and require protocol-level re-adjudication before they can count as measured fixes."
+  ],
+  "closure_conclusion": {
+    "strict_0_80_reached": false,
+    "strict_0_85_reached": false,
+    "best_strict_correct": 205,
+    "best_completed_exploratory_correct": 211,
+    "exact_official_web_measured_exploratory_correct": 210,
+    "highest_official_web_projection_correct": 255,
+    "audit_adjusted_diagnostic_correct": 222,
+    "interpretation": "The strict score remains 205. Completed exploratory branches peak at 211; 0.80 appears only in non-deployable oracle/projection or audit-adjusted diagnostic calculations."
+  }
+}
