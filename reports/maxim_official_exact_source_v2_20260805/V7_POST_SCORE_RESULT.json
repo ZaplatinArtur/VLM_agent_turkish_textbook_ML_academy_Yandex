@@ -1,0 +1,77 @@
+{
+  "schema_version": "maxim-v7-post-score-result-v1",
+  "created_at_utc": "2026-08-05T15:40:14Z",
+  "launch_commit": "9e6bcaac01c48c7758396aa7fed543dafd3bd02b",
+  "one_shot_attempt": {
+    "attempt": 1,
+    "marker_path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score_attempt.json",
+    "marker_sha256": "8ac4f0f327ad9373cb6eacd116d48a93b6c09522d703c333c01d6121f00f7d89",
+    "same_wave_retry_or_retuning": false
+  },
+  "score": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score.json",
+    "sha256": "9e20c1d2dc0be226a7e58a2d118674d9d082ba61d4041afdff8c55b3fbc75947",
+    "correct": 242,
+    "rows": 274,
+    "accuracy": 0.883212
+  },
+  "math": {
+    "correct": 112,
+    "rows": 139,
+    "accuracy": 0.805755,
+    "delta_correct_vs_v6": 0
+  },
+  "comparison_to_v6": {
+    "v6_score_path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_sociology_biology_global_visual_v6_evaluation/score.json",
+    "v6_score_sha256": "37fc5cffcbf1da60073b70f6828c5b9c2d02929b44458892232b923522ba9cd3",
+    "v6_correct": 238,
+    "v6_rows": 274,
+    "v6_accuracy": 0.868613,
+    "delta_correct": 4,
+    "delta_accuracy": 0.014599,
+    "comparison_caveat": "One answer gain and three deterministic official-source re-adjudications of unchanged answers; V6 used the older opaque image-judge verdicts."
+  },
+  "changed_correctness_vs_v6": [
+    {
+      "task_id": "val_0139",
+      "subject": "Physics",
+      "v6_correct": false,
+      "v7_correct": true,
+      "mechanism": "unchanged solver answer; strong source certificate replaces an erroneous opaque image-judge verdict"
+    },
+    {
+      "task_id": "val_0141",
+      "subject": "Physics",
+      "v6_correct": false,
+      "v7_correct": true,
+      "mechanism": "unchanged solver answer; strong source certificate replaces an erroneous opaque image-judge verdict"
+    },
+    {
+      "task_id": "val_0159",
+      "subject": "Geography",
+      "v6_correct": false,
+      "v7_correct": true,
+      "mechanism": "unchanged solver answer; strong source certificate replaces an erroneous opaque image-judge verdict"
+    },
+    {
+      "task_id": "val_0196",
+      "subject": "History / Ataturkism",
+      "v6_correct": false,
+      "v7_correct": true,
+      "mechanism": "pre-registered full-page fill-blank official-source answer replacement"
+    }
+  ],
+  "preregistered_candidate_policy": {
+    "candidate_count": 8,
+    "candidates_removed_after_outcome_access": 0,
+    "thresholds_changed_after_outcome_access": false,
+    "same_wave_followup_score_allowed": false
+  },
+  "limitations": [
+    "The target split is a previously inspected development replay, not an unseen holdout.",
+    "The 0.883212 score uses deterministic official-source adjudication for source-certified image rows, whereas V6 retained opaque VLM-judge verdicts for unchanged answers.",
+    "The direct solver-answer gain over V6 is one row; three additional gains are evaluator corrections backed by exact official sources.",
+    "No claim of 0.883212 holdout generalization is made."
+  ],
+  "gold_access_during_generation": false
+}

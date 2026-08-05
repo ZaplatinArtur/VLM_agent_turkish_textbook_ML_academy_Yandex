@@ -26,11 +26,21 @@ def _write(path: Path, value: dict) -> Path:
     return path
 
 
-def test_frozen_launch_is_ready_before_first_attempt() -> None:
-    result = audit(FREEZE, REPO_ROOT, check_remote=False)
-    assert result["status"] == "ready"
-    assert result["score_attempts"] == 0
-    assert result["score_outputs_absent"] is True
+def test_frozen_launch_is_irreversibly_consumed_after_first_attempt() -> None:
+    with pytest.raises(ValueError, match="score output already exists"):
+        audit(FREEZE, REPO_ROOT, check_remote=False)
+
+    evaluation = (
+        REPO_ROOT
+        / "reports"
+        / "maxim_official_exact_source_v2_20260805"
+        / "fill_blank_page_activity_history_v7_evaluation"
+    )
+    marker = json.loads((evaluation / "score_attempt.json").read_text(encoding="utf-8"))
+    assert marker["attempt"] == 1
+    assert (evaluation / "score.json").is_file()
+    assert (evaluation / "score.md").is_file()
+    assert (evaluation / "score.sha256").is_file()
 
 
 def test_rejects_final_judge_hash_change(tmp_path: Path) -> None:
