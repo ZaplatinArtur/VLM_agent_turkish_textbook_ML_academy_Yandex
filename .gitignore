@@ -175,6 +175,14 @@ __marimo__/
 # Project data (keep the tiny, dependency-free smoke manifest in Git)
 data/*
 !data/tasks.sample.jsonl
+!data/visual_retrive/
+!data/visual_retrive/.gitkeep
+!data/visual_retrive/README.md
+# Scraped corpus / indexes stay local or rsync to the GPU host
+data/visual_retrive/books/
+data/visual_retrive/catalog/
+data/visual_retrive/models/
+data/visual_retrive/*.log
 
 # Generated run outputs and local source artifacts.
 results/

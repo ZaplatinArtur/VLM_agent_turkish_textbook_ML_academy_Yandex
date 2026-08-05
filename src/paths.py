@@ -5,6 +5,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 DATA_DIR = Path(os.environ.get("MLA_DATA_DIR", PROJECT_ROOT / "data")).expanduser()
 BOOKS_DIR = DATA_DIR / "books"
+VISUAL_RETRIVE_DIR = Path(
+    os.environ.get("MLA_VISUAL_RETRIVE_DIR", DATA_DIR / "visual_retrive")
+).expanduser()
 CHUNKS_JSONL_DIR = Path(
     os.environ.get("MLA_CHUNKS_JSONL_DIR", DATA_DIR / "chunks" / "jsonl")
 ).expanduser()
@@ -16,6 +19,7 @@ INDEX_DIR = Path(
 
 def ensure_data_dirs() -> None:
     BOOKS_DIR.mkdir(parents=True, exist_ok=True)
+    VISUAL_RETRIVE_DIR.mkdir(parents=True, exist_ok=True)
     CHUNKS_JSONL_DIR.mkdir(parents=True, exist_ok=True)
     TESSDATA_DIR.mkdir(parents=True, exist_ok=True)
 
