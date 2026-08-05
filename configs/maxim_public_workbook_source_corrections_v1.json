@@ -1,0 +1,28 @@
+{
+  "schema_version": "maxim-public-workbook-source-corrections-v1",
+  "corrections": [
+    {
+      "record_id": "meb_dd_tyt_fizik_7254325f6a47:p30:q8",
+      "old_key_bbox": [243.8, 288.7, 250.3, 297.7],
+      "new_key_bbox": [266.5011, 288.6824, 272.9991, 297.6824],
+      "reason": "Align the answer glyph with printed column header 8, not adjacent column 7."
+    },
+    {
+      "record_id": "meb_dd_tyt_kimya_b3b89a296d91:p48:q8",
+      "old_key_bbox": [244.1, 349.8, 250.1, 358.8],
+      "new_key_bbox": [266.7486, 349.8363, 272.7516, 358.8363],
+      "reason": "Align the answer glyph with printed column header 8, not adjacent column 7."
+    },
+    {
+      "record_id": "meb_def_10biyoloji_640bb362f2d5:p92:q19",
+      "old_section": "2. Ünite Sonu Değerlendirme",
+      "new_section": "2. Ünite Kalıtımın Genel İlkeleri",
+      "reason": "Use the exact section heading printed above Test 5 on the pinned key page."
+    }
+  ],
+  "construction": {
+    "task_id_used": false,
+    "benchmark_answer_or_outcome_access": false,
+    "authority": "pinned PDF text coordinates and printed headings only"
+  }
+}

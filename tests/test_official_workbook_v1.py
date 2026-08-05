@@ -1,0 +1,402 @@
+from __future__ import annotations
+
+from copy import deepcopy
+from dataclasses import replace
+import hashlib
+import json
+
+import pytest
+
+from evidence_os.official_ogm import OcrObservation, OfficialSourceError, PageMatcher
+from evidence_os.official_workbook import (
+    WorkbookThresholds,
+    document_for_source,
+    parse_workbook_index,
+    resolve_workbook_question,
+    strict_yandex_public_identity,
+)
+from scripts.merge_maxim_public_workbook_index_v1 import merge
+
+
+SOURCE_URL = (
+    "https://docs.yandex.ru/docs/view?"
+    "url=ya-disk-public%3A%2F%2Fpublic-key&name=book.pdf&nosw=17"
+)
+TARGET = (
+    "algebra triangle orchard compass lantern isotope fraction theorem polygon "
+    "velocity cylinder matrix radius quotient symmetry tangent integer prism equation"
+)
+DISTRACTOR = (
+    "history empire treaty archive dynasty republic parliament chronology museum "
+    "geography migration monument citizenship reform document"
+)
+DOCUMENT_ID = "synthetic-book-aaaaaaaaaaaa"
+
+
+def _payload() -> dict[str, object]:
+    return {
+        "schema_version": "public-workbook-source-index-v1",
+        "documents": [
+            {
+                "document_id": DOCUMENT_ID,
+                "locator": {
+                    "kind": "yandex_public",
+                    "public_locator": "ya-disk-public://public-key",
+                    "name": "book.pdf",
+                },
+                "pdf_sha256": "a" * 64,
+                "page_count": 4,
+                "content_page_ranges": [[2, 3]],
+                "questions": [
+                    {
+                        "record_id": f"{DOCUMENT_ID}:p2:q7",
+                        "content_page_number": 2,
+                        "question_number": 7,
+                        "question_text": f"7. {TARGET}",
+                        "answer": "C",
+                        "key_binding_kind": "answer_key_table",
+                        "section": "Synthetic section",
+                        "test_variant": "Test 1",
+                        "key_page_number": 4,
+                        "key_bbox": [100, 200, 140, 215],
+                        "content_bbox": [20, 30, 500, 400],
+                        "visually_checked": True,
+                    }
+                ],
+            }
+        ],
+    }
+
+
+def _observation(question_number: int | None = 7) -> OcrObservation:
+    prefix = f"{question_number}. " if question_number is not None else ""
+    return OcrObservation(
+        task_id="alignment-only",
+        statement=prefix + TARGET,
+        image_sha256="f" * 64,
+        width=900,
+        height=600,
+        question_number=question_number,
+        parser_identity="pipeline/layout/recognition",
+        text_blocks=(prefix + TARGET,),
+    )
+
+
+def _pages(*, duplicate_target: bool = False) -> list[str]:
+    return [
+        "cover",
+        f"7. {TARGET}",
+        f"7. {TARGET}" if duplicate_target else f"8. {DISTRACTOR}",
+        "answer key 7 C",
+    ]
+
+
+def _resolve(*, observation: OcrObservation | None = None, pages: list[str] | None = None):
+    index = parse_workbook_index(_payload())
+    document = document_for_source(index, SOURCE_URL)
+    assert document is not None
+    page_texts = pages or _pages()
+    return resolve_workbook_question(
+        observation or _observation(),
+        SOURCE_URL,
+        document,
+        PageMatcher(page_texts),
+        page_texts,
+        WorkbookThresholds(),
+    )
+
+
+def test_printed_number_page_and_reviewed_key_are_accepted() -> None:
+    result = _resolve()
+
+    assert result.accepted is True
+    assert result.answer == "C"
+    assert all(passed for _, passed in result.checks)
+    assert result.trace["match"]["question_binding_method"] == "printed_number"
+    assert result.trace["source"]["record_id"] == f"{DOCUMENT_ID}:p2:q7"
+
+
+def test_numberless_crop_abstains_without_complete_pdf_native_index() -> None:
+    result = _resolve(observation=_observation(question_number=None))
+
+    assert result.accepted is False
+    assert result.answer is None
+    assert result.trace["match"]["question_binding_method"] == "missing_printed_number_abstain"
+
+
+def test_exact_short_text_source_answer_is_supported() -> None:
+    payload = _payload()
+    record = payload["documents"][0]["questions"][0]  # type: ignore[index]
+    record["answer_format"] = "short_text"
+    record["answer"] = "98,8 kg"
+    record["key_crop_text"] = "98,8 kg"
+    record["key_binding_kind"] = "exact_key_text"
+    record.pop("section")
+    record.pop("test_variant")
+    index = parse_workbook_index(payload)
+    document = document_for_source(index, SOURCE_URL)
+    assert document is not None
+    pages = _pages()
+
+    result = resolve_workbook_question(
+        _observation(),
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+    )
+
+    assert result.accepted is True
+    assert result.answer == "98,8 kg"
+    assert result.problem.answer_format == "short_text"
+    assert result.trace["source"]["answer_format"] == "short_text"
+
+
+def test_short_text_requires_exact_key_crop_evidence() -> None:
+    payload = _payload()
+    record = payload["documents"][0]["questions"][0]  # type: ignore[index]
+    record["answer_format"] = "short_text"
+    record["answer"] = "98,8 kg"
+    record["key_binding_kind"] = "exact_key_text"
+    record.pop("section")
+    record.pop("test_variant")
+
+    with pytest.raises(OfficialSourceError, match="short-text answer requires"):
+        parse_workbook_index(payload)
+
+
+def test_coordinate_short_text_source_binding_is_schema_valid() -> None:
+    payload = _payload()
+    record = payload["documents"][0]["questions"][0]  # type: ignore[index]
+    record["answer_format"] = "short_text"
+    record["answer"] = "a=2/5; b=-1/15"
+    record["key_crop_text"] = "1. a. 2/5 b. -1/15"
+    record["key_binding_kind"] = "coordinate_answer_key"
+    record["key_projection_sha256"] = "b" * 64
+    record.pop("section")
+    record.pop("test_variant")
+
+    index = parse_workbook_index(payload)
+
+    question = index.documents[0].questions[0]
+    assert question.key_binding_kind == "coordinate_answer_key"
+    assert question.key_projection_sha256 == "b" * 64
+
+
+def test_coordinate_short_text_binding_requires_projection_and_content_box() -> None:
+    payload = _payload()
+    record = payload["documents"][0]["questions"][0]  # type: ignore[index]
+    record["answer_format"] = "short_text"
+    record["answer"] = "a=2/5"
+    record["key_crop_text"] = "1. a. 2/5"
+    record["key_binding_kind"] = "coordinate_answer_key"
+    record.pop("section")
+    record.pop("test_variant")
+    record.pop("content_bbox")
+
+    with pytest.raises(OfficialSourceError, match="projection pin"):
+        parse_workbook_index(payload)
+
+
+def test_equal_page_scores_fail_closed() -> None:
+    result = _resolve(pages=_pages(duplicate_target=True))
+
+    assert result.accepted is False
+    assert result.answer is None
+    assert dict(result.checks)["unique_content_page"] is False
+
+
+def test_yandex_identity_discards_only_numeric_viewer_flag() -> None:
+    first = strict_yandex_public_identity(SOURCE_URL)
+    second = strict_yandex_public_identity(SOURCE_URL.replace("nosw=17", "nosw=999"))
+
+    assert first == second
+    with pytest.raises(OfficialSourceError):
+        strict_yandex_public_identity(SOURCE_URL + "&answer=C")
+    with pytest.raises(OfficialSourceError):
+        strict_yandex_public_identity(SOURCE_URL.replace("nosw=17", "nosw=route-C"))
+
+
+def test_source_index_forbids_benchmark_task_mapping() -> None:
+    payload = _payload()
+    payload["documents"][0]["questions"][0]["task_id"] = "val_0001"  # type: ignore[index]
+
+    with pytest.raises(OfficialSourceError, match="forbidden"):
+        parse_workbook_index(payload)
+
+
+def test_source_record_id_must_be_page_and_question_address() -> None:
+    payload = _payload()
+    payload["documents"][0]["questions"][0]["record_id"] = "opaque-row"  # type: ignore[index]
+
+    with pytest.raises(OfficialSourceError, match="source-addressed"):
+        parse_workbook_index(payload)
+
+
+def test_unknown_nested_source_index_fields_fail_closed() -> None:
+    payload = _payload()
+    payload["documents"][0]["metadata"] = {"producer": "unreviewed"}  # type: ignore[index]
+    with pytest.raises(OfficialSourceError, match="document fields"):
+        parse_workbook_index(payload)
+
+    payload = _payload()
+    payload["documents"][0]["locator"]["route"] = "A"  # type: ignore[index]
+    with pytest.raises(OfficialSourceError, match="Yandex public resource"):
+        parse_workbook_index(payload)
+
+    payload = _payload()
+    payload["documents"][0]["questions"][0]["qid"] = "val_0001"  # type: ignore[index]
+    with pytest.raises(OfficialSourceError, match="question fields"):
+        parse_workbook_index(payload)
+
+
+def test_page_threshold_boundaries_are_inclusive_and_fail_above_observation() -> None:
+    index = parse_workbook_index(_payload())
+    document = document_for_source(index, SOURCE_URL)
+    assert document is not None
+    observation = replace(
+        _observation(),
+        statement=f"7. {TARGET} unmatched zephyr",
+        text_blocks=(f"7. {TARGET} unmatched zephyr",),
+    )
+    pages = [
+        "cover",
+        f"7. {TARGET}",
+        "8. algebra triangle unrelated archive",
+        "answer key 7 C",
+    ]
+    matcher = PageMatcher(pages)
+    probe = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        matcher,
+        pages,
+        WorkbookThresholds(),
+    )
+    coverage = probe.trace["match"]["page_idf_coverage"]
+    matched_tokens = probe.trace["match"]["page_matched_tokens"]
+    margin = probe.trace["match"]["page_margin"]
+    assert 0.0 < coverage < 1.0
+    assert 0.0 < margin < 1.0
+
+    exact = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        matcher,
+        pages,
+        WorkbookThresholds(
+            min_page_coverage=coverage,
+            min_page_matched_tokens=matched_tokens,
+            min_page_margin=margin,
+        ),
+    )
+    assert exact.accepted is True
+
+    stricter = (
+        WorkbookThresholds(
+            min_page_coverage=coverage + 1e-9,
+            min_page_matched_tokens=matched_tokens,
+            min_page_margin=margin,
+        ),
+        WorkbookThresholds(
+            min_page_coverage=coverage,
+            min_page_matched_tokens=matched_tokens + 1,
+            min_page_margin=margin,
+        ),
+        WorkbookThresholds(
+            min_page_coverage=coverage,
+            min_page_matched_tokens=matched_tokens,
+            min_page_margin=margin + 1e-9,
+        ),
+    )
+    for thresholds in stricter:
+        result = resolve_workbook_question(
+            observation,
+            SOURCE_URL,
+            document,
+            matcher,
+            pages,
+            thresholds,
+        )
+        assert result.accepted is False
+        assert dict(result.checks)["unique_content_page"] is False
+
+
+def test_alignment_key_renaming_does_not_change_source_decision() -> None:
+    first = _resolve(observation=_observation())
+    second = _resolve(
+        observation=replace(_observation(), task_id="completely-renamed-alignment-key")
+    )
+
+    assert first.accepted == second.accepted
+    assert first.answer == second.answer
+    assert first.checks == second.checks
+    assert first.trace["source"] == second.trace["source"]
+    assert first.trace["match"] == second.trace["match"]
+
+
+def test_source_index_root_fields_are_strictly_allowlisted() -> None:
+    payload = _payload()
+    payload["metadata"] = {"qid": "val_0001", "correct_answer": "A"}
+
+    with pytest.raises(OfficialSourceError, match="root fields"):
+        parse_workbook_index(payload)
+
+
+def test_task_like_document_id_is_rejected_even_with_pdf_hash_suffix() -> None:
+    payload = _payload()
+    document = payload["documents"][0]  # type: ignore[index]
+    old_id = document["document_id"]
+    task_like_id = "val_0001-aaaaaaaaaaaa"
+    document["document_id"] = task_like_id
+    for question in document["questions"]:
+        question["record_id"] = question["record_id"].replace(old_id, task_like_id, 1)
+
+    with pytest.raises(OfficialSourceError, match="source-derived"):
+        parse_workbook_index(payload)
+
+
+def test_merge_output_sha_is_invariant_to_fragment_and_question_order(tmp_path) -> None:
+    payload = _payload()
+    document = payload["documents"][0]  # type: ignore[index]
+    first_question = document["questions"][0]
+    second_question = deepcopy(first_question)
+    second_question.update(
+        {
+            "record_id": f"{DOCUMENT_ID}:p3:q8",
+            "content_page_number": 3,
+            "question_number": 8,
+            "answer": "D",
+            "key_bbox": [150, 200, 190, 215],
+        }
+    )
+    static_document = {key: value for key, value in document.items() if key != "questions"}
+    fragments = []
+    for name, question in (("first", first_question), ("second", second_question)):
+        path = tmp_path / f"{name}.json"
+        path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "public-workbook-source-index-v1",
+                    "documents": [{**deepcopy(static_document), "questions": [question]}],
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        fragments.append(path)
+
+    output_ab = tmp_path / "merged_ab.json"
+    output_ba = tmp_path / "merged_ba.json"
+    merge(fragments, output_ab, tmp_path / "manifest_ab.json")
+    merge(list(reversed(fragments)), output_ba, tmp_path / "manifest_ba.json")
+
+    sha_ab = hashlib.sha256(output_ab.read_bytes()).hexdigest()
+    sha_ba = hashlib.sha256(output_ba.read_bytes()).hexdigest()
+    assert sha_ab == sha_ba
+    assert output_ab.read_bytes() == output_ba.read_bytes()

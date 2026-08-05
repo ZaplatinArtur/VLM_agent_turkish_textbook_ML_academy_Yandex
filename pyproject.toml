@@ -31,6 +31,7 @@ sources = ["openpyxl>=3.1"]
 dev = ["pytest>=8"]
 tracing = ["langfuse>=3"]
 deep-search = ["trafilatura>=2.0"]
+official-source = ["pypdf>=6.10,<7", "pdfplumber>=0.11,<1"]
 
 [project.scripts]
 vlm-judge = "vlm_judge.cli:main"

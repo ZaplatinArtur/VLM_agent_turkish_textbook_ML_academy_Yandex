@@ -1,0 +1,66 @@
+{
+  "abstentions": 213,
+  "accepted_certificates": 61,
+  "artifacts": {
+    "audit": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_coordinate_resolver\\audit.jsonl",
+      "sha256": "f8a9b625776b0ac817fb6f687bf4eed82a91e1ac099f01570a3b4a3743d431f0"
+    },
+    "candidate": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_coordinate_resolver\\candidate.jsonl",
+      "sha256": "8b99490d68467fe1c2feb8fb2c54c366a5a965934fe4e736ee6694dca8e3398c"
+    },
+    "certificates": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_coordinate_resolver\\certificates.jsonl",
+      "sha256": "d365ebaf62c61f77d80d13528a1e089e9267c63f2d911231727a36389a5962e9"
+    }
+  },
+  "benchmark_candidate_or_outcome_access": false,
+  "created_at_utc": "2026-08-05T01:40:39.636911+00:00",
+  "eligible_rows": 88,
+  "gold_access": false,
+  "inputs": {
+    "documents": {
+      "meb_dd_tyt_cografya_57424d9b0f99": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\MEB-DD-TYT-cografya.pdf",
+        "sha256": "57424d9b0f99229d42789871af2753181e5b79f2e3d9a540f916703cd49a5dd8"
+      },
+      "meb_dd_tyt_fizik_7254325f6a47": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\MEB-DD-TYT-fizik.pdf",
+        "sha256": "7254325f6a477b745782566d3281af03d3f153af2e2c4f2cf3ae8f83f4388480"
+      },
+      "meb_dd_tyt_kimya_b3b89a296d91": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\MEB-DD-TYT-kimya.pdf",
+        "sha256": "b3b89a296d91ec0c3c7d6862d3113e0b7dcf34469c993808715203bbf0df1e7f"
+      },
+      "meb_def_10biyoloji_640bb362f2d5": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\MEB-DEF-10biyoloji.pdf",
+        "sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b"
+      },
+      "yandex_7_matematik_meb_dee64189589b": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\7 - Matematik - MEB.pdf",
+        "sha256": "dee64189589ba60431680f552edcb9613e620bdf8138c234daf16c7b02450219"
+      }
+    },
+    "parser_observations": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_document_parser_v1_20260803\\parser_augmented_solver_v1\\parser_artifacts\\parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038"
+    },
+    "source_index": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_coordinate_candidate_v1.json",
+      "sha256": "a73560f6264150b8d7e973ea82ff3a48f4fca04b692cecee0a741ecaa6abb206"
+    },
+    "source_locators": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a"
+    }
+  },
+  "profile": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\configs\\maxim_public_workbook_coordinate_v1.json",
+    "sha256": "53d502ddf346d1929aaa5fe415aa1c4a2b8457a74ae4648b8950392a2cca35ce"
+  },
+  "rows": 274,
+  "schema_version": "maxim-public-workbook-run-v1",
+  "task_id_used_for_alignment_only": true,
+  "viewer_nosw_used_as_policy_feature": false
+}

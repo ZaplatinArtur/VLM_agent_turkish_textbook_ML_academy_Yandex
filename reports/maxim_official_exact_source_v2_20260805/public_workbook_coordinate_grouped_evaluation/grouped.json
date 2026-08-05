@@ -1,0 +1,81 @@
+{
+  "bootstrap": {
+    "family_macro_95_ci": [
+      0.6922546021230231,
+      0.8660122169497169
+    ],
+    "micro_95_ci": [
+      0.7330673070430145,
+      0.8753389410625408
+    ]
+  },
+  "family_macro_accuracy": 0.7848293912565167,
+  "family_max_accuracy": 1.0,
+  "family_min_accuracy": 0.0,
+  "fold_family_disjoint": true,
+  "folds": {
+    "0": {
+      "accuracy": 0.8363636363636363,
+      "correct": 46,
+      "n": 55
+    },
+    "1": {
+      "accuracy": 0.6851851851851852,
+      "correct": 37,
+      "n": 54
+    },
+    "2": {
+      "accuracy": 0.8,
+      "correct": 44,
+      "n": 55
+    },
+    "3": {
+      "accuracy": 0.8363636363636363,
+      "correct": 46,
+      "n": 55
+    },
+    "4": {
+      "accuracy": 0.9090909090909091,
+      "correct": 50,
+      "n": 55
+    }
+  },
+  "inputs": {
+    "expected_rows": 274,
+    "frozen_profile": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\configs\\maxim_evidence_os_v1.json",
+      "sha256": "0ece602811f7e41c51bbeb38c171df556229f196ffe5ba471cd895d82e53c8d5"
+    },
+    "metadata": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\data\\validation.meta.jsonl",
+      "sha256": "480239348cce16dd32cefa7bed6dcff7b587e174013a3701b976e2732571d1b9"
+    },
+    "public_tasks": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_final_meta_verifier_v3_20260803\\run\\public_queue.jsonl",
+      "sha256": "641334d304482aa1e6235ced739647d4e99759f6394766d884696f22038f202e"
+    },
+    "score": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_coordinate_evaluation\\score.json",
+      "sha256": "38cb0c65028980ee0896b73031fcc7e1b315aea21e74e9fc694d3a61906a0d81"
+    }
+  },
+  "math": {
+    "accuracy": 0.7985611510791367,
+    "correct": 111,
+    "n": 139
+  },
+  "non_math": {
+    "accuracy": 0.8296296296296296,
+    "correct": 112,
+    "n": 135
+  },
+  "overall": {
+    "accuracy": 0.8138686131386861,
+    "correct": 223,
+    "n": 274
+  },
+  "reporting_status": "source_family_grouped_diagnostic_not_untouched_book_holdout",
+  "schema_version": "maxim-evidence-os-source-family-diagnostic-v1",
+  "source_families": 39,
+  "warning": "Source URL families are proxies and all target rows were previously inspected; do not call this an independent book-disjoint production estimate."
+}

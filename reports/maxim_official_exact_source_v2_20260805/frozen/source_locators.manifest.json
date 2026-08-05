@@ -1,0 +1,19 @@
+{
+  "answer_or_outcome_fields_propagated": false,
+  "created_at_utc": "2026-08-04T23:18:34.914401+00:00",
+  "input": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\data\\validation.meta.jsonl",
+    "sha256": "480239348cce16dd32cefa7bed6dcff7b587e174013a3701b976e2732571d1b9"
+  },
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\source_locators.jsonl",
+    "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a"
+  },
+  "projected_fields": [
+    "task_id",
+    "source_url"
+  ],
+  "rows": 298,
+  "schema_version": "maxim-official-source-locator-projection-v2",
+  "task_id_used_for_alignment_only": true
+}
