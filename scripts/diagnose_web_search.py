@@ -60,9 +60,10 @@ def features(query: str) -> dict:
     }
 
 
-def collect() -> list[dict]:
-    """Плоский список веб-вызовов: прогон, порядковый номер задачи, запрос, исход."""
+def collect() -> tuple[list[dict], dict[str, set]]:
+    """Веб-вызовы (прогон, номер задачи, запрос, исход) и охват по задачам."""
     calls = []
+    tasks: dict[str, set] = {"any": set(), "hit": set()}
     for run, rel in RUNS.items():
         path = ROOT / rel
         if not path.exists():
@@ -77,15 +78,20 @@ def collect() -> list[dict]:
                 if call.get("tool") != "web_search":
                     continue
                 query = str((call.get("args") or {}).get("query") or "").strip()
+                result = outcome(call.get("result_preview") or "")
+                key = (run, row.get("task_id"))
+                tasks["any"].add(key)
+                if result == "hit":
+                    tasks["hit"].add(key)
                 calls.append({
                     "run": run,
                     "task_order": order,
                     "task_id": row.get("task_id"),
                     "query": query,
-                    "outcome": outcome(call.get("result_preview") or ""),
+                    "outcome": result,
                     **features(query),
                 })
-    return calls
+    return calls, tasks
 
 
 def pct(part: int, whole: int) -> str:
@@ -96,9 +102,21 @@ def section(title: str) -> str:
     return f"\n{title}\n" + "-" * len(title)
 
 
-def report(calls: list[dict]) -> str:
-    out: list[str] = ["ДИАГНОСТИКА ВЕБ-ПОИСКА ПО ЛОГАМ", "=" * 33,
-                      f"всего вызовов web_search: {len(calls)}"]
+def report(calls: list[dict], tasks: dict[str, set]) -> str:
+    out: list[str] = ["ДИАГНОСТИКА ВЕБ-ПОИСКА ПО ЛОГАМ", "=" * 33]
+
+    # 0. Сводка по всем прогонам сразу
+    reached = [c for c in calls if c["outcome"] in ("hit", "empty")]
+    empty = [c for c in reached if c["outcome"] == "empty"]
+    blocked = len(calls) - len(reached)
+    out.append(section("0. Итого по трём прогонам"))
+    out.append(f"  вызовов web_search: {len(calls)}")
+    out.append(f"  дошло до бэкенда:   {len(reached)} "
+               f"(ещё {blocked} отбиты дедупом/лимитом, до сети не дошли)")
+    out.append(f"  ПУСТЫХ от дошедших: {pct(len(empty), len(reached))}")
+    out.append(f"  пустых от всех вызовов: {pct(len(empty), len(calls))}")
+    out.append(f"  задач с поиском: {len(tasks['any'])}, "
+               f"из них хоть раз получили выдачу: {pct(len(tasks['hit']), len(tasks['any']))}")
 
     # 1. Исходы по прогонам
     out.append(section("1. Исходы вызовов"))
@@ -180,11 +198,11 @@ def main() -> int:
     parser.add_argument("--out", default="reports/web_search_diag.txt")
     args = parser.parse_args()
 
-    calls = collect()
+    calls, tasks = collect()
     if not calls:
         print("нет данных", file=sys.stderr)
         return 1
-    text = report(calls)
+    text = report(calls, tasks)
     print(text)
     (ROOT / args.out).write_text(text, encoding="utf-8")
     print(f"записано: {args.out}")
