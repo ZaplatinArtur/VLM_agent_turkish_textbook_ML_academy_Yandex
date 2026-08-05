@@ -26,6 +26,10 @@ class ToolCallLog(BaseModel):
     tool: str
     args: dict = {}
     result_preview: str | None = None
+    # Диагностика бэкенда (попытки, http-статус, отвалившиеся движки).
+    # Без неё по логу нельзя отличить «не нашлось» от «поиск не работал» —
+    # именно этого не хватило при разборе прогонов b1.
+    diag: dict | None = None
 
 
 class SolveResult(BaseModel):

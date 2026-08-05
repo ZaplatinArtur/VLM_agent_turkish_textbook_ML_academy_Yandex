@@ -1,0 +1,64 @@
+# Настройки SearXNG для прогонов B1. Комментарии объясняют, почему именно так —
+# каждая строка ниже закрывает конкретную причину пустой выдачи из разбора
+# reports/web_search_diag.txt.
+
+use_default_settings: true
+
+general:
+  instance_name: "mla-baseline"
+  debug: false
+
+server:
+  secret_key: "!!! задаётся переменной SEARXNG_SECRET !!!"
+  # Лимитер режет «ботов» по частоте и заголовкам. Агент ходит из скрипта,
+  # четырьмя параллельными задачами — для лимитера это бот, и он отдаёт
+  # пустоту вместо ответа. Инстанс локальный и не публичный: выключаем.
+  limiter: false
+  public_instance: false
+  image_proxy: false
+  method: "GET"
+
+search:
+  # Без json в formats API молча отдаёт пустой результат — первая вещь,
+  # которую надо проверять на новом инстансе (probe_searxng.py это делает).
+  formats:
+    - html
+    - json
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "tr"
+  # Ошибки движка не должны превращаться в тишину: пусть SearXNG сообщает
+  # о них в unresponsive_engines, наш клиент это читает и ретраит.
+  suspended_times:
+    SearxEngineAccessDenied: 60
+    SearxEngineCaptcha: 60
+    SearxEngineTooManyRequests: 30
+
+outgoing:
+  request_timeout: 10.0
+  max_request_timeout: 15.0
+  pool_connections: 100
+  pool_maxsize: 20
+  enable_http2: true
+
+engines:
+  # Опора на движки без агрессивной капчи. Google/Bing оставлены, но их
+  # падение больше не обнуляет выдачу: рядом четыре независимых источника.
+  - name: duckduckgo
+    disabled: false
+  - name: brave
+    disabled: false
+  - name: mojeek
+    disabled: false
+  - name: startpage
+    disabled: false
+  - name: wikipedia
+    disabled: false
+  - name: wikidata
+    disabled: false
+  # Тяжёлые для парсинга и медленные — выключены, чтобы не тянуть таймаут
+  # общего ответа на себе.
+  - name: qwant
+    disabled: true
+  - name: yahoo
+    disabled: true

@@ -13,6 +13,7 @@ from ..config import Settings
 from ..contracts import Task
 from ..parsing import parse_solve_output
 from ..schemas import SolveResult, ToolCallLog, Usage
+from ..tools import ToolUnavailable
 from ..tools.search import WEB_SEARCH_TOOL_SCHEMA, searxng_search
 from .b0_no_tools import B0NoTools
 
@@ -43,28 +44,35 @@ class B1Search(B0NoTools):
     def _max_calls(self) -> int:
         return self.settings.search_max_calls
 
-    def _run_tool(self, name: str, args: dict, seen: set[str]) -> tuple[str, bool]:
-        """Выполняет вызов. Второй элемент False — инструмент дальше не нужен.
+    def _run_tool(self, name: str, args: dict,
+                  seen: set[str]) -> tuple[str, bool, dict | None]:
+        """Выполняет вызов: (текст модели, оставить ли тул, диагностика).
 
-        Дисциплина цикла (лимит, дедуп, реакция на несуществующий тул) живёт
-        здесь для всех поисковых условий; подклассы переопределяют `_search`.
+        Дисциплина цикла (лимит, дедуп, реакция на несуществующий тул и на
+        неработающий бэкенд) живёт здесь для всех поисковых условий; подклассы
+        переопределяют `_search`.
         """
         if name != self.tool_name:
             # модель «вызвала» несуществующий тул (reasoning, JSON, final_answer):
             # это попытка закрыть задачу, а не поискать — снимаем инструмент
-            return f"Bilinmeyen araç: {name}. Araç kullanmayı bırak ve çözümü tamamla.", False
+            return (f"Bilinmeyen araç: {name}. Araç kullanmayı bırak ve çözümü tamamla.",
+                    False, None)
         query = str(args.get("query") or "").strip()
         if not query:
-            return "Boş sorgu. query parametresini doldur veya aramadan çöz.", True
+            return "Boş sorgu. query parametresini doldur veya aramadan çöz.", True, None
         args = {**args, "query": query}
         if self._dedup_key(args) in seen:
             # модель зацикливается на одном запросе — тул снимаем, текстовый
             # стоп-сигнал она игнорирует (дубли до 24% вызовов в прогонах)
-            return "Bu sorguyu zaten yaptın, sonuçlar yukarıda.", False
+            return "Bu sorguyu zaten yaptın, sonuçlar yukarıda.", False, None
         if len(seen) >= self._max_calls():
-            return "Arama limitine ulaştın.", False
+            return "Arama limitine ulaştın.", False, None
         seen.add(self._dedup_key(args))
-        return self._search(args), True
+        try:
+            return self._search(args), True, None
+        except ToolUnavailable as exc:
+            # бэкенд не работает: переформулировка не поможет, снимаем тул
+            return exc.message_for_model, False, exc.diag
 
     def _step_llm(self, budget: int):
         """LLM с инструментом и укороченным бюджетом шага."""
@@ -126,9 +134,10 @@ class B1Search(B0NoTools):
                            else str(response.content))
                 break
             for tc in response.tool_calls:
-                result, keep = self._run_tool(tc["name"], tc["args"] or {}, seen_queries)
+                result, keep, diag = self._run_tool(
+                    tc["name"], tc["args"] or {}, seen_queries)
                 log.append(ToolCallLog(tool=tc["name"], args=tc["args"] or {},
-                                       result_preview=result[:300]))
+                                       result_preview=result[:300], diag=diag))
                 messages.append(ToolMessage(content=result, tool_call_id=tc["id"]))
                 tools_on = tools_on and keep
         return content, messages

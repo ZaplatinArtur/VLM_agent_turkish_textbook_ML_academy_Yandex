@@ -13,6 +13,7 @@ import json
 import urllib.request
 
 from ..config import Settings
+from . import ToolUnavailable
 
 # лейблы предметов в корпусе — ascii-слаги нижнего регистра ("turkce",
 # "matematik"); модель же шлёт "Türkçe"/"Matematik" — нормализуем
@@ -50,7 +51,11 @@ def textbook_search(settings: Settings, query: str, top_k: int | None = None,
             data = _post_search(settings, {k: v for k, v in body.items()
                                            if k in ("query", "top_k", "mode")})
     except Exception as exc:
-        return f"Arama hatası: {type(exc).__name__}. Aramasız devam et."
+        # сервер ретрива не отвечает — переформулировка не поможет, тул снимут
+        raise ToolUnavailable(
+            "Ders kitabı arama servisi çalışmıyor. Aramadan, kendi bilginle çöz.",
+            {"error": type(exc).__name__, "url": settings.textbook_search_url},
+        ) from exc
 
     hits = data.get("hits") or []
     if not hits:

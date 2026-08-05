@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from mla_baseline.config import Settings          # noqa: E402
 from mla_baseline.contracts import Task           # noqa: E402
 from mla_baseline.schemas import Usage            # noqa: E402
+from mla_baseline.tools import ToolUnavailable    # noqa: E402
 from mla_baseline.solvers.agent_rag import AgentRag  # noqa: E402
 
 TASK = Task(task_id="t1", question="2+2?", answer_type="numeric", grade=8,
@@ -54,9 +55,11 @@ class FakeLLM:
         return self.script.pop(0) if self.script else FakeResponse(content="{}")
 
 
-def build(script_tools, script_plain=None):
+def build(script_tools, script_plain=None, search=None):
     settings = Settings(_env_file=None, langfuse_enabled=False)
     solver = AgentRag(settings)
+    # сам поиск подставной: проверяем дисциплину цикла, а не бэкенд
+    solver._search = search or (lambda args: f"sonuç: {args['query']}")
     journal: list[dict] = []
     tools_llm = FakeLLM(script_tools, journal, "tools")
     tools_llm.bound = {"tools": ["search_textbooks"]}
@@ -135,7 +138,24 @@ def main() -> int:
     ok &= check("канон 16k: шаг строго меньше общего бюджета",
                 bool(canon_budgets) and all(0 < b < canon.max_tokens for b in canon_budgets))
 
-    # 5. Модель ответила сразу — цикл не делает лишних вызовов
+    # 5. Неработающий бэкенд снимает инструмент с первого же отказа:
+    #    переформулировка не поможет, а шаги цикла стоят токенов
+    def dead(_args):
+        raise ToolUnavailable("Arama servisi şu anda çalışmıyor.",
+                              {"attempts": [{"error": "TimeoutError"}]})
+
+    solver, _, journal = build([
+        FakeResponse([call("a")]), FakeResponse([call("b")]),
+        FakeResponse([call("c")]),
+    ], search=dead)
+    content, log, _ = run(solver)
+    ok &= check("мёртвый бэкенд: один вызов и сразу финал", len(log) == 1)
+    ok &= check("мёртвый бэкенд: финал без инструмента",
+                journal[-1]["llm"] == "plain" and not journal[-1]["has_tools"])
+    ok &= check("мёртвый бэкенд: диагностика попала в лог прогона",
+                log[0].diag == {"attempts": [{"error": "TimeoutError"}]})
+
+    # 6. Модель ответила сразу — цикл не делает лишних вызовов
     solver, _, journal = build([FakeResponse(content='{"final_answer": "4"}')])
     content, log, _ = run(solver)
     ok &= check("ответ без поиска: ни одного тул-вызова и один запрос к модели",

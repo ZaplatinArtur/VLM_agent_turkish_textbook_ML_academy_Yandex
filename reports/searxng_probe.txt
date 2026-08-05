@@ -1,0 +1,38 @@
+﻿инстанс: http://localhost:8080
+  версия: 2026.8.4+c63835bd2, форматы: None
+  движков включено: 274
+
+пробуем 25 запросов (ранее провалившиеся)
+
+  1.   0 рез.  10006 мс  Lily Lincoln Sally birthday texting exercise answer key  мертвы: brave,duckduckgo,google cse,startpage
+  2.  20 рез.    499 мс  rasyonel sayılar toplama ve çıkarma işlemleri örnekler  мертвы: brave,duckduckgo,startpage
+  3.  20 рез.    319 мс  Türkiye haritası 21 haziran gündüz süresi enlem ilişkisi  мертвы: brave,duckduckgo,startpage
+  4.  20 рез.    401 мс  Câbir bin Hayyan damıtma kabı albük  мертвы: brave,duckduckgo,startpage
+  5.  20 рез.    345 мс  313 ile kaç çarpıldığında 1878 elde edilir?  мертвы: brave,duckduckgo,startpage
+  6.  20 рез.    334 мс  kimya laboratuvarı deneyinde kullanılan cam malzemeler sorus  мертвы: brave,duckduckgo,mojeek,startpage
+  7.  20 рез.    345 мс  18225 bölü 243 işlemi sonucu  мертвы: brave,duckduckgo,mojeek,startpage
+  8.   0 рез.  10005 мс  kombinasyon formülü C(n,k) nasıl hesaplanır örnek  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  9.   0 рез.  10005 мс  I. Dünya Savaşı Osmanlı ekonomik durumu gıda fiyatları  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 10.  38 рез.   1315 мс  trigonometri sin^2x - 1 = ? özdeşlik  мертвы: duckduckgo,mojeek,startpage,wikipedia
+ 11.  20 рез.   4807 мс  kromozom yapısı I II III sentromer kinetokor soru çözümü  мертвы: brave,duckduckgo,mojeek,startpage,wikipedia
+ 12.   0 рез.    206 мс  "Şekildeki K dikdörtgenler prizmasının boyutları 2x, 2x, 5x"  мертвы: brave,duckduckgo,mojeek,startpage
+ 13.  20 рез.    500 мс  Ebû Bekir er-Râzî Câbir bin Hayyan kimya tarihi karşılaştırm  мертвы: brave,duckduckgo,mojeek,startpage
+ 14.   0 рез.    960 мс  trigonometri tan(4x)+tan(6x)=0 denklemi en büyük kök  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 15.   0 рез.   1353 мс  açı ölçü birimleri derece dakika saniye dönüşümü formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 16.   0 рез.    312 мс  okul duvarı afişler yeşil alan çarpanlarına ayırma soru  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 17.   0 рез.    583 мс  coğrafya öğretiminin amaçları nelerdir  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 18.   0 рез.    350 мс  biyoloji kromozom bölünmesi kromatit sentromer kinetokor tan  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 19.   0 рез.    620 мс  açı ölçü birimleri derece dakika saniye dönüşümü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 20.   0 рез.    604 мс  türkiye'de doğal sayılar tanımı meb  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 21.   0 рез.    660 мс  nüfus piramidi yaş grupları oranları grafik analizi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 22.   0 рез.    513 мс  laboratuvarda titrasyon işleminde kullanılan malzemeler  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 23.   0 рез.   1736 мс  arı üreme sistemi erkek arı sperm oluşumu mitoz mayoz ploidi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 24.   0 рез.    468 мс  Câbir bin Hayyan damıtma kabı albük geliştirdi mi?  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 25.   0 рез.    358 мс  müzik enstrümanı silindir sayısıyla çalma kombinasyonu sorus  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+
+пусто/ошибка: 16/25 (64%)
+медиана задержки: 513 мс
+результаты по движкам: google cse 180, brave 18
+отвалившиеся движки: duckduckgo ×25, startpage ×25, brave ×24, mojeek ×20, google cse ×15, wikipedia ×3
+
+ГЕЙТ НЕ ПРОЙДЕН: пустых 64% > 20%. Прогон запускать нельзя — измерите бэкенд, а не модель.
