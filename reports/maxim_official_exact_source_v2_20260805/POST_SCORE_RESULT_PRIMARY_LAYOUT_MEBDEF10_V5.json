@@ -1,0 +1,92 @@
+{
+  "schema_version": "maxim-post-score-result-v5",
+  "profile_name": "maxim-public-workbook-primary-layout-mebdef10-v5",
+  "evaluation_status": "previously_inspected_development_replay_not_holdout",
+  "pre_score_commit": "440b763a15047d78f7396aecdbca70269994b54b",
+  "remote_branch": "feature/maxim-benchmark-results",
+  "remote_commit_verified_before_scoring": true,
+  "gold_access_during_generation_or_source_admission": false,
+  "one_shot_aggregate_score_after_remote_freeze": true,
+  "retained_best_decision": "promote_v5_strictly_better_than_v4",
+  "result": {
+    "correct": 234,
+    "rows": 274,
+    "accuracy": 0.854015,
+    "previous_v4_correct": 233,
+    "previous_v4_accuracy": 0.850365,
+    "delta_vs_v4_correct": 1,
+    "delta_vs_v4_pp": 0.365,
+    "frozen_page_rag_correct": 141,
+    "frozen_page_rag_accuracy": 0.514599,
+    "delta_vs_frozen_page_rag_correct": 93,
+    "delta_vs_frozen_page_rag_pp": 33.942
+  },
+  "slices": {
+    "deterministic": {
+      "correct": 157,
+      "rows": 177,
+      "accuracy": 0.887006
+    },
+    "image_judge": {
+      "correct": 77,
+      "rows": 97,
+      "accuracy": 0.793814
+    },
+    "math": {
+      "correct": 112,
+      "rows": 139,
+      "accuracy": 0.805755
+    },
+    "non_math": {
+      "correct": 122,
+      "rows": 135,
+      "accuracy": 0.903704
+    },
+    "turkish_language_and_literature": {
+      "correct": 21,
+      "rows": 21,
+      "accuracy": 1.0
+    }
+  },
+  "source_only_delta": {
+    "accepted_certificates": 117,
+    "answer_overrides": 24,
+    "new_certificates_vs_v4": 6,
+    "final_answer_changes_vs_v4": 2,
+    "changed_rows_improved": 1,
+    "changed_rows_remained_correct": 1,
+    "changed_rows_regressed": 0,
+    "changed_task_ids": [
+      "val_0065",
+      "val_0066"
+    ],
+    "improved_task_ids": [
+      "val_0066"
+    ],
+    "remained_correct_task_ids": [
+      "val_0065"
+    ]
+  },
+  "artifacts": {
+    "image_judge_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_mebdef10_v5_sealed_evaluation/image_judge_manifest.json",
+      "sha256": "a89acde94278007b82816861abfd8322cf87dbd620b55d6269350b475764bb8b"
+    },
+    "image_judge": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_mebdef10_v5_sealed_evaluation/matched_image97_judge.jsonl",
+      "sha256": "fa0f8bb8c9fffe3967dcf9dd1870c84781c6c8baca4e949ba2a2190630e67ea0"
+    },
+    "score_json": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_mebdef10_v5_sealed_evaluation/score.json",
+      "sha256": "9dd97d663b675ed9f963c4170dce6d321a4accf4bc5f21f07192086112171f43"
+    },
+    "score_markdown": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_mebdef10_v5_sealed_evaluation/score.md",
+      "sha256": "5c347d7a12e6c7c15a2ee37ae9558a32af715d377767cc0e263076ba0560b2bc"
+    },
+    "score_hash_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_mebdef10_v5_sealed_evaluation/score.sha256",
+      "sha256": "874b41bf4c89ccdbc2e8c0f7bb172e70141cde7d9bd9ab4ce3a01b52a92d1adf"
+    }
+  }
+}
