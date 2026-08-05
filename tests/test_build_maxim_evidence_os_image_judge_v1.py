@@ -275,6 +275,9 @@ def synthetic_bundle(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Synthet
         lambda _path, document: {
             "records": len(document.questions),
             "verified_records": len(document.questions),
+            "content_marker_counts": {
+                question.record_id: 1 for question in document.questions
+            },
         },
     )
 
@@ -407,7 +410,13 @@ def synthetic_bundle(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Synthet
         "workbook_pdf_sha256": pdf_sha,
         "pypdf_version": "synthetic-pypdf-1",
         "pdfplumber_version": "synthetic-pdfplumber-1",
-        "source_verification": {"records": 2, "verified_records": 2},
+        "source_verification": {
+            "records": 2,
+            "verified_records": 2,
+            "content_marker_counts": {
+                question.record_id: 1 for question in document.questions
+            },
+        },
     }
     changed_certificate = _certificate_record(CHANGED_ID, original_result, "B")
     trace_fingerprint = str(changed_certificate["trace_fingerprint"])

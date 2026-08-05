@@ -116,6 +116,7 @@ class WorkbookThresholds:
 class YandexPublicIdentity:
     public_locator: str
     name: str
+    kind: str = "yandex_public"
 
 
 @dataclass(frozen=True, slots=True)
@@ -270,6 +271,74 @@ def strict_yandex_public_identity(
     return YandexPublicIdentity(public_locator=public_locator, name=name)
 
 
+def strict_direct_https_identity(source_url: str) -> YandexPublicIdentity:
+    """Project one canonical, query-free HTTPS PDF URL to its exact identity.
+
+    Unlike a mutable web-page URL, this identity is used only together with a
+    profile-pinned PDF SHA-256.  No normalization is performed: alternate
+    hosts, ports, paths, escapes, queries, fragments, credentials, or spelling
+    are different identities and therefore fail closed.
+    """
+
+    if (
+        source_url != source_url.strip()
+        or not source_url.startswith("https://")
+        or any(ord(character) < 32 or ord(character) == 127 for character in source_url)
+        or any(character.isspace() for character in source_url)
+        or any(character in source_url for character in ("%", "\\", "?", "#"))
+    ):
+        raise OfficialSourceError("direct PDF URL has non-canonical HTTPS syntax")
+    try:
+        parsed = urlsplit(source_url)
+    except ValueError as exc:
+        raise OfficialSourceError("direct PDF URL cannot be parsed safely") from exc
+    hostname = parsed.hostname or ""
+    if (
+        parsed.scheme != "https"
+        or not hostname
+        or parsed.netloc != hostname
+        or parsed.port is not None
+        or parsed.username is not None
+        or parsed.password is not None
+        or parsed.query
+        or parsed.fragment
+        or not re.fullmatch(r"[a-z0-9.-]+", hostname)
+        or hostname.startswith(".")
+        or hostname.endswith(".")
+        or ".." in hostname
+    ):
+        raise OfficialSourceError("direct PDF URL is outside the strict HTTPS identity syntax")
+    path_parts = parsed.path.split("/")
+    if (
+        not parsed.path.startswith("/")
+        or "//" in parsed.path
+        or any(part in {"", ".", ".."} for part in path_parts[1:])
+        or not re.fullmatch(r"/[A-Za-z0-9._~/-]+\.pdf", parsed.path)
+    ):
+        raise OfficialSourceError("direct PDF URL path is not canonical")
+    name = path_parts[-1]
+    return YandexPublicIdentity(
+        public_locator=source_url,
+        name=name,
+        kind="direct_https",
+    )
+
+
+def strict_public_document_identity(
+    source_url: str,
+    *,
+    allow_missing_nosw: bool = False,
+) -> YandexPublicIdentity:
+    """Dispatch only between the two frozen public-PDF identity syntaxes."""
+
+    if source_url.startswith("https://docs.yandex.ru/docs/view?"):
+        return strict_yandex_public_identity(
+            source_url,
+            allow_missing_nosw=allow_missing_nosw,
+        )
+    return strict_direct_https_identity(source_url)
+
+
 def _positive_integer(value: Any, label: str) -> int:
     if isinstance(value, bool):
         raise OfficialSourceError(f"{label} must be a positive integer")
@@ -309,7 +378,7 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
         raise OfficialSourceError("workbook source index has no documents")
     documents: list[WorkbookDocument] = []
     document_ids: set[str] = set()
-    identities: set[tuple[str, str]] = set()
+    identities: set[tuple[str, str, str]] = set()
     for raw_document in raw_documents:
         if not isinstance(raw_document, Mapping):
             raise OfficialSourceError("workbook document entry is malformed")
@@ -331,24 +400,30 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
             )
         if not _HEX64.fullmatch(pdf_sha256):
             raise OfficialSourceError("workbook PDF is not pinned by SHA-256")
-        if (
-            not isinstance(locator, Mapping)
-            or set(locator) != _LOCATOR_KEYS
-            or locator.get("kind") != "yandex_public"
-        ):
-            raise OfficialSourceError("workbook locator must be a Yandex public resource")
-        identity = YandexPublicIdentity(
-            public_locator=str(locator.get("public_locator") or ""),
-            name=str(locator.get("name") or "").strip(),
-        )
-        if (
-            not identity.public_locator.startswith("ya-disk-public://")
-            or not identity.name.casefold().endswith(".pdf")
-            or "/" in identity.name
-            or "\\" in identity.name
-        ):
-            raise OfficialSourceError("indexed Yandex public identity is malformed")
-        identity_key = (identity.public_locator, identity.name)
+        if not isinstance(locator, Mapping) or set(locator) != _LOCATOR_KEYS:
+            raise OfficialSourceError("workbook locator fields are malformed")
+        locator_kind = locator.get("kind")
+        locator_value = str(locator.get("public_locator") or "")
+        locator_name = str(locator.get("name") or "").strip()
+        if locator_kind == "yandex_public":
+            identity = YandexPublicIdentity(
+                public_locator=locator_value,
+                name=locator_name,
+            )
+            if (
+                not identity.public_locator.startswith("ya-disk-public://")
+                or not identity.name.casefold().endswith(".pdf")
+                or "/" in identity.name
+                or "\\" in identity.name
+            ):
+                raise OfficialSourceError("indexed Yandex public identity is malformed")
+        elif locator_kind == "direct_https":
+            identity = strict_direct_https_identity(locator_value)
+            if locator_name != identity.name:
+                raise OfficialSourceError("indexed direct PDF filename does not match its URL")
+        else:
+            raise OfficialSourceError("workbook locator kind is not allowlisted")
+        identity_key = (identity.kind, identity.public_locator, identity.name)
         if identity_key in identities:
             raise OfficialSourceError("workbook public identity is duplicated")
 
@@ -458,16 +533,17 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                 if key_crop_text or key_projection_sha256 or key_binding_kind not in {
                     "inline_solution",
                     "answer_key_table",
+                    "answer_key_list",
                 }:
                     raise OfficialSourceError("choice record has no supported source binding")
                 if key_binding_kind == "inline_solution" and (
                     key_page != content_page or section or test_variant
                 ):
                     raise OfficialSourceError("inline solution binding is inconsistent")
-                if key_binding_kind == "answer_key_table" and not (
+                if key_binding_kind in {"answer_key_table", "answer_key_list"} and not (
                     section and test_variant
                 ):
-                    raise OfficialSourceError("answer-key table binding lacks row context")
+                    raise OfficialSourceError("answer-key binding lacks source context")
             visually_checked = raw_question.get("visually_checked") is True
             if not visually_checked:
                 raise OfficialSourceError("workbook source key lacks visual review")
@@ -525,20 +601,20 @@ def document_for_source(
     *,
     allow_missing_nosw: bool = False,
 ) -> WorkbookDocument | None:
-    identity = strict_yandex_public_identity(
+    identity = strict_public_document_identity(
         source_url,
         allow_missing_nosw=allow_missing_nosw,
     )
     matches = [document for document in index.documents if document.identity == identity]
     if len(matches) > 1:
-        raise OfficialSourceError("Yandex public identity is ambiguous in source index")
+        raise OfficialSourceError("public PDF identity is ambiguous in source index")
     return matches[0] if matches else None
 
 
 def verify_workbook_index_pdf(
     pdf_path: Path,
     document: WorkbookDocument,
-) -> dict[str, int]:
+) -> dict[str, Any]:
     """Re-read every indexed answer from its pinned PDF cell.
 
     The index supplies source coordinates, not authority: a certificate run
@@ -551,6 +627,7 @@ def verify_workbook_index_pdf(
     except ImportError as exc:  # pragma: no cover
         raise OfficialSourceError("workbook source verification requires pdfplumber") from exc
     verified = 0
+    content_marker_counts: dict[str, int] = {}
     with pdfplumber.open(pdf_path) as pdf:
         if len(pdf.pages) != document.page_count:
             raise OfficialSourceError("workbook PDF page count differs from source index")
@@ -611,7 +688,12 @@ def verify_workbook_index_pdf(
                 content_text = content_page.crop(content_bbox).extract_text() or ""
             else:
                 content_text = content_page.extract_text() or ""
-            if _question_marker_count(content_text, question.question_number) != 1:
+            content_marker_count = _question_marker_count(
+                content_text,
+                question.question_number,
+            )
+            content_marker_counts[question.record_id] = content_marker_count
+            if content_marker_count != 1:
                 raise OfficialSourceError(
                     f"printed number is absent or ambiguous for {question.record_id}"
                 )
@@ -623,7 +705,11 @@ def verify_workbook_index_pdf(
                     f"for {question.record_id}"
                 )
             verified += 1
-    return {"records": len(document.questions), "verified_records": verified}
+    return {
+        "records": len(document.questions),
+        "verified_records": verified,
+        "content_marker_counts": dict(sorted(content_marker_counts.items())),
+    }
 
 
 def _word_center(word: Mapping[str, Any]) -> tuple[float, float]:
@@ -652,6 +738,129 @@ def _contains_contiguous(values: Sequence[str], target: Sequence[str]) -> bool:
     if not target or len(target) > len(values):
         return False
     return any(tuple(values[index : index + len(target)]) == tuple(target) for index in range(len(values) - len(target) + 1))
+
+
+def _word_lines(
+    words: Sequence[Mapping[str, Any]],
+    *,
+    y_tolerance: float = 6.0,
+) -> list[list[Mapping[str, Any]]]:
+    """Group PDF words into source-visible rows without trusting text order."""
+
+    lines: list[list[Mapping[str, Any]]] = []
+    line_centers: list[float] = []
+    for word in sorted(words, key=lambda item: (_word_center(item)[1], float(item["x0"]))):
+        center_y = _word_center(word)[1]
+        if lines and abs(center_y - line_centers[-1]) <= y_tolerance:
+            lines[-1].append(word)
+            line_centers[-1] = sum(_word_center(item)[1] for item in lines[-1]) / len(
+                lines[-1]
+            )
+        else:
+            lines.append([word])
+            line_centers.append(center_y)
+    return [sorted(line, key=lambda item: float(item["x0"])) for line in lines]
+
+
+def _line_center_y(line: Sequence[Mapping[str, Any]]) -> float:
+    return sum(_word_center(word)[1] for word in line) / len(line)
+
+
+def _line_tokens(line: Sequence[Mapping[str, Any]]) -> tuple[str, ...]:
+    return normalize_tokens(" ".join(str(word.get("text") or "") for word in line))
+
+
+def _line_has_choice_cell(line: Sequence[Mapping[str, Any]]) -> bool:
+    return any(
+        re.fullmatch(
+            r"\d{1,3}\s*[.:-]\s*[A-E]",
+            str(word.get("text") or "").strip(),
+            re.IGNORECASE,
+        )
+        is not None
+        for word in line
+    )
+
+
+def _line_containing_word(
+    lines: Sequence[Sequence[Mapping[str, Any]]],
+    target: Mapping[str, Any],
+) -> Sequence[Mapping[str, Any]] | None:
+    for line in lines:
+        if any(word is target for word in line):
+            return line
+    return None
+
+
+def _strict_hyphen_table_context(
+    words: Sequence[Mapping[str, Any]],
+    combined_cell: Mapping[str, Any],
+    question: WorkbookQuestion,
+) -> bool:
+    """Bind an ``N-A`` cell to its same-row ADIM and nearest section row."""
+
+    lines = _word_lines(words)
+    answer_line = _line_containing_word(lines, combined_cell)
+    if answer_line is None or not _contains_contiguous(
+        _line_tokens(answer_line), _normalized_phrase(question.test_variant)
+    ):
+        return False
+    answer_line_y = _line_center_y(answer_line)
+    prior_source_rows = [
+        line
+        for line in lines
+        if _line_center_y(line) < answer_line_y and not _line_has_choice_cell(line)
+    ]
+    if not prior_source_rows:
+        return False
+    nearest_section_row = max(prior_source_rows, key=_line_center_y)
+    return _line_tokens(nearest_section_row) == _normalized_phrase(question.section)
+
+
+def _strict_answer_list_context(
+    page: Any,
+    words: Sequence[Mapping[str, Any]],
+    combined_cell: Mapping[str, Any],
+    question: WorkbookQuestion,
+) -> bool:
+    """Bind a list cell to the nearest subject in its column and book header."""
+
+    lines = _word_lines(words)
+    answer_line = _line_containing_word(lines, combined_cell)
+    if answer_line is None:
+        return False
+    answer_x, answer_y = _word_center(combined_cell)
+    midpoint = float(page.width) / 2.0
+    answer_is_left = answer_x < midpoint
+
+    def same_column(line: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
+        return [
+            word
+            for word in line
+            if (_word_center(word)[0] < midpoint) == answer_is_left
+        ]
+
+    prior_source_rows: list[Sequence[Mapping[str, Any]]] = []
+    for line in lines:
+        if _line_center_y(line) >= answer_y:
+            continue
+        column_words = same_column(line)
+        if column_words and not _line_has_choice_cell(column_words):
+            prior_source_rows.append(column_words)
+    if not prior_source_rows:
+        return False
+    nearest_subject_row = max(prior_source_rows, key=_line_center_y)
+    if _line_tokens(nearest_subject_row) != _normalized_phrase(question.section):
+        return False
+
+    subject_y = _line_center_y(nearest_subject_row)
+    header_rows = [
+        line
+        for line in lines
+        if _line_center_y(line) < subject_y
+        and _line_tokens(line) == _normalized_phrase(question.test_variant)
+    ]
+    return len(header_rows) == 1
 
 
 def _choice_binding_matches(page: Any, question: WorkbookQuestion) -> bool:
@@ -702,6 +911,28 @@ def _choice_binding_matches(page: Any, question: WorkbookQuestion) -> bool:
         nearest_number, _ = max(markers, key=lambda item: float(item[1]["top"]))
         return nearest_number == question.question_number
 
+    if question.key_binding_kind == "answer_key_list":
+        combined_cell = [
+            word
+            for word in words
+            if re.fullmatch(
+                rf"{question.question_number}\s*[.:-]\s*{question.answer}",
+                str(word.get("text") or "").strip(),
+                re.IGNORECASE,
+            )
+            and abs(_word_center(word)[1] - answer_y) <= 3.0
+            and float(word["x0"]) <= question.key_bbox[0] + 1.0
+            and float(word["x1"]) >= question.key_bbox[2] - 1.0
+        ]
+        if len(combined_cell) != 1:
+            return False
+        return _strict_answer_list_context(
+            page,
+            words,
+            combined_cell[0],
+            question,
+        )
+
     if question.key_binding_kind != "answer_key_table":
         return False
     context_words = sorted(
@@ -734,7 +965,7 @@ def _choice_binding_matches(page: Any, question: WorkbookQuestion) -> bool:
         word
         for word in words
         if re.fullmatch(
-            rf"{question.question_number}\.\s*{question.answer}",
+            rf"{question.question_number}\s*[.:-]\s*{question.answer}",
             str(word.get("text") or "").strip(),
             re.IGNORECASE,
         )
@@ -743,6 +974,12 @@ def _choice_binding_matches(page: Any, question: WorkbookQuestion) -> bool:
         and float(word["x1"]) >= question.key_bbox[2] - 1.0
     ]
     if len(combined_cell) == 1:
+        if re.fullmatch(
+            rf"{question.question_number}\s*-\s*{question.answer}",
+            str(combined_cell[0].get("text") or "").strip(),
+            re.IGNORECASE,
+        ):
+            return _strict_hyphen_table_context(words, combined_cell[0], question)
         return context_matches
     if answer_word is None:
         return False
@@ -857,10 +1094,11 @@ def resolve_workbook_question(
     thresholds: WorkbookThresholds,
     *,
     allow_missing_nosw: bool = False,
+    verified_content_marker_counts: Mapping[str, int] | None = None,
 ) -> MatchResult:
     """Bind one parser crop to one reviewed workbook key, or abstain."""
 
-    observed_identity = strict_yandex_public_identity(
+    observed_identity = strict_public_document_identity(
         source_url,
         allow_missing_nosw=allow_missing_nosw,
     )
@@ -907,10 +1145,19 @@ def resolve_workbook_question(
         selected = None
         binding_method = "missing_printed_number_abstain"
         question_binding = False
-    visible_number = (
+    if (
         selected is not None
-        and _question_marker_count(page_texts[best_page], selected.question_number) == 1
-    )
+        and selected.content_bbox is not None
+        and verified_content_marker_counts is not None
+    ):
+        visible_marker_count = verified_content_marker_counts.get(selected.record_id, 0)
+    else:
+        visible_marker_count = (
+            _question_marker_count(page_texts[best_page], selected.question_number)
+            if selected is not None
+            else 0
+        )
+    visible_number = selected is not None and visible_marker_count == 1
     checks = (
         ("strict_public_document_identity", observed_identity == document.identity),
         ("unique_content_page", page_is_unique),

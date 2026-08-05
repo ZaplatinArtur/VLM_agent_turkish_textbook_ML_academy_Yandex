@@ -235,7 +235,7 @@ def build(
     manifest_documents = resolver_manifest.get("inputs", {}).get("documents")
     if not isinstance(manifest_documents, dict) or set(manifest_documents) != set(source_documents):
         raise JudgeBuildError("resolver document set differs from the pinned source index")
-    source_verification: dict[str, dict[str, int]] = {}
+    source_verification: dict[str, dict[str, Any]] = {}
     source_caches: dict[str, dict[str, Any]] = {}
     for document_id, document in source_documents.items():
         document_spec = manifest_documents[document_id]
@@ -250,6 +250,9 @@ def build(
         source_caches[document_id] = {
             "page_texts": page_texts,
             "matcher": PageMatcher(page_texts),
+            "content_marker_counts": source_verification[document_id][
+                "content_marker_counts"
+            ],
         }
     base_judge_rows = _load_jsonl(base_judge_path)
     base_judge = _index(base_judge_rows, "base image judge")
@@ -380,6 +383,7 @@ def build(
             cache["page_texts"],
             thresholds,
             allow_missing_nosw=allow_missing_nosw,
+            verified_content_marker_counts=cache["content_marker_counts"],
         )
         recomputed_trace = recomputed.trace
         actual_trace_core = {key: trace.get(key) for key in recomputed_trace}

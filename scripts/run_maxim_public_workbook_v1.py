@@ -314,6 +314,9 @@ def run(
                 cache["page_texts"],
                 thresholds,
                 allow_missing_nosw=allow_missing_nosw,
+                verified_content_marker_counts=cache["source_verification"][
+                    "content_marker_counts"
+                ],
             )
         except (OfficialSourceError, ValueError, KeyError, TypeError) as exc:
             candidate_rows.append(

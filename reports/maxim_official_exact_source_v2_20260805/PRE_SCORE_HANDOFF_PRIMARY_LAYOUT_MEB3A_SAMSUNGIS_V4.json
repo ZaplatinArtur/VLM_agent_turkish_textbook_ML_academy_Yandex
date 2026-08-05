@@ -1,0 +1,135 @@
+{
+  "schema_version": "maxim-pre-score-handoff-v4",
+  "profile_name": "maxim-public-workbook-primary-layout-meb3a-samsungis-v4",
+  "frozen_at_utc": "2026-08-05T05:07:23Z",
+  "git_parent_commit": "8168b1b83d9dfea2eea0aedd90328641f085a732",
+  "evaluation_status": "previously_inspected_development_replay_not_holdout",
+  "score_artifacts_created_before_handoff": false,
+  "gold_access": false,
+  "benchmark_candidate_or_outcome_access": false,
+  "red_team_review": {
+    "status": "pass_after_fail_closed_repairs",
+    "nearest_context_negative_tests": true,
+    "freeze_timestamp_after_all_pinned_artifacts": true
+  },
+  "profile": {
+    "path": "configs/maxim_public_workbook_primary_layout_meb3a_samsungis_v4.json",
+    "sha256": "c96cfd68c4ddbf9fdb40b868a9fb7fec0c3aebfed7a8797278505b39af9caeda"
+  },
+  "protocol": {
+    "path": "docs/MAXIM_PRIMARY_LAYOUT_MEB3A_SAMSUNGIS_V4_PROTOCOL.md",
+    "sha256": "a5bf7dc1753e88de4346ca4b5cf3287d5725af6e13234a845324bc53a6aec4d8"
+  },
+  "implementation": {
+    "src/evidence_os/official_workbook.py": "2d7e753ff255856fbd6607cc98e01f9ac4bc92ebb3b4bceb16c48a73e7ed83a4",
+    "src/evidence_os/official_ogm.py": "9ed24bd106cd2319d1cee246b52650ca2c056497d5ee9a221d06eb6665bff78e",
+    "src/evidence_os/official_pdf.py": "ad7d50a786ef62fd9547f8a8564993a0d21710be0bf6d350453feb58af1a0b6b",
+    "scripts/run_maxim_public_workbook_v1.py": "e1366e6faf3f65a2325c0f54a3657e8b349164d36b38bcb5f04cbfc9b5a9568f",
+    "scripts/compose_maxim_official_ogm_failclosed_v2.py": "d82689fe163be6b28aa432b9c5a26952f1549cac99e307e8068b0fe40b607a08",
+    "scripts/build_maxim_evidence_os_image_judge_v1.py": "41ff9eceea7a85ca1f26115574cbd94ac2c0642f68660a81c18d5c77c9b3c29a",
+    "scripts/audit_maxim_primary_layout_projection_v2.py": "55b50551521f0e591a869c5fcaeb2879571dcaa2cfa74fb320eaaac00cf87c2e",
+    "scripts/merge_maxim_public_workbook_index_v1.py": "d9dbe38e83f2ae4ac5ea8a492a4e4c571cf90b3ef7f895439b95e225ffe79822"
+  },
+  "tests": {
+    "command": "python -m pytest tests/test_official_workbook_v1.py tests/test_build_maxim_evidence_os_image_judge_v1.py tests/test_official_ogm_exact_source_v2.py -q",
+    "result": "87 passed",
+    "files": {
+      "tests/test_official_workbook_v1.py": "f96ff70df5d20f123a0deb031fe3f058aaebd57f5d6b7915f247120993376566",
+      "tests/test_official_ogm_exact_source_v2.py": "1c255a0d2e568a62bb6540d330e6b992a331d15e2d3b45275dc14b726a281bd8",
+      "tests/test_build_maxim_evidence_os_image_judge_v1.py": "c79d04b99e53f2f482ba220ef876c38c8129a0ebe0d3219658e26f805167e996"
+    }
+  },
+  "source_wave": {
+    "meb_3a_turkish": {
+      "fragment": {
+        "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_fragment_meb_3a_tyt_turkce_candidate_v1.json",
+        "sha256": "527255be05de7f4b2235436abacb308b0609896375fb8cec0254a3a61fd6dc8e"
+      },
+      "validation": {
+        "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_meb_3a_tyt_turkce_candidate_v1/SOURCE_ONLY_VALIDATION.md",
+        "sha256": "65c126307a1916de1ac7b3dbc9a568c5a882d3fd0c4f185d5bd9dee30c0460e6"
+      },
+      "manifest": {
+        "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_meb_3a_tyt_turkce_candidate_v1/manifest.json",
+        "sha256": "1044b44cc55a929d364adb0d236aa1c0ece985c900952f8dbb6ff295a3119cf1"
+      },
+      "reviewed_records": 7,
+      "unchanged_gate_admissions": 6
+    },
+    "samsungis_lgs1": {
+      "fragment": {
+        "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_fragment_samsungis_lgs1_candidate_v1.json",
+        "sha256": "01dca6b893ca36fc278778d107d41a5036410492fc75fee5d21274d54a9e972f"
+      },
+      "validation": {
+        "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsungis_lgs1_candidate_v1/SOURCE_ONLY_VALIDATION.md",
+        "sha256": "b4385b15449f70b2b436054bccf61547faa7faf3e879d7c6cd6daf21b1c4cfaf"
+      },
+      "pdf_sha256": "f88c9f40e3c6f3a2494090ee7635d1f7254b736da561b0f0b98125cb25ad5997",
+      "reviewed_records": 18,
+      "unchanged_gate_admissions": 17
+    },
+    "merged_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb_3a_samsungis_candidate_v4.json",
+      "sha256": "879570453315b01e81bd648afced2b2f22f3313cd32e0996ba9a5a0aa3fb000d",
+      "documents": 9,
+      "records": 120
+    },
+    "merge_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb_3a_samsungis_candidate_v4.manifest.json",
+      "sha256": "4fc9b86b734df8a6b2736db209db6a1bdad900f27b2829b34d88fa1c2d1b7006"
+    }
+  },
+  "projection_audit": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_projection_audit/manifest.json",
+      "sha256": "a142b446a33bc588ccc748af5e716b2b08c724e4f4829b5c59e00c1780138dd4"
+    },
+    "decisions": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_projection_audit/projection_decisions.jsonl",
+      "sha256": "c81308b6d108a15d2de780314ae17533205480832e6019d8c38479680e4e1cc6"
+    },
+    "rows": 274,
+    "primary_layout_recoveries": 17
+  },
+  "resolver": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_resolver/manifest.json",
+      "sha256": "64d8b4ea150a1706e5b85b56b6aedda1e3d6a887cbf718db53aca53f89bc71be"
+    },
+    "candidate": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_resolver/candidate.jsonl",
+      "sha256": "e12531928783adc40ed2e784946d70823706f61f18c1dfe3c040ccdd6a31ef99"
+    },
+    "certificates": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_resolver/certificates.jsonl",
+      "sha256": "4097834b8c8dfe69e9c6396552d7d6cb6088674d5ce47e979632de7399bb1f70"
+    },
+    "audit": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_resolver/audit.jsonl",
+      "sha256": "0c6b5fef85032a617ce72305a1f984877bb1a6d8c01f83655ddc8d102965d61a"
+    },
+    "rows": 274,
+    "eligible_rows": 132,
+    "accepted_certificates": 111,
+    "abstentions": 163
+  },
+  "composition": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_composed/manifest.json",
+      "sha256": "f3f5379314615b6b432ab805e420034fe86b2fcf50e872533954364bfe0b62a1"
+    },
+    "solver": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_composed/solver.jsonl",
+      "sha256": "cb4b05feac1a306925e41c444f26fe47bb17badd02d17fcf49dd5a7f59d79472"
+    },
+    "decisions": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_composed/decisions.jsonl",
+      "sha256": "d5d13bdd65d6259fe2f9b27247ec1a4cd59e9b40ea4a04180c6eb6967ee52885"
+    },
+    "rows": 274,
+    "overrides": 22,
+    "certified_equal_anchor": 89,
+    "new_answer_changes_vs_v3": 3
+  }
+}

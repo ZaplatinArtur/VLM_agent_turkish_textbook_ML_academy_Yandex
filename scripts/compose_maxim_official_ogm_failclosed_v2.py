@@ -207,12 +207,21 @@ def _validate_workbook_certificate_artifact(
     if any(provenance.get(key) != value for key, value in expected_provenance.items()):
         raise CompositionError(f"workbook certificate {task_id} provenance was altered")
     source_verification = provenance.get("source_verification")
+    content_marker_counts = (
+        source_verification.get("content_marker_counts")
+        if isinstance(source_verification, dict)
+        else None
+    )
     answer_format = trace_source.get("answer_format")
     key_binding_kind = trace_source.get("key_binding_kind")
     projection_sha = str(trace_source.get("key_projection_sha256") or "")
     binding_is_supported = (
         answer_format == "choice"
-        and key_binding_kind in {"inline_solution", "answer_key_table"}
+        and key_binding_kind in {
+            "inline_solution",
+            "answer_key_table",
+            "answer_key_list",
+        }
         and not projection_sha
     ) or (
         answer_format == "short_text"
@@ -227,6 +236,8 @@ def _validate_workbook_certificate_artifact(
         or int(source_verification.get("records", 0)) < 1
         or source_verification.get("verified_records")
         != source_verification.get("records")
+        or not isinstance(content_marker_counts, dict)
+        or content_marker_counts.get(str(trace_source.get("record_id") or "")) != 1
     ):
         raise CompositionError(f"workbook certificate {task_id} lacks PDF-bound evidence")
 

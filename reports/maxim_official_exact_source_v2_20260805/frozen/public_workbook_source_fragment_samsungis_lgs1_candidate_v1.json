@@ -1,0 +1,235 @@
+{
+  "schema_version": "public-workbook-source-index-v1",
+  "documents": [
+    {
+      "document_id": "samsungis_lgs1_f88c9f40e3c6",
+      "locator": {
+        "kind": "direct_https",
+        "public_locator": "https://samsungis.meb.gov.tr/storage/denemeler/lgs/lgs1.pdf",
+        "name": "lgs1.pdf"
+      },
+      "pdf_sha256": "f88c9f40e3c6f3a2494090ee7635d1f7254b736da561b0f0b98125cb25ad5997",
+      "page_count": 25,
+      "content_page_ranges": [[1, 24]],
+      "questions": [
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p1:q4",
+          "content_page_number": 1,
+          "question_number": 4,
+          "answer": "A",
+          "key_binding_kind": "answer_key_list",
+          "section": "TÜRKÇE",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [117.722, 116.308, 131.231, 125.308],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p2:q5",
+          "content_page_number": 2,
+          "question_number": 5,
+          "answer": "B",
+          "key_binding_kind": "answer_key_list",
+          "section": "TÜRKÇE",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [117.722, 127.108, 131.231, 136.108],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p2:q8",
+          "content_page_number": 2,
+          "question_number": 8,
+          "answer": "C",
+          "key_binding_kind": "answer_key_list",
+          "section": "TÜRKÇE",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [117.473, 159.508, 131.477, 168.508],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p4:q13",
+          "content_page_number": 4,
+          "question_number": 13,
+          "answer": "A",
+          "key_binding_kind": "answer_key_list",
+          "section": "TÜRKÇE",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [115.219, 213.508, 133.732, 222.508],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p11:q2",
+          "content_page_number": 11,
+          "question_number": 2,
+          "answer": "B",
+          "key_binding_kind": "answer_key_list",
+          "section": "İNGİLİZCE",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [117.721, 646.474, 131.230, 655.474],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p12:q7",
+          "content_page_number": 12,
+          "question_number": 7,
+          "answer": "C",
+          "key_binding_kind": "answer_key_list",
+          "section": "İNGİLİZCE",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [117.473, 700.474, 131.477, 709.474],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p12:q8",
+          "content_page_number": 12,
+          "question_number": 8,
+          "answer": "A",
+          "key_binding_kind": "answer_key_list",
+          "section": "İNGİLİZCE",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [117.721, 711.274, 131.230, 720.274],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p14:q2",
+          "content_page_number": 14,
+          "question_number": 2,
+          "answer": "A",
+          "key_binding_kind": "answer_key_list",
+          "section": "MATEMATİK",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [405.415, 97.191, 418.924, 106.191],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p14:q3",
+          "content_page_number": 14,
+          "question_number": 3,
+          "answer": "A",
+          "key_binding_kind": "answer_key_list",
+          "section": "MATEMATİK",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [405.415, 107.991, 418.924, 116.991],
+          "content_bbox": [295.0, 45.0, 590.0, 315.0],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p14:q4",
+          "content_page_number": 14,
+          "question_number": 4,
+          "answer": "B",
+          "key_binding_kind": "answer_key_list",
+          "section": "MATEMATİK",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [405.415, 118.791, 418.924, 127.791],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p15:q6",
+          "content_page_number": 15,
+          "question_number": 6,
+          "answer": "C",
+          "key_binding_kind": "answer_key_list",
+          "section": "MATEMATİK",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [405.166, 140.391, 419.170, 149.391],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p17:q14",
+          "content_page_number": 17,
+          "question_number": 14,
+          "answer": "D",
+          "key_binding_kind": "answer_key_list",
+          "section": "MATEMATİK",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [402.664, 226.791, 421.672, 235.791],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p19:q3",
+          "content_page_number": 19,
+          "question_number": 3,
+          "answer": "D",
+          "key_binding_kind": "answer_key_list",
+          "section": "FEN BİLİMLERİ",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [402.584, 363.144, 416.588, 372.144],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p20:q6",
+          "content_page_number": 20,
+          "question_number": 6,
+          "answer": "B",
+          "key_binding_kind": "answer_key_list",
+          "section": "FEN BİLİMLERİ",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [402.833, 395.544, 416.342, 404.544],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p20:q7",
+          "content_page_number": 20,
+          "question_number": 7,
+          "answer": "D",
+          "key_binding_kind": "answer_key_list",
+          "section": "FEN BİLİMLERİ",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [402.584, 406.344, 416.588, 415.344],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p22:q13",
+          "content_page_number": 22,
+          "question_number": 13,
+          "answer": "A",
+          "key_binding_kind": "answer_key_list",
+          "section": "FEN BİLİMLERİ",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [400.330, 471.144, 418.843, 480.144],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p23:q15",
+          "content_page_number": 23,
+          "question_number": 15,
+          "answer": "B",
+          "key_binding_kind": "answer_key_list",
+          "section": "FEN BİLİMLERİ",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [400.330, 492.744, 418.843, 501.744],
+          "visually_checked": true
+        },
+        {
+          "record_id": "samsungis_lgs1_f88c9f40e3c6:p24:q20",
+          "content_page_number": 24,
+          "question_number": 20,
+          "answer": "B",
+          "key_binding_kind": "answer_key_list",
+          "section": "FEN BİLİMLERİ",
+          "test_variant": "Samsungis LGS Denemeleri - 1",
+          "key_page_number": 25,
+          "key_bbox": [400.330, 546.744, 418.843, 555.744],
+          "visually_checked": true
+        }
+      ]
+    }
+  ]
+}

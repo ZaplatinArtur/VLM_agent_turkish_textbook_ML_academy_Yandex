@@ -10,9 +10,11 @@ import pytest
 from evidence_os.official_ogm import OcrObservation, OfficialSourceError, PageMatcher
 from evidence_os.official_workbook import (
     WorkbookThresholds,
+    _choice_binding_matches,
     document_for_source,
     parse_workbook_index,
     resolve_workbook_question,
+    strict_direct_https_identity,
     strict_yandex_public_identity,
 )
 from scripts.merge_maxim_public_workbook_index_v1 import merge
@@ -31,6 +33,7 @@ DISTRACTOR = (
     "geography migration monument citizenship reform document"
 )
 DOCUMENT_ID = "synthetic-book-aaaaaaaaaaaa"
+DIRECT_URL = "https://official.example.gov.tr/books/lgs1.pdf"
 
 
 def _payload() -> dict[str, object]:
@@ -207,6 +210,37 @@ def test_equal_page_scores_fail_closed() -> None:
     assert dict(result.checks)["unique_content_page"] is False
 
 
+def test_pdf_verified_content_bbox_can_isolate_a_duplicate_page_marker() -> None:
+    index = parse_workbook_index(_payload())
+    document = document_for_source(index, SOURCE_URL)
+    assert document is not None
+    pages = _pages()
+    pages[1] = f"7. {TARGET} explanatory duplicate 7."
+
+    without_pdf_crop_proof = resolve_workbook_question(
+        _observation(),
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+    )
+    with_pdf_crop_proof = resolve_workbook_question(
+        _observation(),
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        verified_content_marker_counts={f"{DOCUMENT_ID}:p2:q7": 1},
+    )
+
+    assert without_pdf_crop_proof.accepted is False
+    assert dict(without_pdf_crop_proof.checks)["printed_number_visible_on_page"] is False
+    assert with_pdf_crop_proof.accepted is True
+    assert with_pdf_crop_proof.answer == "C"
+
+
 def test_yandex_identity_discards_only_numeric_viewer_flag() -> None:
     first = strict_yandex_public_identity(SOURCE_URL)
     second = strict_yandex_public_identity(SOURCE_URL.replace("nosw=17", "nosw=999"))
@@ -228,6 +262,168 @@ def test_yandex_identity_discards_only_numeric_viewer_flag() -> None:
         strict_yandex_public_identity(SOURCE_URL + "&name=duplicate.pdf")
     with pytest.raises(OfficialSourceError):
         strict_yandex_public_identity(SOURCE_URL.replace("&name=book.pdf", ""))
+
+
+def test_direct_https_identity_is_exact_and_query_free() -> None:
+    identity = strict_direct_https_identity(DIRECT_URL)
+
+    assert identity.kind == "direct_https"
+    assert identity.public_locator == DIRECT_URL
+    assert identity.name == "lgs1.pdf"
+    for malformed in (
+        " " + DIRECT_URL,
+        DIRECT_URL + "?answer=A",
+        DIRECT_URL + "#fragment",
+        DIRECT_URL.replace("official.example.gov.tr", "OFFICIAL.example.gov.tr"),
+        DIRECT_URL.replace("/books/", "/books/../books/"),
+        DIRECT_URL.replace("lgs1.pdf", "lgs%31.pdf"),
+        DIRECT_URL.replace("https://", "http://"),
+        DIRECT_URL.replace("official.example.gov.tr", "user@official.example.gov.tr"),
+        DIRECT_URL.replace("official.example.gov.tr", "official.example.gov.tr:443"),
+    ):
+        with pytest.raises(OfficialSourceError):
+            strict_direct_https_identity(malformed)
+
+
+def test_direct_https_document_identity_and_answer_list_are_schema_valid() -> None:
+    payload = _payload()
+    document = payload["documents"][0]  # type: ignore[index]
+    document["locator"] = {
+        "kind": "direct_https",
+        "public_locator": DIRECT_URL,
+        "name": "lgs1.pdf",
+    }
+    question = document["questions"][0]
+    question["key_binding_kind"] = "answer_key_list"
+    question["section"] = "MATEMATIK"
+    question["test_variant"] = "Official LGS 1"
+
+    index = parse_workbook_index(payload)
+    selected = document_for_source(index, DIRECT_URL)
+
+    assert selected is not None
+    assert selected.identity.kind == "direct_https"
+    assert selected.questions[0].key_binding_kind == "answer_key_list"
+    assert document_for_source(index, DIRECT_URL.replace("lgs1.pdf", "other.pdf")) is None
+
+
+class _KeyCrop:
+    def __init__(self, text: str) -> None:
+        self._text = text
+
+    def extract_text(self) -> str:
+        return self._text
+
+
+class _KeyPage:
+    width = 600.0
+
+    def __init__(self, words: list[dict[str, object]], crop_text: str) -> None:
+        self._words = words
+        self._crop_text = crop_text
+
+    def extract_words(self) -> list[dict[str, object]]:
+        return self._words
+
+    def crop(self, _bbox: tuple[float, float, float, float]) -> _KeyCrop:
+        return _KeyCrop(self._crop_text)
+
+
+def _word(text: str, x0: float, x1: float, top: float) -> dict[str, object]:
+    return {"text": text, "x0": x0, "x1": x1, "top": top, "bottom": top + 9.0}
+
+
+def test_exact_colon_answer_list_requires_book_and_subject_context() -> None:
+    payload = _payload()
+    record = payload["documents"][0]["questions"][0]  # type: ignore[index]
+    record.update(
+        {
+            "key_binding_kind": "answer_key_list",
+            "section": "MATEMATIK",
+            "test_variant": "Official LGS 1",
+            "key_bbox": [100.0, 200.0, 114.0, 209.0],
+        }
+    )
+    question = parse_workbook_index(payload).documents[0].questions[0]
+    page = _KeyPage(
+        [
+            _word("Official", 10.0, 45.0, 10.0),
+            _word("LGS", 48.0, 65.0, 10.0),
+            _word("1", 68.0, 73.0, 10.0),
+            _word("MATEMATIK", 10.0, 65.0, 100.0),
+            _word("7:C", 100.0, 114.0, 200.0),
+        ],
+        "7:C",
+    )
+
+    assert _choice_binding_matches(page, question) is True
+    page_without_subject = _KeyPage(
+        [word for word in page.extract_words() if word["text"] != "MATEMATIK"],
+        "7:C",
+    )
+    assert _choice_binding_matches(page_without_subject, question) is False
+
+    page_with_nearer_wrong_subject = _KeyPage(
+        [
+            _word("Official", 10.0, 45.0, 10.0),
+            _word("LGS", 48.0, 65.0, 10.0),
+            _word("1", 68.0, 73.0, 10.0),
+            _word("MATEMATIK", 10.0, 65.0, 100.0),
+            _word("FEN", 10.0, 30.0, 170.0),
+            _word("BILIMLERI", 33.0, 80.0, 170.0),
+            _word("7:C", 100.0, 114.0, 200.0),
+        ],
+        "7:C",
+    )
+    assert _choice_binding_matches(page_with_nearer_wrong_subject, question) is False
+
+
+def test_exact_hyphen_table_cell_is_bound_to_adim_and_section() -> None:
+    question = parse_workbook_index(_payload()).documents[0].questions[0]
+    question = replace(
+        question,
+        key_bbox=(112.0, 200.0, 118.0, 209.0),
+        section="Sozcukte Anlam",
+        test_variant="1. ADIM",
+    )
+    page = _KeyPage(
+        [
+            _word("Sozcukte", 10.0, 50.0, 150.0),
+            _word("Anlam", 53.0, 78.0, 150.0),
+            _word("1.", 10.0, 18.0, 204.0),
+            _word("ADIM", 21.0, 45.0, 204.0),
+            _word("7-C", 100.0, 118.0, 200.0),
+        ],
+        "C",
+    )
+
+    assert _choice_binding_matches(page, question) is True
+
+    page_with_nearer_wrong_section = _KeyPage(
+        [
+            _word("Sozcukte", 10.0, 50.0, 100.0),
+            _word("Anlam", 53.0, 78.0, 100.0),
+            _word("Cumlede", 10.0, 50.0, 150.0),
+            _word("Anlam", 53.0, 78.0, 150.0),
+            _word("1.", 10.0, 18.0, 204.0),
+            _word("ADIM", 21.0, 45.0, 204.0),
+            _word("7-C", 100.0, 118.0, 200.0),
+        ],
+        "C",
+    )
+    assert _choice_binding_matches(page_with_nearer_wrong_section, question) is False
+
+    page_with_wrong_same_row_adim = _KeyPage(
+        [
+            _word("Sozcukte", 10.0, 50.0, 150.0),
+            _word("Anlam", 53.0, 78.0, 150.0),
+            _word("2.", 10.0, 18.0, 204.0),
+            _word("ADIM", 21.0, 45.0, 204.0),
+            _word("7-C", 100.0, 118.0, 200.0),
+        ],
+        "C",
+    )
+    assert _choice_binding_matches(page_with_wrong_same_row_adim, question) is False
 
 
 def test_optional_nosw_policy_is_enforced_through_document_and_resolver() -> None:
@@ -313,7 +509,7 @@ def test_unknown_nested_source_index_fields_fail_closed() -> None:
 
     payload = _payload()
     payload["documents"][0]["locator"]["route"] = "A"  # type: ignore[index]
-    with pytest.raises(OfficialSourceError, match="Yandex public resource"):
+    with pytest.raises(OfficialSourceError, match="locator fields"):
         parse_workbook_index(payload)
 
     payload = _payload()

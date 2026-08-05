@@ -91,9 +91,10 @@ def merge(fragment_paths: list[Path], output_path: Path, manifest_path: Path) ->
         "benchmark_outcome_access": False,
     }
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
-        encoding="utf-8",
+    manifest_path.write_bytes(
+        (json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode(
+            "utf-8"
+        )
     )
     return manifest
 
