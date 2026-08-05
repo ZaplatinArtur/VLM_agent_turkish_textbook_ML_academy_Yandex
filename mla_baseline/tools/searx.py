@@ -79,26 +79,40 @@ class _Breaker:
 
 
 class _Alive:
-    """Память об успехах инстанса.
+    """Память об успехах инстанса и о том, какие движки их приносят.
 
     Нужна, чтобы не путать «не нашлось» с «поиск сломан». Отвалившиеся движки
     сами по себе ничего не доказывают: на живом инстансе с широким пулом
     несколько движков лежат почти всегда (проба показала brave и startpage в
-    капче на всех 25 запросах при 24 успешных выдачах). Признак поломки —
-    пустота на инстансе, который давно ничего не отдавал.
+    капче на всех 25 запросах при 24 успешных выдачах).
+
+    Но и обратное неверно. Замер на 540 запросах: когда duckduckgo был жив,
+    пустых 0 из 240, когда он уходил в капчу — 277 из 300. Пустота при живом
+    инстансе означала не «не нашлось», а «слёг единственный движок, который
+    что-то приносил». Поэтому помним, кто именно даёт выдачу, и если в бане
+    оказались все они разом — это поломка, а не отсутствие результата.
     """
 
     def __init__(self) -> None:
         self._lock = threading.Lock()
         self._at: dict[str, float] = {}
+        self._engines: dict[str, set[str]] = {}
 
-    def mark(self, key: str) -> None:
+    def mark(self, key: str, engines: set[str]) -> None:
         with self._lock:
             self._at[key] = time.monotonic()
+            if engines:
+                self._engines[key] = engines
 
     def recent(self, key: str, window_s: float) -> bool:
         with self._lock:
             return time.monotonic() - self._at.get(key, -1e9) < window_s
+
+    def all_productive_dead(self, key: str, dead: list[str]) -> bool:
+        """Все известные добытчики выдачи лежат?"""
+        with self._lock:
+            productive = self._engines.get(key)
+        return bool(productive) and productive <= set(dead)
 
 
 class _Pacer:
@@ -227,13 +241,14 @@ def search(settings: Settings, query: str) -> SearxResponse:
             if results:
                 out = SearxResponse(OK, results, {"attempts": attempts})
                 _cache.put(cache_key, out, settings.searx_cache_ttl_s)
-                _alive.mark(base)
+                _alive.mark(base, {str(r.get("engine") or "") for r in results
+                                   if r.get("engine")})
                 _breaker.record(base, True, settings.searx_unavailable_streak,
                                 settings.searx_cooldown_s)
                 return out
-            if dead and not alive:
-                # пусто при отвалившихся движках на инстансе, который давно
-                # ничего не отдавал, — похоже на поломку, а не на «не нашлось»
+            if dead and (not alive or _alive.all_productive_dead(base, dead)):
+                # пусто и при этом либо инстанс давно молчит, либо в бане все
+                # движки, которые вообще приносили выдачу, — это поломка
                 degraded = True
                 if attempt <= settings.searx_retries:
                     time.sleep(settings.searx_backoff_s * attempt)

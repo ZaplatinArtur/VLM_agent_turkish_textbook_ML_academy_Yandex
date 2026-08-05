@@ -42,9 +42,13 @@ outgoing:
   enable_http2: true
 
 engines:
-  # Опора на движки без агрессивной капчи. Google/Bing оставлены, но их
-  # падение больше не обнуляет выдачу: рядом четыре независимых источника.
+  # Ширина пула — не роскошь, а единственная защита от бана. Замер на 540
+  # запросах: когда duckduckgo жив, пустых 0 из 240; когда он в капче —
+  # 277 из 300. Инстанс держался на одном движке, потому что google cse и
+  # startpage были забанены наглухо, а brave и mojeek лежали через раз.
   - name: duckduckgo
+    disabled: false
+  - name: duckduckgo web
     disabled: false
   - name: brave
     disabled: false
@@ -52,13 +56,24 @@ engines:
     disabled: false
   - name: startpage
     disabled: false
+  - name: bing
+    disabled: false
+  - name: yandex
+    disabled: false
+  - name: qwant
+    disabled: false
+  - name: yahoo
+    disabled: false
+  # Мета-движки: проксируют чужую выдачу, свою капчу показывают редко —
+  # именно они должны подхватывать, когда основные в бане.
+  - name: dogpile
+    disabled: false
+  - name: zapmeta
+    disabled: false
+  - name: privacywall
+    disabled: false
+  # Справочные: медленно тонут, полезны на определениях и датах.
   - name: wikipedia
     disabled: false
   - name: wikidata
     disabled: false
-  # Тяжёлые для парсинга и медленные — выключены, чтобы не тянуть таймаут
-  # общего ответа на себе.
-  - name: qwant
-    disabled: true
-  - name: yahoo
-    disabled: true

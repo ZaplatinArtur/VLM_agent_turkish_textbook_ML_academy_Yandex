@@ -18,8 +18,11 @@ from mla_baseline.config import Settings  # noqa: E402
 from mla_baseline.tools import ToolUnavailable  # noqa: E402
 from mla_baseline.tools import searx  # noqa: E402
 
-OK_BODY = {"results": [{"url": "https://a.tr", "title": "A", "content": "metin"}],
+OK_BODY = {"results": [{"url": "https://a.tr", "title": "A", "content": "metin",
+                        "engine": "duckduckgo"}],
            "unresponsive_engines": []}
+# пусто, и в бане именно тот движок, который приносил выдачу
+DDG_DEAD_BODY = {"results": [], "unresponsive_engines": [["duckduckgo", "CAPTCHA"]]}
 EMPTY_BODY = {"results": [], "unresponsive_engines": []}
 DEAD_BODY = {"results": [], "unresponsive_engines": [["google", "timeout"],
                                                      ["bing", "CAPTCHA"]]}
@@ -134,7 +137,18 @@ def main() -> int:
           "пустота на недавно ответившем инстансе → empty, а не поломка")
     check(len(calls) - before == 2, "такую пустоту не ретраим, только лестница")
 
-    # 10. Недоступность бэкенда — исключение для тул-цикла
+    # 10. Но если в бане именно добытчик выдачи — это поломка, а не пустота.
+    #     Замер на 540 запросах: при живом duckduckgo пусто 0/240, при
+    #     забаненном — 277/300.
+    searx.reset_state()
+    searx._fetch, calls = fake([(200, OK_BODY), (200, DDG_DEAD_BODY)])
+    cfg = settings()
+    searx.search(cfg, "первый запрос")       # запомнили: выдачу даёт duckduckgo
+    resp = searx.search(cfg, "второй запрос")
+    check(resp.status == searx.UNAVAILABLE,
+          "лёг единственный движок с выдачей → поломка, а не «не нашлось»")
+
+    # 11. Недоступность бэкенда — исключение для тул-цикла
     searx.reset_state()
     searx._fetch, _ = fake([(200, DEAD_BODY)])
     try:

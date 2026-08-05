@@ -32,9 +32,13 @@ EMPTY_PREFIXES = ("Sonuç bulunamadı", "Sayfalar açılamadı", "Arama hatası"
 HDRS = {"User-Agent": "Mozilla/5.0 (compatible; mla-baseline/0.2)"}
 
 
-def load_queries(only_failed: bool) -> list[str]:
-    """Запросы модели из логов прогонов; по умолчанию — только провалившиеся."""
-    out: dict[str, None] = {}
+def load_queries(only_failed: bool) -> dict[str, str]:
+    """Запросы модели из логов: {запрос: прежний исход}.
+
+    Если один запрос встречался с разным исходом, прежним считаем удачный —
+    так сравнение «до/после» получается консервативным.
+    """
+    out: dict[str, str] = {}
     for rel in RUN_LOGS:
         path = ROOT / rel
         if not path.exists():
@@ -48,12 +52,14 @@ def load_queries(only_failed: bool) -> list[str]:
                     continue
                 query = str((call.get("args") or {}).get("query") or "").strip()
                 preview = call.get("result_preview") or ""
-                if not query:
-                    continue
-                if only_failed and not preview.startswith(EMPTY_PREFIXES):
-                    continue
-                out[query] = None
-    return list(out)
+                if not query or preview.startswith(("Bu sorguyu", "Arama limitine")):
+                    continue  # до бэкенда такой вызов не доходил
+                was = "empty" if preview.startswith(EMPTY_PREFIXES) else "hit"
+                if out.get(query) != "hit":
+                    out[query] = was
+    if only_failed:
+        return {q: w for q, w in out.items() if w == "empty"}
+    return out
 
 
 def probe_config(url: str) -> dict:
@@ -87,7 +93,10 @@ def probe_query(url: str, query: str, timeout: float) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", default="http://localhost:8080")
-    parser.add_argument("-n", type=int, default=30, help="сколько запросов взять")
+    parser.add_argument("-n", type=int, default=30,
+                        help="сколько запросов взять (0 — все)")
+    parser.add_argument("--out-jsonl", default="",
+                        help="куда писать результат по каждому запросу")
     parser.add_argument("--all", action="store_true",
                         help="брать все запросы, а не только провалившиеся")
     parser.add_argument("--timeout", type=float, default=30.0)
@@ -114,24 +123,35 @@ def main() -> int:
         return 1
     print(f"  JSON API отвечает: {canary['results']} результатов на 'test'")
 
-    queries = load_queries(only_failed=not args.all)
-    if not queries:
+    previous = load_queries(only_failed=not args.all)
+    if not previous:
         print("нет запросов в логах — укажи --all или проверь reports/")
         return 1
+    queries = list(previous)
     random.Random(args.seed).shuffle(queries)
-    queries = queries[: args.n]
+    if args.n > 0:
+        queries = queries[: args.n]
     kind = "все" if args.all else "ранее провалившиеся"
     print(f"\nпробуем {len(queries)} запросов ({kind})\n")
 
+    sink = (ROOT / args.out_jsonl).open("w", encoding="utf-8") if args.out_jsonl else None
     rows = []
     for i, query in enumerate(queries, 1):
         row = probe_query(args.url, query, args.timeout)
+        row["was"] = previous[query]
         rows.append(row)
+        if sink:
+            sink.write(json.dumps({k: (dict(v) if isinstance(v, Counter) else v)
+                                   for k, v in row.items()}, ensure_ascii=False) + "\n")
+            sink.flush()
         mark = ("ERR " + row["error"]) if row.get("error") else f"{row['results']:>3} рез."
         dead = f"  мертвы: {','.join(row['dead'])}" if row.get("dead") else ""
-        print(f"{i:>3}. {mark}  {row['ms']:>5} мс  {query[:60]}{dead}")
+        print(f"{i:>4}. было:{row['was']:<5} стало:{mark}  {row['ms']:>5} мс  "
+              f"{query[:55]}{dead}", flush=True)
         if args.pause:
             time.sleep(args.pause)
+    if sink:
+        sink.close()
 
     empty = [r for r in rows if r.get("error") or not r.get("results")]
     engines = Counter()
@@ -143,6 +163,17 @@ def main() -> int:
 
     share = len(empty) / len(rows)
     print(f"\nпусто/ошибка: {len(empty)}/{len(rows)} ({share:.0%})")
+
+    # сравнение с прежним исходом того же запроса
+    cross = Counter((r["was"], "empty" if (r.get("error") or not r.get("results"))
+                     else "hit") for r in rows)
+    for was in ("empty", "hit"):
+        total = sum(v for (w, _), v in cross.items() if w == was)
+        if not total:
+            continue
+        fixed = cross[(was, "hit")]
+        print(f"  было {was:<5}: {total:>4} запросов → сейчас находится "
+              f"{fixed} ({fixed / total:.0%})")
     print(f"медиана задержки: {statistics.median(latencies):.0f} мс")
     print("результаты по движкам: "
           + (", ".join(f"{k} {v}" for k, v in engines.most_common(10)) or "—"))
