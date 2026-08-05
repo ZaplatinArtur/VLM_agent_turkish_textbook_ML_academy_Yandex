@@ -32,6 +32,10 @@ _QUESTION_NUMBER = re.compile(r"^\s*(?:#{1,6}\s*)?(\d{1,3})\s*[.)]")
 _PRIMARY_QUESTION_NUMBER = re.compile(
     r"^\s*(?:#{1,6}\s*)?(\d{1,3})\s*(?:[.)]|-(?=\s))"
 )
+_PRIMARY_EXAMPLE_LABEL = re.compile(
+    r"^\s*(?:#{1,6}\s*)?\u00d6rnek\s+([1-9]\d{0,2})\s*[.):]?\s*$",
+    re.IGNORECASE,
+)
 _PRIMARY_TEXT_LAYOUT_LABELS = frozenset({"text", "paragraph_title"})
 _TOKEN = re.compile(r"[a-z0-9]+")
 _LATEX_COMMAND = re.compile(r"\\[A-Za-z]+")
@@ -96,6 +100,7 @@ class OcrObservation:
     question_number: int | None
     parser_identity: str
     text_blocks: tuple[str, ...] = ()
+    primary_example_label_number: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -246,6 +251,55 @@ def _strict_primary_layout_number(
     return int(number_match.group(1))
 
 
+def _strict_primary_layout_example_label_number(
+    raw_blocks: Sequence[Any],
+    *,
+    width: int,
+    height: int,
+) -> int | None:
+    """Return one exact top-left ``\u00d6rnek N`` title, or fail closed."""
+
+    order_one: list[Mapping[str, Any]] = []
+    for raw_block in raw_blocks:
+        if not isinstance(raw_block, Mapping):
+            return None
+        label = str(raw_block.get("block_label") or "").casefold()
+        if label == "image":
+            continue
+        order = raw_block.get("block_order")
+        if isinstance(order, int) and not isinstance(order, bool) and order == 1:
+            order_one.append(raw_block)
+    if len(order_one) != 1:
+        return None
+    block = order_one[0]
+    if str(block.get("block_label") or "").casefold() != "paragraph_title":
+        return None
+    match = _PRIMARY_EXAMPLE_LABEL.fullmatch(
+        str(block.get("block_content") or "").strip()
+    )
+    if match is None:
+        return None
+    bbox = block.get("block_bbox")
+    if (
+        not isinstance(bbox, Sequence)
+        or isinstance(bbox, (str, bytes))
+        or len(bbox) != 4
+        or any(
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(float(value))
+            for value in bbox
+        )
+    ):
+        return None
+    left, top, right, bottom = (float(value) for value in bbox)
+    if not (0.0 <= left < right <= width and 0.0 <= top < bottom <= height):
+        return None
+    if left > width * 0.20 or top > height * 0.15:
+        return None
+    return int(match.group(1))
+
+
 def _parser_observation(
     record: Mapping[str, Any],
     *,
@@ -283,6 +337,15 @@ def _parser_observation(
     texts: list[str] = []
     primary_layout_number = (
         _strict_primary_layout_number(raw_blocks, width=width, height=height)
+        if prefer_primary_layout_number
+        else None
+    )
+    primary_example_label_number = (
+        _strict_primary_layout_example_label_number(
+            raw_blocks,
+            width=width,
+            height=height,
+        )
         if prefer_primary_layout_number
         else None
     )
@@ -332,6 +395,7 @@ def _parser_observation(
         question_number=question_number,
         parser_identity=parser_identity,
         text_blocks=tuple(texts),
+        primary_example_label_number=primary_example_label_number,
     )
 
 
@@ -371,6 +435,23 @@ def parser_observation_primary_layout_number(
         allow_missing_question_number=True,
         prefer_primary_layout_number=True,
     )
+
+
+def observed_source_question_marker(
+    observation: OcrObservation,
+) -> tuple[str | None, int | None]:
+    """Project exactly one source-visible question-address marker."""
+
+    if (
+        observation.question_number is not None
+        and observation.primary_example_label_number is not None
+    ):
+        return None, None
+    if observation.question_number is not None:
+        return "numbered_item", observation.question_number
+    if observation.primary_example_label_number is not None:
+        return "example_label", observation.primary_example_label_number
+    return None, None
 
 
 def problem_for(

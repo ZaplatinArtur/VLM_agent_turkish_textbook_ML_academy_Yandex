@@ -20,6 +20,7 @@ from evidence_os.official_ogm import (
     PageMatcher,
     build_safe_snapshot,
     canonical_json_bytes,
+    observed_source_question_marker,
     parser_observation,
     parser_observation_allow_missing_number,
     parser_observation_primary_layout_number,
@@ -612,3 +613,75 @@ def test_certificate_binds_inline_trace_observation_source_and_answer() -> None:
             allowed_verifiers=frozenset({VERIFIER}),
             allowed_kinds=frozenset({CertificateKind.SOURCE_ENTAILMENT}),
         )
+
+
+def _example_layout_row() -> dict[str, Any]:
+    row = _parser_row()
+    row["images"][0]["parsing_res_list"] = [
+        {
+            "block_label": "paragraph_title",
+            "block_content": "## Örnek 24",
+            "block_order": 1,
+            "block_bbox": [10, 10, 120, 35],
+        },
+        {
+            "block_label": "text",
+            "block_content": TARGET_TEXT,
+            "block_order": 2,
+            "block_bbox": [10, 50, 700, 120],
+        },
+    ]
+    return row
+
+
+def test_primary_layout_projects_only_exact_top_left_example_title() -> None:
+    observation = parser_observation_primary_layout_number(_example_layout_row())
+
+    assert observation.question_number is None
+    assert observation.primary_example_label_number == 24
+
+
+@pytest.mark.parametrize(
+    ("mutation", "value"),
+    [
+        ("block_label", "text"),
+        ("block_order", 2),
+        ("block_bbox", [200, 10, 320, 35]),
+        ("block_content", "Örnek 24 trailing text"),
+        ("block_content", "Example 24"),
+    ],
+)
+def test_primary_example_projection_rejects_layout_and_text_near_misses(
+    mutation: str,
+    value: Any,
+) -> None:
+    row = _example_layout_row()
+    row["images"][0]["parsing_res_list"][0][mutation] = value
+
+    assert (
+        parser_observation_primary_layout_number(row).primary_example_label_number
+        is None
+    )
+
+
+def test_primary_example_projection_rejects_duplicate_and_marker_conflict() -> None:
+    duplicate = _example_layout_row()
+    duplicate["images"][0]["parsing_res_list"].append(
+        {
+            "block_label": "paragraph_title",
+            "block_content": "## Örnek 24",
+            "block_order": 1,
+            "block_bbox": [15, 12, 125, 37],
+        }
+    )
+    assert (
+        parser_observation_primary_layout_number(duplicate).primary_example_label_number
+        is None
+    )
+
+    conflict = _example_layout_row()
+    conflict["images"][0]["parsing_res_list"][1]["block_content"] = "7. conflict"
+    observation = parser_observation_primary_layout_number(conflict)
+    assert observation.question_number == 7
+    assert observation.primary_example_label_number == 24
+    assert observed_source_question_marker(observation) == (None, None)

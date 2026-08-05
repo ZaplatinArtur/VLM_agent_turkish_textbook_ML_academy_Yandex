@@ -27,6 +27,10 @@ from evidence_os.official_ogm import (  # noqa: E402
 
 
 _MARKER = re.compile(r"^\s*(?:#{1,6}\s*)?(\d{1,3})\s*(?:[.)]|-(?=\s))")
+_EXAMPLE_MARKER = re.compile(
+    r"^\s*(?:#{1,6}\s*)?\u00d6rnek\s+([1-9]\d{0,2})\s*[.):]?\s*$",
+    re.IGNORECASE,
+)
 
 
 class ProjectionAuditError(RuntimeError):
@@ -104,6 +108,55 @@ def _primary_evidence(record: Mapping[str, Any], expected_number: int) -> dict[s
     return evidence
 
 
+def _primary_example_evidence(
+    record: Mapping[str, Any], expected_number: int
+) -> dict[str, Any]:
+    images = record.get("images")
+    if not isinstance(images, list) or len(images) != 1 or not isinstance(images[0], Mapping):
+        raise ProjectionAuditError("example projection has malformed image evidence")
+    image = images[0]
+    width = int(image["width"])
+    height = int(image["height"])
+    blocks = image.get("parsing_res_list")
+    if not isinstance(blocks, list):
+        raise ProjectionAuditError("example projection has malformed block evidence")
+    candidates = [
+        block
+        for block in blocks
+        if isinstance(block, Mapping)
+        and str(block.get("block_label") or "").casefold() != "image"
+        and isinstance(block.get("block_order"), int)
+        and not isinstance(block.get("block_order"), bool)
+        and block.get("block_order") == 1
+    ]
+    if len(candidates) != 1:
+        raise ProjectionAuditError("example projection lacks one unique order-one block")
+    block = candidates[0]
+    if str(block.get("block_label") or "").casefold() != "paragraph_title":
+        raise ProjectionAuditError("example projection is not a paragraph title")
+    marker = _EXAMPLE_MARKER.fullmatch(
+        str(block.get("block_content") or "").strip()
+    )
+    if marker is None or int(marker.group(1)) != expected_number:
+        raise ProjectionAuditError("example projection marker does not match observation")
+    bbox = block.get("block_bbox")
+    if not isinstance(bbox, list) or len(bbox) != 4:
+        raise ProjectionAuditError("example projection lacks a four-value bbox")
+    normalized_bbox = [
+        round(float(bbox[0]) / width, 8),
+        round(float(bbox[1]) / height, 8),
+        round(float(bbox[2]) / width, 8),
+        round(float(bbox[3]) / height, 8),
+    ]
+    return {
+        "block_label": "paragraph_title",
+        "block_order": 1,
+        "marker_kind": "example_label",
+        "marker": expected_number,
+        "normalized_bbox": normalized_bbox,
+    }
+
+
 def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
     profile = _load_json(profile_path)
     if profile.get("schema_version") != "maxim-public-workbook-profile-v1":
@@ -113,6 +166,12 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
         "primary_layout_then_unique_v1"
     ):
         raise ProjectionAuditError("profile does not freeze primary-layout projection")
+    example_projection = str(policy.get("example_label_projection") or "disabled")
+    if example_projection not in {
+        "disabled",
+        "primary_paragraph_title_order_one_v1",
+    }:
+        raise ProjectionAuditError("profile has an unsupported example-label projection")
     inputs = profile.get("inputs")
     if not isinstance(inputs, dict) or not isinstance(inputs.get("parser_observations"), dict):
         raise ProjectionAuditError("profile parser input is missing")
@@ -144,12 +203,13 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
             method = "parser_error_abstain"
             decisions.append(
                 {
-                    "schema_version": "maxim-primary-layout-projection-decision-v2",
+                    "schema_version": "maxim-primary-layout-projection-decision-v3",
                     "task_id": task_id,
                     "method": method,
                     "error": str(exc),
                     "legacy_question_number": None,
                     "projected_question_number": None,
+                    "projected_example_label_number": None,
                 }
             )
             methods[method] += 1
@@ -158,8 +218,16 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
         if task_id in seen:
             raise ProjectionAuditError(f"duplicate task_id: {task_id}")
         seen.add(task_id)
-        if projected.question_number is None:
+        if (
+            projected.question_number is None
+            and projected.primary_example_label_number is not None
+            and example_projection == "primary_paragraph_title_order_one_v1"
+        ):
+            method = "primary_example_label"
+        elif projected.question_number is None:
             method = "abstain_no_unique_number"
+        elif projected.primary_example_label_number is not None:
+            method = "numeric_marker_precedence"
         elif projected.question_number == legacy.question_number:
             method = "legacy_unique_or_same_primary"
         elif legacy.question_number is None:
@@ -167,16 +235,25 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
         else:
             method = "primary_layout_override"
         decision: dict[str, Any] = {
-            "schema_version": "maxim-primary-layout-projection-decision-v2",
+            "schema_version": "maxim-primary-layout-projection-decision-v3",
             "task_id": task_id,
             "method": method,
             "legacy_question_number": legacy.question_number,
             "projected_question_number": projected.question_number,
+            "projected_example_label_number": (
+                projected.primary_example_label_number
+            ),
         }
         if method.startswith("primary_layout_"):
             if projected.question_number is None:
                 raise ProjectionAuditError("primary method has no projected number")
             decision["evidence"] = _primary_evidence(raw, projected.question_number)
+        elif method == "primary_example_label":
+            assert projected.primary_example_label_number is not None
+            decision["evidence"] = _primary_example_evidence(
+                raw,
+                projected.primary_example_label_number,
+            )
         decisions.append(decision)
         methods[method] += 1
 
@@ -185,7 +262,7 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
     decisions_path.write_bytes(b"".join(canonical_json_bytes(row) + b"\n" for row in decisions))
     manifest_path = output_dir / "manifest.json"
     manifest = {
-        "schema_version": "maxim-primary-layout-projection-audit-v2",
+        "schema_version": "maxim-primary-layout-projection-audit-v3",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "profile": {"path": str(profile_path.resolve()), "sha256": sha256_file(profile_path)},
         "parser_observations": {"path": str(parser_path.resolve()), "sha256": actual_parser_sha},

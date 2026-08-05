@@ -36,6 +36,7 @@ from evidence_os.official_workbook import (  # noqa: E402
     document_for_source,
     parse_workbook_index,
     resolve_workbook_question,
+    validate_fail_closed_workbook_policy,
     verify_workbook_index_pdf,
 )
 from evidence_os.official_ogm import OfficialSourceError  # noqa: E402
@@ -210,15 +211,8 @@ def run(
         or str(runtime.get("pdfplumber_version") or "") != str(pdfplumber.__version__)
     ):
         raise RunError("public-workbook PDF runtime differs from the frozen profile")
-    if (
-        policy.get("require_observed_question_number") is not True
-        or policy.get("allow_numberless_question_binding") is not False
-        or policy.get("require_unique_printed_number_on_page") is not True
-        or policy.get("require_pdf_bound_key_context") is not True
-    ):
-        raise RunError("public-workbook profile does not enable all fail-closed bindings")
-    number_projection = str(
-        policy.get("question_number_projection") or "unique_block_markers_v1"
+    number_projection, allow_example_label_marker = (
+        validate_fail_closed_workbook_policy(policy)
     )
     if number_projection == "unique_block_markers_v1":
         observation_loader = parser_observation_allow_missing_number
@@ -314,6 +308,7 @@ def run(
                 cache["page_texts"],
                 thresholds,
                 allow_missing_nosw=allow_missing_nosw,
+                allow_example_label_marker=allow_example_label_marker,
                 verified_content_marker_counts=cache["source_verification"][
                     "content_marker_counts"
                 ],

@@ -1,0 +1,22 @@
+{
+  "benchmark_outcome_access": false,
+  "created_at_utc": "2026-08-05T05:54:54.406874+00:00",
+  "documents": 10,
+  "inputs": [
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb_def_10_math_table_hardened_v2.json",
+      "sha256": "36a1b11412be85e55fc2acc5980a5ca47919a8ec500f9b98b7b685192c63597c"
+    },
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb_3a_samsungis_candidate_v4.json",
+      "sha256": "879570453315b01e81bd648afced2b2f22f3313cd32e0996ba9a5a0aa3fb000d"
+    }
+  ],
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb3a_samsungis_mebdef10_candidate_v5.json",
+    "sha256": "731a7271daad531b9537c833232dc2b31e8d55514e81981d447056e27454e736"
+  },
+  "records": 128,
+  "schema_version": "maxim-public-workbook-index-merge-v1",
+  "task_id_present": false
+}

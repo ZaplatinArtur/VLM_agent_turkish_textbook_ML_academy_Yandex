@@ -32,6 +32,8 @@ from evidence_os.contracts import (  # noqa: E402
 )
 from evidence_os.official_ogm import (  # noqa: E402
     VERIFIER as OGM_VERIFIER,
+    OfficialSourceError,
+    observed_source_question_marker,
     parser_observation,
     parser_observation_allow_missing_number,
     parser_observation_primary_layout_number,
@@ -39,7 +41,11 @@ from evidence_os.official_ogm import (  # noqa: E402
     sha256_file,
 )
 from evidence_os.official_pdf import VERIFIER as DIRECT_PDF_VERIFIER  # noqa: E402
-from evidence_os.official_workbook import VERIFIER as WORKBOOK_VERIFIER  # noqa: E402
+from evidence_os.official_workbook import (  # noqa: E402
+    VERIFIER as WORKBOOK_VERIFIER,
+    parse_workbook_index,
+    validate_fail_closed_workbook_policy,
+)
 from evidence_os.policy import EvidencePolicy  # noqa: E402
 
 
@@ -215,6 +221,13 @@ def _validate_workbook_certificate_artifact(
     answer_format = trace_source.get("answer_format")
     key_binding_kind = trace_source.get("key_binding_kind")
     projection_sha = str(trace_source.get("key_projection_sha256") or "")
+    content_projection_sha = str(
+        trace_source.get("content_projection_sha256") or ""
+    )
+    question_marker_kind = str(
+        trace_source.get("question_marker_kind") or "numbered_item"
+    )
+    key_context_page_number = trace_source.get("key_context_page_number")
     binding_is_supported = (
         answer_format == "choice"
         and key_binding_kind in {
@@ -223,11 +236,29 @@ def _validate_workbook_certificate_artifact(
             "answer_key_list",
         }
         and not projection_sha
+        and not content_projection_sha
+        and question_marker_kind == "numbered_item"
     ) or (
         answer_format == "short_text"
         and key_binding_kind == "coordinate_answer_key"
         and len(projection_sha) == 64
         and all(character in "0123456789abcdef" for character in projection_sha)
+        and not content_projection_sha
+        and question_marker_kind == "numbered_item"
+    ) or (
+        answer_format == "short_text"
+        and key_binding_kind == "coordinate_table_answer_key"
+        and question_marker_kind in {"numbered_item", "example_label"}
+        and isinstance(key_context_page_number, int)
+        and not isinstance(key_context_page_number, bool)
+        and key_context_page_number >= 1
+        and len(projection_sha) == 64
+        and all(character in "0123456789abcdef" for character in projection_sha)
+        and len(content_projection_sha) == 64
+        and all(
+            character in "0123456789abcdef"
+            for character in content_projection_sha
+        )
     )
     if (
         trace_source.get("pdf_sha256") != frozen_document.get("pdf_sha256")
@@ -242,6 +273,126 @@ def _validate_workbook_certificate_artifact(
         raise CompositionError(f"workbook certificate {task_id} lacks PDF-bound evidence")
 
 
+def _validate_workbook_trace_against_source(
+    *,
+    task_id: str,
+    candidate_answer: str,
+    observation: Any,
+    trace: dict[str, Any],
+    source_records: dict[str, tuple[Any, Any]],
+    allow_example_label_marker: bool,
+) -> None:
+    trace_source = trace.get("source")
+    trace_observation = trace.get("observation")
+    trace_match = trace.get("match")
+    if not all(
+        isinstance(value, dict)
+        for value in (trace_source, trace_observation, trace_match)
+    ):
+        raise CompositionError(f"workbook certificate {task_id} lacks source trace")
+    record_id = str(trace_source.get("record_id") or "")
+    source_entry = source_records.get(record_id)
+    if source_entry is None:
+        raise CompositionError(
+            f"workbook certificate {task_id} does not name a frozen source record"
+        )
+    document, question = source_entry
+    expected_content_bbox = (
+        list(question.content_bbox) if question.content_bbox is not None else None
+    )
+    expected_source = {
+        "document_id": document.document_id,
+        "public_locator": document.identity.public_locator,
+        "name": document.identity.name,
+        "pdf_sha256": document.pdf_sha256,
+        "matched_page_number": question.content_page_number,
+        "question_number": question.question_number,
+        "question_marker_kind": question.question_marker_kind,
+        "record_id": question.record_id,
+        "answer_format": question.answer_format,
+        "key_binding_kind": question.key_binding_kind,
+        "key_page_number": question.key_page_number,
+        "key_context_page_number": question.key_context_page_number,
+        "key_bbox": list(question.key_bbox),
+        "content_bbox": expected_content_bbox,
+        "key_projection_sha256": question.key_projection_sha256,
+        "content_projection_sha256": question.content_projection_sha256,
+    }
+    actual_source = {
+        key: trace_source.get(key) for key in expected_source
+    }
+    if question.key_binding_kind != "coordinate_table_answer_key":
+        actual_source["question_marker_kind"] = str(
+            trace_source.get("question_marker_kind") or "numbered_item"
+        )
+        actual_source["key_context_page_number"] = trace_source.get(
+            "key_context_page_number", question.key_page_number
+        )
+        actual_source["key_projection_sha256"] = str(
+            trace_source.get("key_projection_sha256") or ""
+        )
+        actual_source["content_projection_sha256"] = str(
+            trace_source.get("content_projection_sha256") or ""
+        )
+    if any(actual_source[key] != value for key, value in expected_source.items()):
+        raise CompositionError(
+            f"workbook certificate {task_id} source trace differs from frozen index"
+        )
+    if candidate_answer != question.answer.strip():
+        raise CompositionError(
+            f"workbook certificate {task_id} answer differs from frozen source"
+        )
+    marker_kind, marker_number = observed_source_question_marker(observation)
+    if (
+        marker_kind != question.question_marker_kind
+        or marker_number != question.question_number
+        or (
+            marker_kind == "example_label"
+            and not allow_example_label_marker
+        )
+    ):
+        raise CompositionError(
+            f"workbook certificate {task_id} lacks one matching observed source marker"
+        )
+    expected_observation = {
+        "image_sha256": observation.image_sha256,
+        "image_size": [observation.width, observation.height],
+        "observed_question_number": observation.question_number,
+        "observed_source_marker_kind": marker_kind,
+        "observed_source_marker_number": marker_number,
+        "parser_identity": observation.parser_identity,
+    }
+    actual_observation = {
+        key: trace_observation.get(key) for key in expected_observation
+    }
+    if (
+        question.key_binding_kind != "coordinate_table_answer_key"
+        and question.question_marker_kind == "numbered_item"
+    ):
+        actual_observation["observed_source_marker_kind"] = str(
+            trace_observation.get("observed_source_marker_kind") or "numbered_item"
+        )
+        actual_observation["observed_source_marker_number"] = trace_observation.get(
+            "observed_source_marker_number", observation.question_number
+        )
+    if any(
+        actual_observation[key] != value
+        for key, value in expected_observation.items()
+    ):
+        raise CompositionError(
+            f"workbook certificate {task_id} observation trace was altered"
+        )
+    expected_binding_method = (
+        "source_visible_example_label"
+        if marker_kind == "example_label"
+        else "printed_number"
+    )
+    if trace_match.get("question_binding_method") != expected_binding_method:
+        raise CompositionError(
+            f"workbook certificate {task_id} binding method conflicts with its marker"
+        )
+
+
 def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) -> dict[str, Any]:
     profile = _load_json(profile_path)
     profile_schema = str(profile.get("schema_version") or "")
@@ -253,8 +404,8 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
         policy = profile.get("policy")
         if not isinstance(policy, dict):
             raise CompositionError("workbook profile policy is missing")
-        number_projection = str(
-            policy.get("question_number_projection") or "unique_block_markers_v1"
+        number_projection, allow_example_label_marker = (
+            validate_fail_closed_workbook_policy(policy)
         )
         if number_projection == "unique_block_markers_v1":
             observation_loader = parser_observation_allow_missing_number
@@ -264,6 +415,7 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
             raise CompositionError("unsupported workbook question-number projection")
     else:
         observation_loader = parser_observation
+        allow_example_label_marker = False
     profile_sha = sha256_file(profile_path)
     expected_rows = int(profile.get("expected_rows", 0))
     anchor_spec = profile.get("anchor")
@@ -287,6 +439,14 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
             str(inputs["source_index"].get("sha256") or ""),
             "workbook source index",
         )
+        workbook_index = parse_workbook_index(_load_json(source_index_path))
+        workbook_source_records = {
+            question.record_id: (document, question)
+            for document in workbook_index.documents
+            for question in document.questions
+        }
+    else:
+        workbook_source_records = {}
     resolver_manifest = _load_json(resolver_manifest_path)
     if resolver_manifest.get("schema_version") != resolver_schema:
         raise CompositionError("resolver manifest schema is invalid")
@@ -402,6 +562,14 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
                     trace=trace,
                     profile=profile,
                     profile_sha=profile_sha,
+                )
+                _validate_workbook_trace_against_source(
+                    task_id=task_id,
+                    candidate_answer=candidate_answer,
+                    observation=observation,
+                    trace=trace,
+                    source_records=workbook_source_records,
+                    allow_example_label_marker=allow_example_label_marker,
                 )
                 trace_source = trace.get("source")
                 answer_format = (
@@ -527,7 +695,14 @@ def main() -> int:
             args.resolver_manifest.resolve(),
             args.output_dir.resolve(),
         )
-    except (CompositionError, OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
+    except (
+        CompositionError,
+        OfficialSourceError,
+        OSError,
+        ValueError,
+        KeyError,
+        json.JSONDecodeError,
+    ) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
     print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))

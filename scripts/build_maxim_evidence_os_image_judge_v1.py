@@ -28,6 +28,7 @@ from evidence_os.contracts import (  # noqa: E402
 from evidence_os.official_ogm import (  # noqa: E402
     OfficialSourceError,
     PageMatcher,
+    observed_source_question_marker,
     parser_observation_allow_missing_number,
     parser_observation_primary_layout_number,
     problem_for,
@@ -38,6 +39,7 @@ from evidence_os.official_workbook import (  # noqa: E402
     document_for_source,
     parse_workbook_index,
     resolve_workbook_question,
+    validate_fail_closed_workbook_policy,
     verify_workbook_index_pdf,
 )
 from compose_maxim_official_ogm_failclosed_v2 import (  # noqa: E402
@@ -202,8 +204,8 @@ def build(
         ),
         min_numberless_question_margin=float(policy["min_numberless_question_margin"]),
     )
-    number_projection = str(
-        policy.get("question_number_projection") or "unique_block_markers_v1"
+    number_projection, allow_example_label_marker = (
+        validate_fail_closed_workbook_policy(policy)
     )
     if number_projection == "unique_block_markers_v1":
         observation_loader = parser_observation_allow_missing_number
@@ -348,6 +350,22 @@ def build(
             for question in document.questions
         }
         source_record = source_records.get(source_record_id)
+        observed_marker_kind, observed_marker_number = observed_source_question_marker(
+            observation
+        )
+        marker_matches = source_record is not None and (
+            (
+                source_record.question_marker_kind == "numbered_item"
+                and observed_marker_kind == "numbered_item"
+                and observed_marker_number == source_record.question_number
+            )
+            or (
+                allow_example_label_marker
+                and source_record.question_marker_kind == "example_label"
+                and observed_marker_kind == "example_label"
+                and observed_marker_number == source_record.question_number
+            )
+        )
         if (
             source_record is None
             or trace_source.get("document_id") != document.document_id
@@ -355,8 +373,12 @@ def build(
             or trace_source.get("name") != document.identity.name
             or trace_source.get("pdf_sha256") != document.pdf_sha256
             or trace_source.get("question_number") != source_record.question_number
+            or trace_source.get("question_marker_kind")
+            != source_record.question_marker_kind
             or trace_source.get("matched_page_number") != source_record.content_page_number
             or trace_source.get("key_page_number") != source_record.key_page_number
+            or trace_source.get("key_context_page_number")
+            != source_record.key_context_page_number
             or trace_source.get("key_binding_kind") != source_record.key_binding_kind
             or trace_source.get("answer_format") != source_record.answer_format
             or list(source_record.key_bbox) != trace_source.get("key_bbox")
@@ -368,7 +390,9 @@ def build(
             != trace_source.get("content_bbox")
             or str(trace_source.get("key_projection_sha256") or "")
             != source_record.key_projection_sha256
-            or observation.question_number != source_record.question_number
+            or str(trace_source.get("content_projection_sha256") or "")
+            != source_record.content_projection_sha256
+            or not marker_matches
             or candidate_answer != source_record.answer
         ):
             raise JudgeBuildError(
@@ -383,6 +407,7 @@ def build(
             cache["page_texts"],
             thresholds,
             allow_missing_nosw=allow_missing_nosw,
+            allow_example_label_marker=allow_example_label_marker,
             verified_content_marker_counts=cache["content_marker_counts"],
         )
         recomputed_trace = recomputed.trace

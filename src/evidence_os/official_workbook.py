@@ -21,12 +21,18 @@ from .coordinate_answer_key import (
     CoordinateAnswerKeyError,
     verify_coordinate_answer_key,
 )
+from .coordinate_table_answer_key import (
+    CoordinateTableAnswerKeyError,
+    verify_content_question_marker,
+    verify_coordinate_table_answer_key,
+)
 from .official_ogm import (
     MatchResult,
     OcrObservation,
     OfficialSourceError,
     PageMatcher,
     normalize_tokens,
+    observed_source_question_marker,
     problem_for,
 )
 
@@ -71,12 +77,15 @@ _QUESTION_KEYS = frozenset(
         "record_id",
         "content_page_number",
         "question_number",
+        "question_marker_kind",
         "question_text",
         "answer",
         "answer_format",
         "key_crop_text",
         "key_projection_sha256",
+        "content_projection_sha256",
         "key_page_number",
+        "key_context_page_number",
         "key_bbox",
         "content_bbox",
         "key_binding_kind",
@@ -112,6 +121,51 @@ class WorkbookThresholds:
             raise ValueError("min_numberless_question_matched_tokens must be positive")
 
 
+def validate_fail_closed_workbook_policy(
+    policy: Mapping[str, Any],
+) -> tuple[str, bool]:
+    """Validate the source-marker policy shared by every runtime entry point."""
+
+    if (
+        policy.get("require_observed_question_number") is not True
+        or policy.get("allow_numberless_question_binding") is not False
+        or policy.get("require_unique_printed_number_on_page") is not True
+        or policy.get("require_pdf_bound_key_context") is not True
+    ):
+        raise OfficialSourceError(
+            "public-workbook profile does not enable all fail-closed bindings"
+        )
+    number_projection = str(
+        policy.get("question_number_projection") or "unique_block_markers_v1"
+    )
+    if number_projection not in {
+        "unique_block_markers_v1",
+        "primary_layout_then_unique_v1",
+    }:
+        raise OfficialSourceError("unsupported workbook question-number projection")
+    example_projection = str(policy.get("example_label_projection") or "disabled")
+    if example_projection not in {
+        "disabled",
+        "primary_paragraph_title_order_one_v1",
+    }:
+        raise OfficialSourceError("unsupported workbook example-label projection")
+    allow_example_label_marker = (
+        example_projection == "primary_paragraph_title_order_one_v1"
+    )
+    if allow_example_label_marker and number_projection != "primary_layout_then_unique_v1":
+        raise OfficialSourceError(
+            "workbook example-label projection requires primary layout"
+        )
+    if (
+        allow_example_label_marker
+        and policy.get("require_observed_source_question_marker") is not True
+    ):
+        raise OfficialSourceError(
+            "workbook example-label projection requires an observed source marker"
+        )
+    return number_projection, allow_example_label_marker
+
+
 @dataclass(frozen=True, slots=True)
 class YandexPublicIdentity:
     public_locator: str
@@ -124,15 +178,18 @@ class WorkbookQuestion:
     record_id: str
     content_page_number: int
     question_number: int
+    question_marker_kind: str
     question_text: str
     answer: str
     answer_format: str
     key_crop_text: str
     key_projection_sha256: str
+    content_projection_sha256: str
     key_binding_kind: str
     section: str
     test_variant: str
     key_page_number: int
+    key_context_page_number: int
     key_bbox: tuple[float, float, float, float]
     content_bbox: tuple[float, float, float, float] | None
     visually_checked: bool
@@ -354,6 +411,11 @@ def _positive_integer(value: Any, label: str) -> int:
 def _bbox(value: Any, label: str) -> tuple[float, float, float, float]:
     if not isinstance(value, Sequence) or isinstance(value, (str, bytes)) or len(value) != 4:
         raise OfficialSourceError(f"{label} must contain four coordinates")
+    if any(
+        not isinstance(item, (int, float)) or isinstance(item, bool)
+        for item in value
+    ):
+        raise OfficialSourceError(f"{label} must contain numeric coordinates")
     try:
         result = tuple(float(item) for item in value)
     except (TypeError, ValueError) as exc:
@@ -462,6 +524,23 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                 raise OfficialSourceError("workbook question record is malformed")
             if not set(raw_question) <= _QUESTION_KEYS:
                 raise OfficialSourceError("workbook question fields are not on the strict allowlist")
+            for field in (
+                "record_id",
+                "question_marker_kind",
+                "question_text",
+                "answer",
+                "answer_format",
+                "key_crop_text",
+                "key_projection_sha256",
+                "content_projection_sha256",
+                "key_binding_kind",
+                "section",
+                "test_variant",
+            ):
+                if field in raw_question and not isinstance(raw_question[field], str):
+                    raise OfficialSourceError(
+                        f"workbook question field {field} must be a literal string"
+                    )
             content_page = _positive_integer(
                 raw_question.get("content_page_number"), "content_page_number"
             )
@@ -471,16 +550,30 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
             key_page = _positive_integer(
                 raw_question.get("key_page_number"), "key_page_number"
             )
+            key_context_page = _positive_integer(
+                raw_question.get("key_context_page_number", key_page),
+                "key_context_page_number",
+            )
             record_id = str(raw_question.get("record_id") or "")
             expected_record_id = f"{document_id}:p{content_page}:q{question_number}"
             if record_id != expected_record_id or record_id in record_ids:
                 raise OfficialSourceError("workbook record_id is not source-addressed or is duplicated")
-            if content_page not in occupied_pages or key_page > page_count:
+            if (
+                content_page not in occupied_pages
+                or key_page > page_count
+                or key_context_page > page_count
+            ):
                 raise OfficialSourceError("workbook question/key page is outside its pinned ranges")
             if (content_page, question_number) in page_numbers:
                 raise OfficialSourceError("workbook page/question address is ambiguous")
-            answer_format = str(raw_question.get("answer_format") or "choice").strip()
-            answer = str(raw_question.get("answer") or "").strip()
+            raw_answer_format = raw_question.get("answer_format", "choice")
+            raw_answer = raw_question.get("answer")
+            if not isinstance(raw_answer_format, str) or not isinstance(raw_answer, str):
+                raise OfficialSourceError(
+                    "workbook answer and answer_format must be literal strings"
+                )
+            answer_format = raw_answer_format.strip()
+            answer = raw_answer.strip()
             if answer_format not in {"choice", "short_text"}:
                 raise OfficialSourceError("workbook answer_format must be choice or short_text")
             if answer_format == "choice":
@@ -497,7 +590,13 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
             key_projection_sha256 = str(
                 raw_question.get("key_projection_sha256") or ""
             ).strip()
+            content_projection_sha256 = str(
+                raw_question.get("content_projection_sha256") or ""
+            ).strip()
             key_binding_kind = str(raw_question.get("key_binding_kind") or "").strip()
+            question_marker_kind = str(
+                raw_question.get("question_marker_kind") or "numbered_item"
+            ).strip()
             section = str(raw_question.get("section") or "").strip()
             test_variant = str(raw_question.get("test_variant") or "").strip()
             question_text = str(raw_question.get("question_text") or "").strip()
@@ -525,6 +624,26 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                             "workbook coordinate short-text answer requires "
                             "text, boxes, and a projection pin"
                         )
+                elif key_binding_kind == "coordinate_table_answer_key":
+                    if (
+                        not key_crop_text
+                        or not question_text
+                        or content_bbox is None
+                        or not section
+                        or not test_variant
+                        or "question_marker_kind" not in raw_question
+                        or "content_projection_sha256" not in raw_question
+                        or "key_context_page_number" not in raw_question
+                        or question_marker_kind
+                        not in {"numbered_item", "example_label"}
+                        or _HEX64.fullmatch(key_projection_sha256) is None
+                        or _HEX64.fullmatch(content_projection_sha256) is None
+                        or key_context_page not in {key_page, key_page - 1}
+                    ):
+                        raise OfficialSourceError(
+                            "workbook coordinate-table short-text answer requires "
+                            "complete adjacent-page key and content projection pins"
+                        )
                 else:
                     raise OfficialSourceError(
                         "workbook short-text answer has no supported source binding"
@@ -544,6 +663,14 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                     section and test_variant
                 ):
                     raise OfficialSourceError("answer-key binding lacks source context")
+            if key_binding_kind != "coordinate_table_answer_key" and (
+                question_marker_kind != "numbered_item"
+                or content_projection_sha256
+                or key_context_page != key_page
+            ):
+                raise OfficialSourceError(
+                    "legacy workbook binding cannot use coordinate-table marker metadata"
+                )
             visually_checked = raw_question.get("visually_checked") is True
             if not visually_checked:
                 raise OfficialSourceError("workbook source key lacks visual review")
@@ -552,15 +679,18 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                     record_id=record_id,
                     content_page_number=content_page,
                     question_number=question_number,
+                    question_marker_kind=question_marker_kind,
                     question_text=question_text,
                     answer=answer,
                     answer_format=answer_format,
                     key_crop_text=key_crop_text,
                     key_projection_sha256=key_projection_sha256,
+                    content_projection_sha256=content_projection_sha256,
                     key_binding_kind=key_binding_kind,
                     section=section,
                     test_variant=test_variant,
                     key_page_number=key_page,
+                    key_context_page_number=key_context_page,
                     key_bbox=_bbox(raw_question.get("key_bbox"), "key_bbox"),
                     content_bbox=content_bbox,
                     visually_checked=True,
@@ -652,7 +782,7 @@ def verify_workbook_index_pdf(
                     normalized_key == normalized_crop
                     and normalized_crop == " ".join(question.answer.split()).casefold()
                 )
-            else:
+            elif question.key_binding_kind == "coordinate_answer_key":
                 try:
                     verification = verify_coordinate_answer_key(
                         key_page,
@@ -666,6 +796,31 @@ def verify_workbook_index_pdf(
                 except CoordinateAnswerKeyError as exc:
                     raise OfficialSourceError(
                         f"coordinate answer key is not verified for {question.record_id}: {exc}"
+                    ) from exc
+                key_matches = (
+                    verification.projection_sha256 == question.key_projection_sha256
+                    and all(verification.component_matches.values())
+                )
+            else:
+                context_page = pdf.pages[question.key_context_page_number - 1]
+                try:
+                    verification = verify_coordinate_table_answer_key(
+                        key_page,
+                        pdf_sha256=document.pdf_sha256,
+                        physical_page=question.key_page_number,
+                        bbox=question.key_bbox,
+                        question_number=question.question_number,
+                        expected_answer=question.answer,
+                        expected_section=question.section,
+                        expected_test_variant=question.test_variant,
+                        expected_projection_sha256=question.key_projection_sha256,
+                        section_page=context_page,
+                        section_physical_page=question.key_context_page_number,
+                    )
+                except CoordinateTableAnswerKeyError as exc:
+                    raise OfficialSourceError(
+                        "coordinate table answer key is not verified for "
+                        f"{question.record_id}: {exc}"
                     ) from exc
                 key_matches = (
                     verification.projection_sha256 == question.key_projection_sha256
@@ -688,10 +843,32 @@ def verify_workbook_index_pdf(
                 content_text = content_page.crop(content_bbox).extract_text() or ""
             else:
                 content_text = content_page.extract_text() or ""
-            content_marker_count = _question_marker_count(
-                content_text,
-                question.question_number,
-            )
+            if question.key_binding_kind == "coordinate_table_answer_key":
+                assert question.content_bbox is not None
+                try:
+                    content_verification = verify_content_question_marker(
+                        content_page,
+                        pdf_sha256=document.pdf_sha256,
+                        physical_page=question.content_page_number,
+                        bbox=question.content_bbox,
+                        question_number=question.question_number,
+                        marker_kind=question.question_marker_kind,
+                        question_text=question.question_text,
+                        expected_projection_sha256=(
+                            question.content_projection_sha256
+                        ),
+                    )
+                except CoordinateTableAnswerKeyError as exc:
+                    raise OfficialSourceError(
+                        "coordinate table content marker is not verified for "
+                        f"{question.record_id}: {exc}"
+                    ) from exc
+                content_marker_count = content_verification.marker_count
+            else:
+                content_marker_count = _question_marker_count(
+                    content_text,
+                    question.question_number,
+                )
             content_marker_counts[question.record_id] = content_marker_count
             if content_marker_count != 1:
                 raise OfficialSourceError(
@@ -1094,6 +1271,7 @@ def resolve_workbook_question(
     thresholds: WorkbookThresholds,
     *,
     allow_missing_nosw: bool = False,
+    allow_example_label_marker: bool = False,
     verified_content_marker_counts: Mapping[str, int] | None = None,
 ) -> MatchResult:
     """Bind one parser crop to one reviewed workbook key, or abstain."""
@@ -1129,14 +1307,32 @@ def resolve_workbook_question(
         "query_tokens": 0,
         "margin": 0.0,
     }
+    observed_marker_kind, observed_marker_number = observed_source_question_marker(
+        observation
+    )
     if observation.question_number is not None:
         matches = [
             question
             for question in page_questions
-            if question.question_number == observation.question_number
+            if question.question_marker_kind == "numbered_item"
+            and question.question_number == observation.question_number
         ]
         selected = matches[0] if len(matches) == 1 else None
         binding_method = "printed_number"
+        question_binding = selected is not None
+    elif (
+        allow_example_label_marker
+        and observed_marker_kind == "example_label"
+        and observed_marker_number is not None
+    ):
+        matches = [
+            question
+            for question in page_questions
+            if question.question_marker_kind == "example_label"
+            and question.question_number == observed_marker_number
+        ]
+        selected = matches[0] if len(matches) == 1 else None
+        binding_method = "source_visible_example_label"
         question_binding = selected is not None
     else:
         # Sparse source indexes cannot prove global question-text uniqueness.
@@ -1195,9 +1391,18 @@ def resolve_workbook_question(
             "record_id": selected.record_id if selected else None,
             "question_number": selected.question_number if selected else observation.question_number,
             "answer_format": selected.answer_format if selected else None,
+            "question_marker_kind": (
+                selected.question_marker_kind if selected else None
+            ),
             "key_binding_kind": selected.key_binding_kind if selected else None,
             "key_projection_sha256": selected.key_projection_sha256 if selected else None,
+            "content_projection_sha256": (
+                selected.content_projection_sha256 if selected else None
+            ),
             "key_page_number": selected.key_page_number if selected else None,
+            "key_context_page_number": (
+                selected.key_context_page_number if selected else None
+            ),
             "key_bbox": list(selected.key_bbox) if selected else None,
             "content_bbox": list(selected.content_bbox) if selected and selected.content_bbox else None,
         },
@@ -1206,6 +1411,8 @@ def resolve_workbook_question(
             "image_size": [observation.width, observation.height],
             "parser_identity": observation.parser_identity,
             "observed_question_number": observation.question_number,
+            "observed_source_marker_kind": observed_marker_kind,
+            "observed_source_marker_number": observed_marker_number,
         },
         "match": {
             "page_idf_coverage": page_coverage,

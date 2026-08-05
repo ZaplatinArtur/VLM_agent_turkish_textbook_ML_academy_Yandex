@@ -16,6 +16,7 @@ from evidence_os.official_workbook import (
     resolve_workbook_question,
     strict_direct_https_identity,
     strict_yandex_public_identity,
+    validate_fail_closed_workbook_policy,
 )
 from scripts.merge_maxim_public_workbook_index_v1 import merge
 
@@ -34,6 +35,37 @@ DISTRACTOR = (
 )
 DOCUMENT_ID = "synthetic-book-aaaaaaaaaaaa"
 DIRECT_URL = "https://official.example.gov.tr/books/lgs1.pdf"
+
+
+def _fail_closed_policy() -> dict[str, object]:
+    return {
+        "require_observed_question_number": True,
+        "allow_numberless_question_binding": False,
+        "require_unique_printed_number_on_page": True,
+        "require_pdf_bound_key_context": True,
+        "question_number_projection": "primary_layout_then_unique_v1",
+        "example_label_projection": "primary_paragraph_title_order_one_v1",
+        "require_observed_source_question_marker": True,
+    }
+
+
+def test_shared_fail_closed_policy_rejects_every_missing_gate() -> None:
+    policy = _fail_closed_policy()
+    assert validate_fail_closed_workbook_policy(policy) == (
+        "primary_layout_then_unique_v1",
+        True,
+    )
+    for key in (
+        "require_observed_question_number",
+        "allow_numberless_question_binding",
+        "require_unique_printed_number_on_page",
+        "require_pdf_bound_key_context",
+        "require_observed_source_question_marker",
+    ):
+        mutated = dict(policy)
+        mutated.pop(key)
+        with pytest.raises(OfficialSourceError):
+            validate_fail_closed_workbook_policy(mutated)
 
 
 def _payload() -> dict[str, object]:
@@ -200,6 +232,119 @@ def test_coordinate_short_text_binding_requires_projection_and_content_box() -> 
 
     with pytest.raises(OfficialSourceError, match="projection pin"):
         parse_workbook_index(payload)
+
+
+def _coordinate_table_payload() -> dict[str, object]:
+    payload = _payload()
+    record = payload["documents"][0]["questions"][0]  # type: ignore[index]
+    record.update(
+        {
+            "question_marker_kind": "example_label",
+            "answer_format": "short_text",
+            "answer": "7",
+            "key_crop_text": "7 7",
+            "key_binding_kind": "coordinate_table_answer_key",
+            "key_projection_sha256": "b" * 64,
+            "content_projection_sha256": "c" * 64,
+            "key_context_page_number": 4,
+            "section": "ÜNİTE 1 - SYNTHETIC ÖRNEKLER",
+            "test_variant": "ÖRNEKLER",
+        }
+    )
+    return payload
+
+
+def test_coordinate_table_source_binding_requires_complete_projection_metadata() -> None:
+    payload = _coordinate_table_payload()
+    question = parse_workbook_index(payload).documents[0].questions[0]
+
+    assert question.question_marker_kind == "example_label"
+    assert question.content_projection_sha256 == "c" * 64
+    assert question.key_context_page_number == 4
+
+    for field in (
+        "content_projection_sha256",
+        "question_marker_kind",
+        "key_context_page_number",
+    ):
+        malformed = _coordinate_table_payload()
+        malformed["documents"][0]["questions"][0].pop(field)  # type: ignore[index]
+        with pytest.raises(OfficialSourceError, match="coordinate-table"):
+            parse_workbook_index(malformed)
+
+
+def test_exact_primary_example_label_binds_only_with_profile_opt_in() -> None:
+    index = parse_workbook_index(_coordinate_table_payload())
+    document = document_for_source(index, SOURCE_URL)
+    assert document is not None
+    observation = replace(
+        _observation(question_number=None),
+        statement=f"## Örnek 7\n{TARGET}",
+        text_blocks=("## Örnek 7", TARGET),
+        primary_example_label_number=7,
+    )
+    pages = _pages()
+    marker_counts = {f"{DOCUMENT_ID}:p2:q7": 1}
+
+    disabled = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        verified_content_marker_counts=marker_counts,
+    )
+    enabled = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        allow_example_label_marker=True,
+        verified_content_marker_counts=marker_counts,
+    )
+
+    assert disabled.accepted is False
+    assert enabled.accepted is True
+    assert enabled.answer == "7"
+    assert enabled.trace["match"]["question_binding_method"] == (
+        "source_visible_example_label"
+    )
+    assert enabled.trace["observation"]["observed_source_marker_kind"] == (
+        "example_label"
+    )
+
+
+def test_wrong_or_conflicting_example_marker_abstains() -> None:
+    index = parse_workbook_index(_coordinate_table_payload())
+    document = document_for_source(index, SOURCE_URL)
+    assert document is not None
+    pages = _pages()
+    marker_counts = {f"{DOCUMENT_ID}:p2:q7": 1}
+    wrong = replace(
+        _observation(question_number=None),
+        primary_example_label_number=8,
+    )
+    conflict = replace(
+        _observation(question_number=7),
+        primary_example_label_number=7,
+    )
+
+    for observation in (wrong, conflict):
+        result = resolve_workbook_question(
+            observation,
+            SOURCE_URL,
+            document,
+            PageMatcher(pages),
+            pages,
+            WorkbookThresholds(),
+            allow_example_label_marker=True,
+            verified_content_marker_counts=marker_counts,
+        )
+        assert result.accepted is False
+        assert result.answer is None
 
 
 def test_equal_page_scores_fail_closed() -> None:

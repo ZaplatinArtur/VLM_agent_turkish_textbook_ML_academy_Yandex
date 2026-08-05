@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import importlib.util
 import json
 from pathlib import Path
@@ -37,6 +37,7 @@ image_judge = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(image_judge)
 
 from run_maxim_public_workbook_v1 import _certificate_record  # noqa: E402
+import compose_maxim_official_ogm_failclosed_v2 as composer  # noqa: E402
 
 
 TASK_IDS = tuple(f"task_{index:03d}" for index in range(274))
@@ -376,6 +377,11 @@ def synthetic_bundle(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Synthet
             "min_numberless_question_coverage": 1.0,
             "min_numberless_question_matched_tokens": 999,
             "min_numberless_question_margin": 1.0,
+            "require_observed_question_number": True,
+            "allow_numberless_question_binding": False,
+            "require_unique_printed_number_on_page": True,
+            "require_pdf_bound_key_context": True,
+            "question_number_projection": "unique_block_markers_v1",
         },
     }
     _write_json(profile_path, profile)
@@ -593,12 +599,19 @@ def test_different_same_number_source_record_fails_repeated_resolution(
             "runner_up_page_number": 1,
             "record_id": second["record_id"],
             "question_number": second["question_number"],
+            "question_marker_kind": second.get(
+                "question_marker_kind", "numbered_item"
+            ),
             "answer_format": second["answer_format"],
             "key_binding_kind": second["key_binding_kind"],
             "key_page_number": second["key_page_number"],
+            "key_context_page_number": second.get(
+                "key_context_page_number", second["key_page_number"]
+            ),
             "key_bbox": second["key_bbox"],
             "content_bbox": None,
             "key_projection_sha256": None,
+            "content_projection_sha256": None,
         }
     )
     forged_result = SimpleNamespace(
@@ -621,6 +634,50 @@ def test_different_same_number_source_record_fails_repeated_resolution(
 
     with pytest.raises(image_judge.JudgeBuildError, match="repeated OCR-to-source"):
         image_judge.build(**synthetic_bundle.seal())
+
+
+def test_composer_cross_checks_frozen_source_context_and_observed_marker(
+    synthetic_bundle: SyntheticBundle,
+) -> None:
+    index = parse_workbook_index(synthetic_bundle.source_index)
+    source_records = {
+        question.record_id: (document, question)
+        for document in index.documents
+        for question in document.questions
+    }
+    observation = parser_observation_allow_missing_number(_parser_row(CHANGED_ID))
+    trace = deepcopy(synthetic_bundle.original_result.trace)
+    composer._validate_workbook_trace_against_source(
+        task_id=CHANGED_ID,
+        candidate_answer="B",
+        observation=observation,
+        trace=trace,
+        source_records=source_records,
+        allow_example_label_marker=False,
+    )
+
+    wrong_context = deepcopy(trace)
+    wrong_context["source"]["key_context_page_number"] = 2
+    with pytest.raises(composer.CompositionError, match="frozen index"):
+        composer._validate_workbook_trace_against_source(
+            task_id=CHANGED_ID,
+            candidate_answer="B",
+            observation=observation,
+            trace=wrong_context,
+            source_records=source_records,
+            allow_example_label_marker=False,
+        )
+
+    conflict = replace(observation, primary_example_label_number=24)
+    with pytest.raises(composer.CompositionError, match="observed source marker"):
+        composer._validate_workbook_trace_against_source(
+            task_id=CHANGED_ID,
+            candidate_answer="B",
+            observation=conflict,
+            trace=trace,
+            source_records=source_records,
+            allow_example_label_marker=True,
+        )
 
 
 def test_incomplete_decision_artifact_is_rejected(
