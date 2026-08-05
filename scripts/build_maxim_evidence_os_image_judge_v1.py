@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import re
 import sys
 from typing import Any
 
@@ -36,6 +37,7 @@ from evidence_os.official_ogm import (  # noqa: E402
 from evidence_os.official_workbook import (  # noqa: E402
     VERIFIER as WORKBOOK_VERIFIER,
     WorkbookThresholds,
+    activity_label_projection_enabled,
     document_for_source,
     parse_workbook_index,
     resolve_workbook_question,
@@ -46,9 +48,18 @@ from compose_maxim_official_ogm_failclosed_v2 import (  # noqa: E402
     CompositionError,
     _validate_workbook_certificate_artifact,
 )
+from evidence_os.visual_coordinate_binding import (  # noqa: E402
+    ActivityVisualObservationRef,
+    ActivityVisualRecordRef,
+    VisualBindingThresholds,
+    VisualCoordinateBindingError,
+    load_activity_visual_artifact_json,
+    verified_activity_bindings_from_artifact,
+)
 
 
 SCHEMA = "maxim-evidence-os-image-judge-v1"
+_HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 
 class JudgeBuildError(RuntimeError):
@@ -103,6 +114,81 @@ def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
 
 def _text_sha256(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _require_activity_visual_reproduction(
+    *,
+    profile_visual_spec: Any,
+    composition_manifest: dict[str, Any],
+    visual_path: Path | None,
+) -> None:
+    reproduction = composition_manifest.get("activity_visual_reproduction")
+    if profile_visual_spec is None:
+        if reproduction is not None:
+            raise JudgeBuildError("nonvisual composition has a stray visual reproduction")
+        return
+    if not isinstance(profile_visual_spec, dict) or visual_path is None:
+        raise JudgeBuildError("visual profile is malformed")
+    expected_sha = str(profile_visual_spec.get("sha256") or "")
+    expected_fields = {
+        "mode",
+        "generator",
+        "frozen_artifact",
+        "reproduced_artifact",
+        "exact_byte_identity",
+        "command_projection_sha256",
+        "runtime",
+        "summary",
+        "benchmark_answer_candidate_outcome_artifacts_read",
+    }
+    if (
+        not isinstance(reproduction, dict)
+        or set(reproduction) != expected_fields
+        or reproduction.get("mode")
+        != "fresh_source_only_poppler_sift_exact_bytes_v1"
+        or reproduction.get("exact_byte_identity") is not True
+        or reproduction.get("benchmark_answer_candidate_outcome_artifacts_read")
+        is not False
+        or _HEX64.fullmatch(
+            str(reproduction.get("command_projection_sha256") or "")
+        )
+        is None
+    ):
+        raise JudgeBuildError("composition lacks an exact source-only visual reproduction")
+    generator = reproduction.get("generator")
+    frozen = reproduction.get("frozen_artifact")
+    rebuilt = reproduction.get("reproduced_artifact")
+    runtime = reproduction.get("runtime")
+    summary = reproduction.get("summary")
+    if (
+        not isinstance(generator, dict)
+        or set(generator) != {"path", "sha256"}
+        or type(generator.get("path")) is not str
+        or _HEX64.fullmatch(str(generator.get("sha256") or "")) is None
+        or not isinstance(frozen, dict)
+        or set(frozen) != {"path", "sha256", "size_bytes"}
+        or Path(str(frozen.get("path") or "")).resolve() != visual_path.resolve()
+        or frozen.get("sha256") != expected_sha
+        or type(frozen.get("size_bytes")) is not int
+        or frozen["size_bytes"] < 1
+        or not isinstance(rebuilt, dict)
+        or set(rebuilt) != {"sha256", "size_bytes"}
+        or rebuilt.get("sha256") != expected_sha
+        or rebuilt.get("size_bytes") != frozen.get("size_bytes")
+        or not isinstance(runtime, dict)
+        or set(runtime)
+        != {
+            "python_executable_sha256",
+            "pdftoppm_sha256",
+            "pdfinfo_sha256",
+            "runtime_projection_sha256",
+        }
+        or any(_HEX64.fullmatch(str(value or "")) is None for value in runtime.values())
+        or not isinstance(summary, dict)
+        or type(summary.get("raw_page_evidences")) is not int
+        or summary["raw_page_evidences"] < 1
+    ):
+        raise JudgeBuildError("composition visual reproduction attestation is malformed")
 
 
 def build(
@@ -180,12 +266,42 @@ def build(
     parser_spec = profile["inputs"]["parser_observations"]
     locator_spec = profile["inputs"]["source_locators"]
     source_index_spec = profile["inputs"]["source_index"]
+    visual_spec = profile["inputs"].get("activity_visual_evidence")
     parser_path = (REPO_ROOT / str(parser_spec["path"])).resolve()
     locator_path = (REPO_ROOT / str(locator_spec["path"])).resolve()
     source_index_path = (REPO_ROOT / str(source_index_spec["path"])).resolve()
     _require_hash(parser_path, str(parser_spec["sha256"]), "parser observations")
     _require_hash(locator_path, str(locator_spec["sha256"]), "source locators")
     _require_hash(source_index_path, str(source_index_spec["sha256"]), "source index")
+    if visual_spec is not None:
+        if (
+            not isinstance(visual_spec, dict)
+            or set(visual_spec) != {"path", "sha256", "allowed_role"}
+            or visual_spec.get("allowed_role")
+            != "answer_free_sift_ransac_page_binding_fallback_only"
+        ):
+            raise JudgeBuildError("activity visual evidence role is not fail-closed")
+        visual_path = (REPO_ROOT / str(visual_spec.get("path") or "")).resolve()
+        visual_sha = _require_hash(
+            visual_path,
+            str(visual_spec.get("sha256") or ""),
+            "activity visual evidence",
+        )
+        manifest_visual_spec = resolver_manifest.get("inputs", {}).get(
+            "activity_visual_evidence"
+        )
+        if (
+            not isinstance(manifest_visual_spec, dict)
+            or manifest_visual_spec.get("sha256") != visual_sha
+        ):
+            raise JudgeBuildError("resolver visual evidence provenance changed")
+    else:
+        visual_path = None
+    _require_activity_visual_reproduction(
+        profile_visual_spec=visual_spec,
+        composition_manifest=composition_manifest,
+        visual_path=visual_path,
+    )
     parser_rows = _index(_load_jsonl(parser_path), "parser observations")
     locator_rows = _index(_load_jsonl(locator_path), "source locators")
     source_index = parse_workbook_index(_load_json(source_index_path))
@@ -203,10 +319,41 @@ def build(
             policy["min_numberless_question_matched_tokens"]
         ),
         min_numberless_question_margin=float(policy["min_numberless_question_margin"]),
+        min_coordinate_question_similarity=float(
+            policy.get("min_coordinate_question_similarity", 0.90)
+        ),
+        min_coordinate_question_source_tokens=int(
+            policy.get("min_coordinate_question_source_tokens", 8)
+        ),
+        min_coordinate_question_margin=float(
+            policy.get("min_coordinate_question_margin", 0.25)
+        ),
+    )
+    visual_thresholds = VisualBindingThresholds(
+        min_good_matches=int(policy.get("visual_min_good_matches", 50)),
+        min_inliers=int(policy.get("visual_min_inliers", 40)),
+        min_inlier_ratio=float(policy.get("visual_min_inlier_ratio", 0.65)),
+        min_task_hull_fraction=float(
+            policy.get("visual_min_task_hull_fraction", 0.30)
+        ),
+        max_median_reprojection_error=float(
+            policy.get("visual_max_median_reprojection_error", 1.0)
+        ),
+        min_mapped_inside_fraction=float(
+            policy.get("visual_min_mapped_inside_fraction", 0.98)
+        ),
+        max_scale_anisotropy=float(
+            policy.get("visual_max_scale_anisotropy", 1.15)
+        ),
+        min_rank_score_margin=float(
+            policy.get("visual_min_rank_score_margin", 10.0)
+        ),
+        min_rank_score_ratio=float(policy.get("visual_min_rank_score_ratio", 5.0)),
     )
     number_projection, allow_example_label_marker = (
         validate_fail_closed_workbook_policy(policy)
     )
+    allow_activity_label_marker = activity_label_projection_enabled(policy)
     if number_projection == "unique_block_markers_v1":
         observation_loader = parser_observation_allow_missing_number
     elif number_projection == "primary_layout_then_unique_v1":
@@ -250,12 +397,90 @@ def build(
         if len(page_texts) != document.page_count:
             raise JudgeBuildError(f"workbook PDF {document_id} page count changed")
         source_caches[document_id] = {
+            "path": pdf_path,
             "page_texts": page_texts,
             "matcher": PageMatcher(page_texts),
             "content_marker_counts": source_verification[document_id][
                 "content_marker_counts"
             ],
         }
+    verified_visual_bindings = {}
+    if visual_path is not None:
+        if policy.get("visual_page_binding_mode") != (
+            "fallback_only_after_text_page_gate_failure_v1"
+        ):
+            raise JudgeBuildError("activity visual fallback policy changed")
+        visual_observations: dict[str, ActivityVisualObservationRef] = {}
+        for task_id, raw in parser_rows.items():
+            try:
+                observation = observation_loader(raw)
+            except (OfficialSourceError, ValueError, KeyError, TypeError):
+                continue
+            marker_kind, marker_number = observed_source_question_marker(observation)
+            if marker_kind != "activity_label" or marker_number is None:
+                continue
+            source_url = str(locator_rows[task_id].get("source_url") or "")
+            try:
+                visual_document = document_for_source(
+                    source_index,
+                    source_url,
+                    allow_missing_nosw=allow_missing_nosw,
+                )
+            except OfficialSourceError:
+                continue
+            if visual_document is None:
+                continue
+            visual_observations[task_id] = ActivityVisualObservationRef(
+                task_id=task_id,
+                task_image_sha256=observation.image_sha256,
+                width=observation.width,
+                height=observation.height,
+                parser_identity=observation.parser_identity,
+                document_id=visual_document.document_id,
+                pdf_sha256=visual_document.pdf_sha256,
+                marker_kind=marker_kind,
+                marker_number=marker_number,
+            )
+        visual_records = tuple(
+            ActivityVisualRecordRef(
+                document_id=document.document_id,
+                record_id=question.record_id,
+                content_page_number=question.content_page_number,
+                activity_number=question.question_number,
+                key_projection_sha256=question.key_projection_sha256,
+                content_projection_sha256=question.content_projection_sha256,
+                binding_projection_sha256=question.binding_projection_sha256,
+                visually_checked=question.visually_checked,
+                content_bbox=question.content_bbox,
+            )
+            for document in source_index.documents
+            for question in document.questions
+            if question.key_binding_kind == "activity_answer_key"
+            and question.question_marker_kind == "activity_label"
+            and question.key_projection_sha256 is not None
+            and question.content_projection_sha256 is not None
+            and question.binding_projection_sha256 is not None
+            and question.content_bbox is not None
+        )
+        try:
+            verified_visual_bindings = verified_activity_bindings_from_artifact(
+                load_activity_visual_artifact_json(visual_path),
+                repo_root=REPO_ROOT,
+                expected_parser_sha256=str(parser_spec["sha256"]),
+                expected_source_locators_sha256=str(locator_spec["sha256"]),
+                expected_source_index_sha256=str(source_index_spec["sha256"]),
+                observations_by_task_id=visual_observations,
+                records=visual_records,
+                document_pdf_paths={
+                    document_id: cache["path"]
+                    for document_id, cache in source_caches.items()
+                },
+                thresholds=visual_thresholds,
+            )
+        except VisualCoordinateBindingError as exc:
+            raise JudgeBuildError(
+                f"activity visual evidence failed repeated replay: {exc}"
+            ) from exc
     base_judge_rows = _load_jsonl(base_judge_path)
     base_judge = _index(base_judge_rows, "base image judge")
     if (
@@ -365,6 +590,37 @@ def build(
                 and observed_marker_kind == "example_label"
                 and observed_marker_number == source_record.question_number
             )
+            or (
+                allow_activity_label_marker
+                and source_record.question_marker_kind == "activity_label"
+                and observed_marker_kind == "activity_label"
+                and observed_marker_number == source_record.question_number
+            )
+        )
+        activity_source_matches = (
+            source_record is None
+            or source_record.key_binding_kind != "activity_answer_key"
+            or (
+                trace_source.get("binding_projection_sha256")
+                == source_record.binding_projection_sha256
+                and trace_source.get("source_answer_format")
+                == source_record.source_answer_format
+                and trace_source.get("source_unit_number")
+                == source_record.source_unit_number
+                and trace_source.get("test_variant")
+                == source_record.test_variant
+            )
+        )
+        coordinate_choice_source_matches = (
+            source_record is None
+            or source_record.key_binding_kind != "coordinate_choice_answer_key"
+            or (
+                trace_source.get("content_section")
+                == source_record.content_section
+                and trace_source.get("section") == source_record.section
+                and trace_source.get("test_variant")
+                == source_record.test_variant
+            )
         )
         if (
             source_record is None
@@ -393,6 +649,8 @@ def build(
             or str(trace_source.get("content_projection_sha256") or "")
             != source_record.content_projection_sha256
             or not marker_matches
+            or not activity_source_matches
+            or not coordinate_choice_source_matches
             or candidate_answer != source_record.answer
         ):
             raise JudgeBuildError(
@@ -408,13 +666,19 @@ def build(
             thresholds,
             allow_missing_nosw=allow_missing_nosw,
             allow_example_label_marker=allow_example_label_marker,
+            allow_activity_label_marker=allow_activity_label_marker,
             verified_content_marker_counts=cache["content_marker_counts"],
+            verified_activity_visual_binding=verified_visual_bindings.get(
+                observation.image_sha256
+            ),
+            activity_visual_thresholds=visual_thresholds,
         )
         recomputed_trace = recomputed.trace
         actual_trace_core = {key: trace.get(key) for key in recomputed_trace}
         if (
             not recomputed.accepted
             or recomputed.answer != candidate_answer
+            or set(trace) != set(recomputed_trace) | {"provenance"}
             or actual_trace_core != recomputed_trace
         ):
             raise JudgeBuildError(

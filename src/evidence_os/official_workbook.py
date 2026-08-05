@@ -17,9 +17,19 @@ from typing import Any
 import unicodedata
 from urllib.parse import parse_qsl, urlsplit
 
+from .activity_answer_key import (
+    ActivityAnswerKeyError,
+    count_activity_markers,
+    verify_activity_answer_key,
+)
 from .coordinate_answer_key import (
     CoordinateAnswerKeyError,
     verify_coordinate_answer_key,
+)
+from .coordinate_choice_answer_key import (
+    CoordinateChoiceAnswerKeyError,
+    verify_coordinate_choice_answer_key,
+    verify_coordinate_choice_content,
 )
 from .coordinate_table_answer_key import (
     CoordinateTableAnswerKeyError,
@@ -31,9 +41,17 @@ from .official_ogm import (
     OcrObservation,
     OfficialSourceError,
     PageMatcher,
+    canonical_json_sha256,
     normalize_tokens,
     observed_source_question_marker,
     problem_for,
+)
+from .visual_coordinate_binding import (
+    ActivityVisualRecordRef,
+    VerifiedActivityVisualBinding,
+    VisualBindingThresholds,
+    VisualCoordinateBindingError,
+    verify_activity_visual_binding,
 )
 
 
@@ -84,6 +102,7 @@ _QUESTION_KEYS = frozenset(
         "key_crop_text",
         "key_projection_sha256",
         "content_projection_sha256",
+        "binding_projection_sha256",
         "key_page_number",
         "key_context_page_number",
         "key_bbox",
@@ -91,6 +110,9 @@ _QUESTION_KEYS = frozenset(
         "key_binding_kind",
         "section",
         "test_variant",
+        "content_section",
+        "source_answer_format",
+        "source_unit_number",
         "visually_checked",
     }
 )
@@ -104,6 +126,9 @@ class WorkbookThresholds:
     min_numberless_question_coverage: float = 0.85
     min_numberless_question_matched_tokens: int = 8
     min_numberless_question_margin: float = 0.25
+    min_coordinate_question_similarity: float = 0.90
+    min_coordinate_question_source_tokens: int = 8
+    min_coordinate_question_margin: float = 0.25
 
     def __post_init__(self) -> None:
         for name in (
@@ -111,6 +136,8 @@ class WorkbookThresholds:
             "min_page_margin",
             "min_numberless_question_coverage",
             "min_numberless_question_margin",
+            "min_coordinate_question_similarity",
+            "min_coordinate_question_margin",
         ):
             value = float(getattr(self, name))
             if not 0.0 <= value <= 1.0:
@@ -119,6 +146,8 @@ class WorkbookThresholds:
             raise ValueError("min_page_matched_tokens must be positive")
         if self.min_numberless_question_matched_tokens < 1:
             raise ValueError("min_numberless_question_matched_tokens must be positive")
+        if self.min_coordinate_question_source_tokens < 1:
+            raise ValueError("min_coordinate_question_source_tokens must be positive")
 
 
 def validate_fail_closed_workbook_policy(
@@ -163,7 +192,31 @@ def validate_fail_closed_workbook_policy(
         raise OfficialSourceError(
             "workbook example-label projection requires an observed source marker"
         )
+    activity_label_projection_enabled(policy)
     return number_projection, allow_example_label_marker
+
+
+def activity_label_projection_enabled(policy: Mapping[str, Any]) -> bool:
+    """Validate and expose the optional source-visible activity-title grammar."""
+
+    projection = str(policy.get("activity_label_projection") or "disabled")
+    if projection not in {
+        "disabled",
+        "primary_paragraph_title_order_one_v1",
+    }:
+        raise OfficialSourceError("unsupported workbook activity-label projection")
+    enabled = projection == "primary_paragraph_title_order_one_v1"
+    if enabled and policy.get("question_number_projection") != (
+        "primary_layout_then_unique_v1"
+    ):
+        raise OfficialSourceError(
+            "workbook activity-label projection requires primary layout"
+        )
+    if enabled and policy.get("require_observed_source_question_marker") is not True:
+        raise OfficialSourceError(
+            "workbook activity-label projection requires an observed source marker"
+        )
+    return enabled
 
 
 @dataclass(frozen=True, slots=True)
@@ -185,6 +238,7 @@ class WorkbookQuestion:
     key_crop_text: str
     key_projection_sha256: str
     content_projection_sha256: str
+    binding_projection_sha256: str
     key_binding_kind: str
     section: str
     test_variant: str
@@ -193,6 +247,9 @@ class WorkbookQuestion:
     key_bbox: tuple[float, float, float, float]
     content_bbox: tuple[float, float, float, float] | None
     visually_checked: bool
+    content_section: str = ""
+    source_answer_format: str = ""
+    source_unit_number: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -533,9 +590,12 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                 "key_crop_text",
                 "key_projection_sha256",
                 "content_projection_sha256",
+                "binding_projection_sha256",
                 "key_binding_kind",
                 "section",
                 "test_variant",
+                "content_section",
+                "source_answer_format",
             ):
                 if field in raw_question and not isinstance(raw_question[field], str):
                     raise OfficialSourceError(
@@ -593,12 +653,25 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
             content_projection_sha256 = str(
                 raw_question.get("content_projection_sha256") or ""
             ).strip()
+            binding_projection_sha256 = str(
+                raw_question.get("binding_projection_sha256") or ""
+            ).strip()
             key_binding_kind = str(raw_question.get("key_binding_kind") or "").strip()
             question_marker_kind = str(
                 raw_question.get("question_marker_kind") or "numbered_item"
             ).strip()
             section = str(raw_question.get("section") or "").strip()
             test_variant = str(raw_question.get("test_variant") or "").strip()
+            content_section = str(raw_question.get("content_section") or "").strip()
+            source_answer_format = str(
+                raw_question.get("source_answer_format") or ""
+            ).strip()
+            source_unit_raw = raw_question.get("source_unit_number")
+            source_unit_number = (
+                _positive_integer(source_unit_raw, "source_unit_number")
+                if source_unit_raw is not None
+                else None
+            )
             question_text = str(raw_question.get("question_text") or "").strip()
             content_bbox_raw = raw_question.get("content_bbox")
             content_bbox = (
@@ -644,32 +717,108 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                             "workbook coordinate-table short-text answer requires "
                             "complete adjacent-page key and content projection pins"
                         )
+                elif key_binding_kind == "activity_answer_key":
+                    if (
+                        not key_crop_text
+                        or not question_text
+                        or content_bbox is None
+                        or not test_variant
+                        or section
+                        or content_section
+                        or source_unit_number is None
+                        or source_answer_format
+                        not in {
+                            "labelled_short_text",
+                            "numbered_short_text",
+                            "scalar_exit",
+                        }
+                        or question_marker_kind != "activity_label"
+                        or _HEX64.fullmatch(key_projection_sha256) is None
+                        or _HEX64.fullmatch(content_projection_sha256) is None
+                        or _HEX64.fullmatch(binding_projection_sha256) is None
+                        or key_context_page != key_page
+                        or normalize_tokens(test_variant)
+                        != (str(source_unit_number), "unite")
+                        or len(normalize_tokens(question_text)) < 8
+                        or len(normalize_tokens(key_crop_text)) < 4
+                    ):
+                        raise OfficialSourceError(
+                            "workbook activity answer requires a complete unit/page/"
+                            "activity address and three frozen PDF projection pins"
+                        )
                 else:
                     raise OfficialSourceError(
                         "workbook short-text answer has no supported source binding"
                     )
             if answer_format == "choice":
-                if key_crop_text or key_projection_sha256 or key_binding_kind not in {
-                    "inline_solution",
-                    "answer_key_table",
-                    "answer_key_list",
-                }:
-                    raise OfficialSourceError("choice record has no supported source binding")
-                if key_binding_kind == "inline_solution" and (
-                    key_page != content_page or section or test_variant
-                ):
-                    raise OfficialSourceError("inline solution binding is inconsistent")
-                if key_binding_kind in {"answer_key_table", "answer_key_list"} and not (
-                    section and test_variant
-                ):
-                    raise OfficialSourceError("answer-key binding lacks source context")
-            if key_binding_kind != "coordinate_table_answer_key" and (
+                if key_binding_kind == "coordinate_choice_answer_key":
+                    if (
+                        not key_crop_text
+                        or not question_text
+                        or content_bbox is None
+                        or not section
+                        or not test_variant
+                        or not content_section
+                        or question_marker_kind != "numbered_item"
+                        or _HEX64.fullmatch(key_projection_sha256) is None
+                        or _HEX64.fullmatch(content_projection_sha256) is None
+                        or binding_projection_sha256
+                        or key_context_page != key_page
+                        or source_answer_format
+                        or source_unit_number is not None
+                    ):
+                        raise OfficialSourceError(
+                            "workbook coordinate-choice answer requires exact key/content "
+                            "text, boxes, unit descriptors, and two PDF projection pins"
+                        )
+                else:
+                    if key_crop_text or key_projection_sha256 or key_binding_kind not in {
+                        "inline_solution",
+                        "answer_key_table",
+                        "answer_key_list",
+                    }:
+                        raise OfficialSourceError("choice record has no supported source binding")
+                    if key_binding_kind == "inline_solution" and (
+                        key_page != content_page or section or test_variant
+                    ):
+                        raise OfficialSourceError("inline solution binding is inconsistent")
+                    if key_binding_kind in {"answer_key_table", "answer_key_list"} and not (
+                        section and test_variant
+                    ):
+                        raise OfficialSourceError("answer-key binding lacks source context")
+            strict_binding_kinds = {
+                "coordinate_table_answer_key",
+                "activity_answer_key",
+                "coordinate_choice_answer_key",
+            }
+            if key_binding_kind not in strict_binding_kinds and (
                 question_marker_kind != "numbered_item"
                 or content_projection_sha256
+                or binding_projection_sha256
                 or key_context_page != key_page
+                or content_section
+                or source_answer_format
+                or source_unit_number is not None
             ):
                 raise OfficialSourceError(
                     "legacy workbook binding cannot use coordinate-table marker metadata"
+                )
+            if key_binding_kind == "coordinate_table_answer_key" and (
+                binding_projection_sha256
+                or content_section
+                or source_answer_format
+                or source_unit_number is not None
+            ):
+                raise OfficialSourceError(
+                    "coordinate-table binding cannot use activity-only metadata"
+                )
+            if key_binding_kind == "coordinate_choice_answer_key" and (
+                binding_projection_sha256
+                or source_answer_format
+                or source_unit_number is not None
+            ):
+                raise OfficialSourceError(
+                    "coordinate-choice binding cannot use activity-only metadata"
                 )
             visually_checked = raw_question.get("visually_checked") is True
             if not visually_checked:
@@ -686,6 +835,7 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                     key_crop_text=key_crop_text,
                     key_projection_sha256=key_projection_sha256,
                     content_projection_sha256=content_projection_sha256,
+                    binding_projection_sha256=binding_projection_sha256,
                     key_binding_kind=key_binding_kind,
                     section=section,
                     test_variant=test_variant,
@@ -694,6 +844,9 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                     key_bbox=_bbox(raw_question.get("key_bbox"), "key_bbox"),
                     content_bbox=content_bbox,
                     visually_checked=True,
+                    content_section=content_section,
+                    source_answer_format=source_answer_format,
+                    source_unit_number=source_unit_number,
                 )
             )
             record_ids.add(record_id)
@@ -762,6 +915,8 @@ def verify_workbook_index_pdf(
         if len(pdf.pages) != document.page_count:
             raise OfficialSourceError("workbook PDF page count differs from source index")
         for question in document.questions:
+            activity_verification = None
+            coordinate_choice_verification = None
             key_page = pdf.pages[question.key_page_number - 1]
             key_bbox = question.key_bbox
             if not (
@@ -770,7 +925,40 @@ def verify_workbook_index_pdf(
             ):
                 raise OfficialSourceError(f"key bbox is outside PDF page for {question.record_id}")
             key_text = key_page.crop(key_bbox).extract_text() or ""
-            if question.answer_format == "choice":
+            if question.key_binding_kind == "coordinate_choice_answer_key":
+                try:
+                    coordinate_choice_verification = (
+                        verify_coordinate_choice_answer_key(
+                            key_page,
+                            pdf_sha256=document.pdf_sha256,
+                            physical_page=question.key_page_number,
+                            bbox=question.key_bbox,
+                            question_number=question.question_number,
+                            expected_answer=question.answer,
+                            expected_section=question.section,
+                            expected_test_variant=question.test_variant,
+                            expected_projection_sha256=(
+                                question.key_projection_sha256
+                            ),
+                        )
+                    )
+                except CoordinateChoiceAnswerKeyError as exc:
+                    raise OfficialSourceError(
+                        "coordinate choice answer key is not verified for "
+                        f"{question.record_id}: {exc}"
+                    ) from exc
+                normalized_key = " ".join(key_text.split()).casefold()
+                normalized_crop = " ".join(
+                    question.key_crop_text.split()
+                ).casefold()
+                key_matches = (
+                    coordinate_choice_verification.projection_sha256
+                    == question.key_projection_sha256
+                    and coordinate_choice_verification.derived_answer
+                    == question.answer
+                    and normalized_key == normalized_crop
+                )
+            elif question.answer_format == "choice":
                 choices = _CHOICE_TOKEN.findall(key_text.upper())
                 key_matches = choices == [question.answer] and _choice_binding_matches(
                     key_page, question
@@ -800,6 +988,50 @@ def verify_workbook_index_pdf(
                 key_matches = (
                     verification.projection_sha256 == question.key_projection_sha256
                     and all(verification.component_matches.values())
+                )
+            elif question.key_binding_kind == "activity_answer_key":
+                assert question.content_bbox is not None
+                assert question.source_unit_number is not None
+                content_page = pdf.pages[question.content_page_number - 1]
+                try:
+                    activity_verification = verify_activity_answer_key(
+                        content_page,
+                        key_page,
+                        pdf_sha256=document.pdf_sha256,
+                        content_physical_page=question.content_page_number,
+                        key_physical_page=question.key_page_number,
+                        unit_number=question.source_unit_number,
+                        activity_number=question.question_number,
+                        activity_page_number=question.content_page_number,
+                        content_bbox=question.content_bbox,
+                        key_bbox=question.key_bbox,
+                        answer_format=question.source_answer_format,
+                        canonical_answer=question.answer,
+                        expected_content_projection_sha256=(
+                            question.content_projection_sha256
+                        ),
+                        expected_key_projection_sha256=(
+                            question.key_projection_sha256
+                        ),
+                        expected_projection_sha256=(
+                            question.binding_projection_sha256
+                        ),
+                    )
+                except ActivityAnswerKeyError as exc:
+                    raise OfficialSourceError(
+                        "activity answer key is not verified for "
+                        f"{question.record_id}: {exc}"
+                    ) from exc
+                key_matches = (
+                    activity_verification.content_projection_sha256
+                    == question.content_projection_sha256
+                    and activity_verification.key_projection_sha256
+                    == question.key_projection_sha256
+                    and activity_verification.projection_sha256
+                    == question.binding_projection_sha256
+                    and all(activity_verification.component_matches.values())
+                    and " ".join(key_text.split()).casefold()
+                    == " ".join(question.key_crop_text.split()).casefold()
                 )
             else:
                 context_page = pdf.pages[question.key_context_page_number - 1]
@@ -843,7 +1075,64 @@ def verify_workbook_index_pdf(
                 content_text = content_page.crop(content_bbox).extract_text() or ""
             else:
                 content_text = content_page.extract_text() or ""
-            if question.key_binding_kind == "coordinate_table_answer_key":
+            if question.key_binding_kind == "activity_answer_key":
+                if activity_verification is None:
+                    raise OfficialSourceError(
+                        f"activity content proof is missing for {question.record_id}"
+                    )
+                if (
+                    " ".join(content_text.split()).casefold()
+                    != " ".join(question.question_text.split()).casefold()
+                ):
+                    raise OfficialSourceError(
+                        "activity content crop differs from its canonical source "
+                        f"text for {question.record_id}"
+                    )
+                try:
+                    content_marker_count = count_activity_markers(
+                        content_page, question.question_number
+                    )
+                except ActivityAnswerKeyError as exc:
+                    raise OfficialSourceError(
+                        "activity page marker inventory is malformed for "
+                        f"{question.record_id}: {exc}"
+                    ) from exc
+            elif question.key_binding_kind == "coordinate_choice_answer_key":
+                assert question.content_bbox is not None
+                if coordinate_choice_verification is None:
+                    raise OfficialSourceError(
+                        "coordinate choice key proof is missing for "
+                        f"{question.record_id}"
+                    )
+                try:
+                    content_verification = verify_coordinate_choice_content(
+                        content_page,
+                        pdf_sha256=document.pdf_sha256,
+                        physical_page=question.content_page_number,
+                        bbox=question.content_bbox,
+                        question_number=question.question_number,
+                        question_text=question.question_text,
+                        expected_content_unit=question.content_section,
+                        expected_test_variant=question.test_variant,
+                        expected_projection_sha256=(
+                            question.content_projection_sha256
+                        ),
+                    )
+                except CoordinateChoiceAnswerKeyError as exc:
+                    raise OfficialSourceError(
+                        "coordinate choice content is not verified for "
+                        f"{question.record_id}: {exc}"
+                    ) from exc
+                if (
+                    content_verification.unit_number
+                    != coordinate_choice_verification.unit_number
+                ):
+                    raise OfficialSourceError(
+                        "coordinate choice content/key units differ for "
+                        f"{question.record_id}"
+                    )
+                content_marker_count = content_verification.marker_count
+            elif question.key_binding_kind == "coordinate_table_answer_key":
                 assert question.content_bbox is not None
                 try:
                     content_verification = verify_content_question_marker(
@@ -1227,6 +1516,169 @@ def _question_marker_count(page_text: str, number: int) -> int:
     return len(re.findall(rf"(?<!\d){number}\s*[.)](?=\s|$)", page_text))
 
 
+def _token_edit_distance(left: Sequence[str], right: Sequence[str]) -> int:
+    """Return deterministic Levenshtein distance for two short token streams."""
+
+    if len(left) < len(right):
+        left, right = right, left
+    previous = list(range(len(right) + 1))
+    for left_index, left_token in enumerate(left, 1):
+        current = [left_index]
+        for right_index, right_token in enumerate(right, 1):
+            current.append(
+                min(
+                    current[-1] + 1,
+                    previous[right_index] + 1,
+                    previous[right_index - 1]
+                    + (left_token != right_token),
+                )
+            )
+        previous = current
+    return previous[-1]
+
+
+def _best_ordered_source_occurrence(
+    observed_tokens: Sequence[str],
+    source_tokens: Sequence[str],
+    *,
+    minimum_similarity: float,
+) -> dict[str, Any]:
+    """Align the complete source stem to one contiguous observed token window.
+
+    Prefix/suffix material (question number and answer choices) is free, while
+    omissions, substitutions, insertions, and reordering inside the frozen
+    source stem all consume the same explicit edit budget.
+    """
+
+    source_count = len(source_tokens)
+    observed_count = len(observed_tokens)
+    if source_count == 0 or observed_count == 0:
+        return {
+            "similarity": 0.0,
+            "edit_distance": source_count,
+            "occurrence_count": 0,
+            "span": None,
+        }
+    max_edits = max(0, math.floor((1.0 - minimum_similarity) * source_count + 1e-9))
+    minimum_window = max(1, source_count - max_edits)
+    maximum_window = min(observed_count, source_count + max_edits)
+    matches: list[tuple[int, int, int]] = []
+    best: tuple[int, int, int] | None = None
+    for start in range(observed_count):
+        for length in range(minimum_window, maximum_window + 1):
+            end = start + length
+            if end > observed_count:
+                break
+            distance = _token_edit_distance(
+                source_tokens, observed_tokens[start:end]
+            )
+            candidate = (distance, start, end)
+            if best is None or candidate < best:
+                best = candidate
+            if distance <= max_edits:
+                matches.append((start, end, distance))
+    if best is None:
+        return {
+            "similarity": 0.0,
+            "edit_distance": source_count,
+            "occurrence_count": 0,
+            "span": None,
+        }
+    best_distance = best[0]
+    best_matches = sorted(
+        (item for item in matches if item[2] == best_distance),
+        key=lambda item: (item[0], item[1]),
+    )
+    clusters = 0
+    last_start: int | None = None
+    for start, _end, _distance in best_matches:
+        if last_start is None or start - last_start > max(2, max_edits + 1):
+            clusters += 1
+        last_start = start
+    return {
+        "similarity": max(0.0, 1.0 - (best_distance / source_count)),
+        "edit_distance": best_distance,
+        "occurrence_count": clusters,
+        "span": [best[1], best[2]],
+    }
+
+
+def observed_coordinate_question_binding(
+    observation: OcrObservation,
+    selected: WorkbookQuestion,
+    page_questions: Sequence[WorkbookQuestion],
+    thresholds: WorkbookThresholds,
+) -> dict[str, Any]:
+    """Bind a parser statement to one full, ordered, PDF-attested source stem."""
+
+    observed_tokens = tuple(normalize_tokens(observation.statement))
+    source_candidates = [
+        question
+        for question in page_questions
+        if question.key_binding_kind == "coordinate_choice_answer_key"
+    ]
+    if selected not in source_candidates:
+        raise OfficialSourceError(
+            "selected coordinate-choice record is absent from its source page"
+        )
+    alignments = {
+        question.record_id: _best_ordered_source_occurrence(
+            observed_tokens,
+            tuple(normalize_tokens(question.question_text)),
+            minimum_similarity=thresholds.min_coordinate_question_similarity,
+        )
+        for question in source_candidates
+    }
+    selected_alignment = alignments[selected.record_id]
+    runner_similarity = max(
+        (
+            float(alignment["similarity"])
+            for record_id, alignment in alignments.items()
+            if record_id != selected.record_id
+        ),
+        default=0.0,
+    )
+    source_tokens = tuple(normalize_tokens(selected.question_text))
+    competing_record_ids = sorted(
+        record_id
+        for record_id, alignment in alignments.items()
+        if record_id != selected.record_id
+        and float(alignment["similarity"])
+        >= thresholds.min_coordinate_question_similarity
+    )
+    margin = float(selected_alignment["similarity"]) - runner_similarity
+    passed = (
+        len(source_tokens) >= thresholds.min_coordinate_question_source_tokens
+        and float(selected_alignment["similarity"])
+        >= thresholds.min_coordinate_question_similarity
+        and int(selected_alignment["occurrence_count"]) == 1
+        and not competing_record_ids
+        and margin >= thresholds.min_coordinate_question_margin
+    )
+    return {
+        "method": "ordered_full_source_fuzzy_once_no_competitor_v1",
+        "source_token_count": len(source_tokens),
+        "observation_token_count": len(observed_tokens),
+        "source_tokens_sha256": canonical_json_sha256(
+            {"tokens": list(source_tokens)}
+        ),
+        "statement_tokens_sha256": canonical_json_sha256(
+            {"tokens": list(observed_tokens)}
+        ),
+        "similarity": selected_alignment["similarity"],
+        "edit_distance": selected_alignment["edit_distance"],
+        "selected_occurrence_count": selected_alignment["occurrence_count"],
+        "selected_span": selected_alignment["span"],
+        "runner_similarity": runner_similarity,
+        "margin": margin,
+        "competing_record_ids": competing_record_ids,
+        "minimum_similarity": thresholds.min_coordinate_question_similarity,
+        "minimum_source_tokens": thresholds.min_coordinate_question_source_tokens,
+        "minimum_margin": thresholds.min_coordinate_question_margin,
+        "passed": passed,
+    }
+
+
 def _numberless_question_match(
     observation: OcrObservation,
     questions: Sequence[WorkbookQuestion],
@@ -1272,7 +1724,10 @@ def resolve_workbook_question(
     *,
     allow_missing_nosw: bool = False,
     allow_example_label_marker: bool = False,
+    allow_activity_label_marker: bool = False,
     verified_content_marker_counts: Mapping[str, int] | None = None,
+    verified_activity_visual_binding: VerifiedActivityVisualBinding | None = None,
+    activity_visual_thresholds: VisualBindingThresholds = VisualBindingThresholds(),
 ) -> MatchResult:
     """Bind one parser crop to one reviewed workbook key, or abstain."""
 
@@ -1290,12 +1745,124 @@ def resolve_workbook_question(
     best_page, runner_page = order[:2]
     page_coverage, page_matched, page_total = scores[best_page]
     page_margin = page_coverage - scores[runner_page][0]
-    page_is_unique = (
+    text_page_is_unique = (
         page_coverage >= thresholds.min_page_coverage
         and page_matched >= thresholds.min_page_matched_tokens
         and page_margin >= thresholds.min_page_margin
     )
+    page_is_unique = text_page_is_unique
     page_number = best_page + 1
+    observed_marker_kind, observed_marker_number = observed_source_question_marker(
+        observation
+    )
+    visual_page_binding_used = False
+    replayed_visual_binding = None
+    if verified_activity_visual_binding is not None:
+        source_visual_records = tuple(
+            ActivityVisualRecordRef(
+                document_id=document.document_id,
+                record_id=question.record_id,
+                content_page_number=question.content_page_number,
+                activity_number=question.question_number,
+                key_projection_sha256=question.key_projection_sha256,
+                content_projection_sha256=question.content_projection_sha256,
+                binding_projection_sha256=question.binding_projection_sha256,
+                visually_checked=question.visually_checked,
+                content_bbox=question.content_bbox,
+            )
+            for question in document.questions
+            if question.key_binding_kind == "activity_answer_key"
+            and question.question_marker_kind == "activity_label"
+            and question.key_projection_sha256 is not None
+            and question.content_projection_sha256 is not None
+            and question.binding_projection_sha256 is not None
+            and question.content_bbox is not None
+        )
+        try:
+            candidate_visual_binding = verify_activity_visual_binding(
+                verified_activity_visual_binding.evidences,
+                source_visual_records,
+                expected_task_image_sha256=observation.image_sha256,
+                expected_document_id=document.document_id,
+                expected_pdf_sha256=document.pdf_sha256,
+                observed_activity_number=(
+                    observed_marker_number
+                    if observed_marker_kind == "activity_label"
+                    and observed_marker_number is not None
+                    else 0
+                ),
+                thresholds=activity_visual_thresholds,
+            )
+        except (VisualCoordinateBindingError, ValueError):
+            candidate_visual_binding = None
+        if (
+            candidate_visual_binding is not None
+            and candidate_visual_binding.trace()
+            == verified_activity_visual_binding.trace()
+        ):
+            replayed_visual_binding = candidate_visual_binding
+        if text_page_is_unique and (
+            replayed_visual_binding is None
+            or replayed_visual_binding.decision.selected_page_number != page_number
+        ):
+            # Any supplied visual proof must agree with an already-strong text
+            # page.  A forged or conflicting object can only force abstention.
+            page_is_unique = False
+    if replayed_visual_binding is not None and not text_page_is_unique:
+        visual_decision = replayed_visual_binding.decision
+        visual_record_matches = [
+            question
+            for question in document.questions
+            if question.record_id == visual_decision.selected_record_id
+            and question.content_page_number == visual_decision.selected_page_number
+            and question.question_marker_kind == "activity_label"
+            and question.question_number
+            == verified_activity_visual_binding.observed_activity_number
+            and question.key_binding_kind == "activity_answer_key"
+        ]
+        visual_identity_matches = (
+            replayed_visual_binding.task_image_sha256
+            == observation.image_sha256
+            and replayed_visual_binding.document_id == document.document_id
+            and replayed_visual_binding.pdf_sha256 == document.pdf_sha256
+            and observed_marker_kind == "activity_label"
+            and observed_marker_number
+            == replayed_visual_binding.observed_activity_number
+            and visual_decision.accepted
+            and all(passed for _, passed in visual_decision.checks)
+            and len(visual_record_matches) == 1
+        )
+        if visual_identity_matches:
+            selected_page_number = visual_decision.selected_page_number
+            assert selected_page_number is not None
+            best_page = selected_page_number - 1
+            if best_page not in content_pages:
+                raise OfficialSourceError(
+                    "verified visual activity page is outside indexed content pages"
+                )
+            visual_order = sorted(
+                replayed_visual_binding.evidences,
+                key=lambda item: (
+                    -item.rank_score,
+                    -item.inliers,
+                    item.page_number,
+                    item.rendered_page_sha256,
+                ),
+            )
+            runner_page = (
+                visual_order[1].page_number - 1
+                if len(visual_order) > 1
+                else best_page
+            )
+            page_coverage, page_matched, page_total = scores[best_page]
+            text_runner_coverage = max(
+                (scores[page][0] for page in content_pages if page != best_page),
+                default=0.0,
+            )
+            page_margin = page_coverage - text_runner_coverage
+            page_number = selected_page_number
+            page_is_unique = True
+            visual_page_binding_used = True
     page_questions = [
         question
         for question in document.questions
@@ -1307,15 +1874,15 @@ def resolve_workbook_question(
         "query_tokens": 0,
         "margin": 0.0,
     }
-    observed_marker_kind, observed_marker_number = observed_source_question_marker(
-        observation
-    )
-    if observation.question_number is not None:
+    if (
+        observed_marker_kind == "numbered_item"
+        and observed_marker_number is not None
+    ):
         matches = [
             question
             for question in page_questions
             if question.question_marker_kind == "numbered_item"
-            and question.question_number == observation.question_number
+            and question.question_number == observed_marker_number
         ]
         selected = matches[0] if len(matches) == 1 else None
         binding_method = "printed_number"
@@ -1334,6 +1901,20 @@ def resolve_workbook_question(
         selected = matches[0] if len(matches) == 1 else None
         binding_method = "source_visible_example_label"
         question_binding = selected is not None
+    elif (
+        allow_activity_label_marker
+        and observed_marker_kind == "activity_label"
+        and observed_marker_number is not None
+    ):
+        matches = [
+            question
+            for question in page_questions
+            if question.question_marker_kind == "activity_label"
+            and question.question_number == observed_marker_number
+        ]
+        selected = matches[0] if len(matches) == 1 else None
+        binding_method = "source_visible_activity_label"
+        question_binding = selected is not None
     else:
         # Sparse source indexes cannot prove global question-text uniqueness.
         # Numberless admission remains fail-closed until a complete PDF-native
@@ -1341,12 +1922,36 @@ def resolve_workbook_question(
         selected = None
         binding_method = "missing_printed_number_abstain"
         question_binding = False
+    observed_question_match: dict[str, Any] = {}
+    observed_question_binding = True
+    if (
+        selected is not None
+        and selected.key_binding_kind == "coordinate_choice_answer_key"
+    ):
+        observed_question_match = observed_coordinate_question_binding(
+            observation,
+            selected,
+            page_questions,
+            thresholds,
+        )
+        observed_question_binding = bool(observed_question_match["passed"])
+    strict_content_proof = (
+        selected is not None
+        and selected.key_binding_kind
+        in {
+            "coordinate_table_answer_key",
+            "activity_answer_key",
+            "coordinate_choice_answer_key",
+        }
+    )
     if (
         selected is not None
         and selected.content_bbox is not None
         and verified_content_marker_counts is not None
     ):
         visible_marker_count = verified_content_marker_counts.get(selected.record_id, 0)
+    elif strict_content_proof:
+        visible_marker_count = 0
     else:
         visible_marker_count = (
             _question_marker_count(page_texts[best_page], selected.question_number)
@@ -1354,7 +1959,7 @@ def resolve_workbook_question(
             else 0
         )
     visible_number = selected is not None and visible_marker_count == 1
-    checks = (
+    checks_list = [
         ("strict_public_document_identity", observed_identity == document.identity),
         ("unique_content_page", page_is_unique),
         ("unique_source_question_record", selected is not None),
@@ -1370,7 +1975,17 @@ def resolve_workbook_question(
             ),
         ),
         ("source_address_not_task_id", selected is not None and selected.record_id.startswith(f"{document.document_id}:p")),
-    )
+    ]
+    if visual_page_binding_used:
+        checks_list.append(("visual_page_binding", True))
+    if (
+        selected is not None
+        and selected.key_binding_kind == "coordinate_choice_answer_key"
+    ):
+        checks_list.append(
+            ("observed_question_text_matches_source", observed_question_binding)
+        )
+    checks = tuple(checks_list)
     accepted = all(passed for _, passed in checks)
     answer = selected.answer if accepted and selected is not None else None
     problem = problem_for(
@@ -1421,6 +2036,20 @@ def resolve_workbook_question(
             "page_margin": page_margin,
             "question_binding_method": binding_method,
             "numberless_question": numberless_match,
+            **(
+                {"observed_question_text": observed_question_match}
+                if selected is not None
+                and selected.key_binding_kind == "coordinate_choice_answer_key"
+                else {}
+            ),
+            **(
+                {
+                    "page_binding_method": "sift_ransac_source_page_fallback_v1",
+                    "text_page_gate_passed": text_page_is_unique,
+                }
+                if visual_page_binding_used
+                else {}
+            ),
         },
         "thresholds": {
             "min_page_coverage": thresholds.min_page_coverage,
@@ -1429,10 +2058,49 @@ def resolve_workbook_question(
             "min_numberless_question_coverage": thresholds.min_numberless_question_coverage,
             "min_numberless_question_matched_tokens": thresholds.min_numberless_question_matched_tokens,
             "min_numberless_question_margin": thresholds.min_numberless_question_margin,
+            **(
+                {
+                    "min_coordinate_question_similarity": (
+                        thresholds.min_coordinate_question_similarity
+                    ),
+                    "min_coordinate_question_source_tokens": (
+                        thresholds.min_coordinate_question_source_tokens
+                    ),
+                    "min_coordinate_question_margin": (
+                        thresholds.min_coordinate_question_margin
+                    ),
+                }
+                if selected is not None
+                and selected.key_binding_kind == "coordinate_choice_answer_key"
+                else {}
+            ),
         },
         "checks": {name: passed for name, passed in checks},
         "accepted": accepted,
     }
+    if visual_page_binding_used:
+        assert replayed_visual_binding is not None
+        trace["visual_page_binding"] = replayed_visual_binding.trace()
+    if selected is not None and selected.key_binding_kind == "activity_answer_key":
+        trace["source"].update(
+            {
+                "binding_projection_sha256": selected.binding_projection_sha256,
+                "source_answer_format": selected.source_answer_format,
+                "source_unit_number": selected.source_unit_number,
+                "test_variant": selected.test_variant,
+            }
+        )
+    elif (
+        selected is not None
+        and selected.key_binding_kind == "coordinate_choice_answer_key"
+    ):
+        trace["source"].update(
+            {
+                "content_section": selected.content_section,
+                "section": selected.section,
+                "test_variant": selected.test_variant,
+            }
+        )
     return MatchResult(
         accepted=accepted,
         answer=answer,

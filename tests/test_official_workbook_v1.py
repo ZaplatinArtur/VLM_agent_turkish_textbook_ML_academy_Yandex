@@ -11,12 +11,18 @@ from evidence_os.official_ogm import OcrObservation, OfficialSourceError, PageMa
 from evidence_os.official_workbook import (
     WorkbookThresholds,
     _choice_binding_matches,
+    activity_label_projection_enabled,
     document_for_source,
     parse_workbook_index,
     resolve_workbook_question,
     strict_direct_https_identity,
     strict_yandex_public_identity,
     validate_fail_closed_workbook_policy,
+)
+from evidence_os.visual_coordinate_binding import (
+    ActivityVisualRecordRef,
+    VisualPageEvidence,
+    verify_activity_visual_binding,
 )
 from scripts.merge_maxim_public_workbook_index_v1 import merge
 
@@ -66,6 +72,16 @@ def test_shared_fail_closed_policy_rejects_every_missing_gate() -> None:
         mutated.pop(key)
         with pytest.raises(OfficialSourceError):
             validate_fail_closed_workbook_policy(mutated)
+
+    enabled = dict(policy)
+    enabled["activity_label_projection"] = (
+        "primary_paragraph_title_order_one_v1"
+    )
+    assert activity_label_projection_enabled(enabled) is True
+    malformed = dict(enabled)
+    malformed["activity_label_projection"] = "semantic_guess_v1"
+    with pytest.raises(OfficialSourceError, match="activity-label"):
+        validate_fail_closed_workbook_policy(malformed)
 
 
 def _payload() -> dict[str, object]:
@@ -345,6 +361,456 @@ def test_wrong_or_conflicting_example_marker_abstains() -> None:
         )
         assert result.accepted is False
         assert result.answer is None
+
+
+def _activity_payload() -> dict[str, object]:
+    payload = _payload()
+    record = payload["documents"][0]["questions"][0]  # type: ignore[index]
+    record.pop("section")
+    record.update(
+        {
+            "record_id": f"{DOCUMENT_ID}:p2:q3",
+            "question_number": 3,
+            "question_marker_kind": "activity_label",
+            "question_text": (
+                "ETKİNLİK-3 complete canonical activity crop with enough "
+                "source words to bind the reviewed physical page"
+            ),
+            "answer_format": "short_text",
+            "answer": "7",
+            "key_crop_text": "Etkinlik 3 (2. Sayfa) Çıkış 7",
+            "key_binding_kind": "activity_answer_key",
+            "key_projection_sha256": "b" * 64,
+            "content_projection_sha256": "c" * 64,
+            "binding_projection_sha256": "d" * 64,
+            "key_context_page_number": 4,
+            "test_variant": "1. ÜNİTE",
+            "source_unit_number": 1,
+            "source_answer_format": "scalar_exit",
+        }
+    )
+    return payload
+
+
+def test_activity_source_binding_requires_complete_projection_metadata() -> None:
+    question = parse_workbook_index(_activity_payload()).documents[0].questions[0]
+
+    assert question.question_marker_kind == "activity_label"
+    assert question.source_unit_number == 1
+    assert question.source_answer_format == "scalar_exit"
+    assert question.binding_projection_sha256 == "d" * 64
+
+    for field in (
+        "content_projection_sha256",
+        "key_projection_sha256",
+        "binding_projection_sha256",
+        "source_unit_number",
+        "source_answer_format",
+    ):
+        malformed = _activity_payload()
+        malformed["documents"][0]["questions"][0].pop(field)  # type: ignore[index]
+        with pytest.raises(OfficialSourceError, match="activity answer"):
+            parse_workbook_index(malformed)
+
+    marker_only = _activity_payload()
+    marker_only["documents"][0]["questions"][0]["question_text"] = (  # type: ignore[index]
+        "ETKİNLİK-3"
+    )
+    with pytest.raises(OfficialSourceError, match="activity answer"):
+        parse_workbook_index(marker_only)
+
+
+def test_exact_activity_label_binds_only_with_profile_opt_in() -> None:
+    index = parse_workbook_index(_activity_payload())
+    document = document_for_source(index, SOURCE_URL)
+    assert document is not None
+    observation = replace(
+        _observation(question_number=None),
+        statement=f"## ETKINLIK-3\n{TARGET}",
+        text_blocks=("## ETKINLIK-3", TARGET),
+        primary_activity_label_number=3,
+    )
+    pages = _pages()
+    marker_counts = {f"{DOCUMENT_ID}:p2:q3": 1}
+
+    disabled = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        verified_content_marker_counts=marker_counts,
+    )
+    enabled = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        allow_activity_label_marker=True,
+        verified_content_marker_counts=marker_counts,
+    )
+
+    assert disabled.accepted is False
+    assert enabled.accepted is True
+    assert enabled.answer == "7"
+    assert enabled.trace["match"]["question_binding_method"] == (
+        "source_visible_activity_label"
+    )
+    assert enabled.trace["source"]["source_unit_number"] == 1
+
+
+def _verified_activity_visual_binding(*, image_sha256: str = "f" * 64):
+    record = ActivityVisualRecordRef(
+        document_id=DOCUMENT_ID,
+        record_id=f"{DOCUMENT_ID}:p2:q3",
+        content_page_number=2,
+        activity_number=3,
+        key_projection_sha256="b" * 64,
+        content_projection_sha256="c" * 64,
+        binding_projection_sha256="d" * 64,
+        visually_checked=True,
+        content_bbox=(20.0, 30.0, 500.0, 400.0),
+    )
+    common = {
+        "task_image_sha256": image_sha256,
+        "document_id": DOCUMENT_ID,
+        "pdf_sha256": "a" * 64,
+        "good_matches": 100,
+        "mapped_inside_fraction": 1.0,
+        "scale_anisotropy": 1.01,
+        "orientation_preserved": True,
+        "convex_mapping": True,
+        "mapped_polygon": ((40.0, 60.0), (1000.0, 60.0), (1000.0, 800.0), (40.0, 800.0)),
+    }
+    evidences = (
+        VisualPageEvidence(
+            **common,
+            page_number=2,
+            rendered_page_sha256="1" * 64,
+            inliers=90,
+            inlier_ratio=0.90,
+            task_hull_fraction=0.70,
+            median_reprojection_error=0.20,
+        ),
+        VisualPageEvidence(
+            **common,
+            page_number=3,
+            rendered_page_sha256="2" * 64,
+            inliers=15,
+            inlier_ratio=0.15,
+            task_hull_fraction=0.10,
+            median_reprojection_error=2.0,
+        ),
+    )
+    binding = verify_activity_visual_binding(
+        evidences,
+        (record,),
+        expected_task_image_sha256=image_sha256,
+        expected_document_id=DOCUMENT_ID,
+        expected_pdf_sha256="a" * 64,
+        observed_activity_number=3,
+    )
+    assert binding is not None
+    return binding
+
+
+def test_activity_visual_page_binding_is_fallback_for_an_honest_text_tie() -> None:
+    document = parse_workbook_index(_activity_payload()).documents[0]
+    observation = replace(
+        _observation(question_number=None),
+        statement="## ETKINLIK-3 short shared stem",
+        text_blocks=("## ETKINLIK-3", "short shared stem"),
+        primary_activity_label_number=3,
+    )
+    pages = ["cover", "ETKINLIK-3 short shared stem", "ETKINLIK-3 short shared stem", "key"]
+    marker_counts = {f"{DOCUMENT_ID}:p2:q3": 1}
+
+    text_only = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        allow_activity_label_marker=True,
+        verified_content_marker_counts=marker_counts,
+    )
+    visual_fallback = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        allow_activity_label_marker=True,
+        verified_content_marker_counts=marker_counts,
+        verified_activity_visual_binding=_verified_activity_visual_binding(),
+    )
+
+    assert text_only.accepted is False
+    assert visual_fallback.accepted is True
+    assert visual_fallback.answer == "7"
+    assert dict(visual_fallback.checks)["visual_page_binding"] is True
+    assert visual_fallback.trace["match"]["page_binding_method"] == (
+        "sift_ransac_source_page_fallback_v1"
+    )
+    assert visual_fallback.trace["match"]["text_page_gate_passed"] is False
+    assert visual_fallback.trace["visual_page_binding"]["selected_record_id"] == (
+        f"{DOCUMENT_ID}:p2:q3"
+    )
+
+
+def test_activity_visual_fallback_rejects_an_image_identity_mismatch() -> None:
+    document = parse_workbook_index(_activity_payload()).documents[0]
+    observation = replace(
+        _observation(question_number=None),
+        statement="## ETKINLIK-3 short shared stem",
+        text_blocks=("## ETKINLIK-3", "short shared stem"),
+        primary_activity_label_number=3,
+    )
+    pages = ["cover", "ETKINLIK-3 short shared stem", "ETKINLIK-3 short shared stem", "key"]
+    result = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        allow_activity_label_marker=True,
+        verified_content_marker_counts={f"{DOCUMENT_ID}:p2:q3": 1},
+        verified_activity_visual_binding=_verified_activity_visual_binding(
+            image_sha256="e" * 64
+        ),
+    )
+
+    assert result.accepted is False
+    assert result.answer is None
+    assert "visual_page_binding" not in dict(result.checks)
+
+
+def test_activity_visual_fallback_replays_evidence_instead_of_trusting_decision() -> None:
+    document = parse_workbook_index(_activity_payload()).documents[0]
+    observation = replace(
+        _observation(question_number=None),
+        statement="## ETKINLIK-3 short shared stem",
+        text_blocks=("## ETKINLIK-3", "short shared stem"),
+        primary_activity_label_number=3,
+    )
+    pages = ["cover", "ETKINLIK-3 short shared stem", "ETKINLIK-3 short shared stem", "key"]
+    valid = _verified_activity_visual_binding()
+    forged_evidence = replace(
+        valid.evidences[0],
+        good_matches=0,
+        inliers=0,
+        inlier_ratio=0.0,
+        task_hull_fraction=0.0,
+        median_reprojection_error=None,
+        mapped_inside_fraction=0.0,
+        scale_anisotropy=None,
+        orientation_preserved=False,
+        convex_mapping=False,
+        mapped_polygon=None,
+    )
+    forged = replace(valid, evidences=(forged_evidence,))
+
+    result = resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        allow_activity_label_marker=True,
+        verified_content_marker_counts={f"{DOCUMENT_ID}:p2:q3": 1},
+        verified_activity_visual_binding=forged,
+    )
+
+    assert result.accepted is False
+    assert result.answer is None
+    assert dict(result.checks)["unique_content_page"] is False
+
+
+def test_wrong_or_conflicting_activity_marker_abstains() -> None:
+    index = parse_workbook_index(_activity_payload())
+    document = document_for_source(index, SOURCE_URL)
+    assert document is not None
+    pages = _pages()
+    marker_counts = {f"{DOCUMENT_ID}:p2:q3": 1}
+    observations = (
+        replace(
+            _observation(question_number=None),
+            primary_activity_label_number=4,
+        ),
+        replace(
+            _observation(question_number=3),
+            primary_activity_label_number=3,
+        ),
+    )
+    for observation in observations:
+        result = resolve_workbook_question(
+            observation,
+            SOURCE_URL,
+            document,
+            PageMatcher(pages),
+            pages,
+            WorkbookThresholds(),
+            allow_activity_label_marker=True,
+            verified_content_marker_counts=marker_counts,
+        )
+        assert result.accepted is False
+        assert result.answer is None
+
+
+def _coordinate_choice_payload() -> dict[str, object]:
+    payload = _payload()
+    document = payload["documents"][0]  # type: ignore[index]
+    base = document["questions"][0]  # type: ignore[index]
+    base.update(
+        {
+            "record_id": f"{DOCUMENT_ID}:p2:q6",
+            "question_number": 6,
+            "question_marker_kind": "numbered_item",
+            "question_text": TARGET,
+            "answer": "E",
+            "answer_format": "choice",
+            "key_crop_text": "6. E",
+            "key_projection_sha256": "b" * 64,
+            "content_projection_sha256": "c" * 64,
+            "key_binding_kind": "coordinate_choice_answer_key",
+            "key_context_page_number": 4,
+            "section": "Cevap Anahtarı",
+            "test_variant": "1. ÜNİTE",
+            "content_section": "1. ÜNİTE",
+        }
+    )
+    second = deepcopy(base)
+    second.update(
+        {
+            "record_id": f"{DOCUMENT_ID}:p2:q8",
+            "question_number": 8,
+            "question_text": DISTRACTOR,
+            "answer": "B",
+            "key_crop_text": "8. B",
+            "key_bbox": [150, 200, 190, 215],
+            "content_bbox": [20, 410, 500, 560],
+            "key_projection_sha256": "d" * 64,
+            "content_projection_sha256": "e" * 64,
+        }
+    )
+    document["questions"] = [base, second]  # type: ignore[index]
+    return payload
+
+
+def _resolve_coordinate_choice(observation: OcrObservation, *, proof: bool = True):
+    document = parse_workbook_index(_coordinate_choice_payload()).documents[0]
+    pages = [
+        "cover",
+        f"6. {TARGET} 8. {DISTRACTOR}",
+        "unrelated appendix material with no source question",
+        "Cevap Anahtarı 1. ÜNİTE 6. E 8. B",
+    ]
+    return resolve_workbook_question(
+        observation,
+        SOURCE_URL,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        verified_content_marker_counts=(
+            {
+                f"{DOCUMENT_ID}:p2:q6": 1,
+                f"{DOCUMENT_ID}:p2:q8": 1,
+            }
+            if proof
+            else None
+        ),
+    )
+
+
+def test_coordinate_choice_parse_requires_complete_source_proof_metadata() -> None:
+    question = parse_workbook_index(
+        _coordinate_choice_payload()
+    ).documents[0].questions[0]
+
+    assert question.key_binding_kind == "coordinate_choice_answer_key"
+    assert question.question_marker_kind == "numbered_item"
+    assert question.key_projection_sha256 == "b" * 64
+    assert question.content_projection_sha256 == "c" * 64
+    assert question.content_section == "1. ÜNİTE"
+
+    for field in (
+        "key_crop_text",
+        "question_text",
+        "content_bbox",
+        "section",
+        "test_variant",
+        "content_section",
+        "key_projection_sha256",
+        "content_projection_sha256",
+    ):
+        malformed = _coordinate_choice_payload()
+        malformed["documents"][0]["questions"][0].pop(field)  # type: ignore[index]
+        with pytest.raises(OfficialSourceError, match="coordinate-choice answer"):
+            parse_workbook_index(malformed)
+
+    wrong_marker = _coordinate_choice_payload()
+    wrong_marker["documents"][0]["questions"][0][  # type: ignore[index]
+        "question_marker_kind"
+    ] = "example_label"
+    with pytest.raises(OfficialSourceError, match="coordinate-choice answer"):
+        parse_workbook_index(wrong_marker)
+
+    wrong_context = _coordinate_choice_payload()
+    wrong_context["documents"][0]["questions"][0][  # type: ignore[index]
+        "key_context_page_number"
+    ] = 3
+    with pytest.raises(OfficialSourceError, match="coordinate-choice answer"):
+        parse_workbook_index(wrong_context)
+
+
+def test_coordinate_choice_requires_full_ordered_observed_source_stem() -> None:
+    accepted = _resolve_coordinate_choice(
+        replace(_observation(question_number=6), statement=f"6. {TARGET}")
+    )
+    assert accepted.accepted is True
+    assert accepted.answer == "E"
+    assert accepted.trace["match"]["observed_question_text"]["passed"] is True
+    assert accepted.trace["source"]["section"] == "Cevap Anahtarı"
+
+    adversarial_observations = (
+        replace(_observation(question_number=6), statement=f"6. {DISTRACTOR}"),
+        replace(_observation(question_number=8), statement=f"8. {TARGET}"),
+        replace(
+            _observation(question_number=6),
+            statement="6. " + " ".join(TARGET.split()[:9]),
+        ),
+        replace(
+            _observation(question_number=6),
+            statement="6. " + " ".join(reversed(TARGET.split())),
+        ),
+        replace(
+            _observation(question_number=6), statement=f"6. {TARGET} {TARGET}"
+        ),
+        replace(
+            _observation(question_number=6), statement=f"6. {TARGET} {DISTRACTOR}"
+        ),
+    )
+    for observation in adversarial_observations:
+        rejected = _resolve_coordinate_choice(observation)
+        assert rejected.accepted is False
+        assert rejected.answer is None
+
+
+def test_coordinate_choice_requires_pinned_content_marker_map() -> None:
+    result = _resolve_coordinate_choice(
+        replace(_observation(question_number=6), statement=f"6. {TARGET}"),
+        proof=False,
+    )
+    assert result.accepted is False
+    assert dict(result.checks)["printed_number_visible_on_page"] is False
 
 
 def test_equal_page_scores_fail_closed() -> None:

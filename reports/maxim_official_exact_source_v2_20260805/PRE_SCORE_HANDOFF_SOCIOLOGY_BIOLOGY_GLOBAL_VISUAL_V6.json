@@ -1,0 +1,144 @@
+{
+  "schema_version": "maxim-pre-score-handoff-v6",
+  "profile_name": "maxim-public-workbook-primary-layout-sociology-biology-strict-v6",
+  "frozen_at_utc": "2026-08-05T11:48:00Z",
+  "git_parent_commit": "752bb4334a1d8f0a5c227fbd06d1c25b91ab18b8",
+  "evaluation_status": "previously_inspected_development_replay_not_holdout",
+  "retained_measured_result_before_v6": {
+    "version": "v5",
+    "correct": 234,
+    "rows": 274,
+    "accuracy": 0.8540145985401459
+  },
+  "aggregate_v6_score_created_before_handoff": false,
+  "gold_access": false,
+  "source_decision_benchmark_candidate_or_outcome_access": false,
+  "visual_generator_benchmark_candidate_or_outcome_access": false,
+  "decision_rule": "after remote pre-score commit matches local commit, materialize changed image adjudication and score once; retain V5 unless V6 is strictly better",
+  "audit_separation": {
+    "clean_path_scoped_audit": "pass_current_workspace",
+    "excluded_read_only_staging_audit": {
+      "incident": "PowerShell command used Unix line continuations and enumerated unrelated local paths",
+      "pipeline_edits": 0,
+      "benchmark_score_or_correctness_or_reference_answer_seen": false,
+      "output_used_for_pipeline_or_staging": false
+    },
+    "target_task_id_is_policy_feature": false,
+    "source_index_task_id_present": false,
+    "changed_rows_known_before_score": [
+      "val_0162",
+      "val_0163",
+      "val_0164",
+      "val_0186"
+    ]
+  },
+  "profile": {
+    "path": "configs/maxim_public_workbook_primary_layout_sociology_biology_strict_v6.json",
+    "sha256": "825cda4add14ddafdf41beb71386d74701fb8b0c0150c20fd9617ddc82b52058"
+  },
+  "protocol": {
+    "path": "docs/MAXIM_SOCIOLOGY_BIOLOGY_GLOBAL_VISUAL_V6_PROTOCOL.md",
+    "sha256": "2e268a67217fe62ef790e0c0d0b145376c77552fa5b11e3f3bee0fe79ea607e6"
+  },
+  "implementation": {
+    "src/evidence_os/activity_answer_key.py": "0fbc29788921a89f72182bd522452219637c0ac69acd06b2d545cdcfd9b9958b",
+    "src/evidence_os/coordinate_choice_answer_key.py": "e308c0547b1e68bca168baec06fe7a0425b280df35211ec79f5f79afdc7bfa87",
+    "src/evidence_os/visual_coordinate_binding.py": "99774b3e88e5c42dafd24dd7aeab8bcd19b6241f073be2a5a1735f09ffd85f4f",
+    "src/evidence_os/official_ogm.py": "a824d86c3ffe918bd51ffb7fecfc2979a01883515eccdcdd01a64ae9490a6e91",
+    "src/evidence_os/official_workbook.py": "8afe6379c8d004c44f63fca63d9126c57b6a1ce76feabd42add311a58f30ae0e",
+    "scripts/adapt_maxim_biology_activity_fragment_v1.py": "a1f8bbf3d0037ce269d7b8cf7b27253bdfc4ef597153dd88d76ffcfdd86b282a",
+    "scripts/adapt_maxim_sociology_coordinate_choice_fragment_v1.py": "a9d42773a051305533f5fc20278e7b9ed9fdb334e53b8d251a06733798e818f2",
+    "scripts/build_maxim_activity_visual_binding_v1.py": "1cc71470242fc5d16a1d813daf13f4b9b7de5810e5977f2a30c1e7dff9075efa",
+    "scripts/audit_maxim_primary_layout_projection_v2.py": "166e818d4b2e7acde6d488ead48adff88a96a48c78fd4e6963b7042429cf858d",
+    "scripts/run_maxim_public_workbook_v1.py": "d5594c6548945ec24e728e19af88df3131e2654c3d9b502254d2a7ba2aa4980f",
+    "scripts/compose_maxim_official_ogm_failclosed_v2.py": "8c73141a310aa4611ddb716caea6d0fc18d8fe4f31718a7b12967927a6514bbf",
+    "scripts/build_maxim_evidence_os_image_judge_v1.py": "dcac2be36b265a340ebdf430abf3a84c9b579d2f2f7832920fdc58b50aac98c7"
+  },
+  "tests": {
+    "command": "PYTHONPATH=src;scripts python -m pytest tests/test_activity_answer_key.py tests/test_coordinate_choice_answer_key.py tests/test_visual_coordinate_binding.py tests/test_official_workbook_v1.py tests/test_official_ogm_exact_source_v2.py tests/test_build_maxim_evidence_os_image_judge_v1.py tests/test_official_direct_pdf_v2.py tests/test_activity_visual_exact_replay.py -q",
+    "result": "228 passed, 1 skipped",
+    "real_full_page_visual_rebuild_passed": true,
+    "files": {
+      "tests/test_activity_answer_key.py": "7e78a96e58c03431379f47d06b7e94ed540b3168f81c620b1f674f7760bda2fa",
+      "tests/test_coordinate_choice_answer_key.py": "6f3e7829fec9021bac6030be1a4f3fd5ab44274dfc1b7e5c8bd559103b1a8470",
+      "tests/test_visual_coordinate_binding.py": "ef6aec53d24da988823e5384101f3c1f2671940ff2fa15b871609c76ad60903b",
+      "tests/test_official_workbook_v1.py": "e4d2e27cd11742d20189e625ecf538a16bff5a5db040f756a7acf34c8788291e",
+      "tests/test_official_ogm_exact_source_v2.py": "8f63ae501904f120451bd297d93b4d8cb30daa77841d0adbdf5ff03a6d24d579",
+      "tests/test_build_maxim_evidence_os_image_judge_v1.py": "206a9776a96d4923ceec464c641c65d72652fa75544d2e9b9ab7386d6a290e66",
+      "tests/test_activity_visual_exact_replay.py": "4d9de6f6b0ea6e48e1e09d23a84dd1844a6d42d5bf60f4673a5007da17eceec7"
+    }
+  },
+  "source_wave": {
+    "parser": {
+      "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/parser_artifacts/parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038",
+      "rows": 274
+    },
+    "biology_fragment_sha256": "443e6c4e32fc7e6265cc94b29fb68274d311a8bde2cbfff2010519fa4e969b04",
+    "biology_index_sha256": "2312706f5f91d0d9b023748cb68b139398b3a4a72bb6ca472a0673c61c011363",
+    "biology_index_manifest_sha256": "76a94c818cfbbde3dc1f3d9589986394aa171c0f5dfe6ff3b94e1af727694fa6",
+    "sociology_fragment_sha256": "461f89178407b2c65e9a1c0469c91c6340146183d5e080ca3db03e5696b6541d",
+    "sociology_index_sha256": "0d7f4e04851e95d4390daac6b5c80b6ac8e82e9d52e1ff0ecfa3407446630e41",
+    "sociology_index_manifest_sha256": "e25fecf68396998e134ba32898a950f0701ff6f279ff554d38cbfd59280c8d2f",
+    "merged_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb3a_samsungis_mebdef10_sociology_biology_strict_candidate_v6.json",
+      "sha256": "715afe9e73b27ded5f52213e24e35da1b397ff9234f2ccf8319a5f6854fc285e",
+      "manifest_sha256": "5f556ba7e2a9b38a6a1e605cb8cbc8402a22a18f48bcfe27864b34c281ef99c5",
+      "documents": 11,
+      "records": 135
+    }
+  },
+  "visual_evidence": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/frozen/activity_visual_binding_sociology_biology_strict_v6.json",
+    "sha256": "131170a808a7455e5be1674399b3d5b444ee088e0185d590fdaf074597f7ac88",
+    "size_bytes": 570459,
+    "candidate_pages": 178,
+    "task_images": 4,
+    "raw_page_evidences": 712,
+    "fresh_subprocess_exact_byte_identity": true,
+    "generator_sha256": "1cc71470242fc5d16a1d813daf13f4b9b7de5810e5977f2a30c1e7dff9075efa"
+  },
+  "projection_audit": {
+    "manifest_sha256": "bf6e16a133391307ce2de433d459d88b73a0ffe5552df580c1ba585ed5b2d953",
+    "decisions_sha256": "d4424360ea05b1090ff346a04a54e189bbcee0810361dd6f08b6f8937f9699ef",
+    "rows": 274,
+    "activity_label_observations": 4
+  },
+  "resolver": {
+    "manifest_sha256": "c1f654ea0bbad88ed597d63b0d961f94d3d51b48b83604e6db0d67dd809491ec",
+    "audit_sha256": "e21eb10861bf17d05c3271f13da50794050ebbd3de52250821ba1a995414bb7d",
+    "candidate_sha256": "8f81bdaf608c561768266351434cf9b68a8e582ea669e5c2bbdd5ea419d7a0b3",
+    "certificates_sha256": "eed69d6ece5409796a7f554441adff08f3912385e59a69d385ffd9f6c7fae529",
+    "rows": 274,
+    "accepted_certificates": 124,
+    "abstentions": 150,
+    "visual_fallback_certificates": 1,
+    "new_certificates_vs_v5": 7
+  },
+  "composition": {
+    "manifest_sha256": "e2a374021f5ebc224a9947b1e31a35e61a086768d493f096804415cd6f6aa49f",
+    "decisions_sha256": "1d5fa940b48a8b6183dca514e63c2a44b1e751b94dcfdef3911dd40cd71b8989",
+    "solver_sha256": "01740f36989e19cec5f809936377bde964befee3c88b3b35f68972e3ee418d57",
+    "rows": 274,
+    "overrides": 28,
+    "certified_equal_anchor": 96,
+    "final_answer_changes_vs_v5": 4
+  },
+  "post_freeze_image_judge_plan": {
+    "status": "not_materialized_before_remote_freeze",
+    "builder": "scripts/build_maxim_evidence_os_image_judge_v1.py",
+    "base_solver_sha256": "aa76740913819b81e23f926e89be68e30501e6f6e14f36867afb3a9f122cc678",
+    "base_image_judge_sha256": "d197ac207479001f36bee2f87c31f5476f674cb8cd1a316aeac3c36494d22c9e",
+    "changed_rows_must_ignore_base_outcomes": true,
+    "materialize_only_after_remote_commit_verification": true,
+    "aggregate_score_runs_once_after_materialization": true
+  },
+  "reproducibility_boundary": {
+    "same_workspace_fresh_source_replay": true,
+    "location_independent_fresh_clone": false,
+    "external_dependencies": "11 hash-pinned official PDFs plus pinned Python/OpenCV/NumPy/Poppler runtime",
+    "absolute_paths_present_in_generated_manifests": true,
+    "official_pdfs_committed": false,
+    "reason": "499.48 MiB of official source PDFs and machine-specific runtime bytes are external; regenerate manifests after exact acquisition on another machine"
+  }
+}

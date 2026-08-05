@@ -1,0 +1,287 @@
+{
+  "schema_version": "public-workbook-biology-activity-source-fragment-v1",
+  "source_only": true,
+  "projection_hash_recipe": {
+    "canonical_json": {
+      "encoding": "utf-8",
+      "ensure_ascii": false,
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "digest": "sha256"
+    },
+    "pdf_extraction": {
+      "engine": "pdfplumber",
+      "version": "0.11.9",
+      "page_numbering": "one_based_physical_page; pdf.pages[physical_page-1]",
+      "extract_words_arguments": {
+        "x_tolerance": 2,
+        "y_tolerance": 2,
+        "keep_blank_chars": false,
+        "use_text_flow": false
+      },
+      "bbox_membership": "inclusive word-center: bbox.x0 <= (word.x0+word.x1)/2 <= bbox.x1 and bbox.top <= (word.top+word.bottom)/2 <= bbox.bottom",
+      "word_sort_key": ["round(word.top,1)", "float(word.x0)", "str(word.text)"],
+      "positioned_word": {
+        "fields": ["text", "x0", "top", "x1", "bottom"],
+        "text_transform": "str(value).strip()",
+        "coordinate_round_digits": 3
+      },
+      "crop_text_transform": "' '.join((page.crop(tuple(bbox)).extract_text() or '').split())",
+      "token_hash_payload": {"tokens": "list(evidence_os.official_ogm.normalize_tokens(crop_text))"},
+      "bbox_union": "[round(min(x0),3),round(min(top),3),round(max(x1),3),round(max(bottom),3)]"
+    },
+    "content_projection": {
+      "projection_schema": "pdf-activity-content-projection-v1",
+      "canonical_payload_fields": [
+        "projection_schema",
+        "pdf_sha256",
+        "physical_page",
+        "printed_page_number",
+        "page_size",
+        "unit_number",
+        "activity_number",
+        "marker_text",
+        "marker_bbox",
+        "content_bbox",
+        "marker",
+        "content_tokens_sha256",
+        "words"
+      ],
+      "marker": "the unique positioned word whose stripped text equals marker_text",
+      "words": "positioned_word objects selected from content_bbox and sorted by word_sort_key"
+    },
+    "key_projection": {
+      "projection_schema": "pdf-activity-key-projection-v1",
+      "canonical_payload_fields": [
+        "projection_schema",
+        "pdf_sha256",
+        "physical_page",
+        "page_size",
+        "unit_number",
+        "activity_number",
+        "printed_source_page_number",
+        "key_header_text",
+        "key_header_bbox",
+        "key_bbox",
+        "answer_format",
+        "canonical_answer",
+        "key_tokens_sha256",
+        "words"
+      ],
+      "key_header_words": "the first four words after selecting key_bbox words and sorting by word_sort_key",
+      "key_header_expected_words": ["Etkinlik", "{activity_number}", "({printed_source_page_number}.", "Sayfa)"],
+      "canonical_answer_transform": "unicodedata.normalize('NFKC', source_answer_literal)",
+      "words": "positioned_word objects selected from key_bbox and sorted by word_sort_key"
+    }
+  },
+  "answer_canonicalization": {
+    "unicode_form": "NFKC",
+    "preserve_source_component_order": true,
+    "component_separator": "; ",
+    "label_value_separator": "=",
+    "synonym_expansion": false,
+    "source_literal_is_authoritative": true
+  },
+  "documents": [
+    {
+      "document_id": "meb_def_10biyoloji_640bb362f2d5",
+      "source_file_name": "MEB-DEF-10biyoloji.pdf",
+      "public_locator": "ya-disk-public://enaTIeEJ6EkmV8iZcuGkjsW2AQGG8Zk91MZ+kXV1fTsdFdYvBGAaTVhk/JNzKRWhq/J6bpmRyOJonT3VoXnDag==:/MEB-DEF-10biyoloji.pdf",
+      "official_book_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/defterim/10/biyoloji/index.html",
+      "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+      "page_count": 183,
+      "page_size": [623.622, 822.047],
+      "isbn": "978-975-11-7294-5",
+      "units": [
+        {
+          "unit_number": 1,
+          "unit_title": "HÜCRE BÖLÜNMELERİ",
+          "physical_content_page_range": [9, 60],
+          "key_physical_page": 179,
+          "key_unit_heading_text": "1. ÜNİTE: HÜCRE BÖLÜNMELERİ",
+          "key_unit_heading_bbox": [97.979, 79.29, 250.472, 90.29]
+        },
+        {
+          "unit_number": 2,
+          "unit_title": "KALITIMIN GENEL İLKELERİ",
+          "physical_content_page_range": [61, 110],
+          "key_physical_page": 180,
+          "key_unit_heading_text": "2. ÜNİTE: KALITIMIN GENEL İLKELERİ",
+          "key_unit_heading_bbox": [82.544, 49.056, 266.75, 60.056]
+        }
+      ],
+      "activities": [
+        {
+          "record_id": "meb_def_10biyoloji_640bb362f2d5:u1:p20:activity2",
+          "source_address": {
+            "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+            "unit_number": 1,
+            "printed_page_number": 20,
+            "activity_number": 2
+          },
+          "unit_title": "HÜCRE BÖLÜNMELERİ",
+          "content_physical_page": 20,
+          "printed_page_number": 20,
+          "activity_number": 2,
+          "marker_kind": "activity_label",
+          "marker_text": "ETKİNLİK-2",
+          "marker_bbox": [281.314, 325.417, 338.602, 336.417],
+          "content_bbox": [42.0, 320.0, 582.0, 780.0],
+          "content_word_count": 118,
+          "content_tokens_sha256": "4c0cb5b6760cd9dddc91e528994391c016c73b38ffcbe9748ccff1de1a6bbd82",
+          "content_projection_schema": "pdf-activity-content-projection-v1",
+          "content_projection_sha256": "43fb1dee258d3eb238a68be936429d3fc0567c036457216c5ed5a3ac13b7b1b9",
+          "key_binding_kind": "activity_answer_key",
+          "key_physical_page": 179,
+          "key_header_text": "Etkinlik 2 (20. Sayfa)",
+          "key_header_bbox": [124.546, 311.406, 223.886, 321.406],
+          "key_bbox": [41.0, 308.0, 296.0, 369.0],
+          "key_word_count": 34,
+          "key_tokens_sha256": "af42137b1868ed65fcd7c9025b40baa3d1820ba1d0e05d9d6743cd623a57acf4",
+          "key_projection_schema": "pdf-activity-key-projection-v1",
+          "key_projection_sha256": "bc93c09869089c04355903ed2f89c746381181ebff887fc0e11a5ef6d22f7f64",
+          "answer_format": "labelled_short_text",
+          "answer_components": [
+            {"label": "a", "value": "3,4,6,8,9"},
+            {"label": "b", "value": "3,8"},
+            {"label": "c", "value": "12"},
+            {"label": "ç", "value": "9"},
+            {"label": "d", "value": "1,2,5,7,10,11"},
+            {"label": "e", "value": "1,2,7"},
+            {"label": "f", "value": "7,10,11"},
+            {"label": "g", "value": "5"}
+          ],
+          "canonical_answer": "a=3,4,6,8,9; b=3,8; c=12; ç=9; d=1,2,5,7,10,11; e=1,2,7; f=7,10,11; g=5",
+          "text_visible_activity_marker": true,
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_def_10biyoloji_640bb362f2d5:u1:p21:activity3",
+          "source_address": {
+            "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+            "unit_number": 1,
+            "printed_page_number": 21,
+            "activity_number": 3
+          },
+          "unit_title": "HÜCRE BÖLÜNMELERİ",
+          "content_physical_page": 21,
+          "printed_page_number": 21,
+          "activity_number": 3,
+          "marker_kind": "activity_label",
+          "marker_text": "ETKİNLİK-3",
+          "marker_bbox": [285.767, 64.255, 342.659, 75.255],
+          "content_bbox": [42.0, 50.0, 582.0, 780.0],
+          "content_word_count": 59,
+          "content_tokens_sha256": "b72869eee40ef202dfdb949049131082ce2e5d79b1e62496485c38da349b3e95",
+          "content_projection_schema": "pdf-activity-content-projection-v1",
+          "content_projection_sha256": "ca5aa6779fa73e45aa4160663b880585f339870e9ba5ce5d92d8a407f47b21fc",
+          "key_binding_kind": "activity_answer_key",
+          "key_physical_page": 179,
+          "key_header_text": "Etkinlik 3 (21. Sayfa)",
+          "key_header_bbox": [125.776, 370.736, 222.646, 380.736],
+          "key_bbox": [41.0, 368.0, 296.0, 452.0],
+          "key_word_count": 30,
+          "key_tokens_sha256": "083a2592aa065fb7776e62d1c49a4e9c52fa94b3434e90eb3564a3ba10c1f92b",
+          "key_projection_schema": "pdf-activity-key-projection-v1",
+          "key_projection_sha256": "bcb25b6825ca137558c1dad195433c28841b15cb5e01e6e98b2486271e102aad",
+          "answer_format": "labelled_short_text",
+          "answer_components": [
+            {"label": "a", "value": "S evresi"},
+            {"label": "b", "value": "Metafaz"},
+            {"label": "c", "value": "Telofaz"},
+            {"label": "ç", "value": "Sitokinez"},
+            {"label": "d", "value": "Mitotik evre"},
+            {"label": "e", "value": "Sporla üreme"},
+            {"label": "f", "value": "Partenogenez"},
+            {"label": "g", "value": "Stolonla üreme"},
+            {"label": "ğ", "value": "Rizomla üreme"},
+            {"label": "h", "value": "Daldırmayla üreme"}
+          ],
+          "canonical_answer": "a=S evresi; b=Metafaz; c=Telofaz; ç=Sitokinez; d=Mitotik evre; e=Sporla üreme; f=Partenogenez; g=Stolonla üreme; ğ=Rizomla üreme; h=Daldırmayla üreme",
+          "text_visible_activity_marker": true,
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_def_10biyoloji_640bb362f2d5:u1:p27:activity5",
+          "source_address": {
+            "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+            "unit_number": 1,
+            "printed_page_number": 27,
+            "activity_number": 5
+          },
+          "unit_title": "HÜCRE BÖLÜNMELERİ",
+          "content_physical_page": 27,
+          "printed_page_number": 27,
+          "activity_number": 5,
+          "marker_kind": "activity_label",
+          "marker_text": "ETKİNLİK-5",
+          "marker_bbox": [279.844, 54.919, 336.285, 65.919],
+          "content_bbox": [42.0, 50.0, 582.0, 470.0],
+          "content_word_count": 82,
+          "content_tokens_sha256": "0fbe2b554b143485f208baca07a3a27b4f6c3b6394c580dfdbe3b94c14058319",
+          "content_projection_schema": "pdf-activity-content-projection-v1",
+          "content_projection_sha256": "980fed4ef4d10e7a2d307477d51f37c2c96c561b6a22168cb18923f3c2d4dd50",
+          "key_binding_kind": "activity_answer_key",
+          "key_physical_page": 179,
+          "key_header_text": "Etkinlik 5 (27. Sayfa)",
+          "key_header_bbox": [125.136, 600.706, 223.296, 610.706],
+          "key_bbox": [41.0, 598.0, 296.0, 684.0],
+          "key_word_count": 26,
+          "key_tokens_sha256": "e5bf0ae4e3d2add9cd114e375da84173326c3eb45b988b5d4d1bfcba5cb4363c",
+          "key_projection_schema": "pdf-activity-key-projection-v1",
+          "key_projection_sha256": "40aa04df7f6c453b8d4060b1bd38298a1a692b3b055a39e8346d4dee9c49488d",
+          "answer_format": "numbered_short_text",
+          "answer_components": [
+            {"label": "1", "value": "Polen"},
+            {"label": "2", "value": "Mayoz"},
+            {"label": "3", "value": "Gametogenez"},
+            {"label": "4", "value": "Tetrat"},
+            {"label": "5", "value": "Hermafrodit"},
+            {"label": "6", "value": "Döllenme"},
+            {"label": "7", "value": "Kiyazma"},
+            {"label": "8", "value": "Sperm"},
+            {"label": "9", "value": "Zigot"}
+          ],
+          "canonical_answer": "1=Polen; 2=Mayoz; 3=Gametogenez; 4=Tetrat; 5=Hermafrodit; 6=Döllenme; 7=Kiyazma; 8=Sperm; 9=Zigot",
+          "text_visible_activity_marker": true,
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_def_10biyoloji_640bb362f2d5:u2:p74:activity3",
+          "source_address": {
+            "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+            "unit_number": 2,
+            "printed_page_number": 74,
+            "activity_number": 3
+          },
+          "unit_title": "KALITIMIN GENEL İLKELERİ",
+          "content_physical_page": 74,
+          "printed_page_number": 74,
+          "activity_number": 3,
+          "marker_kind": "activity_label",
+          "marker_text": "ETKİNLİK-3",
+          "marker_bbox": [287.324, 54.597, 344.216, 65.597],
+          "content_bbox": [42.0, 50.0, 582.0, 780.0],
+          "content_word_count": 151,
+          "content_tokens_sha256": "9bb71ed83313fc170f391ef6a47dd3d163104d7ffc9e886c64a1ce1d706ad0ab",
+          "content_projection_schema": "pdf-activity-content-projection-v1",
+          "content_projection_sha256": "e4eedc63c69c4b84462b9121f7d08885a332bbc32430aa3fcab76164208a6c5d",
+          "key_binding_kind": "activity_answer_key",
+          "key_physical_page": 180,
+          "key_header_text": "Etkinlik 3 (74. Sayfa)",
+          "key_header_bbox": [125.552, 232.342, 223.742, 242.342],
+          "key_bbox": [41.0, 230.0, 296.0, 506.0],
+          "key_word_count": 128,
+          "key_tokens_sha256": "d944f7818a55bb204cddd6b4076a2904b3e1eabf427bdb03f905a9901326d6a6",
+          "key_projection_schema": "pdf-activity-key-projection-v1",
+          "key_projection_sha256": "477fefd372d6eb50d687ba2384f8ff7ebb945001536c29d37373e9f22cc6ddab",
+          "answer_format": "scalar_exit",
+          "answer_components": [{"label": "scalar", "value": "7"}],
+          "canonical_answer": "7",
+          "text_visible_activity_marker": true,
+          "visually_checked": true
+        }
+      ]
+    }
+  ]
+}

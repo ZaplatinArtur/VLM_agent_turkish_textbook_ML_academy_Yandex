@@ -36,6 +36,9 @@ _PRIMARY_EXAMPLE_LABEL = re.compile(
     r"^\s*(?:#{1,6}\s*)?\u00d6rnek\s+([1-9]\d{0,2})\s*[.):]?\s*$",
     re.IGNORECASE,
 )
+_PRIMARY_ACTIVITY_LABEL = re.compile(
+    r"^\s*(?:#{1,6}\s*)?etkinlik-([1-9]\d{0,2}|s)\s*$"
+)
 _PRIMARY_TEXT_LAYOUT_LABELS = frozenset({"text", "paragraph_title"})
 _TOKEN = re.compile(r"[a-z0-9]+")
 _LATEX_COMMAND = re.compile(r"\\[A-Za-z]+")
@@ -101,6 +104,7 @@ class OcrObservation:
     parser_identity: str
     text_blocks: tuple[str, ...] = ()
     primary_example_label_number: int | None = None
+    primary_activity_label_number: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -300,6 +304,79 @@ def _strict_primary_layout_example_label_number(
     return int(match.group(1))
 
 
+def strict_activity_label_number_text(value: str) -> int | None:
+    """Return one exact ``ETKİNLİK-N`` title number, or ``None``.
+
+    The official handwriting-style title font renders the digit 5 with an
+    S-shaped glyph, and the pinned OCR consequently emits ``ETKINLIK-S`` for
+    that one terminal position.  The canonicalization is deliberately narrow:
+    only a complete activity title may map terminal ``S`` to 5.  Other letters,
+    prefixes, suffixes, and uses of ``S`` remain invalid.
+    """
+
+    if not isinstance(value, str):
+        return None
+    folded = unicodedata.normalize("NFKD", value.casefold().replace("\u0131", "i"))
+    folded = "".join(
+        character for character in folded if not unicodedata.combining(character)
+    )
+    match = _PRIMARY_ACTIVITY_LABEL.fullmatch(folded)
+    if match is None:
+        return None
+    marker = match.group(1)
+    return 5 if marker == "s" else int(marker)
+
+
+def _strict_primary_layout_activity_label_number(
+    raw_blocks: Sequence[Any],
+    *,
+    width: int,
+    height: int,
+) -> int | None:
+    """Return one exact top-centred ``ETKİNLİK-N`` title, or fail closed."""
+
+    order_one: list[Mapping[str, Any]] = []
+    for raw_block in raw_blocks:
+        if not isinstance(raw_block, Mapping):
+            return None
+        label = str(raw_block.get("block_label") or "").casefold()
+        if label == "image":
+            continue
+        order = raw_block.get("block_order")
+        if isinstance(order, int) and not isinstance(order, bool) and order == 1:
+            order_one.append(raw_block)
+    if len(order_one) != 1:
+        return None
+    block = order_one[0]
+    if str(block.get("block_label") or "").casefold() != "paragraph_title":
+        return None
+    number = strict_activity_label_number_text(
+        str(block.get("block_content") or "").strip()
+    )
+    if number is None:
+        return None
+    bbox = block.get("block_bbox")
+    if (
+        not isinstance(bbox, Sequence)
+        or isinstance(bbox, (str, bytes))
+        or len(bbox) != 4
+        or any(
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(float(value))
+            for value in bbox
+        )
+    ):
+        return None
+    left, top, right, bottom = (float(value) for value in bbox)
+    if not (0.0 <= left < right <= width and 0.0 <= top < bottom <= height):
+        return None
+    center_x = (left + right) / 2.0
+    if not width * 0.35 <= center_x <= width * 0.65 or top > height * 0.15:
+        return None
+    return number
+
+
 def _parser_observation(
     record: Mapping[str, Any],
     *,
@@ -342,6 +419,15 @@ def _parser_observation(
     )
     primary_example_label_number = (
         _strict_primary_layout_example_label_number(
+            raw_blocks,
+            width=width,
+            height=height,
+        )
+        if prefer_primary_layout_number
+        else None
+    )
+    primary_activity_label_number = (
+        _strict_primary_layout_activity_label_number(
             raw_blocks,
             width=width,
             height=height,
@@ -396,6 +482,7 @@ def _parser_observation(
         parser_identity=parser_identity,
         text_blocks=tuple(texts),
         primary_example_label_number=primary_example_label_number,
+        primary_activity_label_number=primary_activity_label_number,
     )
 
 
@@ -442,16 +529,18 @@ def observed_source_question_marker(
 ) -> tuple[str | None, int | None]:
     """Project exactly one source-visible question-address marker."""
 
-    if (
-        observation.question_number is not None
-        and observation.primary_example_label_number is not None
-    ):
+    observed = tuple(
+        (kind, number)
+        for kind, number in (
+            ("numbered_item", observation.question_number),
+            ("example_label", observation.primary_example_label_number),
+            ("activity_label", observation.primary_activity_label_number),
+        )
+        if number is not None
+    )
+    if len(observed) != 1:
         return None, None
-    if observation.question_number is not None:
-        return "numbered_item", observation.question_number
-    if observation.primary_example_label_number is not None:
-        return "example_label", observation.primary_example_label_number
-    return None, None
+    return observed[0]
 
 
 def problem_for(

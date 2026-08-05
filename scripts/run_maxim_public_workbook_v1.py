@@ -26,6 +26,7 @@ from evidence_os.contracts import (  # noqa: E402
 from evidence_os.official_ogm import (  # noqa: E402
     PageMatcher,
     canonical_json_bytes,
+    observed_source_question_marker,
     parser_observation_allow_missing_number,
     parser_observation_primary_layout_number,
     sha256_file,
@@ -33,6 +34,7 @@ from evidence_os.official_ogm import (  # noqa: E402
 from evidence_os.official_workbook import (  # noqa: E402
     VERIFIER,
     WorkbookThresholds,
+    activity_label_projection_enabled,
     document_for_source,
     parse_workbook_index,
     resolve_workbook_question,
@@ -40,6 +42,14 @@ from evidence_os.official_workbook import (  # noqa: E402
     verify_workbook_index_pdf,
 )
 from evidence_os.official_ogm import OfficialSourceError  # noqa: E402
+from evidence_os.visual_coordinate_binding import (  # noqa: E402
+    ActivityVisualObservationRef,
+    ActivityVisualRecordRef,
+    VisualBindingThresholds,
+    VisualCoordinateBindingError,
+    load_activity_visual_artifact_json,
+    verified_activity_bindings_from_artifact,
+)
 
 
 SCHEMA = "maxim-public-workbook-run-v1"
@@ -178,6 +188,27 @@ def run(
     source_index_sha = _require_hash(
         source_index_path, str(index_spec["sha256"]), "source-native workbook index"
     )
+    visual_spec = inputs.get("activity_visual_evidence")
+    if visual_spec is not None and not isinstance(visual_spec, dict):
+        raise RunError("activity visual evidence input must be a pinned object")
+    if isinstance(visual_spec, dict):
+        if (
+            set(visual_spec) != {"path", "sha256", "allowed_role"}
+            or visual_spec.get("allowed_role")
+            != "answer_free_sift_ransac_page_binding_fallback_only"
+            or policy.get("visual_page_binding_mode")
+            != "fallback_only_after_text_page_gate_failure_v1"
+        ):
+            raise RunError("activity visual evidence role is not fail-closed")
+        visual_path = _repo_path(str(visual_spec.get("path") or ""))
+        visual_sha = _require_hash(
+            visual_path,
+            str(visual_spec.get("sha256") or ""),
+            "activity visual evidence",
+        )
+    else:
+        visual_path = None
+        visual_sha = None
     source_index = parse_workbook_index(_load_json(source_index_path))
     indexed_documents = {document.document_id: document for document in source_index.documents}
     frozen_by_id: dict[str, dict[str, Any]] = {}
@@ -199,6 +230,36 @@ def run(
             policy["min_numberless_question_matched_tokens"]
         ),
         min_numberless_question_margin=float(policy["min_numberless_question_margin"]),
+        min_coordinate_question_similarity=float(
+            policy.get("min_coordinate_question_similarity", 0.90)
+        ),
+        min_coordinate_question_source_tokens=int(
+            policy.get("min_coordinate_question_source_tokens", 8)
+        ),
+        min_coordinate_question_margin=float(
+            policy.get("min_coordinate_question_margin", 0.25)
+        ),
+    )
+    visual_thresholds = VisualBindingThresholds(
+        min_good_matches=int(policy.get("visual_min_good_matches", 50)),
+        min_inliers=int(policy.get("visual_min_inliers", 40)),
+        min_inlier_ratio=float(policy.get("visual_min_inlier_ratio", 0.65)),
+        min_task_hull_fraction=float(
+            policy.get("visual_min_task_hull_fraction", 0.30)
+        ),
+        max_median_reprojection_error=float(
+            policy.get("visual_max_median_reprojection_error", 1.0)
+        ),
+        min_mapped_inside_fraction=float(
+            policy.get("visual_min_mapped_inside_fraction", 0.98)
+        ),
+        max_scale_anisotropy=float(
+            policy.get("visual_max_scale_anisotropy", 1.15)
+        ),
+        min_rank_score_margin=float(
+            policy.get("visual_min_rank_score_margin", 10.0)
+        ),
+        min_rank_score_ratio=float(policy.get("visual_min_rank_score_ratio", 5.0)),
     )
     try:
         import pdfplumber
@@ -214,6 +275,7 @@ def run(
     number_projection, allow_example_label_marker = (
         validate_fail_closed_workbook_policy(policy)
     )
+    allow_activity_label_marker = activity_label_projection_enabled(policy)
     if number_projection == "unique_block_markers_v1":
         observation_loader = parser_observation_allow_missing_number
     elif number_projection == "primary_layout_then_unique_v1":
@@ -260,12 +322,81 @@ def run(
     locator_index = _index(_load_jsonl(locator_path), "source locators")
     if not set(parser_index) <= set(locator_index):
         raise RunError("source locator projection does not cover every parser task")
+    verified_visual_bindings = {}
+    if visual_path is not None:
+        visual_observations: dict[str, ActivityVisualObservationRef] = {}
+        for task_id, raw in parser_index.items():
+            try:
+                observation = observation_loader(raw)
+            except (OfficialSourceError, ValueError, KeyError, TypeError):
+                continue
+            marker_kind, marker_number = observed_source_question_marker(observation)
+            if marker_kind != "activity_label" or marker_number is None:
+                continue
+            source_url = str(locator_index[task_id].get("source_url") or "")
+            try:
+                visual_document = document_for_source(
+                    source_index,
+                    source_url,
+                    allow_missing_nosw=allow_missing_nosw,
+                )
+            except OfficialSourceError:
+                continue
+            if visual_document is None:
+                continue
+            visual_observations[task_id] = ActivityVisualObservationRef(
+                task_id=task_id,
+                task_image_sha256=observation.image_sha256,
+                width=observation.width,
+                height=observation.height,
+                parser_identity=observation.parser_identity,
+                document_id=visual_document.document_id,
+                pdf_sha256=visual_document.pdf_sha256,
+                marker_kind=marker_kind,
+                marker_number=marker_number,
+            )
+        visual_records = tuple(
+            ActivityVisualRecordRef(
+                document_id=document.document_id,
+                record_id=question.record_id,
+                content_page_number=question.content_page_number,
+                activity_number=question.question_number,
+                key_projection_sha256=question.key_projection_sha256,
+                content_projection_sha256=question.content_projection_sha256,
+                binding_projection_sha256=question.binding_projection_sha256,
+                visually_checked=question.visually_checked,
+                content_bbox=question.content_bbox,
+            )
+            for document in source_index.documents
+            for question in document.questions
+            if question.key_binding_kind == "activity_answer_key"
+            and question.question_marker_kind == "activity_label"
+            and question.key_projection_sha256 is not None
+            and question.content_projection_sha256 is not None
+            and question.binding_projection_sha256 is not None
+            and question.content_bbox is not None
+        )
+        try:
+            verified_visual_bindings = verified_activity_bindings_from_artifact(
+                load_activity_visual_artifact_json(visual_path),
+                repo_root=REPO_ROOT,
+                expected_parser_sha256=parser_sha,
+                expected_source_locators_sha256=locator_sha,
+                expected_source_index_sha256=source_index_sha,
+                observations_by_task_id=visual_observations,
+                records=visual_records,
+                document_pdf_paths=document_paths,
+                thresholds=visual_thresholds,
+            )
+        except VisualCoordinateBindingError as exc:
+            raise RunError(f"activity visual evidence failed closed: {exc}") from exc
 
     candidate_rows: list[dict[str, Any]] = []
     certificate_rows: list[dict[str, Any]] = []
     audit_rows: list[dict[str, Any]] = []
     eligible = 0
     accepted = 0
+    visual_fallback_certificates = 0
     for raw in parser_rows:
         task_id = str(raw["task_id"])
         source_url = str(locator_index[task_id].get("source_url") or "")
@@ -309,9 +440,14 @@ def run(
                 thresholds,
                 allow_missing_nosw=allow_missing_nosw,
                 allow_example_label_marker=allow_example_label_marker,
+                allow_activity_label_marker=allow_activity_label_marker,
                 verified_content_marker_counts=cache["source_verification"][
                     "content_marker_counts"
                 ],
+                verified_activity_visual_binding=verified_visual_bindings.get(
+                    observation.image_sha256
+                ),
+                activity_visual_thresholds=visual_thresholds,
             )
         except (OfficialSourceError, ValueError, KeyError, TypeError) as exc:
             candidate_rows.append(
@@ -341,9 +477,16 @@ def run(
             "pypdf_version": str(pypdf.__version__),
             "pdfplumber_version": str(pdfplumber.__version__),
             "source_verification": cache["source_verification"],
+            **(
+                {"activity_visual_evidence_sha256": visual_sha}
+                if visual_sha is not None
+                else {}
+            ),
         }
         if result.accepted and result.answer:
             accepted += 1
+            if "visual_page_binding" in result.trace:
+                visual_fallback_certificates += 1
             candidate_rows.append(
                 {
                     "task_id": task_id,
@@ -397,6 +540,7 @@ def run(
         "rows": expected_rows,
         "eligible_rows": eligible,
         "accepted_certificates": accepted,
+        "visual_fallback_certificates": visual_fallback_certificates,
         "abstentions": expected_rows - accepted,
         "artifacts": {
             "candidate": {"path": str(candidate_path), "sha256": sha256_file(candidate_path)},
@@ -410,6 +554,16 @@ def run(
             "parser_observations": {"path": str(parser_path), "sha256": parser_sha},
             "source_locators": {"path": str(locator_path), "sha256": locator_sha},
             "source_index": {"path": str(source_index_path), "sha256": source_index_sha},
+            **(
+                {
+                    "activity_visual_evidence": {
+                        "path": str(visual_path),
+                        "sha256": visual_sha,
+                    }
+                }
+                if visual_path is not None
+                else {}
+            ),
             "documents": {
                 document_id: {
                     "path": str(cache["path"]),

@@ -23,6 +23,11 @@ from evidence_os.official_ogm import (  # noqa: E402
     parser_observation_allow_missing_number,
     parser_observation_primary_layout_number,
     sha256_file,
+    strict_activity_label_number_text,
+)
+from evidence_os.official_workbook import (  # noqa: E402
+    activity_label_projection_enabled,
+    validate_fail_closed_workbook_policy,
 )
 
 
@@ -157,14 +162,74 @@ def _primary_example_evidence(
     }
 
 
+def _primary_activity_evidence(
+    record: Mapping[str, Any], expected_number: int
+) -> dict[str, Any]:
+    images = record.get("images")
+    if not isinstance(images, list) or len(images) != 1 or not isinstance(images[0], Mapping):
+        raise ProjectionAuditError("activity projection has malformed image evidence")
+    image = images[0]
+    width = int(image["width"])
+    height = int(image["height"])
+    blocks = image.get("parsing_res_list")
+    if not isinstance(blocks, list):
+        raise ProjectionAuditError("activity projection has malformed block evidence")
+    candidates = [
+        block
+        for block in blocks
+        if isinstance(block, Mapping)
+        and str(block.get("block_label") or "").casefold() != "image"
+        and isinstance(block.get("block_order"), int)
+        and not isinstance(block.get("block_order"), bool)
+        and block.get("block_order") == 1
+    ]
+    if len(candidates) != 1:
+        raise ProjectionAuditError("activity projection lacks one unique order-one block")
+    block = candidates[0]
+    if str(block.get("block_label") or "").casefold() != "paragraph_title":
+        raise ProjectionAuditError("activity projection is not a paragraph title")
+    if strict_activity_label_number_text(
+        str(block.get("block_content") or "").strip()
+    ) != expected_number:
+        raise ProjectionAuditError("activity projection marker does not match observation")
+    bbox = block.get("block_bbox")
+    if not isinstance(bbox, list) or len(bbox) != 4:
+        raise ProjectionAuditError("activity projection lacks a four-value bbox")
+    normalized_bbox = [
+        round(float(bbox[0]) / width, 8),
+        round(float(bbox[1]) / height, 8),
+        round(float(bbox[2]) / width, 8),
+        round(float(bbox[3]) / height, 8),
+    ]
+    return {
+        "block_label": "paragraph_title",
+        "block_order": 1,
+        "marker_kind": "activity_label",
+        "marker": expected_number,
+        "terminal_s_canonicalized_to_5": (
+            str(block.get("block_content") or "").strip().casefold().endswith("-s")
+        ),
+        "normalized_bbox": normalized_bbox,
+    }
+
+
 def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
     profile = _load_json(profile_path)
     if profile.get("schema_version") != "maxim-public-workbook-profile-v1":
         raise ProjectionAuditError("unsupported profile schema")
     policy = profile.get("policy")
-    if not isinstance(policy, dict) or policy.get("question_number_projection") != (
-        "primary_layout_then_unique_v1"
-    ):
+    if not isinstance(policy, dict):
+        raise ProjectionAuditError("profile policy is missing")
+    try:
+        number_projection, _allow_example_label = (
+            validate_fail_closed_workbook_policy(policy)
+        )
+        allow_activity_label = activity_label_projection_enabled(policy)
+    except OfficialSourceError as exc:
+        raise ProjectionAuditError(
+            f"profile fail-closed policy is invalid: {exc}"
+        ) from exc
+    if number_projection != "primary_layout_then_unique_v1":
         raise ProjectionAuditError("profile does not freeze primary-layout projection")
     example_projection = str(policy.get("example_label_projection") or "disabled")
     if example_projection not in {
@@ -172,6 +237,17 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
         "primary_paragraph_title_order_one_v1",
     }:
         raise ProjectionAuditError("profile has an unsupported example-label projection")
+    activity_projection = str(policy.get("activity_label_projection") or "disabled")
+    if activity_projection not in {
+        "disabled",
+        "primary_paragraph_title_order_one_v1",
+    }:
+        raise ProjectionAuditError("profile has an unsupported activity-label projection")
+    decision_schema = (
+        "maxim-primary-layout-projection-decision-v4"
+        if allow_activity_label
+        else "maxim-primary-layout-projection-decision-v3"
+    )
     inputs = profile.get("inputs")
     if not isinstance(inputs, dict) or not isinstance(inputs.get("parser_observations"), dict):
         raise ProjectionAuditError("profile parser input is missing")
@@ -203,13 +279,18 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
             method = "parser_error_abstain"
             decisions.append(
                 {
-                    "schema_version": "maxim-primary-layout-projection-decision-v3",
+                    "schema_version": decision_schema,
                     "task_id": task_id,
                     "method": method,
                     "error": str(exc),
                     "legacy_question_number": None,
                     "projected_question_number": None,
                     "projected_example_label_number": None,
+                    **(
+                        {"projected_activity_label_number": None}
+                        if allow_activity_label
+                        else {}
+                    ),
                 }
             )
             methods[method] += 1
@@ -218,12 +299,32 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
         if task_id in seen:
             raise ProjectionAuditError(f"duplicate task_id: {task_id}")
         seen.add(task_id)
-        if (
+        marker_values = tuple(
+            value
+            for value in (
+                projected.question_number,
+                projected.primary_example_label_number,
+                projected.primary_activity_label_number
+                if allow_activity_label
+                else None,
+            )
+            if value is not None
+        )
+        if len(marker_values) > 1:
+            method = "source_marker_conflict_abstain"
+        elif (
             projected.question_number is None
             and projected.primary_example_label_number is not None
             and example_projection == "primary_paragraph_title_order_one_v1"
         ):
             method = "primary_example_label"
+        elif (
+            projected.question_number is None
+            and projected.primary_example_label_number is None
+            and projected.primary_activity_label_number is not None
+            and allow_activity_label
+        ):
+            method = "primary_activity_label"
         elif projected.question_number is None:
             method = "abstain_no_unique_number"
         elif projected.primary_example_label_number is not None:
@@ -235,7 +336,7 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
         else:
             method = "primary_layout_override"
         decision: dict[str, Any] = {
-            "schema_version": "maxim-primary-layout-projection-decision-v3",
+            "schema_version": decision_schema,
             "task_id": task_id,
             "method": method,
             "legacy_question_number": legacy.question_number,
@@ -244,6 +345,10 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
                 projected.primary_example_label_number
             ),
         }
+        if allow_activity_label:
+            decision["projected_activity_label_number"] = (
+                projected.primary_activity_label_number
+            )
         if method.startswith("primary_layout_"):
             if projected.question_number is None:
                 raise ProjectionAuditError("primary method has no projected number")
@@ -254,6 +359,12 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
                 raw,
                 projected.primary_example_label_number,
             )
+        elif method == "primary_activity_label":
+            assert projected.primary_activity_label_number is not None
+            decision["evidence"] = _primary_activity_evidence(
+                raw,
+                projected.primary_activity_label_number,
+            )
         decisions.append(decision)
         methods[method] += 1
 
@@ -262,7 +373,11 @@ def audit(profile_path: Path, output_dir: Path) -> dict[str, Any]:
     decisions_path.write_bytes(b"".join(canonical_json_bytes(row) + b"\n" for row in decisions))
     manifest_path = output_dir / "manifest.json"
     manifest = {
-        "schema_version": "maxim-primary-layout-projection-audit-v3",
+        "schema_version": (
+            "maxim-primary-layout-projection-audit-v4"
+            if allow_activity_label
+            else "maxim-primary-layout-projection-audit-v3"
+        ),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "profile": {"path": str(profile_path.resolve()), "sha256": sha256_file(profile_path)},
         "parser_observations": {"path": str(parser_path.resolve()), "sha256": actual_parser_sha},

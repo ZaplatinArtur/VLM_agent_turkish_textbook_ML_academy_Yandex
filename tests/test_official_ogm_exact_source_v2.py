@@ -26,6 +26,7 @@ from evidence_os.official_ogm import (
     parser_observation_primary_layout_number,
     resolve_exact_question,
     safe_project_book,
+    strict_activity_label_number_text,
     strict_book_id,
 )
 
@@ -684,4 +685,107 @@ def test_primary_example_projection_rejects_duplicate_and_marker_conflict() -> N
     observation = parser_observation_primary_layout_number(conflict)
     assert observation.question_number == 7
     assert observation.primary_example_label_number == 24
+    assert observed_source_question_marker(observation) == (None, None)
+
+
+def _activity_layout_row(marker: str = "## ETKINLIK-3") -> dict[str, Any]:
+    row = _parser_row()
+    row["images"][0]["parsing_res_list"] = [
+        {
+            "block_label": "paragraph_title",
+            "block_content": marker,
+            "block_order": 1,
+            "block_bbox": [330, 10, 470, 35],
+        },
+        {
+            "block_label": "text",
+            "block_content": TARGET_TEXT,
+            "block_order": 2,
+            "block_bbox": [10, 50, 700, 120],
+        },
+    ]
+    return row
+
+
+@pytest.mark.parametrize(
+    ("marker", "expected"),
+    [
+        ("## ETKINLIK-3", 3),
+        ("ETKİNLİK-2", 2),
+        ("## ETKINLIK-S", 5),
+    ],
+)
+def test_primary_layout_projects_exact_top_center_activity_title(
+    marker: str,
+    expected: int,
+) -> None:
+    observation = parser_observation_primary_layout_number(
+        _activity_layout_row(marker)
+    )
+
+    assert observation.question_number is None
+    assert observation.primary_activity_label_number == expected
+    assert observed_source_question_marker(observation) == (
+        "activity_label",
+        expected,
+    )
+
+
+@pytest.mark.parametrize(
+    "marker",
+    [
+        "ETKINLIK-A",
+        "ETKINLIK-S trailing",
+        "prefix ETKINLIK-S",
+        "ETKINLIK-0",
+        "Etkinlik S",
+        "S ETKINLIK-5",
+    ],
+)
+def test_activity_title_canonicalization_rejects_near_misses(marker: str) -> None:
+    assert strict_activity_label_number_text(marker) is None
+
+
+@pytest.mark.parametrize(
+    ("mutation", "value"),
+    [
+        ("block_label", "text"),
+        ("block_order", 2),
+        ("block_bbox", [10, 10, 150, 35]),
+        ("block_bbox", [330, 100, 470, 135]),
+    ],
+)
+def test_primary_activity_projection_rejects_layout_near_misses(
+    mutation: str,
+    value: Any,
+) -> None:
+    row = _activity_layout_row()
+    row["images"][0]["parsing_res_list"][0][mutation] = value
+
+    assert (
+        parser_observation_primary_layout_number(row).primary_activity_label_number
+        is None
+    )
+
+
+def test_primary_activity_projection_rejects_duplicate_and_marker_conflict() -> None:
+    duplicate = _activity_layout_row()
+    duplicate["images"][0]["parsing_res_list"].append(
+        {
+            "block_label": "paragraph_title",
+            "block_content": "## ETKINLIK-3",
+            "block_order": 1,
+            "block_bbox": [335, 12, 475, 37],
+        }
+    )
+    assert (
+        parser_observation_primary_layout_number(duplicate).primary_activity_label_number
+        is None
+    )
+
+    conflict = _activity_layout_row()
+    conflict["images"][0]["parsing_res_list"][1]["block_content"] = "7. conflict"
+    observation = parser_observation_primary_layout_number(conflict)
+    assert observation.question_number == 7
+    assert observation.primary_activity_label_number == 3
     assert observed_source_question_marker(observation) == (None, None)
