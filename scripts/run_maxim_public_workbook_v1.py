@@ -27,6 +27,7 @@ from evidence_os.official_ogm import (  # noqa: E402
     PageMatcher,
     canonical_json_bytes,
     parser_observation_allow_missing_number,
+    parser_observation_primary_layout_number,
     sha256_file,
 )
 from evidence_os.official_workbook import (  # noqa: E402
@@ -216,6 +217,15 @@ def run(
         or policy.get("require_pdf_bound_key_context") is not True
     ):
         raise RunError("public-workbook profile does not enable all fail-closed bindings")
+    number_projection = str(
+        policy.get("question_number_projection") or "unique_block_markers_v1"
+    )
+    if number_projection == "unique_block_markers_v1":
+        observation_loader = parser_observation_allow_missing_number
+    elif number_projection == "primary_layout_then_unique_v1":
+        observation_loader = parser_observation_primary_layout_number
+    else:
+        raise RunError("unsupported question-number projection")
 
     caches: dict[str, dict[str, Any]] = {}
     for document_id, document in indexed_documents.items():
@@ -281,7 +291,7 @@ def run(
         eligible += 1
         cache = caches[document.document_id]
         try:
-            observation = parser_observation_allow_missing_number(raw)
+            observation = observation_loader(raw)
             result = resolve_workbook_question(
                 observation,
                 source_url,
@@ -397,9 +407,10 @@ def run(
         },
     }
     manifest_path = output_dir / "manifest.json"
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
-        encoding="utf-8",
+    manifest_path.write_bytes(
+        (json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode(
+            "utf-8"
+        )
     )
     manifest["manifest"] = {"path": str(manifest_path), "sha256": sha256_file(manifest_path)}
     return manifest

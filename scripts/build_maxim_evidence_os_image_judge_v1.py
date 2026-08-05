@@ -29,6 +29,7 @@ from evidence_os.official_ogm import (  # noqa: E402
     OfficialSourceError,
     PageMatcher,
     parser_observation_allow_missing_number,
+    parser_observation_primary_layout_number,
     problem_for,
 )
 from evidence_os.official_workbook import (  # noqa: E402
@@ -201,6 +202,15 @@ def build(
         ),
         min_numberless_question_margin=float(policy["min_numberless_question_margin"]),
     )
+    number_projection = str(
+        policy.get("question_number_projection") or "unique_block_markers_v1"
+    )
+    if number_projection == "unique_block_markers_v1":
+        observation_loader = parser_observation_allow_missing_number
+    elif number_projection == "primary_layout_then_unique_v1":
+        observation_loader = parser_observation_primary_layout_number
+    else:
+        raise JudgeBuildError("unsupported question-number projection")
     try:
         import pdfplumber
         import pypdf
@@ -310,7 +320,7 @@ def build(
         trace_source = trace.get("source")
         if not isinstance(trace_source, dict):
             raise JudgeBuildError(f"changed image row {task_id} lacks source metadata")
-        observation = parser_observation_allow_missing_number(parser_rows[task_id])
+        observation = observation_loader(parser_rows[task_id])
         source_url = str(locator_rows[task_id].get("source_url") or "")
         document = document_for_source(source_index, source_url)
         if document is None:

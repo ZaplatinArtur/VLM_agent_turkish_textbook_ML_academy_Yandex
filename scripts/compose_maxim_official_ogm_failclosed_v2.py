@@ -34,6 +34,7 @@ from evidence_os.official_ogm import (  # noqa: E402
     VERIFIER as OGM_VERIFIER,
     parser_observation,
     parser_observation_allow_missing_number,
+    parser_observation_primary_layout_number,
     problem_for,
     sha256_file,
 )
@@ -237,11 +238,21 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
     if contract is None:
         raise CompositionError("unsupported profile schema")
     resolver_schema, verifier, min_checks = contract
-    observation_loader = (
-        parser_observation_allow_missing_number
-        if profile_schema == "maxim-public-workbook-profile-v1"
-        else parser_observation
-    )
+    if profile_schema == "maxim-public-workbook-profile-v1":
+        policy = profile.get("policy")
+        if not isinstance(policy, dict):
+            raise CompositionError("workbook profile policy is missing")
+        number_projection = str(
+            policy.get("question_number_projection") or "unique_block_markers_v1"
+        )
+        if number_projection == "unique_block_markers_v1":
+            observation_loader = parser_observation_allow_missing_number
+        elif number_projection == "primary_layout_then_unique_v1":
+            observation_loader = parser_observation_primary_layout_number
+        else:
+            raise CompositionError("unsupported workbook question-number projection")
+    else:
+        observation_loader = parser_observation
     profile_sha = sha256_file(profile_path)
     expected_rows = int(profile.get("expected_rows", 0))
     anchor_spec = profile.get("anchor")
@@ -485,9 +496,10 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
         },
     }
     manifest_path = output_dir / "manifest.json"
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
-        encoding="utf-8",
+    manifest_path.write_bytes(
+        (json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode(
+            "utf-8"
+        )
     )
     return manifest
 

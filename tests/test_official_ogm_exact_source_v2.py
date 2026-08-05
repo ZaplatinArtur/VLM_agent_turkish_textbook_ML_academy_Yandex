@@ -21,6 +21,8 @@ from evidence_os.official_ogm import (
     build_safe_snapshot,
     canonical_json_bytes,
     parser_observation,
+    parser_observation_allow_missing_number,
+    parser_observation_primary_layout_number,
     resolve_exact_question,
     safe_project_book,
     strict_book_id,
@@ -292,6 +294,208 @@ def test_parser_gold_access_attestation_is_only_allowed_at_provenance_path() -> 
 
     with pytest.raises(OfficialSourceError, match="gold_access|forbidden"):
         parser_observation(row)
+
+
+def test_primary_layout_projection_prefers_first_top_left_question_marker() -> None:
+    row = _parser_row()
+    row["images"][0]["parsing_res_list"] = [
+        {
+            "block_label": "image",
+            "block_content": "99. text inside an ignored figure",
+            "block_order": 0,
+            "block_bbox": [0, 0, 800, 400],
+        },
+        {
+            "block_label": "text",
+            "block_content": f"14. {TARGET_TEXT}",
+            "block_order": 1,
+            "block_bbox": [12, 18, 780, 90],
+        },
+        {
+            "block_label": "text",
+            "block_content": "1) numbered subitem",
+            "block_order": 2,
+            "block_bbox": [40, 120, 400, 150],
+        },
+    ]
+
+    assert parser_observation_allow_missing_number(row).question_number is None
+    observed = parser_observation_primary_layout_number(row)
+    assert observed.question_number == 14
+
+    renamed = deepcopy(row)
+    renamed["task_id"] = "different-opaque-alignment-key"
+    assert parser_observation_primary_layout_number(renamed).question_number == 14
+
+
+@pytest.mark.parametrize(
+    ("block_order", "block_bbox"),
+    [
+        (2, [12, 18, 780, 90]),
+        (True, [12, 18, 780, 90]),
+        (1.0, [12, 18, 780, 90]),
+        (1.9, [12, 18, 780, 90]),
+        (1, [200, 18, 780, 90]),
+        (1, [12, 80, 780, 130]),
+    ],
+)
+def test_primary_layout_projection_rejects_nonprimary_geometry(
+    block_order: int,
+    block_bbox: list[int],
+) -> None:
+    row = _parser_row()
+    row["images"][0]["parsing_res_list"] = [
+        {
+            "block_label": "text",
+            "block_content": f"14. {TARGET_TEXT}",
+            "block_order": block_order,
+            "block_bbox": block_bbox,
+        },
+        {
+            "block_label": "text",
+            "block_content": "1) numbered subitem",
+            "block_order": 3,
+            "block_bbox": [40, 120, 400, 150],
+        },
+    ]
+
+    assert parser_observation_primary_layout_number(row).question_number is None
+
+
+def test_primary_layout_projection_accepts_strict_hyphen_and_keeps_unique_fallback() -> None:
+    row = _parser_row()
+    row["images"][0]["parsing_res_list"] = [
+        {
+            "block_label": "text",
+            "block_content": f"7 - {TARGET_TEXT}",
+            "block_order": 1,
+            "block_bbox": [8, 8, 780, 90],
+        },
+        {
+            "block_label": "text",
+            "block_content": "2) numbered subitem",
+            "block_order": 2,
+            "block_bbox": [40, 120, 400, 150],
+        },
+    ]
+    assert parser_observation_primary_layout_number(row).question_number == 7
+
+    fallback = _parser_row()
+    fallback["images"][0]["parsing_res_list"] = [
+        {"block_label": "text", "block_content": "introductory heading"},
+        {"block_label": "text", "block_content": "7) only numbered marker"},
+    ]
+    assert parser_observation_primary_layout_number(fallback).question_number == 7
+
+
+@pytest.mark.parametrize("layout_label", ["text", "paragraph_title"])
+def test_primary_layout_projection_allows_only_textual_layout_classes(
+    layout_label: str,
+) -> None:
+    row = _parser_row()
+    row["images"][0]["parsing_res_list"] = [
+        {
+            "block_label": layout_label,
+            "block_content": f"18. {TARGET_TEXT}",
+            "block_order": 1,
+            "block_bbox": [8, 8, 780, 90],
+        },
+        {
+            "block_label": "text",
+            "block_content": "2) numbered subitem",
+            "block_order": 2,
+            "block_bbox": [40, 120, 400, 150],
+        },
+    ]
+    assert parser_observation_primary_layout_number(row).question_number == 18
+
+    row["images"][0]["parsing_res_list"][0]["block_label"] = "table"
+    assert parser_observation_primary_layout_number(row).question_number is None
+
+
+def test_primary_layout_projection_is_permutation_invariant_and_inclusive_at_bounds() -> None:
+    row = _parser_row()
+    primary = {
+        "block_label": "text",
+        "block_content": f"14. {TARGET_TEXT}",
+        "block_order": 1,
+        "block_bbox": [160, 60, 800, 400],
+    }
+    subitem = {
+        "block_label": "text",
+        "block_content": "1) numbered subitem at the same left level",
+        "block_order": 2,
+        "block_bbox": [12, 120, 400, 150],
+    }
+    row["images"][0]["parsing_res_list"] = [primary, subitem]
+    forward = parser_observation_primary_layout_number(row)
+
+    permuted = deepcopy(row)
+    permuted["images"][0]["parsing_res_list"] = [subitem, primary]
+    reverse = parser_observation_primary_layout_number(permuted)
+
+    assert forward.question_number == reverse.question_number == 14
+
+
+def test_primary_layout_projection_rejects_duplicate_order_one_blocks() -> None:
+    row = _parser_row()
+    row["images"][0]["parsing_res_list"] = [
+        {
+            "block_label": "text",
+            "block_content": f"14. {TARGET_TEXT}",
+            "block_order": 1,
+            "block_bbox": [12, 18, 780, 90],
+        },
+        {
+            "block_label": "paragraph_title",
+            "block_content": "section heading",
+            "block_order": 1,
+            "block_bbox": [12, 100, 500, 118],
+        },
+        {
+            "block_label": "text",
+            "block_content": "1) numbered subitem",
+            "block_order": 2,
+            "block_bbox": [40, 120, 400, 150],
+        },
+    ]
+    assert parser_observation_primary_layout_number(row).question_number is None
+
+
+@pytest.mark.parametrize(
+    "bad_bbox",
+    [
+        [True, 10, 700, 100],
+        [float("nan"), 10, 700, 100],
+        [10, float("inf"), 700, 100],
+        [10, 10, 10, 100],
+        [10, 10, 700, 10],
+        [-1, 10, 700, 100],
+        [10, -1, 700, 100],
+        [10, 10, 801, 100],
+        [10, 10, 700, 401],
+        [10, 10, 700],
+    ],
+)
+def test_primary_layout_projection_rejects_malformed_geometry(
+    bad_bbox: list[object],
+) -> None:
+    row = _parser_row()
+    row["images"][0]["parsing_res_list"] = [
+        {
+            "block_label": "text",
+            "block_content": f"14. {TARGET_TEXT}",
+            "block_order": 1,
+            "block_bbox": bad_bbox,
+        },
+        {
+            "block_label": "text",
+            "block_content": "1) numbered subitem",
+            "block_order": 2,
+            "block_bbox": [40, 120, 400, 150],
+        },
+    ]
+    assert parser_observation_primary_layout_number(row).question_number is None
 
 
 def test_safe_snapshot_projection_drops_stats_and_outcome_ids_recursively() -> None:

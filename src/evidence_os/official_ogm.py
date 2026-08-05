@@ -29,6 +29,10 @@ VERIFIER = "official-ogm-ocr-pdf-binding-v2"
 _HEX24 = re.compile(r"^[0-9a-f]{24}$")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _QUESTION_NUMBER = re.compile(r"^\s*(?:#{1,6}\s*)?(\d{1,3})\s*[.)]")
+_PRIMARY_QUESTION_NUMBER = re.compile(
+    r"^\s*(?:#{1,6}\s*)?(\d{1,3})\s*(?:[.)]|-(?=\s))"
+)
+_PRIMARY_TEXT_LAYOUT_LABELS = frozenset({"text", "paragraph_title"})
 _TOKEN = re.compile(r"[a-z0-9]+")
 _LATEX_COMMAND = re.compile(r"\\[A-Za-z]+")
 _HTML_TAG = re.compile(r"<[^>]+>")
@@ -186,8 +190,67 @@ def normalize_tokens(text: str) -> tuple[str, ...]:
     return tuple(_TOKEN.findall(value))
 
 
+def _strict_primary_layout_number(
+    raw_blocks: Sequence[Any],
+    *,
+    width: int,
+    height: int,
+) -> int | None:
+    """Return one source-observable primary marker, or fail closed.
+
+    The parser's explicit layout order—not JSON array position—defines the
+    primary block.  Duplicate order-one blocks, non-integral order values, and
+    malformed/non-finite/out-of-image geometry are all rejected.
+    """
+
+    order_one: list[Mapping[str, Any]] = []
+    for raw_block in raw_blocks:
+        if not isinstance(raw_block, Mapping):
+            return None
+        label = str(raw_block.get("block_label") or "").casefold()
+        if label == "image":
+            continue
+        order = raw_block.get("block_order")
+        if isinstance(order, int) and not isinstance(order, bool) and order == 1:
+            order_one.append(raw_block)
+    if len(order_one) != 1:
+        return None
+
+    block = order_one[0]
+    label = str(block.get("block_label") or "").casefold()
+    if label not in _PRIMARY_TEXT_LAYOUT_LABELS:
+        return None
+    content = str(block.get("block_content") or "").strip()
+    number_match = _PRIMARY_QUESTION_NUMBER.match(content)
+    if number_match is None:
+        return None
+
+    bbox = block.get("block_bbox")
+    if (
+        not isinstance(bbox, Sequence)
+        or isinstance(bbox, (str, bytes))
+        or len(bbox) != 4
+        or any(
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(float(value))
+            for value in bbox
+        )
+    ):
+        return None
+    left, top, right, bottom = (float(value) for value in bbox)
+    if not (0.0 <= left < right <= width and 0.0 <= top < bottom <= height):
+        return None
+    if left > width * 0.20 or top > height * 0.15:
+        return None
+    return int(number_match.group(1))
+
+
 def _parser_observation(
-    record: Mapping[str, Any], *, allow_missing_question_number: bool
+    record: Mapping[str, Any],
+    *,
+    allow_missing_question_number: bool,
+    prefer_primary_layout_number: bool = False,
 ) -> OcrObservation:
     """Project one clean parser row to the only fields a resolver may use."""
 
@@ -218,10 +281,16 @@ def _parser_observation(
     if not isinstance(raw_blocks, Sequence) or isinstance(raw_blocks, (str, bytes)):
         raise OfficialSourceError("parser text blocks are missing")
     texts: list[str] = []
+    primary_layout_number = (
+        _strict_primary_layout_number(raw_blocks, width=width, height=height)
+        if prefer_primary_layout_number
+        else None
+    )
     for block in raw_blocks:
         if not isinstance(block, Mapping):
             raise OfficialSourceError("parser block is malformed")
-        if str(block.get("block_label") or "").casefold() == "image":
+        label = str(block.get("block_label") or "")
+        if label.casefold() == "image":
             continue
         content = str(block.get("block_content") or "").strip()
         if content:
@@ -235,7 +304,12 @@ def _parser_observation(
             for text in texts
             if (match := _QUESTION_NUMBER.match(text)) is not None
         }
-        question_number = next(iter(observed_numbers)) if len(observed_numbers) == 1 else None
+        if primary_layout_number is not None:
+            question_number = primary_layout_number
+        elif len(observed_numbers) == 1:
+            question_number = next(iter(observed_numbers))
+        else:
+            question_number = None
     else:
         number_match = _QUESTION_NUMBER.match(texts[0])
         if not number_match:
@@ -278,6 +352,25 @@ def parser_observation_allow_missing_number(
     """
 
     return _parser_observation(record, allow_missing_question_number=True)
+
+
+def parser_observation_primary_layout_number(
+    record: Mapping[str, Any],
+) -> OcrObservation:
+    """Prefer an explicitly top-left, first-layout-block question marker.
+
+    Numbered subitems commonly make the legacy all-block projection
+    ambiguous.  This variant admits a primary marker only when exactly one
+    non-image block has integer layout order one, is parser-classified text or
+    paragraph title, and starts near the image's top-left corner; otherwise it
+    falls back to the legacy unique-marker rule and ultimately to ``None``.
+    """
+
+    return _parser_observation(
+        record,
+        allow_missing_question_number=True,
+        prefer_primary_layout_number=True,
+    )
 
 
 def problem_for(
