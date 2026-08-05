@@ -7,13 +7,19 @@ from typing import Any
 
 
 _LAZY_ATTRS = {
+    "BM25Ranker": (".rankers", "BM25Ranker"),
+    "CrossEncoderRanker": (".rankers", "CrossEncoderRanker"),
     "DenseRanker": (".rankers", "DenseRanker"),
+    "E5Embedder": (".embedders", "E5Embedder"),
     "Embedder": (".embedders", "Embedder"),
+    "M3Embedder": (".embedders", "M3Embedder"),
     "EmbeddingCache": (".cache", "EmbeddingCache"),
     "FaissVectorStore": (".vector_store", "FaissVectorStore"),
     "Index": (".index", "Index"),
     "Ranker": (".rankers", "Ranker"),
     "ReciprocalRankFusion": (".rankers", "ReciprocalRankFusion"),
+    "build_profile": (".pipelines", "build_profile"),
+    "evaluate_pipeline": (".evaluate", "evaluate_pipeline"),
     "Relevance": (".confidence", "Relevance"),
     "RelevanceVerdict": (".confidence", "RelevanceVerdict"),
     "RetrievalPipeline": (".pipeline", "RetrievalPipeline"),
