@@ -25,10 +25,19 @@ def _write_profile(path: Path, value: dict) -> Path:
     return path
 
 
-def test_frozen_composite_chain_passes_without_judge_outputs(tmp_path: Path) -> None:
-    output = tmp_path / "audit.json"
-    result = audit(PROFILE, output, REPO_ROOT)
+def test_source_freeze_was_recorded_and_cannot_be_reopened_post_launch(
+    tmp_path: Path,
+) -> None:
+    with pytest.raises(ValueError, match="main judge output already exists"):
+        audit(PROFILE, tmp_path / "audit.json", REPO_ROOT)
 
+    frozen_audit_path = (
+        REPO_ROOT
+        / "reports"
+        / "maxim_official_exact_source_v2_20260805"
+        / "V7_COMPOSITE_SOURCE_FREEZE_AUDIT.json"
+    )
+    result = json.loads(frozen_audit_path.read_text(encoding="utf-8"))
     assert result["status"] == "pass"
     assert result["candidate_task_ids"] == [
         "val_0042",
@@ -43,7 +52,6 @@ def test_frozen_composite_chain_passes_without_judge_outputs(tmp_path: Path) -> 
     assert result["main"]["overrides"] == 1
     assert result["history"]["overrides"] == 1
     assert result["fixed_outputs_absent"] is True
-    assert json.loads(output.read_text(encoding="utf-8")) == result
 
 
 def test_rejects_outcome_guided_policy(tmp_path: Path) -> None:
