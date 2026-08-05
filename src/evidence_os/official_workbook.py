@@ -36,6 +36,10 @@ from .coordinate_table_answer_key import (
     verify_content_question_marker,
     verify_coordinate_table_answer_key,
 )
+from .inline_solution import (
+    InlineSolutionError,
+    verify_inline_solution_content,
+)
 from .official_ogm import (
     MatchResult,
     OcrObservation,
@@ -129,6 +133,9 @@ class WorkbookThresholds:
     min_coordinate_question_similarity: float = 0.90
     min_coordinate_question_source_tokens: int = 8
     min_coordinate_question_margin: float = 0.25
+    min_inline_question_coverage: float = 0.85
+    min_inline_question_matched_tokens: int = 8
+    min_inline_question_margin: float = 0.25
 
     def __post_init__(self) -> None:
         for name in (
@@ -138,6 +145,8 @@ class WorkbookThresholds:
             "min_numberless_question_margin",
             "min_coordinate_question_similarity",
             "min_coordinate_question_margin",
+            "min_inline_question_coverage",
+            "min_inline_question_margin",
         ):
             value = float(getattr(self, name))
             if not 0.0 <= value <= 1.0:
@@ -148,6 +157,8 @@ class WorkbookThresholds:
             raise ValueError("min_numberless_question_matched_tokens must be positive")
         if self.min_coordinate_question_source_tokens < 1:
             raise ValueError("min_coordinate_question_source_tokens must be positive")
+        if self.min_inline_question_matched_tokens < 1:
+            raise ValueError("min_inline_question_matched_tokens must be positive")
 
 
 def validate_fail_closed_workbook_policy(
@@ -771,6 +782,27 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                             "workbook coordinate-choice answer requires exact key/content "
                             "text, boxes, unit descriptors, and two PDF projection pins"
                         )
+                elif key_binding_kind == "inline_solution_projected":
+                    if (
+                        key_crop_text
+                        or key_projection_sha256
+                        or not question_text
+                        or content_bbox is None
+                        or _HEX64.fullmatch(content_projection_sha256) is None
+                        or binding_projection_sha256
+                        or key_page != content_page
+                        or key_context_page != key_page
+                        or question_marker_kind != "numbered_item"
+                        or section
+                        or test_variant
+                        or content_section
+                        or source_answer_format
+                        or source_unit_number is not None
+                    ):
+                        raise OfficialSourceError(
+                            "inline solution requires exact content text, a content "
+                            "projection pin, and one same-page numbered key"
+                        )
                 else:
                     if key_crop_text or key_projection_sha256 or key_binding_kind not in {
                         "inline_solution",
@@ -790,6 +822,7 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
                 "coordinate_table_answer_key",
                 "activity_answer_key",
                 "coordinate_choice_answer_key",
+                "inline_solution_projected",
             }
             if key_binding_kind not in strict_binding_kinds and (
                 question_marker_kind != "numbered_item"
@@ -1132,6 +1165,26 @@ def verify_workbook_index_pdf(
                         f"{question.record_id}"
                     )
                 content_marker_count = content_verification.marker_count
+            elif question.key_binding_kind == "inline_solution_projected":
+                assert question.content_bbox is not None
+                try:
+                    content_verification = verify_inline_solution_content(
+                        content_page,
+                        pdf_sha256=document.pdf_sha256,
+                        physical_page=question.content_page_number,
+                        bbox=question.content_bbox,
+                        question_number=question.question_number,
+                        question_text=question.question_text,
+                        expected_projection_sha256=(
+                            question.content_projection_sha256
+                        ),
+                    )
+                except InlineSolutionError as exc:
+                    raise OfficialSourceError(
+                        "inline solution content is not verified for "
+                        f"{question.record_id}: {exc}"
+                    ) from exc
+                content_marker_count = content_verification.marker_count
             elif question.key_binding_kind == "coordinate_table_answer_key":
                 assert question.content_bbox is not None
                 try:
@@ -1344,7 +1397,10 @@ def _choice_binding_matches(page: Any, question: WorkbookQuestion) -> bool:
     answer_word = answer_words[0] if len(answer_words) == 1 else None
     answer_x = (question.key_bbox[0] + question.key_bbox[2]) / 2.0
     answer_y = (question.key_bbox[1] + question.key_bbox[3]) / 2.0
-    if question.key_binding_kind == "inline_solution":
+    if question.key_binding_kind in {
+        "inline_solution",
+        "inline_solution_projected",
+    }:
         if answer_word is None:
             return False
         midpoint = float(page.width) / 2.0
@@ -1352,7 +1408,11 @@ def _choice_binding_matches(page: Any, question: WorkbookQuestion) -> bool:
         labels = [
             word
             for word in words
-            if str(word.get("text") or "").strip().casefold().startswith("cevap")
+            if re.fullmatch(
+                r"cevap\s*:",
+                str(word.get("text") or "").strip(),
+                re.IGNORECASE,
+            )
             and abs(_word_center(word)[1] - answer_y) <= 3.0
             and 0.0 <= float(answer_word["x0"]) - float(word["x1"]) <= 8.0
         ]
@@ -1513,7 +1573,18 @@ def _question_marker_present(page_text: str, number: int) -> bool:
 
 
 def _question_marker_count(page_text: str, number: int) -> int:
-    return len(re.findall(rf"(?<!\d){number}\s*[.)](?=\s|$)", page_text))
+    # Some official PDFs glue a numbered marker to the first word during text
+    # extraction (for example ``12.Sefa``).  Admit that exact source-visible
+    # form without widening the gate to decimals, identifiers, or embedded
+    # digit runs: the marker must begin at whitespace/start and the character
+    # after its punctuation must be whitespace, end-of-text, or a Unicode
+    # letter.
+    return len(
+        re.findall(
+            rf"(?<!\S){number}\s*[.)](?=\s|$|[^\W\d_])",
+            page_text,
+        )
+    )
 
 
 def _token_edit_distance(left: Sequence[str], right: Sequence[str]) -> int:
@@ -1711,6 +1782,56 @@ def _numberless_question_match(
         "matched_tokens": matched,
         "query_tokens": total,
         "margin": margin,
+    }
+
+
+def observed_inline_question_binding(
+    observation: OcrObservation,
+    selected: WorkbookQuestion,
+    page_questions: Sequence[WorkbookQuestion],
+    thresholds: WorkbookThresholds,
+) -> dict[str, Any]:
+    """Require the observed text to select the same inline source question."""
+
+    candidates = [
+        question
+        for question in page_questions
+        if question.key_binding_kind == "inline_solution_projected"
+    ]
+    if selected not in candidates:
+        raise OfficialSourceError(
+            "selected inline solution is absent from its source page"
+        )
+    matcher = PageMatcher([question.question_text for question in candidates])
+    scored = [
+        (matcher.score(observation.statement, index), question)
+        for index, question in enumerate(candidates)
+    ]
+    scored.sort(key=lambda item: (-item[0][0], item[1].record_id))
+    (coverage, matched_tokens, query_tokens), matched = scored[0]
+    runner = scored[1][0][0] if len(scored) > 1 else 0.0
+    margin = coverage - runner
+    passed = (
+        matched == selected
+        and coverage >= thresholds.min_inline_question_coverage
+        and matched_tokens >= thresholds.min_inline_question_matched_tokens
+        and margin >= thresholds.min_inline_question_margin
+    )
+    return {
+        "method": "unique_observed_query_to_pdf_attested_inline_crop_v1",
+        "selected_record_id": selected.record_id,
+        "source_text_sha256": canonical_json_sha256(
+            {"tokens": list(normalize_tokens(selected.question_text))}
+        ),
+        "coverage": coverage,
+        "matched_tokens": matched_tokens,
+        "query_tokens": query_tokens,
+        "runner_coverage": runner,
+        "margin": margin,
+        "minimum_coverage": thresholds.min_inline_question_coverage,
+        "minimum_matched_tokens": thresholds.min_inline_question_matched_tokens,
+        "minimum_margin": thresholds.min_inline_question_margin,
+        "passed": passed,
     }
 
 
@@ -1935,6 +2056,17 @@ def resolve_workbook_question(
             thresholds,
         )
         observed_question_binding = bool(observed_question_match["passed"])
+    elif (
+        selected is not None
+        and selected.key_binding_kind == "inline_solution_projected"
+    ):
+        observed_question_match = observed_inline_question_binding(
+            observation,
+            selected,
+            page_questions,
+            thresholds,
+        )
+        observed_question_binding = bool(observed_question_match["passed"])
     strict_content_proof = (
         selected is not None
         and selected.key_binding_kind
@@ -1942,6 +2074,7 @@ def resolve_workbook_question(
             "coordinate_table_answer_key",
             "activity_answer_key",
             "coordinate_choice_answer_key",
+            "inline_solution_projected",
         }
     )
     if (
@@ -1980,7 +2113,8 @@ def resolve_workbook_question(
         checks_list.append(("visual_page_binding", True))
     if (
         selected is not None
-        and selected.key_binding_kind == "coordinate_choice_answer_key"
+        and selected.key_binding_kind
+        in {"coordinate_choice_answer_key", "inline_solution_projected"}
     ):
         checks_list.append(
             ("observed_question_text_matches_source", observed_question_binding)
@@ -2039,7 +2173,8 @@ def resolve_workbook_question(
             **(
                 {"observed_question_text": observed_question_match}
                 if selected is not None
-                and selected.key_binding_kind == "coordinate_choice_answer_key"
+                and selected.key_binding_kind
+                in {"coordinate_choice_answer_key", "inline_solution_projected"}
                 else {}
             ),
             **(

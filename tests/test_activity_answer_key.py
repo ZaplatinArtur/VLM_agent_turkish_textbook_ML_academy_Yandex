@@ -7,6 +7,7 @@ import pytest
 
 from evidence_os.activity_answer_key import (
     ActivityAnswerKeyError,
+    activity_marker_inventory,
     activity_joint_projection_sha256,
     attest_activity_answer_key,
     count_activity_markers,
@@ -148,6 +149,18 @@ def test_full_page_activity_marker_inventory_detects_duplicate_title() -> None:
 
     assert count_activity_markers(_content(), 2) == 1
     assert count_activity_markers(page, 2) == 2
+
+
+def test_full_page_activity_marker_inventory_preserves_distinct_titles() -> None:
+    page = FakePage(
+        [
+            ("ETKİNLİK-2", 18.0),
+            ("unrelated prompt text", 50.0),
+            ("ETKİNLİK-4", 180.0),
+        ]
+    )
+
+    assert activity_marker_inventory(page) == (2, 4)
 
 
 def test_raw_short_text_record_maps_directly_and_derives_the_joint_pin() -> None:

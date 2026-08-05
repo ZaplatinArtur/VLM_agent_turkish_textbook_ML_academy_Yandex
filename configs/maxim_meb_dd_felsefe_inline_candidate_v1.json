@@ -1,0 +1,17 @@
+{
+  "schema_version": "maxim-inline-solutions-workbook-spec-v1",
+  "documents": [
+    {
+      "document_id": "meb_dd_tyt_felsefe_1e66a07b236a",
+      "locator": {
+        "kind": "yandex_public",
+        "public_locator": "ya-disk-public://enaTIeEJ6EkmV8iZcuGkjsW2AQGG8Zk91MZ+kXV1fTsdFdYvBGAaTVhk/JNzKRWhq/J6bpmRyOJonT3VoXnDag==:/MEB-DD-TYT-felsefe.pdf",
+        "name": "MEB-DD-TYT-felsefe.pdf"
+      },
+      "pdf_sha256": "1e66a07b236a8dec0570397eac04cb22962504fc042001d7d7fcd300ebfa884e",
+      "page_count": 285,
+      "content_page_ranges": [[1, 280]],
+      "reviewed_inline_pages": [12, 28]
+    }
+  ]
+}

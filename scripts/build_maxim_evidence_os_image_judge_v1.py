@@ -34,6 +34,17 @@ from evidence_os.official_ogm import (  # noqa: E402
     parser_observation_primary_layout_number,
     problem_for,
 )
+from evidence_os.image_only_activity import (  # noqa: E402
+    IMAGE_ONLY_ACTIVITY_ARTIFACT_ROLE,
+    OBSERVATION_KIND as IMAGE_ONLY_ACTIVITY_OBSERVATION_KIND,
+    RECORD_SELECTION_POLICY as IMAGE_ONLY_ACTIVITY_RECORD_SELECTION_POLICY,
+    ImageOnlyActivityError,
+    load_image_only_activity_visual_artifact_json,
+    problem_for_image_only_activity,
+    project_image_only_activity_observation,
+    resolve_image_only_activity_question,
+    verified_image_only_activity_bindings_from_artifact,
+)
 from evidence_os.official_workbook import (  # noqa: E402
     VERIFIER as WORKBOOK_VERIFIER,
     WorkbookThresholds,
@@ -121,8 +132,10 @@ def _require_activity_visual_reproduction(
     profile_visual_spec: Any,
     composition_manifest: dict[str, Any],
     visual_path: Path | None,
+    manifest_key: str = "activity_visual_reproduction",
+    expected_mode: str = "fresh_source_only_poppler_sift_exact_bytes_v1",
 ) -> None:
-    reproduction = composition_manifest.get("activity_visual_reproduction")
+    reproduction = composition_manifest.get(manifest_key)
     if profile_visual_spec is None:
         if reproduction is not None:
             raise JudgeBuildError("nonvisual composition has a stray visual reproduction")
@@ -144,8 +157,7 @@ def _require_activity_visual_reproduction(
     if (
         not isinstance(reproduction, dict)
         or set(reproduction) != expected_fields
-        or reproduction.get("mode")
-        != "fresh_source_only_poppler_sift_exact_bytes_v1"
+        or reproduction.get("mode") != expected_mode
         or reproduction.get("exact_byte_identity") is not True
         or reproduction.get("benchmark_answer_candidate_outcome_artifacts_read")
         is not False
@@ -267,6 +279,9 @@ def build(
     locator_spec = profile["inputs"]["source_locators"]
     source_index_spec = profile["inputs"]["source_index"]
     visual_spec = profile["inputs"].get("activity_visual_evidence")
+    image_only_visual_spec = profile["inputs"].get(
+        "image_only_activity_visual_evidence"
+    )
     parser_path = (REPO_ROOT / str(parser_spec["path"])).resolve()
     locator_path = (REPO_ROOT / str(locator_spec["path"])).resolve()
     source_index_path = (REPO_ROOT / str(source_index_spec["path"])).resolve()
@@ -297,10 +312,50 @@ def build(
             raise JudgeBuildError("resolver visual evidence provenance changed")
     else:
         visual_path = None
+    if image_only_visual_spec is not None:
+        if (
+            not isinstance(image_only_visual_spec, dict)
+            or set(image_only_visual_spec)
+            != {"path", "sha256", "allowed_role"}
+            or image_only_visual_spec.get("allowed_role")
+            != IMAGE_ONLY_ACTIVITY_ARTIFACT_ROLE
+        ):
+            raise JudgeBuildError(
+                "image-only activity visual evidence role is not fail-closed"
+            )
+        image_only_visual_path = (
+            REPO_ROOT / str(image_only_visual_spec.get("path") or "")
+        ).resolve()
+        image_only_visual_sha = _require_hash(
+            image_only_visual_path,
+            str(image_only_visual_spec.get("sha256") or ""),
+            "image-only activity visual evidence",
+        )
+        manifest_image_only_spec = resolver_manifest.get("inputs", {}).get(
+            "image_only_activity_visual_evidence"
+        )
+        if (
+            not isinstance(manifest_image_only_spec, dict)
+            or manifest_image_only_spec.get("sha256") != image_only_visual_sha
+        ):
+            raise JudgeBuildError(
+                "resolver image-only activity evidence provenance changed"
+            )
+    else:
+        image_only_visual_path = None
     _require_activity_visual_reproduction(
         profile_visual_spec=visual_spec,
         composition_manifest=composition_manifest,
         visual_path=visual_path,
+    )
+    _require_activity_visual_reproduction(
+        profile_visual_spec=image_only_visual_spec,
+        composition_manifest=composition_manifest,
+        visual_path=image_only_visual_path,
+        manifest_key="image_only_activity_visual_reproduction",
+        expected_mode=(
+            "fresh_source_only_poppler_sift_image_only_activity_exact_bytes_v1"
+        ),
     )
     parser_rows = _index(_load_jsonl(parser_path), "parser observations")
     locator_rows = _index(_load_jsonl(locator_path), "source locators")
@@ -310,6 +365,15 @@ def build(
     runtime = profile.get("runtime")
     if not isinstance(policy, dict) or not isinstance(runtime, dict):
         raise JudgeBuildError("profile policy/runtime is incomplete")
+    if image_only_visual_path is not None and (
+        policy.get("image_only_activity_observation_projection")
+        != IMAGE_ONLY_ACTIVITY_OBSERVATION_KIND
+        or policy.get("image_only_activity_record_projection")
+        != IMAGE_ONLY_ACTIVITY_RECORD_SELECTION_POLICY
+        or policy.get("task_id_is_policy_feature") is not False
+        or policy.get("benchmark_candidate_or_outcome_access") is not False
+    ):
+        raise JudgeBuildError("image-only activity policy changed")
     thresholds = WorkbookThresholds(
         min_page_coverage=float(policy["min_page_coverage"]),
         min_page_matched_tokens=int(policy["min_page_matched_tokens"]),
@@ -327,6 +391,15 @@ def build(
         ),
         min_coordinate_question_margin=float(
             policy.get("min_coordinate_question_margin", 0.25)
+        ),
+        min_inline_question_coverage=float(
+            policy.get("min_inline_question_coverage", 0.85)
+        ),
+        min_inline_question_matched_tokens=int(
+            policy.get("min_inline_question_matched_tokens", 8)
+        ),
+        min_inline_question_margin=float(
+            policy.get("min_inline_question_margin", 0.25)
         ),
     )
     visual_thresholds = VisualBindingThresholds(
@@ -404,6 +477,27 @@ def build(
                 "content_marker_counts"
             ],
         }
+    visual_records = tuple(
+        ActivityVisualRecordRef(
+            document_id=document.document_id,
+            record_id=question.record_id,
+            content_page_number=question.content_page_number,
+            activity_number=question.question_number,
+            key_projection_sha256=question.key_projection_sha256,
+            content_projection_sha256=question.content_projection_sha256,
+            binding_projection_sha256=question.binding_projection_sha256,
+            visually_checked=question.visually_checked,
+            content_bbox=question.content_bbox,
+        )
+        for document in source_index.documents
+        for question in document.questions
+        if question.key_binding_kind == "activity_answer_key"
+        and question.question_marker_kind == "activity_label"
+        and question.key_projection_sha256 is not None
+        and question.content_projection_sha256 is not None
+        and question.binding_projection_sha256 is not None
+        and question.content_bbox is not None
+    )
     verified_visual_bindings = {}
     if visual_path is not None:
         if policy.get("visual_page_binding_mode") != (
@@ -441,27 +535,6 @@ def build(
                 marker_kind=marker_kind,
                 marker_number=marker_number,
             )
-        visual_records = tuple(
-            ActivityVisualRecordRef(
-                document_id=document.document_id,
-                record_id=question.record_id,
-                content_page_number=question.content_page_number,
-                activity_number=question.question_number,
-                key_projection_sha256=question.key_projection_sha256,
-                content_projection_sha256=question.content_projection_sha256,
-                binding_projection_sha256=question.binding_projection_sha256,
-                visually_checked=question.visually_checked,
-                content_bbox=question.content_bbox,
-            )
-            for document in source_index.documents
-            for question in document.questions
-            if question.key_binding_kind == "activity_answer_key"
-            and question.question_marker_kind == "activity_label"
-            and question.key_projection_sha256 is not None
-            and question.content_projection_sha256 is not None
-            and question.binding_projection_sha256 is not None
-            and question.content_bbox is not None
-        )
         try:
             verified_visual_bindings = verified_activity_bindings_from_artifact(
                 load_activity_visual_artifact_json(visual_path),
@@ -481,6 +554,71 @@ def build(
             raise JudgeBuildError(
                 f"activity visual evidence failed repeated replay: {exc}"
             ) from exc
+    image_only_observations = {}
+    verified_image_only_bindings = {}
+    if image_only_visual_path is not None:
+        for task_id, raw in parser_rows.items():
+            try:
+                image_only_observation = (
+                    project_image_only_activity_observation(raw)
+                )
+            except ImageOnlyActivityError:
+                continue
+            try:
+                observation_loader(raw)
+            except (OfficialSourceError, ValueError, KeyError, TypeError):
+                pass
+            else:
+                raise JudgeBuildError(
+                    f"parser row {task_id} is ambiguous between text and image-only routes"
+                )
+            image_only_observations[task_id] = image_only_observation
+        try:
+            verified_image_only_bindings = (
+                verified_image_only_activity_bindings_from_artifact(
+                    load_image_only_activity_visual_artifact_json(
+                        image_only_visual_path
+                    ),
+                    repo_root=REPO_ROOT,
+                    expected_parser_sha256=str(parser_spec["sha256"]),
+                    expected_source_locators_sha256=str(locator_spec["sha256"]),
+                    observations_by_task_id=image_only_observations,
+                    source_urls_by_task_id={
+                        task_id: str(
+                            locator_rows[task_id].get("source_url") or ""
+                        )
+                        for task_id in image_only_observations
+                    },
+                    documents_by_id=source_documents,
+                    records=visual_records,
+                    document_pdf_paths={
+                        document_id: cache["path"]
+                        for document_id, cache in source_caches.items()
+                    },
+                    thresholds=VisualBindingThresholds(),
+                )
+            )
+        except ImageOnlyActivityError as exc:
+            raise JudgeBuildError(
+                f"image-only activity evidence failed repeated replay: {exc}"
+            ) from exc
+        image_only_certificate_count = sum(
+            isinstance(
+                certificate.get("trace", {}).get(
+                    "image_only_activity_binding"
+                ),
+                dict,
+            )
+            for certificate in certificates.values()
+            if isinstance(certificate.get("trace"), dict)
+        )
+        if (
+            resolver_manifest.get("image_only_activity_observations")
+            != len(image_only_observations)
+            or resolver_manifest.get("image_only_activity_certificates")
+            != image_only_certificate_count
+        ):
+            raise JudgeBuildError("image-only activity counters changed")
     base_judge_rows = _load_jsonl(base_judge_path)
     base_judge = _index(base_judge_rows, "base image judge")
     if (
@@ -518,19 +656,38 @@ def build(
             raise JudgeBuildError(
                 f"image row {task_id} anchor differs from the candidate judged by base image judge"
             )
-    changed_image_ids = {
-        task_id
-        for task_id, decision in decisions.items()
-        if decision.get("action") == "replace_anchor" and task_id in base_judge
-    }
-    if not changed_image_ids:
-        raise JudgeBuildError("no changed image rows require certificate adjudication")
+    source_adjudication_ids: set[str] = set()
+    for task_id in base_judge:
+        decision = decisions[task_id]
+        certificate = certificates.get(task_id)
+        if certificate is None:
+            continue
+        action = decision.get("action")
+        reason = decision.get("reason")
+        composition_selected = (
+            (action == "replace_anchor" and reason == "strongly_verified_challenger")
+            or (action == "keep_anchor" and reason == "equivalent_to_anchor")
+        )
+        if (
+            not composition_selected
+            or decision.get("certificate_trace_fingerprint")
+            != certificate.get("trace_fingerprint")
+        ):
+            raise JudgeBuildError(
+                f"image row {task_id} has a source certificate that is not "
+                "composition-selected"
+            )
+        source_adjudication_ids.add(task_id)
+    if not source_adjudication_ids:
+        raise JudgeBuildError(
+            "no image rows have a composition-selected source certificate"
+        )
     output_rows: list[dict[str, Any]] = []
     adjudicated: list[dict[str, Any]] = []
     for original in base_judge_rows:
         task_id = str(original["task_id"])
         current_answer = str(solver[task_id].get("final_answer") or "").strip()
-        if task_id not in changed_image_ids:
+        if task_id not in source_adjudication_ids:
             base_answer = str(base_solver[task_id].get("final_answer") or "").strip()
             if current_answer != base_answer:
                 raise JudgeBuildError(
@@ -541,10 +698,14 @@ def build(
         candidate = candidates.get(task_id)
         certificate = certificates.get(task_id)
         if candidate is None or certificate is None:
-            raise JudgeBuildError(f"changed image row {task_id} lacks its source certificate")
+            raise JudgeBuildError(
+                f"source-adjudicated image row {task_id} lacks its certificate"
+            )
         trace = certificate.get("trace")
         if not isinstance(trace, dict):
-            raise JudgeBuildError(f"changed image row {task_id} lacks an inline trace")
+            raise JudgeBuildError(
+                f"source-adjudicated image row {task_id} lacks an inline trace"
+            )
         try:
             _validate_workbook_certificate_artifact(
                 task_id=task_id,
@@ -559,8 +720,15 @@ def build(
         candidate_answer = str(candidate.get("final_answer") or "").strip()
         trace_source = trace.get("source")
         if not isinstance(trace_source, dict):
-            raise JudgeBuildError(f"changed image row {task_id} lacks source metadata")
-        observation = observation_loader(parser_rows[task_id])
+            raise JudgeBuildError(
+                f"source-adjudicated image row {task_id} lacks source metadata"
+            )
+        image_only_observation = image_only_observations.get(task_id)
+        observation = (
+            image_only_observation
+            if image_only_observation is not None
+            else observation_loader(parser_rows[task_id])
+        )
         source_url = str(locator_rows[task_id].get("source_url") or "")
         document = document_for_source(
             source_index,
@@ -568,35 +736,48 @@ def build(
             allow_missing_nosw=allow_missing_nosw,
         )
         if document is None:
-            raise JudgeBuildError(f"changed image row {task_id} has no indexed source document")
+            raise JudgeBuildError(
+                f"source-adjudicated image row {task_id} has no indexed source document"
+            )
         source_record_id = str(trace_source.get("record_id") or "")
         source_records = {
             question.record_id: question
             for question in document.questions
         }
         source_record = source_records.get(source_record_id)
-        observed_marker_kind, observed_marker_number = observed_source_question_marker(
-            observation
-        )
-        marker_matches = source_record is not None and (
-            (
-                source_record.question_marker_kind == "numbered_item"
-                and observed_marker_kind == "numbered_item"
-                and observed_marker_number == source_record.question_number
-            )
-            or (
-                allow_example_label_marker
-                and source_record.question_marker_kind == "example_label"
-                and observed_marker_kind == "example_label"
-                and observed_marker_number == source_record.question_number
-            )
-            or (
-                allow_activity_label_marker
+        if image_only_observation is not None:
+            trace_observation = trace.get("observation")
+            marker_matches = (
+                source_record is not None
                 and source_record.question_marker_kind == "activity_label"
-                and observed_marker_kind == "activity_label"
-                and observed_marker_number == source_record.question_number
+                and isinstance(trace.get("image_only_activity_binding"), dict)
+                and isinstance(trace_observation, dict)
+                and trace_observation.get("observed_source_marker_kind") is None
+                and trace_observation.get("observed_source_marker_number") is None
             )
-        )
+        else:
+            observed_marker_kind, observed_marker_number = (
+                observed_source_question_marker(observation)
+            )
+            marker_matches = source_record is not None and (
+                (
+                    source_record.question_marker_kind == "numbered_item"
+                    and observed_marker_kind == "numbered_item"
+                    and observed_marker_number == source_record.question_number
+                )
+                or (
+                    allow_example_label_marker
+                    and source_record.question_marker_kind == "example_label"
+                    and observed_marker_kind == "example_label"
+                    and observed_marker_number == source_record.question_number
+                )
+                or (
+                    allow_activity_label_marker
+                    and source_record.question_marker_kind == "activity_label"
+                    and observed_marker_kind == "activity_label"
+                    and observed_marker_number == source_record.question_number
+                )
+            )
         activity_source_matches = (
             source_record is None
             or source_record.key_binding_kind != "activity_answer_key"
@@ -654,25 +835,43 @@ def build(
             or candidate_answer != source_record.answer
         ):
             raise JudgeBuildError(
-                f"changed image row {task_id} is not bound to its pinned source-index record"
+                f"source-adjudicated image row {task_id} is not bound to its "
+                "pinned source-index record"
             )
         cache = source_caches[document.document_id]
-        recomputed = resolve_workbook_question(
-            observation,
-            source_url,
-            document,
-            cache["matcher"],
-            cache["page_texts"],
-            thresholds,
-            allow_missing_nosw=allow_missing_nosw,
-            allow_example_label_marker=allow_example_label_marker,
-            allow_activity_label_marker=allow_activity_label_marker,
-            verified_content_marker_counts=cache["content_marker_counts"],
-            verified_activity_visual_binding=verified_visual_bindings.get(
-                observation.image_sha256
-            ),
-            activity_visual_thresholds=visual_thresholds,
-        )
+        if image_only_observation is not None:
+            image_only_binding = verified_image_only_bindings.get(
+                image_only_observation.image_sha256
+            )
+            if image_only_binding is None:
+                raise JudgeBuildError(
+                    f"source-adjudicated image-only row {task_id} lacks a replayed binding"
+                )
+            recomputed = resolve_image_only_activity_question(
+                image_only_observation,
+                source_url,
+                document,
+                image_only_binding,
+                verified_content_marker_counts=cache["content_marker_counts"],
+                allow_missing_nosw=allow_missing_nosw,
+            )
+        else:
+            recomputed = resolve_workbook_question(
+                observation,
+                source_url,
+                document,
+                cache["matcher"],
+                cache["page_texts"],
+                thresholds,
+                allow_missing_nosw=allow_missing_nosw,
+                allow_example_label_marker=allow_example_label_marker,
+                allow_activity_label_marker=allow_activity_label_marker,
+                verified_content_marker_counts=cache["content_marker_counts"],
+                verified_activity_visual_binding=verified_visual_bindings.get(
+                    observation.image_sha256
+                ),
+                activity_visual_thresholds=visual_thresholds,
+            )
         recomputed_trace = recomputed.trace
         actual_trace_core = {key: trace.get(key) for key in recomputed_trace}
         if (
@@ -682,13 +881,21 @@ def build(
             or actual_trace_core != recomputed_trace
         ):
             raise JudgeBuildError(
-                f"changed image row {task_id} fails the repeated OCR-to-source resolution"
+                f"source-adjudicated image row {task_id} fails the repeated "
+                "OCR-to-source resolution"
             )
-        problem = problem_for(
-            observation,
-            source_url,
-            answer_format=str(trace_source.get("answer_format") or ""),
-        )
+        if image_only_observation is not None:
+            problem = problem_for_image_only_activity(
+                image_only_observation,
+                source_url,
+                answer_format=str(trace_source.get("answer_format") or ""),
+            )
+        else:
+            problem = problem_for(
+                observation,
+                source_url,
+                answer_format=str(trace_source.get("answer_format") or ""),
+            )
         try:
             bound_certificate = certificate_from_record(
                 problem,
@@ -700,7 +907,8 @@ def build(
             )
         except (TypeError, ValueError) as exc:
             raise JudgeBuildError(
-                f"changed image row {task_id} certificate is not input/answer bound: {exc}"
+                f"source-adjudicated image row {task_id} certificate is not "
+                f"input/answer bound: {exc}"
             ) from exc
         if (
             bound_certificate.strength is not CertificateStrength.STRONG
@@ -712,7 +920,8 @@ def build(
             or not all(bound_certificate.deterministic_checks)
         ):
             raise JudgeBuildError(
-                f"changed image row {task_id} certificate is not a strong passing proof"
+                f"source-adjudicated image row {task_id} certificate is not a "
+                "strong passing proof"
             )
         decision = decisions[task_id]
         if (
@@ -721,17 +930,34 @@ def build(
             or decision.get("certificate_trace_fingerprint")
             != certificate.get("trace_fingerprint")
         ):
-            raise JudgeBuildError(f"changed image row {task_id} is not certificate-selected")
+            raise JudgeBuildError(
+                f"source-adjudicated image row {task_id} is not certificate-selected"
+            )
         generation = solver[task_id].get("generation")
         override = generation.get("official_source_override") if isinstance(generation, dict) else None
-        if (
-            not isinstance(override, dict)
-            or generation.get("gold_access") is not False
-            or override.get("profile_sha256") != profile_sha
-            or override.get("trace_fingerprint") != certificate.get("trace_fingerprint")
-            or override.get("verifier") != WORKBOOK_VERIFIER
+        action = decision.get("action")
+        if action == "replace_anchor":
+            if (
+                not isinstance(override, dict)
+                or generation.get("gold_access") is not False
+                or override.get("profile_sha256") != profile_sha
+                or override.get("trace_fingerprint")
+                != certificate.get("trace_fingerprint")
+                or override.get("verifier") != WORKBOOK_VERIFIER
+            ):
+                raise JudgeBuildError(
+                    f"changed image row {task_id} lacks its solver override binding"
+                )
+        elif (
+            action != "keep_anchor"
+            or decision.get("reason") != "equivalent_to_anchor"
+            or solver[task_id] != anchor[task_id]
+            or current_answer
+            != str(base_solver[task_id].get("final_answer") or "").strip()
         ):
-            raise JudgeBuildError(f"changed image row {task_id} lacks its solver override binding")
+            raise JudgeBuildError(
+                f"confirmed image row {task_id} is not an unchanged anchor answer"
+            )
         row = {
                 "task_id": task_id,
                 "subject": original.get("subject"),
@@ -758,6 +984,8 @@ def build(
                     "source_record_id": trace["source"]["record_id"],
                     "source_pdf_sha256": trace["source"]["pdf_sha256"],
                     "certificate_trace_fingerprint": certificate["trace_fingerprint"],
+                    "composition_action": action,
+                    "answer_changed_from_anchor": action == "replace_anchor",
                 },
                 "verdict": {
                     "complete": True,
@@ -781,6 +1009,8 @@ def build(
                 "task_id": task_id,
                 "source_record_id": trace["source"]["record_id"],
                 "certificate_trace_fingerprint": certificate["trace_fingerprint"],
+                "composition_action": action,
+                "answer_changed_from_anchor": action == "replace_anchor",
             }
         )
     _write_jsonl(output_path, output_rows)
@@ -793,6 +1023,7 @@ def build(
         "benchmark_reference_answers_opened": False,
         "base_image_judge_outcomes_read_and_copied_for_unchanged_rows": True,
         "base_image_judge_outcomes_used_for_changed_rows": False,
+        "base_image_judge_outcomes_used_for_source_adjudicated_rows": False,
         "source_pdf_reverification": source_verification,
         "profile": {"path": str(profile_path), "sha256": profile_sha},
         "profile_anchor": {
@@ -809,8 +1040,10 @@ def build(
         "output": {"path": str(output_path), "sha256": sha256_file(output_path), "rows": 97},
         "official_certificate_rows": adjudicated,
         "copied_unchanged_rows": 97 - len(adjudicated),
+        "copied_nonadjudicated_rows": 97 - len(adjudicated),
         "limitations": [
-            "Certificate adjudication replaces the VLM judge only where the candidate changed.",
+            "Certificate adjudication replaces the VLM judge wherever a strong source "
+            "certificate is composition-selected, including confirmations equal to the anchor.",
             "The evaluated target set is a previously inspected development replay, not a holdout.",
         ],
     }

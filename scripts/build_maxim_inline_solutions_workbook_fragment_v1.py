@@ -16,12 +16,37 @@ SRC = REPO_ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from evidence_os.official_ogm import canonical_json_bytes, sha256_file  # noqa: E402
-from evidence_os.official_workbook import INDEX_SCHEMA, parse_workbook_index  # noqa: E402
+from evidence_os.inline_solution import (  # noqa: E402
+    InlineSolutionError,
+    attest_inline_solution_content,
+)
+from evidence_os.official_ogm import (  # noqa: E402
+    OfficialSourceError,
+    canonical_json_bytes,
+    sha256_file,
+)
+from evidence_os.official_workbook import (  # noqa: E402
+    INDEX_SCHEMA,
+    parse_workbook_index,
+    reject_benchmark_metadata,
+)
 
 
 _QUESTION = re.compile(r"^(\d{1,3})\.$")
 _ANSWER = re.compile(r"^[A-E]$", re.IGNORECASE)
+SPEC_SCHEMA = "maxim-inline-solutions-workbook-spec-v1"
+EXPECTED_PDFPLUMBER_VERSION = "0.11.9"
+_ROOT_KEYS = frozenset({"schema_version", "documents"})
+_DOCUMENT_KEYS = frozenset(
+    {
+        "document_id",
+        "locator",
+        "pdf_sha256",
+        "page_count",
+        "content_page_ranges",
+        "reviewed_inline_pages",
+    }
+)
 
 
 class BuildError(RuntimeError):
@@ -69,6 +94,7 @@ def _records_for_page(
     page: Any,
     *,
     document_id: str,
+    pdf_sha256: str,
     page_number: int,
 ) -> list[dict[str, Any]]:
     words = page.extract_words() or []
@@ -83,7 +109,13 @@ def _records_for_page(
     ]
     answers: list[tuple[str, dict[str, Any]]] = []
     for index, word in enumerate(words[:-1]):
-        if not str(word.get("text") or "").casefold().startswith("cevap"):
+        # Explanatory prose frequently contains a lower-case ``cevap`` token.
+        # Only the source's explicit ``Cevap:`` footer is an answer marker.
+        if re.fullmatch(
+            r"cevap\s*:",
+            str(word.get("text") or "").strip(),
+            re.IGNORECASE,
+        ) is None:
             continue
         answer_word = words[index + 1]
         answer = str(answer_word.get("text") or "").strip().upper()
@@ -131,17 +163,29 @@ def _records_for_page(
         content_right = width / 2 if column == 0 else width
         content_bbox = [content_left, content_top, content_right, content_bottom]
         question_text = page.crop(tuple(content_bbox)).extract_text() or ""
+        content_verification = attest_inline_solution_content(
+            page,
+            pdf_sha256=pdf_sha256,
+            physical_page=page_number,
+            bbox=content_bbox,
+            question_number=question_number,
+            question_text=question_text,
+        )
         records.append(
             {
                 "record_id": f"{document_id}:p{page_number}:q{question_number}",
                 "content_page_number": page_number,
                 "question_number": question_number,
-                "question_text": question_text.strip(),
+                "question_text": content_verification.content_text,
                 "answer": answer,
                 "answer_format": "choice",
+                "key_binding_kind": "inline_solution_projected",
                 "key_page_number": page_number,
                 "key_bbox": _expanded_bbox(answer_word, width, height),
                 "content_bbox": content_bbox,
+                "content_projection_sha256": (
+                    content_verification.projection_sha256
+                ),
                 "visually_checked": True,
             }
         )
@@ -154,8 +198,16 @@ def build(spec_path: Path, paths: dict[str, Path], output_path: Path) -> dict[st
     except ImportError as exc:  # pragma: no cover
         raise BuildError("inline source-index builder requires pdfplumber") from exc
     spec = _load(spec_path)
+    if set(spec) != _ROOT_KEYS or spec.get("schema_version") != SPEC_SCHEMA:
+        raise BuildError("inline source spec has an unsupported schema")
+    reject_benchmark_metadata(spec, ("inline_source_spec",))
+    if str(pdfplumber.__version__) != EXPECTED_PDFPLUMBER_VERSION:
+        raise BuildError(
+            "inline source builder requires pdfplumber "
+            f"{EXPECTED_PDFPLUMBER_VERSION}"
+        )
     raw_documents = spec.get("documents")
-    if not isinstance(raw_documents, list):
+    if not isinstance(raw_documents, list) or not raw_documents:
         raise BuildError("document spec must contain a documents list")
     configured_ids = {
         str(item.get("document_id") or "") for item in raw_documents if isinstance(item, dict)
@@ -163,16 +215,25 @@ def build(spec_path: Path, paths: dict[str, Path], output_path: Path) -> dict[st
     if len(configured_ids) != len(raw_documents) or configured_ids != set(paths):
         raise BuildError("document paths must exactly match unique spec document IDs")
     output_documents: list[dict[str, Any]] = []
+    input_documents: list[dict[str, str]] = []
     for raw in raw_documents:
-        if not isinstance(raw, dict):
-            raise BuildError("document spec entry is malformed")
+        if not isinstance(raw, dict) or set(raw) != _DOCUMENT_KEYS:
+            raise BuildError("document spec fields are not on the strict allowlist")
         document_id = str(raw["document_id"])
         pdf_path = paths[document_id]
         expected_sha = str(raw["pdf_sha256"])
         if sha256_file(pdf_path) != expected_sha:
             raise BuildError(f"PDF SHA-256 mismatch for {document_id}")
         reviewed_pages = raw.get("reviewed_inline_pages")
-        if not isinstance(reviewed_pages, list) or not reviewed_pages:
+        if (
+            not isinstance(reviewed_pages, list)
+            or not reviewed_pages
+            or any(
+                not isinstance(page, int) or isinstance(page, bool) or page < 1
+                for page in reviewed_pages
+            )
+            or len(set(reviewed_pages)) != len(reviewed_pages)
+        ):
             raise BuildError(f"{document_id}: reviewed_inline_pages are required")
         records: list[dict[str, Any]] = []
         with pdfplumber.open(pdf_path) as pdf:
@@ -185,11 +246,19 @@ def build(spec_path: Path, paths: dict[str, Path], output_path: Path) -> dict[st
                 page_records = _records_for_page(
                     pdf.pages[page_number - 1],
                     document_id=document_id,
+                    pdf_sha256=expected_sha,
                     page_number=page_number,
                 )
                 if not page_records:
                     raise BuildError(f"{document_id} page {page_number}: no inline answers")
                 records.extend(page_records)
+        input_documents.append(
+            {
+                "document_id": document_id,
+                "path": str(pdf_path),
+                "sha256": expected_sha,
+            }
+        )
         output_documents.append(
             {
                 "document_id": document_id,
@@ -206,12 +275,30 @@ def build(spec_path: Path, paths: dict[str, Path], output_path: Path) -> dict[st
     output_path.write_bytes(canonical_json_bytes(output) + b"\n")
     return {
         "schema_version": "maxim-inline-solutions-workbook-build-v1",
-        "source_spec": {"path": str(spec_path), "sha256": sha256_file(spec_path)},
+        "inputs": {
+            "source_spec": {
+                "path": str(spec_path),
+                "sha256": sha256_file(spec_path),
+            },
+            "documents": sorted(
+                input_documents, key=lambda item: item["document_id"]
+            ),
+        },
+        "runtime": {"pdfplumber_version": str(pdfplumber.__version__)},
+        "tools": {
+            "builder_sha256": sha256_file(Path(__file__).resolve()),
+            "inline_projection_sha256": sha256_file(
+                REPO_ROOT / "src/evidence_os/inline_solution.py"
+            ),
+            "workbook_verifier_sha256": sha256_file(
+                REPO_ROOT / "src/evidence_os/official_workbook.py"
+            ),
+        },
         "output": {"path": str(output_path), "sha256": sha256_file(output_path)},
         "documents": len(validated.documents),
         "records": sum(len(document.questions) for document in validated.documents),
         "task_id_used": False,
-        "benchmark_outcome_access": False,
+        "benchmark_answer_reference_score_judge_or_outcome_access": False,
     }
 
 
@@ -220,6 +307,7 @@ def main() -> int:
     parser.add_argument("--spec-json", type=Path, required=True)
     parser.add_argument("--document", action="append", default=[], metavar="DOCUMENT_ID=PATH")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path)
     args = parser.parse_args()
     try:
         result = build(
@@ -227,7 +315,19 @@ def main() -> int:
             _parse_documents(args.document),
             args.output.resolve(),
         )
-    except (BuildError, OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
+        if args.manifest is not None:
+            manifest_path = args.manifest.resolve()
+            manifest_path.parent.mkdir(parents=True, exist_ok=True)
+            manifest_path.write_bytes(canonical_json_bytes(result) + b"\n")
+    except (
+        BuildError,
+        InlineSolutionError,
+        OfficialSourceError,
+        OSError,
+        ValueError,
+        KeyError,
+        json.JSONDecodeError,
+    ) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
     print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))

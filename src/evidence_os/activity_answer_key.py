@@ -470,15 +470,22 @@ def _prove_content_marker(
     return marker_line, marker_word, bbox_words
 
 
+def activity_marker_inventory(page: Any) -> tuple[int, ...]:
+    """Return canonical activity-title numbers across one physical page."""
+
+    words = _extract_words(page, "content page")
+    return tuple(
+        number
+        for line in _lines(words)
+        if (number := _content_marker_number(line.text)) is not None
+    )
+
+
 def count_activity_markers(page: Any, activity_number: int) -> int:
     """Count canonical activity titles across the complete physical page."""
 
     activity_number = _positive_integer(activity_number, "activity number")
-    words = _extract_words(page, "content page")
-    return sum(
-        _content_marker_number(line.text) == activity_number
-        for line in _lines(words)
-    )
+    return activity_marker_inventory(page).count(activity_number)
 
 
 def _key_section(

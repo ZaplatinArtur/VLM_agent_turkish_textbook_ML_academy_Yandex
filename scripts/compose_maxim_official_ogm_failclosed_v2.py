@@ -46,12 +46,25 @@ from evidence_os.official_ogm import (  # noqa: E402
     sha256_file,
 )
 from evidence_os.official_pdf import VERIFIER as DIRECT_PDF_VERIFIER  # noqa: E402
+from evidence_os.image_only_activity import (  # noqa: E402
+    IMAGE_ONLY_ACTIVITY_ARTIFACT_ROLE,
+    IMAGE_ONLY_ACTIVITY_TRACE_CHECKS,
+    OBSERVATION_KIND as IMAGE_ONLY_ACTIVITY_OBSERVATION_KIND,
+    RECORD_SELECTION_POLICY as IMAGE_ONLY_ACTIVITY_RECORD_SELECTION_POLICY,
+    ImageOnlyActivityError,
+    load_image_only_activity_visual_artifact_json,
+    problem_for_image_only_activity,
+    project_image_only_activity_observation,
+    resolve_image_only_activity_question,
+    verified_image_only_activity_bindings_from_artifact,
+)
 from evidence_os.official_workbook import (  # noqa: E402
     VERIFIER as WORKBOOK_VERIFIER,
     WorkbookThresholds,
     activity_label_projection_enabled,
     document_for_source,
     observed_coordinate_question_binding,
+    observed_inline_question_binding,
     parse_workbook_index,
     resolve_workbook_question,
     validate_fail_closed_workbook_policy,
@@ -176,6 +189,9 @@ def _fresh_rebuild_activity_visual_artifact(
     expected_visual_sha256: str,
     visual_payload: dict[str, Any],
     document_pdf_paths: dict[str, Path],
+    generator_filename: str = "build_maxim_activity_visual_binding_v1.py",
+    replay_mode: str = "fresh_source_only_poppler_sift_exact_bytes_v1",
+    temp_prefix: str = "maxim_activity_visual_exact_replay_",
 ) -> dict[str, Any]:
     """Rebuild Poppler/SIFT evidence in a clean subprocess and require exact bytes."""
 
@@ -233,7 +249,7 @@ def _fresh_rebuild_activity_visual_artifact(
             )
         activity_document_paths[document_id] = pdf_path.resolve()
 
-    generator_path = (REPO_ROOT / "scripts" / "build_maxim_activity_visual_binding_v1.py").resolve()
+    generator_path = (REPO_ROOT / "scripts" / generator_filename).resolve()
     if not generator_path.is_file():
         raise CompositionError("activity visual source-only generator is unavailable")
     generator_sha256 = sha256_file(generator_path)
@@ -269,7 +285,7 @@ def _fresh_rebuild_activity_visual_artifact(
     temp_parent = (REPO_ROOT / "tmp").resolve()
     temp_parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(
-        prefix="maxim_activity_visual_exact_replay_",
+        prefix=temp_prefix,
         dir=temp_parent,
     ) as raw_temp:
         rebuilt_path = Path(raw_temp) / "rebuilt.json"
@@ -354,7 +370,7 @@ def _fresh_rebuild_activity_visual_artifact(
             )
 
     return {
-        "mode": "fresh_source_only_poppler_sift_exact_bytes_v1",
+        "mode": replay_mode,
         "generator": {
             "path": str(generator_path),
             "sha256": generator_sha256,
@@ -379,6 +395,52 @@ def _fresh_rebuild_activity_visual_artifact(
         "summary": report["summary"],
         "benchmark_answer_candidate_outcome_artifacts_read": False,
     }
+
+
+def _fresh_rebuild_image_only_activity_visual_artifact(
+    *,
+    parser_path: Path,
+    locator_path: Path,
+    visual_path: Path,
+    expected_visual_sha256: str,
+    visual_payload: dict[str, Any],
+    document_pdf_paths: dict[str, Path],
+) -> dict[str, Any]:
+    """Rebuild the image-only artifact from its isolated source-only profile."""
+
+    inputs = visual_payload.get("inputs")
+    if not isinstance(inputs, dict):
+        raise CompositionError("image-only visual replay lacks frozen inputs")
+    pinned_paths: dict[str, Path] = {}
+    for key in ("profile", "parser_observations", "source_locators", "source_index"):
+        spec = inputs.get(key)
+        if not isinstance(spec, dict) or not isinstance(spec.get("sha256"), str):
+            raise CompositionError(f"image-only visual replay lacks {key}")
+        path = _path(str(spec.get("path") or ""))
+        _require_hash(path, str(spec["sha256"]), f"image-only visual {key}")
+        pinned_paths[key] = path
+    if (
+        pinned_paths["parser_observations"] != parser_path.resolve()
+        or pinned_paths["source_locators"] != locator_path.resolve()
+    ):
+        raise CompositionError(
+            "image-only visual replay parser/locator inputs differ from runtime"
+        )
+    return _fresh_rebuild_activity_visual_artifact(
+        profile_path=pinned_paths["profile"],
+        parser_path=parser_path,
+        locator_path=locator_path,
+        source_index_path=pinned_paths["source_index"],
+        visual_path=visual_path,
+        expected_visual_sha256=expected_visual_sha256,
+        visual_payload=visual_payload,
+        document_pdf_paths=document_pdf_paths,
+        generator_filename="build_maxim_image_only_activity_visual_binding_v1.py",
+        replay_mode=(
+            "fresh_source_only_poppler_sift_image_only_activity_exact_bytes_v1"
+        ),
+        temp_prefix="maxim_image_only_activity_visual_exact_replay_",
+    )
 
 
 def _validate_workbook_certificate_artifact(
@@ -412,15 +474,21 @@ def _validate_workbook_certificate_artifact(
     trace_checks = trace.get("checks")
     deterministic_checks = raw_certificate.get("deterministic_checks")
     trace_source_for_checks = trace.get("source")
-    expected_trace_checks = set(_WORKBOOK_TRACE_CHECKS)
-    if (
-        isinstance(trace_source_for_checks, dict)
-        and trace_source_for_checks.get("key_binding_kind")
-        == "coordinate_choice_answer_key"
-    ):
-        expected_trace_checks.add("observed_question_text_matches_source")
-    if isinstance(trace.get("visual_page_binding"), dict):
-        expected_trace_checks.add("visual_page_binding")
+    is_image_only_activity = isinstance(
+        trace.get("image_only_activity_binding"), dict
+    )
+    if is_image_only_activity:
+        expected_trace_checks = set(IMAGE_ONLY_ACTIVITY_TRACE_CHECKS)
+    else:
+        expected_trace_checks = set(_WORKBOOK_TRACE_CHECKS)
+        if (
+            isinstance(trace_source_for_checks, dict)
+            and trace_source_for_checks.get("key_binding_kind")
+            in {"coordinate_choice_answer_key", "inline_solution_projected"}
+        ):
+            expected_trace_checks.add("observed_question_text_matches_source")
+        if isinstance(trace.get("visual_page_binding"), dict):
+            expected_trace_checks.add("visual_page_binding")
     if (
         not isinstance(trace_checks, dict)
         or set(trace_checks) != expected_trace_checks
@@ -469,6 +537,11 @@ def _validate_workbook_certificate_artifact(
         expected_provenance["activity_visual_evidence_sha256"] = str(
             visual_spec.get("sha256") or ""
         )
+    image_only_visual_spec = inputs.get("image_only_activity_visual_evidence")
+    if isinstance(image_only_visual_spec, dict):
+        expected_provenance[
+            "image_only_activity_visual_evidence_sha256"
+        ] = str(image_only_visual_spec.get("sha256") or "")
     if (
         set(provenance) != set(expected_provenance) | {"source_verification"}
         or any(provenance.get(key) != value for key, value in expected_provenance.items())
@@ -503,6 +576,20 @@ def _validate_workbook_certificate_artifact(
         and not projection_sha
         and not content_projection_sha
         and question_marker_kind == "numbered_item"
+    ) or (
+        answer_format == "choice"
+        and key_binding_kind == "inline_solution_projected"
+        and question_marker_kind == "numbered_item"
+        and not projection_sha
+        and len(content_projection_sha) == 64
+        and all(
+            character in "0123456789abcdef"
+            for character in content_projection_sha
+        )
+        and not binding_projection_sha
+        and isinstance(key_context_page_number, int)
+        and not isinstance(key_context_page_number, bool)
+        and key_context_page_number >= 1
     ) or (
         answer_format == "choice"
         and key_binding_kind == "coordinate_choice_answer_key"
@@ -651,6 +738,7 @@ def _validate_workbook_trace_against_source(
         "coordinate_table_answer_key",
         "activity_answer_key",
         "coordinate_choice_answer_key",
+        "inline_solution_projected",
     }:
         actual_source["question_marker_kind"] = str(
             trace_source.get("question_marker_kind") or "numbered_item"
@@ -753,11 +841,36 @@ def _validate_workbook_trace_against_source(
                 f"workbook certificate {task_id} lacks exact observed-to-source "
                 "question binding"
             )
+    elif question.key_binding_kind == "inline_solution_projected":
+        if thresholds is None:
+            raise CompositionError(
+                f"workbook certificate {task_id} lacks inline-source thresholds"
+            )
+        page_questions = [
+            candidate
+            for candidate in document.questions
+            if candidate.content_page_number == question.content_page_number
+        ]
+        expected_question_match = observed_inline_question_binding(
+            observation,
+            question,
+            page_questions,
+            thresholds,
+        )
+        if (
+            trace_match.get("observed_question_text") != expected_question_match
+            or expected_question_match.get("passed") is not True
+        ):
+            raise CompositionError(
+                f"workbook certificate {task_id} lacks unique observed-to-inline "
+                "source binding"
+            )
 
 
 def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) -> dict[str, Any]:
     profile = _load_json(profile_path)
     activity_visual_reproduction: dict[str, Any] | None = None
+    image_only_activity_visual_reproduction: dict[str, Any] | None = None
     profile_schema = str(profile.get("schema_version") or "")
     contract = _PROFILE_CONTRACTS.get(profile_schema)
     if contract is None:
@@ -792,6 +905,15 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
             ),
             min_coordinate_question_margin=float(
                 policy.get("min_coordinate_question_margin", 0.25)
+            ),
+            min_inline_question_coverage=float(
+                policy.get("min_inline_question_coverage", 0.85)
+            ),
+            min_inline_question_matched_tokens=int(
+                policy.get("min_inline_question_matched_tokens", 8)
+            ),
+            min_inline_question_margin=float(
+                policy.get("min_inline_question_margin", 0.25)
             ),
         )
         workbook_visual_thresholds = VisualBindingThresholds(
@@ -894,6 +1016,36 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
             )
         else:
             visual_path = None
+        image_only_visual_spec = inputs.get(
+            "image_only_activity_visual_evidence"
+        )
+        if image_only_visual_spec is not None:
+            if (
+                not isinstance(image_only_visual_spec, dict)
+                or set(image_only_visual_spec)
+                != {"path", "sha256", "allowed_role"}
+                or image_only_visual_spec.get("allowed_role")
+                != IMAGE_ONLY_ACTIVITY_ARTIFACT_ROLE
+                or policy.get("image_only_activity_observation_projection")
+                != IMAGE_ONLY_ACTIVITY_OBSERVATION_KIND
+                or policy.get("image_only_activity_record_projection")
+                != IMAGE_ONLY_ACTIVITY_RECORD_SELECTION_POLICY
+                or policy.get("task_id_is_policy_feature") is not False
+                or policy.get("benchmark_candidate_or_outcome_access") is not False
+            ):
+                raise CompositionError(
+                    "workbook image-only activity role is not fail-closed"
+                )
+            image_only_visual_path = _path(
+                str(image_only_visual_spec.get("path") or "")
+            )
+            _require_hash(
+                image_only_visual_path,
+                str(image_only_visual_spec.get("sha256") or ""),
+                "image-only activity visual evidence",
+            )
+        else:
+            image_only_visual_path = None
         workbook_visual_records = tuple(
             ActivityVisualRecordRef(
                 document_id=document.document_id,
@@ -920,6 +1072,8 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
         workbook_documents_by_id = {}
         workbook_visual_records = ()
         visual_path = None
+        image_only_visual_path = None
+        image_only_visual_spec = None
     resolver_manifest = _load_json(resolver_manifest_path)
     if resolver_manifest.get("schema_version") != resolver_schema:
         raise CompositionError("resolver manifest schema is invalid")
@@ -940,6 +1094,8 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
         manifest_input_keys = ["parser_observations", "source_locators", "source_index"]
         if visual_path is not None:
             manifest_input_keys.append("activity_visual_evidence")
+        if image_only_visual_path is not None:
+            manifest_input_keys.append("image_only_activity_visual_evidence")
         for key in manifest_input_keys:
             manifest_item = manifest_inputs.get(key)
             if (
@@ -1044,6 +1200,36 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
         )
         if resolver_manifest.get("visual_fallback_certificates") != visual_certificate_count:
             raise CompositionError("workbook visual fallback counter changed")
+    if (
+        profile_schema == "maxim-public-workbook-profile-v1"
+        and image_only_visual_path is not None
+    ):
+        structural_image_only_count = 0
+        for raw in parser.values():
+            try:
+                project_image_only_activity_observation(raw)
+            except ImageOnlyActivityError:
+                continue
+            structural_image_only_count += 1
+        image_only_certificate_count = sum(
+            isinstance(
+                certificate.get("trace", {}).get(
+                    "image_only_activity_binding"
+                ),
+                dict,
+            )
+            for certificate in certificates.values()
+            if isinstance(certificate.get("trace"), dict)
+        )
+        if (
+            resolver_manifest.get("image_only_activity_observations")
+            != structural_image_only_count
+            or resolver_manifest.get("image_only_activity_certificates")
+            != image_only_certificate_count
+        ):
+            raise CompositionError(
+                "workbook image-only activity counters changed"
+            )
     task_set = set(anchor)
     if set(parser) != task_set or set(candidates) != task_set or not task_set <= set(locators):
         raise CompositionError("resolver, parser, locator, and anchor task sets do not align")
@@ -1123,6 +1309,79 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
             },
         )
 
+    workbook_image_only_observations = {}
+    workbook_image_only_bindings = {}
+    if (
+        profile_schema == "maxim-public-workbook-profile-v1"
+        and image_only_visual_path is not None
+    ):
+        for task_id, raw in parser.items():
+            try:
+                image_only_observation = (
+                    project_image_only_activity_observation(raw)
+                )
+            except ImageOnlyActivityError:
+                continue
+            try:
+                observation_loader(raw)
+            except (OfficialSourceError, ValueError, KeyError, TypeError):
+                pass
+            else:
+                raise CompositionError(
+                    f"parser row {task_id} is ambiguous between text and image-only routes"
+                )
+            workbook_image_only_observations[task_id] = image_only_observation
+        try:
+            image_only_visual_payload = (
+                load_image_only_activity_visual_artifact_json(
+                    image_only_visual_path
+                )
+            )
+            workbook_image_only_bindings = (
+                verified_image_only_activity_bindings_from_artifact(
+                    image_only_visual_payload,
+                    repo_root=REPO_ROOT,
+                    expected_parser_sha256=str(
+                        inputs["parser_observations"].get("sha256") or ""
+                    ),
+                    expected_source_locators_sha256=str(
+                        inputs["source_locators"].get("sha256") or ""
+                    ),
+                    observations_by_task_id=workbook_image_only_observations,
+                    source_urls_by_task_id={
+                        task_id: str(locators[task_id].get("source_url") or "")
+                        for task_id in workbook_image_only_observations
+                    },
+                    documents_by_id=workbook_documents_by_id,
+                    records=workbook_visual_records,
+                    document_pdf_paths={
+                        document_id: cache["path"]
+                        for document_id, cache in workbook_replay_caches.items()
+                    },
+                    thresholds=VisualBindingThresholds(),
+                )
+            )
+        except ImageOnlyActivityError as exc:
+            raise CompositionError(
+                "image-only activity evidence failed independent replay: "
+                f"{exc}"
+            ) from exc
+        image_only_activity_visual_reproduction = (
+            _fresh_rebuild_image_only_activity_visual_artifact(
+                parser_path=parser_path,
+                locator_path=locator_path,
+                visual_path=image_only_visual_path,
+                expected_visual_sha256=str(
+                    image_only_visual_spec.get("sha256") or ""
+                ),
+                visual_payload=image_only_visual_payload,
+                document_pdf_paths={
+                    document_id: cache["path"]
+                    for document_id, cache in workbook_replay_caches.items()
+                },
+            )
+        )
+
     evidence_policy = EvidencePolicy()
     frozen_policy = FrozenProfile(
         name=str(profile.get("profile_name") or "maxim-official-ogm-v2"),
@@ -1152,7 +1411,12 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
             generation = raw_candidate.get("generation")
             if not isinstance(generation, dict) or generation.get("gold_access") is not False:
                 raise CompositionError(f"candidate {task_id} lacks a strict blind attestation")
-            observation = observation_loader(parser[task_id])
+            image_only_observation = workbook_image_only_observations.get(task_id)
+            observation = (
+                image_only_observation
+                if image_only_observation is not None
+                else observation_loader(parser[task_id])
+            )
             source_url = str(locators[task_id].get("source_url") or "")
             trace = certificates[task_id].get("trace")
             if not isinstance(trace, dict) or trace.get("accepted") is not True:
@@ -1166,16 +1430,23 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
                     profile=profile,
                     profile_sha=profile_sha,
                 )
-                _validate_workbook_trace_against_source(
-                    task_id=task_id,
-                    candidate_answer=candidate_answer,
-                    observation=observation,
-                    trace=trace,
-                    source_records=workbook_source_records,
-                    allow_example_label_marker=allow_example_label_marker,
-                    allow_activity_label_marker=allow_activity_label_marker,
-                    thresholds=workbook_thresholds,
-                )
+                if image_only_observation is None:
+                    _validate_workbook_trace_against_source(
+                        task_id=task_id,
+                        candidate_answer=candidate_answer,
+                        observation=observation,
+                        trace=trace,
+                        source_records=workbook_source_records,
+                        allow_example_label_marker=allow_example_label_marker,
+                        allow_activity_label_marker=allow_activity_label_marker,
+                        thresholds=workbook_thresholds,
+                    )
+                elif not isinstance(
+                    trace.get("image_only_activity_binding"), dict
+                ):
+                    raise CompositionError(
+                        f"image-only certificate {task_id} lacks its distinct binding trace"
+                    )
                 try:
                     replay_document = document_for_source(
                         workbook_index,
@@ -1189,26 +1460,51 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
                     replay_cache = workbook_replay_caches[
                         replay_document.document_id
                     ]
-                    assert workbook_thresholds is not None
-                    replay_result = resolve_workbook_question(
-                        observation,
-                        source_url,
-                        replay_document,
-                        replay_cache["matcher"],
-                        replay_cache["page_texts"],
-                        workbook_thresholds,
-                        allow_missing_nosw=allow_missing_nosw,
-                        allow_example_label_marker=allow_example_label_marker,
-                        allow_activity_label_marker=allow_activity_label_marker,
-                        verified_content_marker_counts=replay_cache[
-                            "source_verification"
-                        ]["content_marker_counts"],
-                        verified_activity_visual_binding=workbook_visual_bindings.get(
-                            observation.image_sha256
-                        ),
-                        activity_visual_thresholds=workbook_visual_thresholds,
-                    )
-                except (OfficialSourceError, KeyError, ValueError, TypeError) as exc:
+                    if image_only_observation is not None:
+                        image_only_binding = workbook_image_only_bindings.get(
+                            image_only_observation.image_sha256
+                        )
+                        if image_only_binding is None:
+                            raise ImageOnlyActivityError(
+                                "image-only observation lacks a replayed binding"
+                            )
+                        replay_result = resolve_image_only_activity_question(
+                            image_only_observation,
+                            source_url,
+                            replay_document,
+                            image_only_binding,
+                            verified_content_marker_counts=replay_cache[
+                                "source_verification"
+                            ]["content_marker_counts"],
+                            allow_missing_nosw=allow_missing_nosw,
+                        )
+                    else:
+                        assert workbook_thresholds is not None
+                        replay_result = resolve_workbook_question(
+                            observation,
+                            source_url,
+                            replay_document,
+                            replay_cache["matcher"],
+                            replay_cache["page_texts"],
+                            workbook_thresholds,
+                            allow_missing_nosw=allow_missing_nosw,
+                            allow_example_label_marker=allow_example_label_marker,
+                            allow_activity_label_marker=allow_activity_label_marker,
+                            verified_content_marker_counts=replay_cache[
+                                "source_verification"
+                            ]["content_marker_counts"],
+                            verified_activity_visual_binding=workbook_visual_bindings.get(
+                                observation.image_sha256
+                            ),
+                            activity_visual_thresholds=workbook_visual_thresholds,
+                        )
+                except (
+                    ImageOnlyActivityError,
+                    OfficialSourceError,
+                    KeyError,
+                    ValueError,
+                    TypeError,
+                ) as exc:
                     raise CompositionError(
                         f"workbook certificate {task_id} cannot be replayed: {exc}"
                     ) from exc
@@ -1238,11 +1534,18 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
                     )
             else:
                 answer_format = "choice"
-            problem = problem_for(
-                observation,
-                source_url,
-                answer_format=answer_format,
-            )
+            if image_only_observation is not None:
+                problem = problem_for_image_only_activity(
+                    image_only_observation,
+                    source_url,
+                    answer_format=answer_format,
+                )
+            else:
+                problem = problem_for(
+                    observation,
+                    source_url,
+                    answer_format=answer_format,
+                )
             bare = CandidateEnvelope(source=verifier, final_answer=candidate_answer)
             certificate = certificate_from_record(
                 problem,
@@ -1331,6 +1634,10 @@ def compose(profile_path: Path, resolver_manifest_path: Path, output_dir: Path) 
     }
     if activity_visual_reproduction is not None:
         manifest["activity_visual_reproduction"] = activity_visual_reproduction
+    if image_only_activity_visual_reproduction is not None:
+        manifest["image_only_activity_visual_reproduction"] = (
+            image_only_activity_visual_reproduction
+        )
     manifest_path = output_dir / "manifest.json"
     manifest_path.write_bytes(
         (json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode(

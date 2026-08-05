@@ -1,0 +1,32 @@
+{
+  "schema_version": "maxim-fill-blank-workbook-source-spec-v1",
+  "documents": [
+    {
+      "document_id": "meb_ck_12_inkilap_tarihi_f7c805d55591",
+      "locator": {
+        "kind": "yandex_public",
+        "public_locator": "ya-disk-public://enaTIeEJ6EkmV8iZcuGkjsW2AQGG8Zk91MZ+kXV1fTsdFdYvBGAaTVhk/JNzKRWhq/J6bpmRyOJonT3VoXnDag==:/MEB-CK-12tcinkiliaptarihiveataturkculukf01.pdf",
+        "name": "MEB-CK-12tcinkiliaptarihiveataturkculukf01.pdf"
+      },
+      "pdf_sha256": "f7c805d5559135809870f7db6cad47f8094303bde88b10a7be252c81424ea2e1",
+      "page_count": 20,
+      "content_page_ranges": [[1, 17]],
+      "activities": [
+        {
+          "record_id": "meb_ck_12_inkilap_tarihi_f7c805d55591:p9:fill_blank",
+          "content_page_number": 9,
+          "key_page_number": 18,
+          "content_bbox": [30.0, 15.0, 565.0, 800.0],
+          "word_bank_bbox": [32.0, 72.0, 560.0, 280.0],
+          "key_bbox": [190.0, 60.0, 420.0, 312.0],
+          "activity_title": "Boşluk Doldurma",
+          "instruction_text": "Aşağıdaki cümlelerde boş bırakılan yerlere verilen kelime ve kelime öbeklerinden uygun olanı yazınız.",
+          "expected_item_count": 20,
+          "expected_column_count": 2,
+          "answer": "1=Ali Rıza Paşa; 2=Müdafaa-i Hukuk/Felâh-ı Vatan; 3=Malta; 4=Manastırlı Hamdi Bey; 5=Sinop; 6=Güçler Birliği; 7=Meclis Hükûmet Sistemi; 8=Fevzi Paşa; 9=Refet Bey/İsmet Bey; 10=Moskova Antlaşması; 11=Ali Saip Bey; 12=Akşam/Tasvir-i Efkâr/Tercüman; 13=Kuvay-ı İnzibatiye/Kuvâ-yi Milliye; 14=General Harbord; 15=Kazım Karabekir; 16=Fransa; 17=Anadolu ve Rumeli Müdafaa-i Hukuk; 18=Osman Zeki Üngör; 19=Tevfik Paşa/Bekir Sami (Kunduh) Bey; 20=Gümrü Antlaşması",
+          "visually_checked": true
+        }
+      ]
+    }
+  ]
+}

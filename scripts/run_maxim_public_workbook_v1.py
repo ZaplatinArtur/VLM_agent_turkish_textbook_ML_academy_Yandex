@@ -42,6 +42,16 @@ from evidence_os.official_workbook import (  # noqa: E402
     verify_workbook_index_pdf,
 )
 from evidence_os.official_ogm import OfficialSourceError  # noqa: E402
+from evidence_os.image_only_activity import (  # noqa: E402
+    IMAGE_ONLY_ACTIVITY_ARTIFACT_ROLE,
+    OBSERVATION_KIND as IMAGE_ONLY_ACTIVITY_OBSERVATION_KIND,
+    RECORD_SELECTION_POLICY as IMAGE_ONLY_ACTIVITY_RECORD_SELECTION_POLICY,
+    ImageOnlyActivityError,
+    load_image_only_activity_visual_artifact_json,
+    project_image_only_activity_observation,
+    resolve_image_only_activity_question,
+    verified_image_only_activity_bindings_from_artifact,
+)
 from evidence_os.visual_coordinate_binding import (  # noqa: E402
     ActivityVisualObservationRef,
     ActivityVisualRecordRef,
@@ -209,6 +219,35 @@ def run(
     else:
         visual_path = None
         visual_sha = None
+    image_only_visual_spec = inputs.get("image_only_activity_visual_evidence")
+    if image_only_visual_spec is not None and not isinstance(
+        image_only_visual_spec, dict
+    ):
+        raise RunError("image-only activity visual evidence input must be pinned")
+    if isinstance(image_only_visual_spec, dict):
+        if (
+            set(image_only_visual_spec) != {"path", "sha256", "allowed_role"}
+            or image_only_visual_spec.get("allowed_role")
+            != IMAGE_ONLY_ACTIVITY_ARTIFACT_ROLE
+            or policy.get("image_only_activity_observation_projection")
+            != IMAGE_ONLY_ACTIVITY_OBSERVATION_KIND
+            or policy.get("image_only_activity_record_projection")
+            != IMAGE_ONLY_ACTIVITY_RECORD_SELECTION_POLICY
+            or policy.get("task_id_is_policy_feature") is not False
+            or policy.get("benchmark_candidate_or_outcome_access") is not False
+        ):
+            raise RunError("image-only activity visual evidence role is not fail-closed")
+        image_only_visual_path = _repo_path(
+            str(image_only_visual_spec.get("path") or "")
+        )
+        image_only_visual_sha = _require_hash(
+            image_only_visual_path,
+            str(image_only_visual_spec.get("sha256") or ""),
+            "image-only activity visual evidence",
+        )
+    else:
+        image_only_visual_path = None
+        image_only_visual_sha = None
     source_index = parse_workbook_index(_load_json(source_index_path))
     indexed_documents = {document.document_id: document for document in source_index.documents}
     frozen_by_id: dict[str, dict[str, Any]] = {}
@@ -238,6 +277,15 @@ def run(
         ),
         min_coordinate_question_margin=float(
             policy.get("min_coordinate_question_margin", 0.25)
+        ),
+        min_inline_question_coverage=float(
+            policy.get("min_inline_question_coverage", 0.85)
+        ),
+        min_inline_question_matched_tokens=int(
+            policy.get("min_inline_question_matched_tokens", 8)
+        ),
+        min_inline_question_margin=float(
+            policy.get("min_inline_question_margin", 0.25)
         ),
     )
     visual_thresholds = VisualBindingThresholds(
@@ -322,6 +370,27 @@ def run(
     locator_index = _index(_load_jsonl(locator_path), "source locators")
     if not set(parser_index) <= set(locator_index):
         raise RunError("source locator projection does not cover every parser task")
+    visual_records = tuple(
+        ActivityVisualRecordRef(
+            document_id=document.document_id,
+            record_id=question.record_id,
+            content_page_number=question.content_page_number,
+            activity_number=question.question_number,
+            key_projection_sha256=question.key_projection_sha256,
+            content_projection_sha256=question.content_projection_sha256,
+            binding_projection_sha256=question.binding_projection_sha256,
+            visually_checked=question.visually_checked,
+            content_bbox=question.content_bbox,
+        )
+        for document in source_index.documents
+        for question in document.questions
+        if question.key_binding_kind == "activity_answer_key"
+        and question.question_marker_kind == "activity_label"
+        and question.key_projection_sha256 is not None
+        and question.content_projection_sha256 is not None
+        and question.binding_projection_sha256 is not None
+        and question.content_bbox is not None
+    )
     verified_visual_bindings = {}
     if visual_path is not None:
         visual_observations: dict[str, ActivityVisualObservationRef] = {}
@@ -355,27 +424,6 @@ def run(
                 marker_kind=marker_kind,
                 marker_number=marker_number,
             )
-        visual_records = tuple(
-            ActivityVisualRecordRef(
-                document_id=document.document_id,
-                record_id=question.record_id,
-                content_page_number=question.content_page_number,
-                activity_number=question.question_number,
-                key_projection_sha256=question.key_projection_sha256,
-                content_projection_sha256=question.content_projection_sha256,
-                binding_projection_sha256=question.binding_projection_sha256,
-                visually_checked=question.visually_checked,
-                content_bbox=question.content_bbox,
-            )
-            for document in source_index.documents
-            for question in document.questions
-            if question.key_binding_kind == "activity_answer_key"
-            and question.question_marker_kind == "activity_label"
-            and question.key_projection_sha256 is not None
-            and question.content_projection_sha256 is not None
-            and question.binding_projection_sha256 is not None
-            and question.content_bbox is not None
-        )
         try:
             verified_visual_bindings = verified_activity_bindings_from_artifact(
                 load_activity_visual_artifact_json(visual_path),
@@ -391,12 +439,48 @@ def run(
         except VisualCoordinateBindingError as exc:
             raise RunError(f"activity visual evidence failed closed: {exc}") from exc
 
+    image_only_observations = {}
+    for task_id, raw in parser_index.items():
+        try:
+            image_only_observations[task_id] = (
+                project_image_only_activity_observation(raw)
+            )
+        except ImageOnlyActivityError:
+            continue
+    verified_image_only_bindings = {}
+    if image_only_visual_path is not None:
+        try:
+            verified_image_only_bindings = (
+                verified_image_only_activity_bindings_from_artifact(
+                    load_image_only_activity_visual_artifact_json(
+                        image_only_visual_path
+                    ),
+                    repo_root=REPO_ROOT,
+                    expected_parser_sha256=parser_sha,
+                    expected_source_locators_sha256=locator_sha,
+                    observations_by_task_id=image_only_observations,
+                    source_urls_by_task_id={
+                        task_id: str(locator_index[task_id].get("source_url") or "")
+                        for task_id in image_only_observations
+                    },
+                    documents_by_id=indexed_documents,
+                    records=visual_records,
+                    document_pdf_paths=document_paths,
+                    thresholds=VisualBindingThresholds(),
+                )
+            )
+        except ImageOnlyActivityError as exc:
+            raise RunError(
+                f"image-only activity visual evidence failed closed: {exc}"
+            ) from exc
+
     candidate_rows: list[dict[str, Any]] = []
     certificate_rows: list[dict[str, Any]] = []
     audit_rows: list[dict[str, Any]] = []
     eligible = 0
     accepted = 0
     visual_fallback_certificates = 0
+    image_only_activity_certificates = 0
     for raw in parser_rows:
         task_id = str(raw["task_id"])
         source_url = str(locator_index[task_id].get("source_url") or "")
@@ -429,27 +513,53 @@ def run(
             continue
         eligible += 1
         cache = caches[document.document_id]
+        image_only_observation = image_only_observations.get(task_id)
         try:
-            observation = observation_loader(raw)
-            result = resolve_workbook_question(
-                observation,
-                source_url,
-                document,
-                cache["matcher"],
-                cache["page_texts"],
-                thresholds,
-                allow_missing_nosw=allow_missing_nosw,
-                allow_example_label_marker=allow_example_label_marker,
-                allow_activity_label_marker=allow_activity_label_marker,
-                verified_content_marker_counts=cache["source_verification"][
-                    "content_marker_counts"
-                ],
-                verified_activity_visual_binding=verified_visual_bindings.get(
-                    observation.image_sha256
-                ),
-                activity_visual_thresholds=visual_thresholds,
-            )
-        except (OfficialSourceError, ValueError, KeyError, TypeError) as exc:
+            if image_only_observation is not None:
+                image_only_binding = verified_image_only_bindings.get(
+                    image_only_observation.image_sha256
+                )
+                if image_only_binding is None:
+                    raise ImageOnlyActivityError(
+                        "image-only observation has no verified visual binding"
+                    )
+                result = resolve_image_only_activity_question(
+                    image_only_observation,
+                    source_url,
+                    document,
+                    image_only_binding,
+                    verified_content_marker_counts=cache["source_verification"][
+                        "content_marker_counts"
+                    ],
+                    allow_missing_nosw=allow_missing_nosw,
+                )
+            else:
+                observation = observation_loader(raw)
+                result = resolve_workbook_question(
+                    observation,
+                    source_url,
+                    document,
+                    cache["matcher"],
+                    cache["page_texts"],
+                    thresholds,
+                    allow_missing_nosw=allow_missing_nosw,
+                    allow_example_label_marker=allow_example_label_marker,
+                    allow_activity_label_marker=allow_activity_label_marker,
+                    verified_content_marker_counts=cache["source_verification"][
+                        "content_marker_counts"
+                    ],
+                    verified_activity_visual_binding=verified_visual_bindings.get(
+                        observation.image_sha256
+                    ),
+                    activity_visual_thresholds=visual_thresholds,
+                )
+        except (
+            ImageOnlyActivityError,
+            OfficialSourceError,
+            ValueError,
+            KeyError,
+            TypeError,
+        ) as exc:
             candidate_rows.append(
                 {
                     "task_id": task_id,
@@ -482,11 +592,22 @@ def run(
                 if visual_sha is not None
                 else {}
             ),
+            **(
+                {
+                    "image_only_activity_visual_evidence_sha256": (
+                        image_only_visual_sha
+                    )
+                }
+                if image_only_visual_sha is not None
+                else {}
+            ),
         }
         if result.accepted and result.answer:
             accepted += 1
             if "visual_page_binding" in result.trace:
                 visual_fallback_certificates += 1
+            if "image_only_activity_binding" in result.trace:
+                image_only_activity_certificates += 1
             candidate_rows.append(
                 {
                     "task_id": task_id,
@@ -541,6 +662,8 @@ def run(
         "eligible_rows": eligible,
         "accepted_certificates": accepted,
         "visual_fallback_certificates": visual_fallback_certificates,
+        "image_only_activity_observations": len(image_only_observations),
+        "image_only_activity_certificates": image_only_activity_certificates,
         "abstentions": expected_rows - accepted,
         "artifacts": {
             "candidate": {"path": str(candidate_path), "sha256": sha256_file(candidate_path)},
@@ -562,6 +685,16 @@ def run(
                     }
                 }
                 if visual_path is not None
+                else {}
+            ),
+            **(
+                {
+                    "image_only_activity_visual_evidence": {
+                        "path": str(image_only_visual_path),
+                        "sha256": image_only_visual_sha,
+                    }
+                }
+                if image_only_visual_path is not None
                 else {}
             ),
             "documents": {

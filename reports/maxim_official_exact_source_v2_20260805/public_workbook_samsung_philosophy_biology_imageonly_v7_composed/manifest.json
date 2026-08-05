@@ -1,0 +1,70 @@
+{
+  "anchor": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_primary_layout_sociology_biology_global_visual_v6_composed\\solver.jsonl",
+    "sha256": "01740f36989e19cec5f809936377bde964befee3c88b3b35f68972e3ee418d57"
+  },
+  "certificates_seen": 130,
+  "certified_equal_anchor": 129,
+  "created_at_utc": "2026-08-05T14:34:18.054086+00:00",
+  "decision_reasons": {
+    "equivalent_to_anchor": 129,
+    "no_challengers": 144,
+    "strongly_verified_challenger": 1
+  },
+  "gold_access": false,
+  "image_only_activity_visual_reproduction": {
+    "benchmark_answer_candidate_outcome_artifacts_read": false,
+    "command_projection_sha256": "51b0fdae98b854c0f7d3312546c097529ddb5bd5b2ad0c93a10009f11cd28605",
+    "exact_byte_identity": true,
+    "frozen_artifact": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\activity_visual_binding_biology_activity4_imageonly_candidate_v1.json",
+      "sha256": "4a14842d3e2ea83555b300fb1f1509dc39edb6ff2bc176752b948969d65b184e",
+      "size_bytes": 164127
+    },
+    "generator": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\scripts\\build_maxim_image_only_activity_visual_binding_v1.py",
+      "sha256": "fd3d4094e8b360d16d8bf2c86c9bf1eec8c9ce62ff6d419e7cca36c9acd10a21"
+    },
+    "mode": "fresh_source_only_poppler_sift_image_only_activity_exact_bytes_v1",
+    "reproduced_artifact": {
+      "sha256": "4a14842d3e2ea83555b300fb1f1509dc39edb6ff2bc176752b948969d65b184e",
+      "size_bytes": 164127
+    },
+    "runtime": {
+      "pdfinfo_sha256": "bc2c0f980c9a2a29cd1e06aacd8d1c7b67a5304e9d1d6f75190bdeb9c81a4365",
+      "pdftoppm_sha256": "742cbbd9a00931ad16c6618410bc40471375d639a45c61c1d86f3dcfc54b6388",
+      "python_executable_sha256": "3c6a206b7d93cca823934a83732220dcffd413fd1036d9fb82eebb64599cf7f3",
+      "runtime_projection_sha256": "d21a4b6289154293a2dcce574f58e1af98ea189068cc69d4425fdb4a276d0b76"
+    },
+    "summary": {
+      "accepted_page_bindings": 1,
+      "activity_documents": 1,
+      "activity_records": 1,
+      "decision_layer": "strict_unique_page_activity_applied",
+      "image_only_activity_observations": 1,
+      "raw_page_evidences": 178
+    }
+  },
+  "output": {
+    "decisions": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_samsung_philosophy_biology_imageonly_v7_composed\\decisions.jsonl",
+      "sha256": "85e0fadad20a4f69a5130ccdef648f5370ddb6c461857ac03ff5da5c69c82397"
+    },
+    "solver": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_samsung_philosophy_biology_imageonly_v7_composed\\solver.jsonl",
+      "sha256": "48735253b140f23f126625fea06a1e09b6440f0dc8afd64753216bc94da53ea0"
+    }
+  },
+  "overrides": 1,
+  "profile": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\configs\\maxim_public_workbook_samsung_philosophy_biology_imageonly_v7.json",
+    "sha256": "f71564909eb1ed76bcc4707abb546ffbc64694e899984dc5553f08a4082d439f"
+  },
+  "resolver_manifest": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_samsung_philosophy_biology_imageonly_v7_resolver\\manifest.json",
+    "sha256": "b70a05d9ea117fd3ee910e5bb77e36a86b4ddf29ba33bad1de4277de5b176532"
+  },
+  "rows": 274,
+  "schema_version": "maxim-official-source-failclosed-composition-v2",
+  "score_or_outcome_access": false
+}

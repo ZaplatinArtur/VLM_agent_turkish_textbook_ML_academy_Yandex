@@ -1,0 +1,26 @@
+{
+  "benchmark_outcome_access": false,
+  "created_at_utc": "2026-08-05T13:48:18.995843+00:00",
+  "documents": 12,
+  "inputs": [
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb_def_10_biology_activity4_imageonly_candidate_v1.json",
+      "sha256": "2782d62b6b1610af81800c525ffbbecd68947268e925d9e3fedbeb516d88669d"
+    },
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_fragment_meb_dd_felsefe_inline_candidate_v1.json",
+      "sha256": "42b189bfc7343f743c092cd63b3bb1174ca24bd623c32346a37c88435a91e665"
+    },
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_samsungis_lgs1_math_remaining_candidate_v7.json",
+      "sha256": "dfb0f74114978b18605d6b76cb0522430c3d2484a486c7db06510b634d3a5474"
+    }
+  ],
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_samsung_philosophy_biology_imageonly_candidate_v7.json",
+    "sha256": "39d0e6bc6975974dfefc4c6c39ae925e0cd667f79655b7b0bcfc31eebe84e348"
+  },
+  "records": 144,
+  "schema_version": "maxim-public-workbook-index-merge-v1",
+  "task_id_present": false
+}

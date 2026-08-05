@@ -16,6 +16,7 @@ from evidence_os.visual_coordinate_binding import (
     VisualPageEvidence,
     compute_sift_page_evidence,
     decide_visual_activity_binding,
+    decide_visual_activity_page_binding,
     decide_visual_binding,
     load_activity_visual_artifact_json,
     unique_indexed_markers,
@@ -386,6 +387,56 @@ def test_visual_activity_accepts_one_strong_source_attested_record() -> None:
     assert decision.selected_question_number == 3
     assert decision.selected_record_id == f"{DOCUMENT_ID}:p15:q3"
     assert all(passed for _, passed in decision.checks)
+
+
+def test_image_only_visual_activity_infers_only_one_reviewed_page_record() -> None:
+    evidence = visual_page_evidence_from_mapping(_evidence_mapping())
+
+    decision = decide_visual_activity_page_binding(
+        [evidence],
+        [_activity_record()],
+        expected_task_image_sha256=TASK_SHA,
+        expected_document_id=DOCUMENT_ID,
+        expected_pdf_sha256=PDF_SHA,
+    )
+
+    assert decision.accepted is True
+    assert decision.selected_page_number == 15
+    assert decision.selected_question_number == 3
+    assert decision.selected_record_id == f"{DOCUMENT_ID}:p15:q3"
+    assert all(passed for _, passed in decision.checks)
+
+
+def test_image_only_visual_activity_rejects_ambiguous_page_records() -> None:
+    evidence = visual_page_evidence_from_mapping(_evidence_mapping())
+
+    decision = decide_visual_activity_page_binding(
+        [evidence],
+        [_activity_record(number=3), _activity_record(number=4)],
+        expected_task_image_sha256=TASK_SHA,
+        expected_document_id=DOCUMENT_ID,
+        expected_pdf_sha256=PDF_SHA,
+    )
+
+    assert decision.accepted is False
+    assert decision.reason == "activity_record_binding_failed"
+    assert dict(decision.checks)["one_indexed_activity_on_page"] is False
+    assert decision.selected_record_id is None
+
+
+def test_image_only_visual_activity_still_requires_crop_overlap() -> None:
+    evidence = visual_page_evidence_from_mapping(_evidence_mapping())
+
+    decision = decide_visual_activity_page_binding(
+        [evidence],
+        [_activity_record(content_bbox=(200.0, 200.0, 250.0, 250.0))],
+        expected_task_image_sha256=TASK_SHA,
+        expected_document_id=DOCUMENT_ID,
+        expected_pdf_sha256=PDF_SHA,
+    )
+
+    assert decision.accepted is False
+    assert dict(decision.checks)["mapped_crop_bbox_iou"] is False
 
 
 def test_visual_activity_rejects_wrong_observed_activity() -> None:

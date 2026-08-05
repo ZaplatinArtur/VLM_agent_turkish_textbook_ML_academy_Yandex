@@ -1164,6 +1164,139 @@ def decide_visual_activity_binding(
     )
 
 
+def decide_visual_activity_page_binding(
+    evidences: Sequence[VisualPageEvidence],
+    records: Sequence[ActivityVisualRecordRef],
+    *,
+    expected_task_image_sha256: str,
+    expected_document_id: str,
+    expected_pdf_sha256: str,
+    thresholds: VisualBindingThresholds = VisualBindingThresholds(),
+) -> VisualBindingDecision:
+    """Bind an image-only parser observation to one activity by exact page.
+
+    This is deliberately narrower than inferring an activity number from task
+    identity or benchmark position.  The visual sweep must first select one
+    source page with the normal strict geometry and rank-margin gates.  That
+    page must then contain exactly one indexed, visually reviewed activity
+    record, and the mapped task crop must overlap that record's PDF content
+    crop.  Ambiguous pages abstain.
+    """
+
+    if not evidences:
+        return VisualBindingDecision(False, "no_page_evidence", ())
+    page_addresses = [
+        (evidence.document_id, evidence.page_number) for evidence in evidences
+    ]
+    if len(page_addresses) != len(set(page_addresses)):
+        return VisualBindingDecision(
+            False,
+            "duplicate_page_evidence",
+            (("unique_page_evidence", False),),
+        )
+    if (
+        _HEX64.fullmatch(expected_task_image_sha256) is None
+        or _HEX64.fullmatch(expected_pdf_sha256) is None
+    ):
+        raise VisualCoordinateBindingError(
+            "expected image-only visual activity identity is malformed"
+        )
+    identity_ok = all(
+        evidence.task_image_sha256 == expected_task_image_sha256
+        and evidence.document_id == expected_document_id
+        and evidence.pdf_sha256 == expected_pdf_sha256
+        for evidence in evidences
+    )
+    if not identity_ok:
+        return VisualBindingDecision(
+            False,
+            "source_identity_mismatch",
+            (("source_identity", False),),
+        )
+    ordered = sorted(
+        evidences,
+        key=lambda item: (
+            -item.rank_score,
+            -item.inliers,
+            item.page_number,
+            item.rendered_page_sha256,
+        ),
+    )
+    best = ordered[0]
+    runner_score = ordered[1].rank_score if len(ordered) > 1 else 0.0
+    score_margin = best.rank_score - runner_score
+    score_ratio = best.rank_score / max(runner_score, 1e-9)
+    checks = list(geometry_checks(best, thresholds))
+    checks.extend(
+        (
+            ("source_identity", True),
+            (
+                "page_rank_margin",
+                score_margin >= thresholds.min_rank_score_margin,
+            ),
+            (
+                "page_rank_ratio",
+                score_ratio >= thresholds.min_rank_score_ratio,
+            ),
+        )
+    )
+    if not all(passed for _, passed in checks):
+        return VisualBindingDecision(
+            False,
+            "visual_geometry_or_margin_failed",
+            tuple(checks),
+            selected_page_number=best.page_number,
+            best_rank_score=best.rank_score,
+            runner_rank_score=runner_score,
+        )
+
+    page_records = [
+        record
+        for record in records
+        if record.document_id == expected_document_id
+        and record.content_page_number == best.page_number
+    ]
+    reviewed_records = [record for record in page_records if record.visually_checked]
+    unique_page_activity = len(page_records) == 1
+    unique_reviewed_record = len(reviewed_records) == 1 and unique_page_activity
+    selected = reviewed_records[0] if unique_reviewed_record else None
+    crop_bbox_iou = (
+        _mapped_crop_bbox_iou(best.mapped_polygon, selected.content_bbox)
+        if selected is not None
+        else 0.0
+    )
+    checks.extend(
+        (
+            ("one_indexed_activity_on_page", unique_page_activity),
+            ("one_visually_reviewed_activity_on_page", unique_reviewed_record),
+            (
+                "pdf_projection_pins_present",
+                selected is not None
+                and all(
+                    _HEX64.fullmatch(value) is not None
+                    for value in (
+                        selected.key_projection_sha256,
+                        selected.content_projection_sha256,
+                        selected.binding_projection_sha256,
+                    )
+                ),
+            ),
+            ("mapped_crop_bbox_iou", crop_bbox_iou >= 0.80),
+        )
+    )
+    accepted = all(passed for _, passed in checks)
+    return VisualBindingDecision(
+        accepted,
+        "accepted" if accepted else "activity_record_binding_failed",
+        tuple(checks),
+        selected_page_number=best.page_number,
+        selected_question_number=(selected.activity_number if accepted and selected else None),
+        selected_record_id=(selected.record_id if accepted and selected else None),
+        best_rank_score=best.rank_score,
+        runner_rank_score=runner_score,
+    )
+
+
 def _mapped_crop_bbox_iou(
     polygon: Sequence[Point] | None,
     pdf_bbox: tuple[float, float, float, float],

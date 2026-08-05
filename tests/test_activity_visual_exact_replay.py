@@ -303,6 +303,60 @@ def test_fresh_rebuild_rejects_poppler_hash_mismatch(
         composer._fresh_rebuild_activity_visual_artifact(**replay_case["kwargs"])
 
 
+def test_image_only_rebuild_uses_its_isolated_profile_and_index(
+    replay_case: dict[str, Any],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = replay_case["root"]
+    image_only_generator = (
+        root / "scripts" / "build_maxim_image_only_activity_visual_binding_v1.py"
+    )
+    image_only_generator.write_text(
+        "# synthetic image-only generator\n", encoding="utf-8"
+    )
+    paths = replay_case["kwargs"]
+    replay_case["payload"]["inputs"].update(
+        {
+            "profile": {
+                "path": str(paths["profile_path"]),
+                "sha256": _sha256(paths["profile_path"]),
+            },
+            "parser_observations": {
+                "path": str(paths["parser_path"]),
+                "sha256": _sha256(paths["parser_path"]),
+            },
+            "source_locators": {
+                "path": str(paths["locator_path"]),
+                "sha256": _sha256(paths["locator_path"]),
+            },
+            "source_index": {
+                "path": str(paths["source_index_path"]),
+                "sha256": _sha256(paths["source_index_path"]),
+            },
+        }
+    )
+    monkeypatch.setattr(
+        composer.subprocess,
+        "run",
+        _completed_run(rebuilt_bytes=replay_case["frozen_bytes"]),
+    )
+
+    result = composer._fresh_rebuild_image_only_activity_visual_artifact(
+        parser_path=paths["parser_path"],
+        locator_path=paths["locator_path"],
+        visual_path=paths["visual_path"],
+        expected_visual_sha256=paths["expected_visual_sha256"],
+        visual_payload=replay_case["payload"],
+        document_pdf_paths=paths["document_pdf_paths"],
+    )
+
+    assert result["mode"] == (
+        "fresh_source_only_poppler_sift_image_only_activity_exact_bytes_v1"
+    )
+    assert result["generator"]["path"] == str(image_only_generator)
+    assert result["exact_byte_identity"] is True
+
+
 def _valid_reproduction(visual_path: Path, visual_sha: str) -> dict[str, Any]:
     return {
         "mode": "fresh_source_only_poppler_sift_exact_bytes_v1",
@@ -402,3 +456,32 @@ def test_image_judge_rejects_stray_reproduction_for_nonvisual_profile(
             composition_manifest={"activity_visual_reproduction": reproduction},
             visual_path=None,
         )
+
+
+def test_image_only_reproduction_is_independent_when_normal_visual_is_absent(
+    tmp_path: Path,
+) -> None:
+    image_only_path = tmp_path / "image-only.json"
+    image_only_sha = "b" * 64
+    reproduction = _valid_reproduction(image_only_path, image_only_sha)
+    reproduction["mode"] = (
+        "fresh_source_only_poppler_sift_image_only_activity_exact_bytes_v1"
+    )
+    composition_manifest = {
+        "image_only_activity_visual_reproduction": reproduction
+    }
+
+    image_judge._require_activity_visual_reproduction(
+        profile_visual_spec=None,
+        composition_manifest=composition_manifest,
+        visual_path=None,
+    )
+    image_judge._require_activity_visual_reproduction(
+        profile_visual_spec={"sha256": image_only_sha},
+        composition_manifest=composition_manifest,
+        visual_path=image_only_path,
+        manifest_key="image_only_activity_visual_reproduction",
+        expected_mode=(
+            "fresh_source_only_poppler_sift_image_only_activity_exact_bytes_v1"
+        ),
+    )

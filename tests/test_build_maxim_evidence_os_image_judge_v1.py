@@ -43,6 +43,7 @@ import compose_maxim_official_ogm_failclosed_v2 as composer  # noqa: E402
 TASK_IDS = tuple(f"task_{index:03d}" for index in range(274))
 IMAGE_IDS = frozenset(TASK_IDS[:97])
 CHANGED_ID = TASK_IDS[0]
+UNCHANGED_ID = TASK_IDS[1]
 TARGET_TEXT = (
     "algebra triangle orchard compass lantern isotope fraction theorem polygon "
     "velocity cylinder matrix radius quotient symmetry tangent integer prism equation"
@@ -460,7 +461,11 @@ def synthetic_bundle(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Synthet
         task_id: {
             "task_id": task_id,
             "action": "replace_anchor" if task_id == CHANGED_ID else "keep_anchor",
-            "reason": "synthetic",
+            "reason": (
+                "strongly_verified_challenger"
+                if task_id == CHANGED_ID
+                else "no_challengers"
+            ),
             "anchor_answer": "A",
             "selected_answer": "B" if task_id == CHANGED_ID else "A",
             "certificate_trace_fingerprint": (
@@ -513,6 +518,41 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
 
 
+def _configure_certified_equal_anchor(
+    bundle: SyntheticBundle,
+) -> None:
+    """Turn the synthetic changed row into a source-confirmed anchor answer."""
+
+    anchor_path = Path(str(bundle.profile["anchor"]["path"]))
+    anchor_rows = _read_jsonl(anchor_path)
+    anchor_row = next(row for row in anchor_rows if row["task_id"] == CHANGED_ID)
+    anchor_row["final_answer"] = "B"
+    _write_jsonl(anchor_path, anchor_rows)
+    bundle.profile["anchor"]["sha256"] = sha256_file(anchor_path)
+    _write_json(bundle.profile_path, bundle.profile)
+
+    trace = deepcopy(bundle.original_result.trace)
+    trace["provenance"]["profile_sha256"] = sha256_file(bundle.profile_path)
+    result = SimpleNamespace(
+        problem=bundle.original_result.problem,
+        checks=bundle.original_result.checks,
+        trace=trace,
+    )
+    certificate = _certificate_record(CHANGED_ID, result, "B")
+    fingerprint = str(certificate["trace_fingerprint"])
+    bundle.certificates[CHANGED_ID] = certificate
+    bundle.solver[CHANGED_ID] = deepcopy(anchor_row)
+    bundle.base_solver[CHANGED_ID]["final_answer"] = "B"
+    bundle.decisions[CHANGED_ID] = {
+        "task_id": CHANGED_ID,
+        "action": "keep_anchor",
+        "reason": "equivalent_to_anchor",
+        "anchor_answer": "B",
+        "selected_answer": "B",
+        "certificate_trace_fingerprint": fingerprint,
+    }
+
+
 def test_valid_bundle_uses_profile_anchor_and_strictly_projects_changed_row(
     synthetic_bundle: SyntheticBundle,
 ) -> None:
@@ -523,12 +563,112 @@ def test_valid_bundle_uses_profile_anchor_and_strictly_projects_changed_row(
     assert changed["verdict"]["strict_correct"] is True
     assert changed["verdict"]["label"] == "fully_correct"
     assert changed["verdict"]["reasoning_correct"] is None
+    assert changed["metadata"]["composition_action"] == "replace_anchor"
+    assert changed["metadata"]["answer_changed_from_anchor"] is True
     assert "gold" not in changed
     assert "reference_answer" not in changed
     assert "outcome" not in changed
     assert manifest["benchmark_reference_answers_opened"] is False
     assert manifest["base_image_judge_outcomes_read_and_copied_for_unchanged_rows"] is True
     assert manifest["base_image_judge_outcomes_used_for_changed_rows"] is False
+
+
+def test_certified_equal_anchor_gets_deterministic_fully_correct_verdict(
+    synthetic_bundle: SyntheticBundle,
+) -> None:
+    _configure_certified_equal_anchor(synthetic_bundle)
+    original = deepcopy(synthetic_bundle.base_judge[CHANGED_ID])
+    assert original["verdict"]["strict_correct"] is False
+
+    manifest = image_judge.build(**synthetic_bundle.seal())
+
+    output = {row["task_id"]: row for row in _read_jsonl(synthetic_bundle.output_path)}
+    confirmed = output[CHANGED_ID]
+    assert confirmed["setup"] == "maxim_evidence_os_official_source_adjudication_v1"
+    assert confirmed["judge"]["backend"] == "deterministic-pinned-pdf-certificate"
+    assert confirmed["verdict"]["label"] == "fully_correct"
+    assert confirmed["verdict"]["strict_correct"] is True
+    assert confirmed["metadata"]["composition_action"] == "keep_anchor"
+    assert confirmed["metadata"]["answer_changed_from_anchor"] is False
+    assert confirmed != original
+    assert manifest["copied_nonadjudicated_rows"] == 96
+    assert manifest["official_certificate_rows"] == [
+        {
+            "task_id": CHANGED_ID,
+            "source_record_id": synthetic_bundle.source_questions[0]["record_id"],
+            "certificate_trace_fingerprint": synthetic_bundle.certificates[CHANGED_ID][
+                "trace_fingerprint"
+            ],
+            "composition_action": "keep_anchor",
+            "answer_changed_from_anchor": False,
+        }
+    ]
+
+
+def test_certified_equal_anchor_verdict_is_independent_of_base_verdict(
+    synthetic_bundle: SyntheticBundle,
+) -> None:
+    _configure_certified_equal_anchor(synthetic_bundle)
+    image_judge.build(**synthetic_bundle.seal())
+    first = {
+        row["task_id"]: row for row in _read_jsonl(synthetic_bundle.output_path)
+    }[CHANGED_ID]
+
+    synthetic_bundle.base_judge[CHANGED_ID]["verdict"] = {
+        "label": "fully_correct",
+        "score": 4,
+        "strict_correct": True,
+        "final_answer_correct": True,
+        "reasoning_correct": True,
+        "complete": True,
+        "confidence": 0.125,
+        "error_types": ["synthetic-equal-anchor-canary"],
+        "rationale": "A contradictory synthetic base verdict.",
+        "reference_quality_issue": True,
+    }
+    image_judge.build(**synthetic_bundle.seal())
+    second = {
+        row["task_id"]: row for row in _read_jsonl(synthetic_bundle.output_path)
+    }[CHANGED_ID]
+
+    assert second == first
+
+
+def test_noncertified_equal_anchor_row_is_byte_copied(
+    synthetic_bundle: SyntheticBundle,
+) -> None:
+    expected = deepcopy(synthetic_bundle.base_judge[UNCHANGED_ID])
+
+    image_judge.build(**synthetic_bundle.seal())
+
+    base_lines = synthetic_bundle.base_judge_path.read_bytes().splitlines(keepends=True)
+    output_lines = synthetic_bundle.output_path.read_bytes().splitlines(keepends=True)
+    output = {row["task_id"]: row for row in _read_jsonl(synthetic_bundle.output_path)}
+    assert output[UNCHANGED_ID] == expected
+    assert canonical_json_bytes(output[UNCHANGED_ID]) == canonical_json_bytes(expected)
+    assert output_lines[1] == base_lines[1]
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("reason", "no_challengers"),
+        ("certificate_trace_fingerprint", "0" * 64),
+    ],
+)
+def test_certified_equal_anchor_forged_selection_fails_closed(
+    synthetic_bundle: SyntheticBundle,
+    field: str,
+    value: str,
+) -> None:
+    _configure_certified_equal_anchor(synthetic_bundle)
+    synthetic_bundle.decisions[CHANGED_ID][field] = value
+
+    with pytest.raises(
+        image_judge.JudgeBuildError,
+        match="source certificate that is not composition-selected",
+    ):
+        image_judge.build(**synthetic_bundle.seal())
 
 
 def test_changed_verdict_is_independent_of_the_base_judge_outcome(
