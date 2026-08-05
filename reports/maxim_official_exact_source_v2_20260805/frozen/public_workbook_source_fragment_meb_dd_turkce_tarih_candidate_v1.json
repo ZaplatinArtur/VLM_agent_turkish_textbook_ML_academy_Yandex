@@ -1,0 +1,208 @@
+{
+  "schema_version": "public-workbook-source-index-v1",
+  "documents": [
+    {
+      "document_id": "meb_dd_tyt_tarih_7ebb73de46eb",
+      "locator": {
+        "kind": "yandex_public",
+        "public_locator": "ya-disk-public://enaTIeEJ6EkmV8iZcuGkjsW2AQGG8Zk91MZ+kXV1fTsdFdYvBGAaTVhk/JNzKRWhq/J6bpmRyOJonT3VoXnDag==:/MEB-DD-TYT-tarih.pdf",
+        "name": "MEB-DD-TYT-tarih.pdf"
+      },
+      "pdf_sha256": "7ebb73de46eb8e213771354905090b677386be4aea5e506eb96f0339548c7e20",
+      "page_count": 250,
+      "content_page_ranges": [[1, 246]],
+      "questions": [
+        {
+          "record_id": "meb_dd_tyt_tarih_7ebb73de46eb:p213:q1",
+          "content_page_number": 213,
+          "question_number": 1,
+          "answer": "B",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 213,
+          "key_bbox": [227.6, 423.6, 262.6, 432.1],
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_tarih_7ebb73de46eb:p214:q4",
+          "content_page_number": 214,
+          "question_number": 4,
+          "answer": "B",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 214,
+          "key_bbox": [227.5, 457.4, 262.5, 465.9],
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_tarih_7ebb73de46eb:p221:q4",
+          "content_page_number": 221,
+          "question_number": 4,
+          "answer": "D",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 250,
+          "key_bbox": [161.7, 317.3, 168.2, 326.3],
+          "section": "XX. Yüzyıl Başlarında Osmanlı Devleti ve Dünya",
+          "test_variant": "4. TEST",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_tarih_7ebb73de46eb:p223:q1",
+          "content_page_number": 223,
+          "question_number": 1,
+          "answer": "C",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 223,
+          "key_bbox": [227.2, 566.6, 262.6, 575.1],
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_tarih_7ebb73de46eb:p223:q2",
+          "content_page_number": 223,
+          "question_number": 2,
+          "answer": "B",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 223,
+          "key_bbox": [481.9, 553.8, 516.9, 562.3],
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_tarih_7ebb73de46eb:p241:q1",
+          "content_page_number": 241,
+          "question_number": 1,
+          "answer": "E",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 250,
+          "key_bbox": [98.0, 533.6, 104.0, 542.6],
+          "section": "Atatürkçülük ve Türk İnkılabı",
+          "test_variant": "2. TEST",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_tarih_7ebb73de46eb:p244:q12",
+          "content_page_number": 244,
+          "question_number": 12,
+          "answer": "E",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 250,
+          "key_bbox": [332.4, 553.5, 338.4, 562.5],
+          "section": "Atatürkçülük ve Türk İnkılabı",
+          "test_variant": "3. TEST",
+          "visually_checked": true
+        }
+      ]
+    },
+    {
+      "document_id": "meb_dd_tyt_turkce_ee4a7e7c202e",
+      "locator": {
+        "kind": "yandex_public",
+        "public_locator": "ya-disk-public://enaTIeEJ6EkmV8iZcuGkjsW2AQGG8Zk91MZ+kXV1fTsdFdYvBGAaTVhk/JNzKRWhq/J6bpmRyOJonT3VoXnDag==:/MEB-DD-TYT-turkce.pdf",
+        "name": "MEB-DD-TYT-turkce.pdf"
+      },
+      "pdf_sha256": "ee4a7e7c202e7b1464f63b61f7896582826d7a5b6f3afa3961942fec695d4d1f",
+      "page_count": 184,
+      "content_page_ranges": [[1, 180]],
+      "questions": [
+        {
+          "record_id": "meb_dd_tyt_turkce_ee4a7e7c202e:p14:q10",
+          "content_page_number": 14,
+          "question_number": 10,
+          "answer": "E",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 14,
+          "key_bbox": [227.8, 373.3, 262.3, 381.8],
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_turkce_ee4a7e7c202e:p14:q11",
+          "content_page_number": 14,
+          "question_number": 11,
+          "answer": "D",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 14,
+          "key_bbox": [481.0, 557.7, 516.5, 566.2],
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_turkce_ee4a7e7c202e:p17:q2",
+          "content_page_number": 17,
+          "question_number": 2,
+          "answer": "A",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 181,
+          "key_bbox": [119.3, 135.9, 125.3, 144.9],
+          "section": "Sözcükte Anlam",
+          "test_variant": "2. TEST",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_turkce_ee4a7e7c202e:p21:q1",
+          "content_page_number": 21,
+          "question_number": 1,
+          "answer": "E",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 181,
+          "key_bbox": [97.9, 175.6, 103.9, 184.6],
+          "section": "Sözcükte Anlam",
+          "test_variant": "4. TEST",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_turkce_ee4a7e7c202e:p35:q1",
+          "content_page_number": 35,
+          "question_number": 1,
+          "answer": "D",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 35,
+          "key_bbox": [227.2, 455.0, 262.6, 463.5],
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_turkce_ee4a7e7c202e:p35:q2",
+          "content_page_number": 35,
+          "question_number": 2,
+          "answer": "C",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 35,
+          "key_bbox": [481.4, 525.6, 516.8, 534.1],
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_turkce_ee4a7e7c202e:p44:q6",
+          "content_page_number": 44,
+          "question_number": 6,
+          "answer": "E",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 181,
+          "key_bbox": [204.5, 422.2, 210.5, 431.2],
+          "section": "Paragrafta Anlam",
+          "test_variant": "3. TEST",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_dd_tyt_turkce_ee4a7e7c202e:p48:q5",
+          "content_page_number": 48,
+          "question_number": 5,
+          "answer": "A",
+          "answer_format": "choice",
+          "key_binding_kind": "inline_solution",
+          "key_page_number": 48,
+          "key_bbox": [227.2, 465.1, 262.2, 473.6],
+          "visually_checked": true
+        }
+      ]
+    }
+  ]
+}

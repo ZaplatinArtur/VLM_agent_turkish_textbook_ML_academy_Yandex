@@ -1,0 +1,89 @@
+{
+  "schema_version": "maxim-public-workbook-profile-v1",
+  "profile_name": "maxim-public-workbook-meb-dd-turkce-tarih-candidate-v1",
+  "expected_rows": 274,
+  "anchor": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/direct_pdf_composed/solver.jsonl",
+    "sha256": "b0b366c80de4cf45dec48f4cb77367cb632d31f824c08eb9d3474c0e860248ea",
+    "role": "fail_closed_official_source_anchor"
+  },
+  "inputs": {
+    "parser_observations": {
+      "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/parser_artifacts/parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038",
+      "allowed_role": "observable_ocr_and_image_binding_only"
+    },
+    "source_locators": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a",
+      "allowed_role": "public_source_identity_only"
+    },
+    "source_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb_dd_turkce_tarih_candidate_v1.json",
+      "sha256": "d9fa48f57961bbef05359e0e03e89146272d306429e807dbd1331387ce66fa52",
+      "allowed_role": "task_id_free_source_native_records_only"
+    }
+  },
+  "documents": [
+    {
+      "document_id": "meb_dd_tyt_cografya_57424d9b0f99",
+      "pdf_sha256": "57424d9b0f99229d42789871af2753181e5b79f2e3d9a540f916703cd49a5dd8",
+      "page_count": 268
+    },
+    {
+      "document_id": "meb_dd_tyt_fizik_7254325f6a47",
+      "pdf_sha256": "7254325f6a477b745782566d3281af03d3f153af2e2c4f2cf3ae8f83f4388480",
+      "page_count": 366
+    },
+    {
+      "document_id": "meb_dd_tyt_kimya_b3b89a296d91",
+      "pdf_sha256": "b3b89a296d91ec0c3c7d6862d3113e0b7dcf34469c993808715203bbf0df1e7f",
+      "page_count": 324
+    },
+    {
+      "document_id": "meb_dd_tyt_tarih_7ebb73de46eb",
+      "pdf_sha256": "7ebb73de46eb8e213771354905090b677386be4aea5e506eb96f0339548c7e20",
+      "page_count": 250
+    },
+    {
+      "document_id": "meb_dd_tyt_turkce_ee4a7e7c202e",
+      "pdf_sha256": "ee4a7e7c202e7b1464f63b61f7896582826d7a5b6f3afa3961942fec695d4d1f",
+      "page_count": 184
+    },
+    {
+      "document_id": "meb_def_10biyoloji_640bb362f2d5",
+      "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+      "page_count": 183
+    },
+    {
+      "document_id": "yandex_7_matematik_meb_dee64189589b",
+      "pdf_sha256": "dee64189589ba60431680f552edcb9613e620bdf8138c234daf16c7b02450219",
+      "page_count": 273
+    }
+  ],
+  "runtime": {
+    "pypdf_version": "6.10.0",
+    "pdfplumber_version": "0.11.9"
+  },
+  "policy": {
+    "min_page_coverage": 0.65,
+    "min_page_matched_tokens": 10,
+    "min_page_margin": 0.12,
+    "min_numberless_question_coverage": 1.0,
+    "min_numberless_question_matched_tokens": 999,
+    "min_numberless_question_margin": 1.0,
+    "require_observed_question_number": true,
+    "allow_numberless_question_binding": false,
+    "require_unique_printed_number_on_page": true,
+    "require_pdf_bound_key_context": true,
+    "ambiguous_or_malformed_action": "abstain_keep_anchor",
+    "task_id_is_policy_feature": false,
+    "benchmark_candidate_or_outcome_access": false
+  },
+  "evaluation": {
+    "profile_frozen_before_scoring": false,
+    "threshold_basis": "unchanged source-only page matching and PDF key attestation",
+    "target_split_status": "candidate_source_only_not_scored",
+    "known_runtime_blocker": "four Turkish source locators omit nosw; current strict identity parser requires an inert numeric nosw"
+  }
+}

@@ -226,6 +226,16 @@ def run(
         observation_loader = parser_observation_primary_layout_number
     else:
         raise RunError("unsupported question-number projection")
+    identity_projection = str(
+        policy.get("yandex_public_identity_projection")
+        or "url_name_plus_required_numeric_nosw_v1"
+    )
+    if identity_projection not in {
+        "url_name_plus_required_numeric_nosw_v1",
+        "url_name_plus_optional_numeric_nosw_v2",
+    }:
+        raise RunError("unsupported Yandex public-identity projection")
+    allow_missing_nosw = identity_projection == "url_name_plus_optional_numeric_nosw_v2"
 
     caches: dict[str, dict[str, Any]] = {}
     for document_id, document in indexed_documents.items():
@@ -266,7 +276,11 @@ def run(
         task_id = str(raw["task_id"])
         source_url = str(locator_index[task_id].get("source_url") or "")
         try:
-            document = document_for_source(source_index, source_url)
+            document = document_for_source(
+                source_index,
+                source_url,
+                allow_missing_nosw=allow_missing_nosw,
+            )
         except OfficialSourceError:
             document = None
         if document is None:
@@ -299,6 +313,7 @@ def run(
                 cache["matcher"],
                 cache["page_texts"],
                 thresholds,
+                allow_missing_nosw=allow_missing_nosw,
             )
         except (OfficialSourceError, ValueError, KeyError, TypeError) as exc:
             candidate_rows.append(

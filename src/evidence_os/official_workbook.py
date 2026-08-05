@@ -14,6 +14,7 @@ import math
 from pathlib import Path
 import re
 from typing import Any
+import unicodedata
 from urllib.parse import parse_qsl, urlsplit
 
 from .coordinate_answer_key import (
@@ -34,6 +35,7 @@ VERIFIER = "public-workbook-ocr-page-key-binding-v1"
 INDEX_SCHEMA = "public-workbook-source-index-v1"
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _NOSW = re.compile(r"^[0-9]+$")
+_BAD_PERCENT_ESCAPE = re.compile(r"%(?![0-9a-fA-F]{2})")
 _TASK_LIKE_IDENTIFIER = re.compile(
     r"(?:^|[._-])(?:val|test|train|task|qid)[._-]?\d+(?:[._-]|$)",
     re.IGNORECASE,
@@ -179,14 +181,30 @@ def reject_benchmark_metadata(value: Any, path: tuple[str, ...] = ()) -> None:
             reject_benchmark_metadata(child, path + (f"[{index}]",))
 
 
-def strict_yandex_public_identity(source_url: str) -> YandexPublicIdentity:
+def strict_yandex_public_identity(
+    source_url: str,
+    *,
+    allow_missing_nosw: bool = False,
+) -> YandexPublicIdentity:
     """Project a Yandex viewer URL to its immutable public-resource identity.
 
-    ``nosw`` is accepted only as an inert numeric viewer flag and is discarded.
-    It must never become a routing or answer feature.
+    ``nosw`` is optional.  When present, it is accepted only as an inert
+    numeric viewer flag and is discarded.  It must never become a routing or
+    answer feature.
     """
 
-    parsed = urlsplit(source_url)
+    if (
+        source_url != source_url.strip()
+        or any(ord(character) < 32 or ord(character) == 127 for character in source_url)
+        or "#" in source_url
+        or _BAD_PERCENT_ESCAPE.search(source_url) is not None
+        or not source_url.startswith("https://docs.yandex.ru/docs/view?")
+    ):
+        raise OfficialSourceError("source URL has non-canonical Yandex Docs syntax")
+    try:
+        parsed = urlsplit(source_url)
+    except ValueError as exc:
+        raise OfficialSourceError("source URL cannot be parsed safely") from exc
     if (
         parsed.scheme != "https"
         or parsed.hostname != "docs.yandex.ru"
@@ -197,27 +215,57 @@ def strict_yandex_public_identity(source_url: str) -> YandexPublicIdentity:
         or parsed.fragment
     ):
         raise OfficialSourceError("source URL is outside the strict Yandex Docs allowlist")
-    pairs = parse_qsl(parsed.query, keep_blank_values=True, strict_parsing=True)
-    if len(pairs) != 3 or {key for key, _ in pairs} != {"url", "name", "nosw"}:
-        raise OfficialSourceError("Yandex Docs locator must contain url, name, and nosw once")
+    raw_pairs = parsed.query.split("&")
+    if any(part.count("=") != 1 for part in raw_pairs):
+        raise OfficialSourceError("Yandex Docs query fields must use one literal equals sign")
+    raw_keys = [part.split("=", 1)[0] for part in raw_pairs]
+    if any(key not in {"url", "name", "nosw"} for key in raw_keys):
+        raise OfficialSourceError("Yandex Docs query keys must be literal and allowlisted")
+    try:
+        pairs = parse_qsl(
+            parsed.query,
+            keep_blank_values=True,
+            strict_parsing=True,
+            encoding="utf-8",
+            errors="strict",
+        )
+    except (UnicodeDecodeError, ValueError) as exc:
+        raise OfficialSourceError("Yandex Docs query encoding is malformed") from exc
+    keys = [key for key, _ in pairs]
+    key_set = set(keys)
+    allowed_key_sets = (
+        ({"url", "name"}, {"url", "name", "nosw"})
+        if allow_missing_nosw
+        else ({"url", "name", "nosw"},)
+    )
+    if (
+        len(keys) not in (2, 3)
+        or len(key_set) != len(keys)
+        or key_set not in allowed_key_sets
+    ):
+        raise OfficialSourceError(
+            "Yandex Docs locator must contain url and name once, plus optional nosw once"
+        )
     values = {key: value for key, value in pairs}
     public_locator = values["url"]
-    name = values["name"].strip()
+    name = values["name"]
     if (
         not public_locator.startswith("ya-disk-public://")
         or len(public_locator) <= len("ya-disk-public://")
-        or any(ord(character) < 32 for character in public_locator)
+        or any(unicodedata.category(character) == "Cc" for character in public_locator)
+        or any(character.isspace() for character in public_locator)
     ):
         raise OfficialSourceError("Yandex public-resource locator is malformed")
     if (
         not name
+        or name != name.strip()
         or not name.casefold().endswith(".pdf")
         or "/" in name
         or "\\" in name
-        or any(ord(character) < 32 for character in name)
+        or any(unicodedata.category(character) == "Cc" for character in name)
     ):
         raise OfficialSourceError("Yandex public-resource filename is malformed")
-    if not _NOSW.fullmatch(values["nosw"]):
+    if "nosw" in values and not _NOSW.fullmatch(values["nosw"]):
         raise OfficialSourceError("Yandex viewer flag must be numeric and inert")
     return YandexPublicIdentity(public_locator=public_locator, name=name)
 
@@ -471,8 +519,16 @@ def parse_workbook_index(payload: Mapping[str, Any]) -> WorkbookIndex:
     return WorkbookIndex(documents=tuple(sorted(documents, key=lambda item: item.document_id)))
 
 
-def document_for_source(index: WorkbookIndex, source_url: str) -> WorkbookDocument | None:
-    identity = strict_yandex_public_identity(source_url)
+def document_for_source(
+    index: WorkbookIndex,
+    source_url: str,
+    *,
+    allow_missing_nosw: bool = False,
+) -> WorkbookDocument | None:
+    identity = strict_yandex_public_identity(
+        source_url,
+        allow_missing_nosw=allow_missing_nosw,
+    )
     matches = [document for document in index.documents if document.identity == identity]
     if len(matches) > 1:
         raise OfficialSourceError("Yandex public identity is ambiguous in source index")
@@ -799,10 +855,15 @@ def resolve_workbook_question(
     matcher: PageMatcher,
     page_texts: Sequence[str],
     thresholds: WorkbookThresholds,
+    *,
+    allow_missing_nosw: bool = False,
 ) -> MatchResult:
     """Bind one parser crop to one reviewed workbook key, or abstain."""
 
-    observed_identity = strict_yandex_public_identity(source_url)
+    observed_identity = strict_yandex_public_identity(
+        source_url,
+        allow_missing_nosw=allow_missing_nosw,
+    )
     if observed_identity != document.identity:
         raise OfficialSourceError("source URL does not match the pinned workbook identity")
     if matcher.page_count != len(page_texts) or len(page_texts) != document.page_count:

@@ -1,0 +1,116 @@
+{
+  "schema_version": "maxim-pre-score-handoff-v3",
+  "profile_name": "maxim-public-workbook-primary-layout-meb-dd-v3",
+  "frozen_at_utc": "2026-08-05T03:15:03.8631387Z",
+  "git_parent_commit": "1d6bdf7a99ac91735932d099a7699572ab094fdc",
+  "evaluation_status": "previously_inspected_development_replay_not_holdout",
+  "score_artifacts_created_before_handoff": false,
+  "gold_access": false,
+  "benchmark_candidate_or_outcome_access": false,
+  "profile": {
+    "path": "configs/maxim_public_workbook_primary_layout_meb_dd_v3.json",
+    "sha256": "fb7fc1c2d83e070ec6189850a9616297d490b4e5fa30eeebc13d20acda9d9687"
+  },
+  "protocol": {
+    "path": "docs/MAXIM_PRIMARY_LAYOUT_MEB_DD_V3_PROTOCOL.md",
+    "sha256": "e29e023cb52455de2321cca088f1571f5c896734613c06c65d3dc9ff7c6b22ad"
+  },
+  "implementation": {
+    "src/evidence_os/official_ogm.py": "9ed24bd106cd2319d1cee246b52650ca2c056497d5ee9a221d06eb6665bff78e",
+    "src/evidence_os/official_workbook.py": "78d0ce953e0a9e9c0c8fe2463519f362b6586c94c5d76bb6fc67e71a6319807e",
+    "src/evidence_os/official_pdf.py": "ad7d50a786ef62fd9547f8a8564993a0d21710be0bf6d350453feb58af1a0b6b",
+    "scripts/run_maxim_public_workbook_v1.py": "d2f1291d76eaecf3f31e9cef181fe49f6a455f9de5caf330a96a6adb73ad32bb",
+    "scripts/compose_maxim_official_ogm_failclosed_v2.py": "60039eb248e4da1b38d5cb8d0ebcbad9bb21690e6c10d8c9f706aa9398c2ccb0",
+    "scripts/build_maxim_evidence_os_image_judge_v1.py": "253e3fcebc89208ced35fc92729bcfaea0befa990c8ee19a56310fd1fc7e0990",
+    "scripts/audit_maxim_primary_layout_projection_v2.py": "55b50551521f0e591a869c5fcaeb2879571dcaa2cfa74fb320eaaac00cf87c2e"
+  },
+  "tests": {
+    "command": "python -m pytest tests/test_official_ogm_exact_source_v2.py tests/test_official_workbook_v1.py tests/test_build_maxim_evidence_os_image_judge_v1.py -q",
+    "result": "82 passed",
+    "independent_source_review": "15/15 new MEB DD records verified; no blocker found",
+    "files": {
+      "tests/test_official_ogm_exact_source_v2.py": "1c255a0d2e568a62bb6540d330e6b992a331d15e2d3b45275dc14b726a281bd8",
+      "tests/test_official_workbook_v1.py": "16914a2b7010306e145fe20820a7f39fb8b908085f5a05d15eb11c765b3b9c9e",
+      "tests/test_build_maxim_evidence_os_image_judge_v1.py": "4355539e66a3e079e0f28ee6dcf1967f51353bd42e49c106f489f3a9ecae47a0"
+    }
+  },
+  "source_wave": {
+    "fragment": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_fragment_meb_dd_turkce_tarih_candidate_v1.json",
+      "sha256": "a83211a10b4cd8a64750334cde5d0724ea4cf142f3ebbbca3e4f674a18218811"
+    },
+    "merged_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb_dd_turkce_tarih_candidate_v1.json",
+      "sha256": "d9fa48f57961bbef05359e0e03e89146272d306429e807dbd1331387ce66fa52"
+    },
+    "build_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb_dd_turkce_tarih_candidate_v1.manifest.json",
+      "sha256": "9158e8c89c89321f49b6bb254b3a4a7c673e063a7a7af1d85922f35bbe8d4fb0"
+    },
+    "source_only_validation": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_meb_dd_turkce_tarih_candidate_v1/SOURCE_ONLY_VALIDATION.md",
+      "sha256": "876511a0ad6a20e97663edecf2854abf8a3162fbefcb5c4bde6fb9e207d10d18"
+    },
+    "candidate_profile": {
+      "path": "configs/maxim_public_workbook_meb_dd_turkce_tarih_candidate_v1.json",
+      "sha256": "3b71a10461b53626908bca8c2c1f97f63046cde429014c3b29c87357621b2f2f"
+    },
+    "candidate_resolver_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_meb_dd_turkce_tarih_candidate_v1/manifest.json",
+      "sha256": "061e7371efb7bf506d431600a070b67c00b46614ec3258f8c61de44eda2b2ad7"
+    },
+    "new_records": 15,
+    "pdf_coordinate_and_key_review": "15/15"
+  },
+  "projection_audit": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_projection_audit/manifest.json",
+      "sha256": "3d0e127294c53102b9dab8ed7fa3ee6763d228bfef7f271cf731b133e1976205"
+    },
+    "decisions": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_projection_audit/projection_decisions.jsonl",
+      "sha256": "c81308b6d108a15d2de780314ae17533205480832e6019d8c38479680e4e1cc6"
+    },
+    "rows": 274,
+    "primary_layout_recoveries": 17
+  },
+  "resolver": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_resolver/manifest.json",
+      "sha256": "daf33095c56d33504a2c1a60d5a466dd8a68642933b4abaa0014d8fc314468f9"
+    },
+    "candidate": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_resolver/candidate.jsonl",
+      "sha256": "7c82f6e440a8dd4d225882438f5571f6924d48e0d7e1291875cfb7d4156748df"
+    },
+    "certificates": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_resolver/certificates.jsonl",
+      "sha256": "079d8967685ffcda173ce06de368faef64bf9adc7226bd1a2239b67793187458"
+    },
+    "audit": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_resolver/audit.jsonl",
+      "sha256": "9284839f2ce7d56e7885b4189cf9a31b191d18a6f14f703398f7dbb0130dafc4"
+    },
+    "rows": 274,
+    "eligible_rows": 103,
+    "accepted_certificates": 88,
+    "abstentions": 186
+  },
+  "composition": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_composed/manifest.json",
+      "sha256": "b6b9b3f9e25bb46130d0d13ecb48850ee90f109ee35299758311d6be9d757fe5"
+    },
+    "solver": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_composed/solver.jsonl",
+      "sha256": "1bb9e1850afba9e6a6ec5346bf3dad8dcc6630ea6eed69e838886c72a2f1b8e6"
+    },
+    "decisions": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb_dd_v3_final_composed/decisions.jsonl",
+      "sha256": "0b7075a41af68aece7d8c286833270565885ddecffc82e2051c7bd1ce0587295"
+    },
+    "rows": 274,
+    "overrides": 19,
+    "certified_equal_anchor": 69
+  }
+}

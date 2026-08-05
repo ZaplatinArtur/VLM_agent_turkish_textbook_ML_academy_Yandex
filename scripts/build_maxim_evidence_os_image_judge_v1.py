@@ -211,6 +211,16 @@ def build(
         observation_loader = parser_observation_primary_layout_number
     else:
         raise JudgeBuildError("unsupported question-number projection")
+    identity_projection = str(
+        policy.get("yandex_public_identity_projection")
+        or "url_name_plus_required_numeric_nosw_v1"
+    )
+    if identity_projection not in {
+        "url_name_plus_required_numeric_nosw_v1",
+        "url_name_plus_optional_numeric_nosw_v2",
+    }:
+        raise JudgeBuildError("unsupported Yandex public-identity projection")
+    allow_missing_nosw = identity_projection == "url_name_plus_optional_numeric_nosw_v2"
     try:
         import pdfplumber
         import pypdf
@@ -322,7 +332,11 @@ def build(
             raise JudgeBuildError(f"changed image row {task_id} lacks source metadata")
         observation = observation_loader(parser_rows[task_id])
         source_url = str(locator_rows[task_id].get("source_url") or "")
-        document = document_for_source(source_index, source_url)
+        document = document_for_source(
+            source_index,
+            source_url,
+            allow_missing_nosw=allow_missing_nosw,
+        )
         if document is None:
             raise JudgeBuildError(f"changed image row {task_id} has no indexed source document")
         source_record_id = str(trace_source.get("record_id") or "")
@@ -365,6 +379,7 @@ def build(
             cache["matcher"],
             cache["page_texts"],
             thresholds,
+            allow_missing_nosw=allow_missing_nosw,
         )
         recomputed_trace = recomputed.trace
         actual_trace_core = {key: trace.get(key) for key in recomputed_trace}

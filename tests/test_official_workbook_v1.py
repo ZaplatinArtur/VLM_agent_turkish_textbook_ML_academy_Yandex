@@ -210,12 +210,83 @@ def test_equal_page_scores_fail_closed() -> None:
 def test_yandex_identity_discards_only_numeric_viewer_flag() -> None:
     first = strict_yandex_public_identity(SOURCE_URL)
     second = strict_yandex_public_identity(SOURCE_URL.replace("nosw=17", "nosw=999"))
+    without_nosw = strict_yandex_public_identity(
+        SOURCE_URL.replace("&nosw=17", ""),
+        allow_missing_nosw=True,
+    )
 
-    assert first == second
+    assert first == second == without_nosw
+    with pytest.raises(OfficialSourceError):
+        strict_yandex_public_identity(SOURCE_URL.replace("&nosw=17", ""))
     with pytest.raises(OfficialSourceError):
         strict_yandex_public_identity(SOURCE_URL + "&answer=C")
     with pytest.raises(OfficialSourceError):
         strict_yandex_public_identity(SOURCE_URL.replace("nosw=17", "nosw=route-C"))
+    with pytest.raises(OfficialSourceError):
+        strict_yandex_public_identity(SOURCE_URL.replace("nosw=17", "nosw="))
+    with pytest.raises(OfficialSourceError):
+        strict_yandex_public_identity(SOURCE_URL + "&name=duplicate.pdf")
+    with pytest.raises(OfficialSourceError):
+        strict_yandex_public_identity(SOURCE_URL.replace("&name=book.pdf", ""))
+
+
+def test_optional_nosw_policy_is_enforced_through_document_and_resolver() -> None:
+    index = parse_workbook_index(_payload())
+    source_without_nosw = SOURCE_URL.replace("&nosw=17", "")
+    with pytest.raises(OfficialSourceError):
+        document_for_source(index, source_without_nosw)
+
+    document = document_for_source(
+        index,
+        source_without_nosw,
+        allow_missing_nosw=True,
+    )
+    assert document is not None
+    pages = _pages()
+    with pytest.raises(OfficialSourceError):
+        resolve_workbook_question(
+            _observation(),
+            source_without_nosw,
+            document,
+            PageMatcher(pages),
+            pages,
+            WorkbookThresholds(),
+        )
+
+    result = resolve_workbook_question(
+        _observation(),
+        source_without_nosw,
+        document,
+        PageMatcher(pages),
+        pages,
+        WorkbookThresholds(),
+        allow_missing_nosw=True,
+    )
+    assert result.accepted is True
+    assert result.answer == "C"
+
+
+@pytest.mark.parametrize(
+    "malformed_url",
+    [
+        " " + SOURCE_URL,
+        SOURCE_URL + "#",
+        SOURCE_URL.replace("https://docs.yandex.ru/", "https://docs.yandex.ru:/"),
+        SOURCE_URL.replace("docs.yandex.ru", "docs.yandex.\nru"),
+        SOURCE_URL.replace("url=", "%75rl="),
+        SOURCE_URL.replace("book.pdf", "%20book.pdf"),
+        SOURCE_URL.replace("book.pdf", "book%ZZ.pdf"),
+        SOURCE_URL.replace("book.pdf", "book%FF.pdf"),
+        SOURCE_URL.replace("book.pdf", "book%7F.pdf"),
+        SOURCE_URL.replace("book.pdf", "book%C2%80.pdf"),
+        SOURCE_URL.replace("public-key", "public%7F-key"),
+    ],
+)
+def test_yandex_identity_rejects_noncanonical_raw_url_syntax(
+    malformed_url: str,
+) -> None:
+    with pytest.raises(OfficialSourceError):
+        strict_yandex_public_identity(malformed_url, allow_missing_nosw=True)
 
 
 def test_source_index_forbids_benchmark_task_mapping() -> None:
