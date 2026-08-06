@@ -54,8 +54,11 @@ cd MLA_Baseline && git pull --ff-only && cd ..
 
 # --- vLLM на нашей GPU -------------------------------------------------------
 if ! curl -sf "http://127.0.0.1:$VLLM_PORT/v1/models" >/dev/null 2>&1; then
+  # V100 — это Volta: bfloat16 она не умеет, только float16. На A100 vLLM
+  # выбирал bf16 сам, здесь это надо задать явно, иначе падение на старте.
+  DTYPE="${DTYPE:-float16}"
   CUDA_VISIBLE_DEVICES="$GPU" nohup ./.venv/bin/python -m vllm.entrypoints.openai.api_server \
-    --model "$MODEL" --port "$VLLM_PORT" --max-model-len 32768 \
+    --model "$MODEL" --port "$VLLM_PORT" --max-model-len 32768 --dtype "$DTYPE" \
     --gpu-memory-utilization 0.90 > "$WORK/vllm.log" 2>&1 &
   echo "vLLM стартует, лог $WORK/vllm.log"
   for i in $(seq 1 120); do
