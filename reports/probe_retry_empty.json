@@ -1,0 +1,562 @@
+[
+ {
+  "query": "vektör doğrultu aynıdır mı",
+  "quoted": false,
+  "n1": 39,
+  "n2": 40,
+  "n3": 61,
+  "best": 61,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "Türkçe metinde \"çürük elma\" ve \"buz dağı\" metaforlarının kullanım amacı nedir?",
+  "quoted": false,
+  "n1": 10,
+  "n2": 0,
+  "n3": 20,
+  "best": 20,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "(-23) + (-7) işleminin sonucu nasıl bulunur?",
+  "quoted": false,
+  "n1": 50,
+  "n2": 51,
+  "n3": 48,
+  "best": 51,
+  "dead": [
+   "brave",
+   "duckduckgo web",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "dikdörtgen alan formülü",
+  "quoted": false,
+  "n1": 28,
+  "n2": 29,
+  "n3": 30,
+  "best": 30,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex",
+   "zapmeta"
+  ]
+ },
+ {
+  "query": "edebi metinlerde üslup ve işleniş farkı nedir?",
+  "quoted": false,
+  "n1": 30,
+  "n2": 38,
+  "n3": 47,
+  "best": 47,
+  "dead": [
+   "bing",
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "\"küçük prens\" kitabı cümle içinde isim-fiil zarf-fiil sıfat-fiil örnekleri",
+  "quoted": true,
+  "n1": 32,
+  "n2": 21,
+  "n3": 23,
+  "best": 32,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "\"başında paralı olmak\" deyim",
+  "quoted": true,
+  "n1": 10,
+  "n2": 10,
+  "n3": 0,
+  "best": 10,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "iki doğrunun dik olması eğim çarpımı",
+  "quoted": false,
+  "n1": 23,
+  "n2": 42,
+  "n3": 42,
+  "best": 42,
+  "dead": [
+   "bing",
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex",
+   "zapmeta"
+  ]
+ },
+ {
+  "query": "\"Güneşin portakal lokmaları daha dökülmüş\" Mehmet Yaşaroğlu",
+  "quoted": true,
+  "n1": 10,
+  "n2": 0,
+  "n3": 0,
+  "best": 10,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "google cse",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "f(x)=x³·|x| fonksiyonunun x=1 ve x=-1 noktalarındaki teğetlerinin denklemi",
+  "quoted": false,
+  "n1": 46,
+  "n2": 48,
+  "n3": 35,
+  "best": 48,
+  "dead": [
+   "brave",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex",
+   "zapmeta"
+  ]
+ },
+ {
+  "query": "sünger üreme şekilleri eşeysiz cinsel",
+  "quoted": false,
+  "n1": 35,
+  "n2": 50,
+  "n3": 38,
+  "best": 50,
+  "dead": [
+   "bing",
+   "brave",
+   "dogpile",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "faktöriyel tanımı formülü 0! kaçtır",
+  "quoted": false,
+  "n1": 19,
+  "n2": 24,
+  "n3": 38,
+  "best": 38,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "google cse",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "Atatürk görselleri tarım ulaşım sağlık ticaret sanayi soru cevabı",
+  "quoted": false,
+  "n1": 21,
+  "n2": 30,
+  "n3": 48,
+  "best": 48,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "google cse",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "a < b < 0 olmak üzere a/b ifadesinin aralığı nasıl bulunur?",
+  "quoted": false,
+  "n1": 39,
+  "n2": 17,
+  "n3": 29,
+  "best": 39,
+  "dead": [
+   "brave",
+   "google cse",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "türev f(x)*f'(x) formülü ve yorumu",
+  "quoted": false,
+  "n1": 33,
+  "n2": 18,
+  "n3": 26,
+  "best": 33,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "I. Dünya Savaşı Osmanlı İmparatorluğu gıda fiyatları tablosu yorum sorusu",
+  "quoted": false,
+  "n1": 53,
+  "n2": 23,
+  "n3": 38,
+  "best": 53,
+  "dead": [
+   "brave",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "damıtma kabı imbik câbir bin hayyan hintli simyacılar",
+  "quoted": false,
+  "n1": 12,
+  "n2": 11,
+  "n3": 40,
+  "best": 40,
+  "dead": [
+   "bing",
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "google cse",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "kromozom yapısı sentromer kinetokor tanımı",
+  "quoted": false,
+  "n1": 17,
+  "n2": 25,
+  "n3": 38,
+  "best": 38,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "google cse",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex",
+   "zapmeta"
+  ]
+ },
+ {
+  "query": "\"Amy likes parties a lot\" meaning in English",
+  "quoted": true,
+  "n1": 0,
+  "n2": 10,
+  "n3": 10,
+  "best": 10,
+  "dead": [
+   "bing",
+   "brave",
+   "dogpile",
+   "duckduckgo",
+   "duckduckgo web",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "vektör toplama çıkarma işlemleri nasıl yapılır örnek",
+  "quoted": false,
+  "n1": 43,
+  "n2": 43,
+  "n3": 31,
+  "best": 43,
+  "dead": [
+   "brave",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "biyoloji kromozom yapısı sentromer kinetokor tanımı",
+  "quoted": false,
+  "n1": 38,
+  "n2": 37,
+  "n3": 48,
+  "best": 48,
+  "dead": [
+   "bing",
+   "brave",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "fındık kurutma hava durumu iklim farkı",
+  "quoted": false,
+  "n1": 45,
+  "n2": 11,
+  "n3": 11,
+  "best": 45,
+  "dead": [
+   "brave",
+   "duckduckgo web",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "Pascal üçgeni formülü binom katsayıları",
+  "quoted": false,
+  "n1": 31,
+  "n2": 18,
+  "n3": 25,
+  "best": 31,
+  "dead": [
+   "bing",
+   "brave",
+   "duckduckgo web",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "matematik sorusu 3 roman 4 hikaye kitabı üst noktaları aynı raf problemi",
+  "quoted": false,
+  "n1": 25,
+  "n2": 42,
+  "n3": 38,
+  "best": 42,
+  "dead": [
+   "bing",
+   "brave",
+   "dogpile",
+   "duckduckgo",
+   "duckduckgo web",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "altın ayar tanımı karışım yoğunluğu nasıl hesaplanır",
+  "quoted": false,
+  "n1": 46,
+  "n2": 45,
+  "n3": 35,
+  "best": 46,
+  "dead": [
+   "brave",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "zihinden toplama yöntemleri kolay toplanan sayıları gruplama örnek",
+  "quoted": false,
+  "n1": 36,
+  "n2": 44,
+  "n3": 18,
+  "best": 44,
+  "dead": [
+   "bing",
+   "brave",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "iklim koşulları ve hava durumu farkı",
+  "quoted": false,
+  "n1": 17,
+  "n2": 25,
+  "n3": 25,
+  "best": 25,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "google cse",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "\"hukukun tarihî gelişimi toplumsal ihtiyaçlar\"",
+  "quoted": true,
+  "n1": 10,
+  "n2": 10,
+  "n3": 0,
+  "best": 10,
+  "dead": [
+   "brave",
+   "duckduckgo",
+   "duckduckgo web",
+   "google cse",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "wikipedia",
+   "yahoo",
+   "yandex"
+  ]
+ },
+ {
+  "query": "matematik problemi \"iki ayakkabıdan eşit miktarda indirim\"",
+  "quoted": false,
+  "n1": 20,
+  "n2": 20,
+  "n3": 0,
+  "best": 20,
+  "dead": [
+   "bing",
+   "duckduckgo",
+   "duckduckgo web",
+   "google cse",
+   "mojeek",
+   "privacywall",
+   "qwant",
+   "startpage",
+   "yahoo",
+   "yandex",
+   "zapmeta"
+  ]
+ }
+]
