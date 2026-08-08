@@ -1,0 +1,12 @@
+# Public protocol bundle intentionally excludes heavy inputs and all answer payloads.
+assets/
+resolver_inputs/assets/
+sealed/key_pages/
+sealed/sealed_gold.jsonl
+sealed/resolver_input_map_*.jsonl
+predictions*.jsonl
+evaluation*.json
+*.pyc
+__pycache__/
+.pytest_cache/
+rebuild*/

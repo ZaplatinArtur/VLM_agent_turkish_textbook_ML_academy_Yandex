@@ -1,0 +1,41 @@
+{
+  "schema_version": "holdout80-freeze-v1",
+  "status": "FROZEN_BEFORE_GOLD",
+  "created_utc": "2026-08-08T08:54:31.670093+00:00",
+  "holdout_kind": "same_book_new_question_holdout",
+  "book_disjoint": false,
+  "selection_seed": "holdout80-v1",
+  "selection_policy": "source_structure_plus_hash_rank_only",
+  "benchmark_outcomes_accessed": false,
+  "benchmark_gold_accessed": false,
+  "benchmark_input_count": 274,
+  "benchmark_input_artifact": "../VLM_agent_turkish_textbook_basic_rag/reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/parser_artifacts/parser_results_274.jsonl",
+  "benchmark_input_artifact_sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038",
+  "known_math12_excluded_activities": [
+    3,
+    17,
+    31,
+    43,
+    88
+  ],
+  "manifest": "reports/holdout80_20260808/selection_manifest.jsonl",
+  "manifest_sha256": "7a6ecbe1579790541bc0c0c36a9141941c2c0cf8f65dd3cd5b6a687bae8c5fa5",
+  "manifest_count": 80,
+  "counts": {
+    "total": 80,
+    "math12_beceri": 20,
+    "biology9": 30,
+    "physics12": 30
+  },
+  "source_pdf_sha256": {
+    "math12_beceri": "16d650177e62dc04b9a8b42fd7aafc3c1a8a38ec8c7040f92d5a26b120cde548",
+    "biology9": "717548090c5bece21242fab41a3dad26aa43031f5a73d4191538903ab3ec4ea0",
+    "physics12": "0957cb2a74ed46d6b7c3a3165863e03b5a7206cdf444f6ad8ecf6a13179a6307"
+  },
+  "selection_script_sha256": "2940a61f3392a4193720d158f56fe1fcbd8be6fa3935fb44220f084db8fe65cf",
+  "notes": [
+    "The split measures transfer to unseen questions inside already available books.",
+    "It must not be described as book-disjoint or domain-disjoint.",
+    "Gold sealing is a separate command that verifies this manifest hash first."
+  ]
+}
