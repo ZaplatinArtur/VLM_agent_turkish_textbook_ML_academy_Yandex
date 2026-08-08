@@ -32,7 +32,10 @@ python -m venv .venv
 
 Перед демонстрацией проверьте bundle командой `trace_viewer.py --validate-only`.
 Полное описание, режим скриншотов и трактовка source-first профиля находятся в
-[`vlm_trace_viewer/README.md`](vlm_trace_viewer/README.md).
+[`vlm_trace_viewer/README.md`](vlm_trace_viewer/README.md). Готовый Windows launcher и
+трёхминутный сценарий показа описаны в [`DEMO_GUIDE_RU.md`](DEMO_GUIDE_RU.md).
+
+![VLM Trace — сохранённый V7 trace](docs/assets/trace-viewer-final.png)
 
 ## Синхронизация без интерфейса
 
