@@ -38,9 +38,9 @@ from evidence_os.mcq_fullpage_source import (  # noqa: E402
     McqRenderedPage,
     McqSourceError,
     RENDER_MANIFEST_SCHEMA,
+    assert_frozen_mcq_bundle,
     assert_mcq_runtime,
     load_mcq_inventory,
-    load_mcq_key_index,
     load_mcq_render_manifest,
     load_mcq_source_certificate,
     resolve_mcq_image_bytes,
@@ -48,6 +48,10 @@ from evidence_os.mcq_fullpage_source import (  # noqa: E402
     write_canonical_json,
 )
 from evidence_os.official_ogm import canonical_json_sha256, sha256_file  # noqa: E402
+from evidence_os.mcq_opaque_batch import (  # noqa: E402
+    McqOpaqueBatchError,
+    assert_mcq_v11_code_freeze,
+)
 from evidence_os.visual_coordinate_binding import (  # noqa: E402
     VisualCoordinateBindingError,
 )
@@ -109,9 +113,27 @@ def _load_prompt(args: argparse.Namespace) -> str:
         raise McqSourceError("prompt file cannot be read as UTF-8") from exc
 
 
+def _attest_v11_code(args: argparse.Namespace) -> None:
+    assert_mcq_v11_code_freeze(
+        freeze_manifest_path=args.v11_freeze_manifest,
+        expected_freeze_sha256=args.expected_v11_freeze_sha256,
+        expected_freeze_projection_sha256=(
+            args.expected_v11_freeze_projection_sha256
+        ),
+    )
+
+
 def _verify_source_command(args: argparse.Namespace) -> None:
-    observed_inventory = load_mcq_inventory(args.inventory)
-    observed_key_index = load_mcq_key_index(args.key_index, observed_inventory)
+    _attest_v11_code(args)
+    bundle = assert_frozen_mcq_bundle(
+        freeze_manifest_path=args.freeze_manifest,
+        inventory_path=args.inventory,
+        key_index_path=args.key_index,
+        render_manifest_path=args.render_manifest,
+        page_root=args.page_root,
+    )
+    observed_inventory = bundle.inventory
+    observed_key_index = bundle.key_index
     rebuilt_inventory, rebuilt_key_index, audit = build_source(
         args.biology_pdf, args.physics_pdf
     )
@@ -263,20 +285,31 @@ def _render_command(args: argparse.Namespace) -> None:
 
 
 def _resolve_command(args: argparse.Namespace) -> None:
-    inventory = load_mcq_inventory(args.inventory)
-    key_index = load_mcq_key_index(args.key_index, inventory)
-    manifest = load_mcq_render_manifest(
-        args.render_manifest, inventory, page_root=args.page_root
+    _attest_v11_code(args)
+    bundle = assert_frozen_mcq_bundle(
+        freeze_manifest_path=args.freeze_manifest,
+        inventory_path=args.inventory,
+        key_index_path=args.key_index,
+        render_manifest_path=args.render_manifest,
+        page_root=args.page_root,
     )
     prompt = _load_prompt(args)
+    image_bytes = args.image.read_bytes()
     certificate = resolve_mcq_image_bytes(
         prompt,
-        args.image.read_bytes(),
-        inventory,
-        manifest,
-        key_index,
+        image_bytes,
+        bundle.inventory,
+        bundle.render_manifest,
+        bundle.key_index,
     )
-    verify_mcq_source_certificate(prompt, inventory, manifest, key_index, certificate)
+    verify_mcq_source_certificate(
+        prompt,
+        bundle.inventory,
+        bundle.render_manifest,
+        bundle.key_index,
+        certificate,
+        expected_task_image_bytes=image_bytes,
+    )
     write_canonical_json(args.output, certificate.to_mapping())
     print(
         json.dumps(
@@ -298,14 +331,23 @@ def _resolve_command(args: argparse.Namespace) -> None:
 
 
 def _verify_certificate_command(args: argparse.Namespace) -> None:
-    inventory = load_mcq_inventory(args.inventory)
-    key_index = load_mcq_key_index(args.key_index, inventory)
-    manifest = load_mcq_render_manifest(
-        args.render_manifest, inventory, page_root=args.page_root
+    _attest_v11_code(args)
+    bundle = assert_frozen_mcq_bundle(
+        freeze_manifest_path=args.freeze_manifest,
+        inventory_path=args.inventory,
+        key_index_path=args.key_index,
+        render_manifest_path=args.render_manifest,
+        page_root=args.page_root,
     )
+    image_bytes = args.image.read_bytes()
     certificate = load_mcq_source_certificate(args.certificate)
     decision = verify_mcq_source_certificate(
-        _load_prompt(args), inventory, manifest, key_index, certificate
+        _load_prompt(args),
+        bundle.inventory,
+        bundle.render_manifest,
+        bundle.key_index,
+        certificate,
+        expected_task_image_bytes=image_bytes,
     )
     print(
         json.dumps(
@@ -347,6 +389,12 @@ def _preflight_command(args: argparse.Namespace) -> None:
 
 
 def _add_source_artifacts(command: argparse.ArgumentParser) -> None:
+    command.add_argument("--v11-freeze-manifest", type=Path, required=True)
+    command.add_argument("--expected-v11-freeze-sha256", required=True)
+    command.add_argument(
+        "--expected-v11-freeze-projection-sha256", required=True
+    )
+    command.add_argument("--freeze-manifest", type=Path, required=True)
     command.add_argument("--inventory", type=Path, required=True)
     command.add_argument("--key-index", type=Path, required=True)
 
@@ -370,6 +418,7 @@ def _parser() -> argparse.ArgumentParser:
     verify_source.add_argument("--biology-pdf", type=Path, required=True)
     verify_source.add_argument("--physics-pdf", type=Path, required=True)
     _add_source_artifacts(verify_source)
+    _add_render_artifacts(verify_source)
     verify_source.set_defaults(handler=_verify_source_command)
 
     render = commands.add_parser("render-pages")
@@ -394,6 +443,7 @@ def _parser() -> argparse.ArgumentParser:
     _add_render_artifacts(verify)
     _add_prompt(verify)
     verify.add_argument("--certificate", type=Path, required=True)
+    verify.add_argument("--image", type=Path, required=True)
     verify.set_defaults(handler=_verify_certificate_command)
 
     preflight = commands.add_parser("preflight")
@@ -407,6 +457,7 @@ def main() -> int:
     try:
         args.handler(args)
     except (
+        McqOpaqueBatchError,
         McqSourceError,
         VisualCoordinateBindingError,
         OSError,

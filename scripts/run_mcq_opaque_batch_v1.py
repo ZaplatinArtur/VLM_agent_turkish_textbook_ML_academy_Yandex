@@ -34,6 +34,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-jsonl", type=Path, required=True)
     parser.add_argument("--asset-root", type=Path, required=True)
+    parser.add_argument("--v11-freeze-manifest", type=Path, required=True)
+    parser.add_argument("--expected-v11-freeze-sha256", required=True)
+    parser.add_argument("--expected-v11-freeze-projection-sha256", required=True)
+    parser.add_argument("--freeze-manifest", type=Path, required=True)
     parser.add_argument("--inventory", type=Path, required=True)
     parser.add_argument("--key-index", type=Path, required=True)
     parser.add_argument("--render-manifest", type=Path, required=True)
@@ -44,6 +48,12 @@ def main() -> int:
         manifest = run_mcq_opaque_batch(
             input_jsonl=args.input_jsonl,
             asset_root=args.asset_root,
+            v11_freeze_manifest_path=args.v11_freeze_manifest,
+            expected_v11_freeze_sha256=args.expected_v11_freeze_sha256,
+            expected_v11_freeze_projection_sha256=(
+                args.expected_v11_freeze_projection_sha256
+            ),
+            freeze_manifest_path=args.freeze_manifest,
             inventory_path=args.inventory,
             key_index_path=args.key_index,
             render_manifest_path=args.render_manifest,

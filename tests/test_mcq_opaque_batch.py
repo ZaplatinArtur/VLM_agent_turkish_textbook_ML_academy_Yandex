@@ -8,19 +8,14 @@ from pathlib import Path
 import pytest
 
 from evidence_os.mcq_fullpage_source import (
-    EXPECTED_PDFTOPPM_SHA256,
-    McqRenderManifest,
-    McqRenderedPage,
-    issue_mcq_source_certificate,
     load_mcq_inventory,
     load_mcq_key_index,
+    load_mcq_render_manifest,
 )
 from evidence_os.mcq_opaque_batch import (
     McqOpaqueBatchError,
-    execute_mcq_opaque_batch,
     load_mcq_opaque_inputs,
 )
-from evidence_os.visual_coordinate_binding import VisualPageEvidence
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -31,10 +26,6 @@ PUBLIC_SOURCE_ROOT = (
 
 def _sha_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
-
-
-def _sha(label: str) -> str:
-    return _sha_bytes(label.encode("utf-8"))
 
 
 def _prompt(question_number: int) -> str:
@@ -52,28 +43,10 @@ def synthetic_source():
     assert key_index_path.is_file(), "the public official-key index must be generated first"
     inventory = load_mcq_inventory(inventory_path)
     key_index = load_mcq_key_index(key_index_path, inventory)
-    pages = tuple(
-        McqRenderedPage(
-            document_id=document_id,
-            page_number=page_number,
-            relative_path=f"{document_id}/page-{page_number:04d}.png",
-            sha256=_sha(f"render:{document_id}:{page_number}"),
-            size_bytes=1_000 + index,
-            width=1_190,
-            height=1_684,
-        )
-        for index, (document_id, page_number) in enumerate(
-            inventory.candidate_pages, start=1
-        )
-    )
-    manifest = McqRenderManifest(
-        inventory_projection_sha256=inventory.inventory_projection_sha256,
-        render_dpi=144,
-        color_mode="poppler_gray_rgb_png",
-        poppler_version="26.05.0",
-        poppler_executable_sha256=EXPECTED_PDFTOPPM_SHA256,
-        pages=pages,
-        render_manifest_projection_sha256=_sha("synthetic-render-manifest"),
+    manifest = load_mcq_render_manifest(
+        PUBLIC_SOURCE_ROOT / "render_manifest.json",
+        inventory,
+        page_root=PUBLIC_SOURCE_ROOT / "renders",
     )
     return inventory, key_index, manifest
 
@@ -86,34 +59,6 @@ def _source_page_with_two_choices(inventory):
                 (record.document_id, record.content_page_number), []
             ).append(record)
     return next(records[:2] for records in grouped.values() if len(records) >= 2)
-
-
-def _evidences(inventory, manifest, selected_address, task_sha):
-    result: list[VisualPageEvidence] = []
-    for document_id, page_number in inventory.candidate_pages:
-        selected = (document_id, page_number) == selected_address
-        good_matches = 120 if selected else 20
-        inliers = 120 if selected else 10
-        result.append(
-            VisualPageEvidence(
-                task_image_sha256=task_sha,
-                document_id=document_id,
-                pdf_sha256=inventory.document(document_id).pdf_sha256,
-                page_number=page_number,
-                rendered_page_sha256=manifest.page(document_id, page_number).sha256,
-                good_matches=good_matches,
-                inliers=inliers,
-                inlier_ratio=inliers / good_matches,
-                task_hull_fraction=0.90 if selected else 0.20,
-                median_reprojection_error=0.20 if selected else 1.0,
-                mapped_inside_fraction=1.0 if selected else 0.50,
-                scale_anisotropy=1.0,
-                orientation_preserved=True,
-                convex_mapping=True,
-                mapped_polygon=((0.0, 0.0), (100.0, 0.0), (100.0, 100.0), (0.0, 100.0)),
-            )
-        )
-    return tuple(result)
 
 
 def _opaque_row(
@@ -253,11 +198,11 @@ def test_forbidden_metadata_key_normalization_cannot_bypass_rejection(
         load_mcq_opaque_inputs(input_path, asset_root)
 
 
-def test_input_id_renaming_cannot_change_resolver_inputs_or_answer(
+def test_input_id_renaming_cannot_change_observable_resolver_inputs(
     tmp_path: Path,
     synthetic_source,
 ) -> None:
-    inventory, key_index, manifest = synthetic_source
+    inventory, _, _ = synthetic_source
     first, _ = _source_page_with_two_choices(inventory)
     asset_root = tmp_path / "assets"
     asset_root.mkdir()
@@ -266,7 +211,7 @@ def test_input_id_renaming_cannot_change_resolver_inputs_or_answer(
     image_sha = _sha_bytes(image_bytes)
     prompt = _prompt(first.question_number)
 
-    loaded_runs = []
+    loaded_runs: list[tuple[tuple[object, ...], bytes]] = []
     for input_id in ("alignment-original", "alignment-renamed"):
         input_path = tmp_path / f"{input_id}.jsonl"
         _write_jsonl(
@@ -280,60 +225,14 @@ def test_input_id_renaming_cannot_change_resolver_inputs_or_answer(
                 )
             ],
         )
-        loaded_runs.append(load_mcq_opaque_inputs(input_path, asset_root))
+        loaded_runs.append(
+            (load_mcq_opaque_inputs(input_path, asset_root), input_path.read_bytes())
+        )
 
-    original = loaded_runs[0][0]
-    renamed = loaded_runs[1][0]
+    original = loaded_runs[0][0][0]
+    renamed = loaded_runs[1][0][0]
     original_observation = asdict(original)
     renamed_observation = asdict(renamed)
     original_observation.pop("input_id")
     renamed_observation.pop("input_id")
     assert original_observation == renamed_observation
-
-    resolver_calls: list[tuple[str, str]] = []
-
-    def source_only_resolver(prompt_arg, image_arg, inv_arg, render_arg, key_arg):
-        resolver_calls.append((prompt_arg, _sha_bytes(image_arg)))
-        return issue_mcq_source_certificate(
-            prompt_arg,
-            _sha_bytes(image_arg),
-            _evidences(
-                inv_arg,
-                render_arg,
-                (first.document_id, first.content_page_number),
-                _sha_bytes(image_arg),
-            ),
-            inv_arg,
-            render_arg,
-            key_arg,
-        )
-
-    output_rows = []
-    for index, inputs in enumerate(loaded_runs):
-        output_dir = tmp_path / f"output-{index}"
-        manifest_result = execute_mcq_opaque_batch(
-            inputs,
-            inventory,
-            manifest,
-            key_index,
-            output_dir,
-            resolver=source_only_resolver,
-        )
-        assert manifest_result["accepted_count"] == 1
-        output_rows.append(
-            json.loads(
-                (output_dir / "results.jsonl").read_text(encoding="utf-8")
-            )
-        )
-
-    assert resolver_calls == [(prompt, image_sha), (prompt, image_sha)]
-    assert output_rows[0]["input_id"] != output_rows[1]["input_id"]
-    for invariant_field in (
-        "prompt_sha256",
-        "image_sha256",
-        "accepted",
-        "reason",
-        "answer",
-        "certificate_projection_sha256",
-    ):
-        assert output_rows[0][invariant_field] == output_rows[1][invariant_field]

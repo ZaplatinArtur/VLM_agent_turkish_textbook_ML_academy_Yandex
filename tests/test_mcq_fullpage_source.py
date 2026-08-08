@@ -10,17 +10,15 @@ import pytest
 from evidence_os.mcq_fullpage_source import (
     EXPECTED_CHOICE_KEY_COUNT,
     EXPECTED_CONTENT_PAGE_COUNT,
-    EXPECTED_PDFTOPPM_SHA256,
     EXPECTED_PROTOCOL_RECORD_COUNT,
     FROZEN_VISUAL_THRESHOLDS,
     McqKeyIndex,
-    McqRenderManifest,
-    McqRenderedPage,
     McqSourceError,
     decide_mcq_page_binding,
     issue_mcq_source_certificate,
     load_mcq_inventory,
     load_mcq_key_index,
+    load_mcq_render_manifest,
     parse_observable_mcq_prompt,
     verify_mcq_source_certificate,
 )
@@ -62,28 +60,10 @@ def source_pair():
 @pytest.fixture(scope="module")
 def synthetic_source(source_pair):
     inventory, key_index = source_pair
-    pages = tuple(
-        McqRenderedPage(
-            document_id=document_id,
-            page_number=page_number,
-            relative_path=f"{document_id}/page-{page_number:04d}.png",
-            sha256=_sha(f"render:{document_id}:{page_number}"),
-            size_bytes=1_000 + index,
-            width=1_190,
-            height=1_684,
-        )
-        for index, (document_id, page_number) in enumerate(
-            inventory.candidate_pages, start=1
-        )
-    )
-    manifest = McqRenderManifest(
-        inventory_projection_sha256=inventory.inventory_projection_sha256,
-        render_dpi=144,
-        color_mode="poppler_gray_rgb_png",
-        poppler_version="26.05.0",
-        poppler_executable_sha256=EXPECTED_PDFTOPPM_SHA256,
-        pages=pages,
-        render_manifest_projection_sha256=_sha("synthetic-render-manifest"),
+    manifest = load_mcq_render_manifest(
+        PUBLIC_SOURCE_ROOT / "render_manifest.json",
+        inventory,
+        page_root=PUBLIC_SOURCE_ROOT / "renders",
     )
     return inventory, key_index, manifest
 
@@ -494,7 +474,8 @@ def test_answer_bound_certificate_replays_exactly_and_rejects_tampering(
 ) -> None:
     inventory, key_index, manifest = synthetic_source
     record = _supported_record(inventory)
-    task_sha = _sha("opaque-task-image")
+    task_image_bytes = b"opaque-task-image"
+    task_sha = hashlib.sha256(task_image_bytes).hexdigest()
     prompt = _prompt(record.question_number)
     evidences = _evidences(
         inventory,
@@ -512,10 +493,25 @@ def test_answer_bound_certificate_replays_exactly_and_rejects_tampering(
     )
 
     replayed = verify_mcq_source_certificate(
-        prompt, inventory, manifest, key_index, certificate
+        prompt,
+        inventory,
+        manifest,
+        key_index,
+        certificate,
+        expected_task_image_bytes=task_image_bytes,
     )
     assert replayed.accepted is True
     assert certificate.answer == key_index.cell(record.record_id).answer
+
+    with pytest.raises(McqSourceError, match="different expected image bytes"):
+        verify_mcq_source_certificate(
+            prompt,
+            inventory,
+            manifest,
+            key_index,
+            certificate,
+            expected_task_image_bytes=b"foreign image bytes",
+        )
 
     other_answer = next(choice for choice in "ABCDE" if choice != certificate.answer)
     with pytest.raises(McqSourceError, match="answer hash mismatch"):
@@ -553,7 +549,12 @@ def test_answer_bound_certificate_replays_exactly_and_rejects_tampering(
     for forged in tampered:
         with pytest.raises(McqSourceError):
             verify_mcq_source_certificate(
-                prompt, inventory, manifest, key_index, forged
+                prompt,
+                inventory,
+                manifest,
+                key_index,
+                forged,
+                expected_task_image_bytes=task_image_bytes,
             )
 
     with pytest.raises(McqSourceError, match="input/source pins changed"):
@@ -563,4 +564,5 @@ def test_answer_bound_certificate_replays_exactly_and_rejects_tampering(
             manifest,
             key_index,
             certificate,
+            expected_task_image_bytes=task_image_bytes,
         )

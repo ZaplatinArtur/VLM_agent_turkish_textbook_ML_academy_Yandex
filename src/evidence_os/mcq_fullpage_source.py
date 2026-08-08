@@ -56,6 +56,47 @@ EXPECTED_PROTOCOL_RECORD_COUNT = 147
 EXPECTED_CHOICE_KEY_COUNT = 143
 EXPECTED_CONTENT_PAGE_COUNT = 28
 EXPECTED_KEY_PAGE_COUNT = 6
+FROZEN_BUNDLE_MANIFEST_SCHEMA = "mcq-fullpage-source-adapter-freeze-v1"
+EXPECTED_FROZEN_BUNDLE_MANIFEST_SHA256 = (
+    "5744488edc02e70e921bae9cddbae3d2f60448768a7fd02975a7dc9e5ccb04f7"
+)
+EXPECTED_FROZEN_BUNDLE_MANIFEST_PROJECTION_SHA256 = (
+    "134946a0087cd1f389f2904b187f41708b7bb4ae8899001b5311b668aee14c01"
+)
+EXPECTED_INVENTORY_FILE_SHA256 = (
+    "965e41673aea7df73fb03f98818c3ce3c8a1561873c9deece7e11be9a8b37dec"
+)
+EXPECTED_KEY_INDEX_FILE_SHA256 = (
+    "1ef19fe8e56b0ba97307d8c22abe8a8c8d3a72baf42eb5f7a22eb069b6a5e8e0"
+)
+EXPECTED_SOURCE_AUDIT_FILE_SHA256 = (
+    "e31eef8538ca30eb58111ecbd3ef2485a13e6f4ed75e3c9bcf4ee052bc2939c6"
+)
+EXPECTED_RENDER_MANIFEST_FILE_SHA256 = (
+    "a57c8869ba29a5f9362d9d536b5a78415e810a4bfbdc8a3b2848b19e29cdb458"
+)
+EXPECTED_FROZEN_REPORT_FILE_SHA256 = (
+    "eae63b82a8fe31eee56288f162f68a73a71eb1dcb12eb1dd3d136cfb7c7458a9"
+)
+EXPECTED_INVENTORY_PROJECTION_SHA256 = (
+    "5f9e01678b2a3b7c14600dffadb06e0cce96212712835509d3bcfd1625b4fff3"
+)
+EXPECTED_KEY_INDEX_PROJECTION_SHA256 = (
+    "9ca8672db13c5d6a6b05ee375bc540c4b4e5647f91cb8c54daa4839fdaa317ee"
+)
+EXPECTED_RENDER_MANIFEST_PROJECTION_SHA256 = (
+    "709ecc38a36cfbdad33d8ea8bf80ebf4ad38f00fd650655a5afd518c0d2903aa"
+)
+EXPECTED_PAGE_PAYLOADS_PROJECTION_SHA256 = (
+    "85bdb83c27bf4e4cc5e236a8997ecfb6903403cb3f1846685432672fb4c202f9"
+)
+EXPECTED_FROZEN_ARTIFACTS = {
+    "inventory.json": (EXPECTED_INVENTORY_FILE_SHA256, 61_945),
+    "official_key_index.json": (EXPECTED_KEY_INDEX_FILE_SHA256, 59_034),
+    "source_build_audit.json": (EXPECTED_SOURCE_AUDIT_FILE_SHA256, 1_279),
+    "render_manifest.json": (EXPECTED_RENDER_MANIFEST_FILE_SHA256, 7_285),
+    "REPORT_RU.md": (EXPECTED_FROZEN_REPORT_FILE_SHA256, 19_474),
+}
 EXPECTED_DOCUMENT_SOURCES = {
     "biology9_textbook": {
         "pdf_sha256": "717548090c5bece21242fab41a3dad26aa43031f5a73d4191538903ab3ec4ea0",
@@ -729,6 +770,34 @@ class McqRenderManifest:
 
 
 @dataclass(frozen=True, slots=True)
+class FrozenMcqBundle:
+    """Exact public source bundle attested before any opaque input is read."""
+
+    inventory: McqInventory
+    key_index: McqKeyIndex
+    render_manifest: McqRenderManifest
+    freeze_manifest_sha256: str
+    freeze_manifest_projection_sha256: str
+    page_payloads_projection_sha256: str
+    attestation_projection_sha256: str
+
+    def __post_init__(self) -> None:
+        if self.freeze_manifest_sha256 != EXPECTED_FROZEN_BUNDLE_MANIFEST_SHA256:
+            raise McqSourceError("MCQ bundle freeze-manifest SHA changed")
+        if (
+            self.freeze_manifest_projection_sha256
+            != EXPECTED_FROZEN_BUNDLE_MANIFEST_PROJECTION_SHA256
+        ):
+            raise McqSourceError("MCQ bundle freeze projection changed")
+        if (
+            self.page_payloads_projection_sha256
+            != EXPECTED_PAGE_PAYLOADS_PROJECTION_SHA256
+        ):
+            raise McqSourceError("MCQ bundle page-payload projection changed")
+        _sha(self.attestation_projection_sha256, "bundle attestation")
+
+
+@dataclass(frozen=True, slots=True)
 class McqPageDecision:
     accepted: bool
     reason: str
@@ -1160,6 +1229,273 @@ def load_mcq_render_manifest(
     return manifest
 
 
+def _recompute_object_projection(
+    value: Mapping[str, Any], pin_field: str, label: str
+) -> str:
+    projection = dict(value)
+    observed_pin = projection.pop(pin_field, None)
+    recomputed = canonical_json_sha256(projection)
+    if observed_pin != recomputed:
+        raise McqSourceError(f"{label} object projection is not self-consistent")
+    return recomputed
+
+
+def assert_frozen_mcq_objects(
+    inventory: McqInventory,
+    key_index: McqKeyIndex,
+    render_manifest: McqRenderManifest,
+) -> None:
+    """Reject a self-consistent but non-frozen source/key/render object graph.
+
+    This is deliberately repeated by the resolver, certificate verifier and
+    batch executor.  Loading a structurally valid replacement bundle is not a
+    trust decision: exact public v1 artifact projections are the trust anchor.
+    Rendered page bytes are checked here; SIFT evidence is *not* recomputed by
+    this function or by certificate replay.
+    """
+
+    inventory_projection = _recompute_object_projection(
+        inventory.to_mapping(), "inventory_projection_sha256", "inventory"
+    )
+    key_projection = _recompute_object_projection(
+        key_index.to_mapping(), "key_index_projection_sha256", "key index"
+    )
+    render_projection = _recompute_object_projection(
+        render_manifest.to_mapping(),
+        "render_manifest_projection_sha256",
+        "render manifest",
+    )
+    if inventory_projection != EXPECTED_INVENTORY_PROJECTION_SHA256:
+        raise McqSourceError("inventory is not the exact frozen source census")
+    if key_projection != EXPECTED_KEY_INDEX_PROJECTION_SHA256:
+        raise McqSourceError("key index is not the exact frozen official key")
+    if render_projection != EXPECTED_RENDER_MANIFEST_PROJECTION_SHA256:
+        raise McqSourceError("render manifest is not the exact frozen page set")
+    if (
+        key_index.inventory_projection_sha256 != inventory_projection
+        or render_manifest.inventory_projection_sha256 != inventory_projection
+    ):
+        raise McqSourceError("frozen MCQ artifacts are cross-bound")
+    for page in render_manifest.pages:
+        if page.resolved_path is None or not page.resolved_path.is_file():
+            raise McqSourceError("frozen rendered page bytes were not loaded")
+        if (
+            sha256_file(page.resolved_path) != page.sha256
+            or page.resolved_path.stat().st_size != page.size_bytes
+        ):
+            raise McqSourceError("frozen rendered page bytes changed after load")
+
+
+def _artifact_entry_map(raw_artifacts: Any) -> dict[str, tuple[str, int]]:
+    if not isinstance(raw_artifacts, list):
+        raise McqSourceError("frozen MCQ artifact list is malformed")
+    result: dict[str, tuple[str, int]] = {}
+    for raw in raw_artifacts:
+        if not isinstance(raw, dict) or set(raw) != {
+            "path",
+            "sha256",
+            "size_bytes",
+        }:
+            raise McqSourceError("frozen MCQ artifact entry is malformed")
+        path = PurePosixPath(str(raw["path"]))
+        if path.is_absolute() or ".." in path.parts or not path.name:
+            raise McqSourceError("frozen MCQ artifact path is unsafe")
+        if path.name in result:
+            raise McqSourceError("frozen MCQ artifact basename is duplicated")
+        result[path.name] = (
+            _sha(raw["sha256"], "frozen artifact"),
+            _positive_integer(raw["size_bytes"], "frozen artifact size"),
+        )
+    return result
+
+
+def assert_frozen_mcq_bundle(
+    *,
+    freeze_manifest_path: Path,
+    inventory_path: Path,
+    key_index_path: Path,
+    render_manifest_path: Path,
+    page_root: Path,
+) -> FrozenMcqBundle:
+    """Attest the exact public source bundle from bytes and frozen projections.
+
+    The SHA of the already-published v1 freeze manifest is embedded in code.
+    Therefore an attacker cannot substitute a new internally consistent key,
+    inventory, render manifest and freeze file.  Every machine artifact and all
+    28 page payloads are re-hashed before the caller may read opaque data.
+    """
+
+    freeze_manifest_path = freeze_manifest_path.resolve(strict=False)
+    if (
+        not freeze_manifest_path.is_file()
+        or sha256_file(freeze_manifest_path)
+        != EXPECTED_FROZEN_BUNDLE_MANIFEST_SHA256
+    ):
+        raise McqSourceError("MCQ freeze manifest is not the embedded trust anchor")
+    raw = _strict_json_object(freeze_manifest_path)
+    if raw.get("schema_version") != FROZEN_BUNDLE_MANIFEST_SCHEMA:
+        raise McqSourceError("MCQ freeze-manifest schema changed")
+    declared_projection = raw.get("manifest_projection_sha256")
+    projection = dict(raw)
+    projection.pop("manifest_projection_sha256", None)
+    recomputed_projection = canonical_json_sha256(projection)
+    if (
+        declared_projection != recomputed_projection
+        or recomputed_projection
+        != EXPECTED_FROZEN_BUNDLE_MANIFEST_PROJECTION_SHA256
+    ):
+        raise McqSourceError("MCQ freeze-manifest projection changed")
+
+    artifact_entries = _artifact_entry_map(raw.get("artifacts"))
+    if artifact_entries != EXPECTED_FROZEN_ARTIFACTS:
+        raise McqSourceError("MCQ frozen artifact set changed")
+    passed_artifacts = {
+        "inventory.json": inventory_path.resolve(strict=False),
+        "official_key_index.json": key_index_path.resolve(strict=False),
+        "render_manifest.json": render_manifest_path.resolve(strict=False),
+        "source_build_audit.json": (
+            freeze_manifest_path.parent / "source_build_audit.json"
+        ),
+        "REPORT_RU.md": freeze_manifest_path.parent / "REPORT_RU.md",
+    }
+    for name, path in passed_artifacts.items():
+        expected_sha, expected_size = EXPECTED_FROZEN_ARTIFACTS[name]
+        if (
+            not path.is_file()
+            or path.stat().st_size != expected_size
+            or sha256_file(path) != expected_sha
+        ):
+            raise McqSourceError(f"frozen MCQ artifact bytes changed: {name}")
+
+    page_payloads = raw.get("page_payloads")
+    if not isinstance(page_payloads, dict) or set(page_payloads) != {
+        "count",
+        "files",
+        "combined_projection_sha256",
+    }:
+        raise McqSourceError("frozen MCQ page-payload declaration is malformed")
+    raw_page_files = page_payloads.get("files")
+    if (
+        page_payloads.get("count") != EXPECTED_CONTENT_PAGE_COUNT
+        or not isinstance(raw_page_files, list)
+        or len(raw_page_files) != EXPECTED_CONTENT_PAGE_COUNT
+        or canonical_json_sha256(raw_page_files)
+        != EXPECTED_PAGE_PAYLOADS_PROJECTION_SHA256
+        or page_payloads.get("combined_projection_sha256")
+        != EXPECTED_PAGE_PAYLOADS_PROJECTION_SHA256
+    ):
+        raise McqSourceError("frozen MCQ page-payload projection changed")
+    resolved_page_root = page_root.resolve(strict=False)
+    if not resolved_page_root.is_dir():
+        raise McqSourceError("frozen MCQ page root is missing")
+    seen_page_paths: set[str] = set()
+    for raw_page in raw_page_files:
+        if not isinstance(raw_page, dict) or set(raw_page) != {
+            "document_id",
+            "height",
+            "page_number",
+            "path",
+            "sha256",
+            "size_bytes",
+            "width",
+        }:
+            raise McqSourceError("frozen MCQ page-payload entry changed")
+        relative = str(raw_page["path"])
+        pure = PurePosixPath(relative)
+        if (
+            pure.is_absolute()
+            or ".." in pure.parts
+            or "\\" in relative
+            or relative in seen_page_paths
+        ):
+            raise McqSourceError("frozen MCQ page-payload path is unsafe/duplicate")
+        seen_page_paths.add(relative)
+        payload = (resolved_page_root / Path(relative)).resolve(strict=False)
+        try:
+            payload.relative_to(resolved_page_root)
+        except ValueError as exc:
+            raise McqSourceError("frozen MCQ page payload escapes page_root") from exc
+        if (
+            not payload.is_file()
+            or payload.stat().st_size != raw_page["size_bytes"]
+            or sha256_file(payload) != raw_page["sha256"]
+        ):
+            raise McqSourceError("frozen MCQ page payload bytes changed")
+
+    inventory = load_mcq_inventory(passed_artifacts["inventory.json"])
+    key_index = load_mcq_key_index(
+        passed_artifacts["official_key_index.json"], inventory
+    )
+    render_manifest = load_mcq_render_manifest(
+        passed_artifacts["render_manifest.json"],
+        inventory,
+        page_root=resolved_page_root,
+    )
+    assert_frozen_mcq_objects(inventory, key_index, render_manifest)
+    frozen_pages = {
+        (item.document_id, item.page_number): (
+            item.relative_path,
+            item.sha256,
+            item.size_bytes,
+            item.width,
+            item.height,
+        )
+        for item in render_manifest.pages
+    }
+    declared_pages = {
+        (str(item["document_id"]), int(item["page_number"])): (
+            str(item["path"]),
+            str(item["sha256"]),
+            int(item["size_bytes"]),
+            int(item["width"]),
+            int(item["height"]),
+        )
+        for item in raw_page_files
+    }
+    if frozen_pages != declared_pages:
+        raise McqSourceError("render manifest and freeze page payloads differ")
+    source_census = raw.get("source_census")
+    if not isinstance(source_census, dict) or (
+        source_census.get("inventory_projection_sha256")
+        != EXPECTED_INVENTORY_PROJECTION_SHA256
+        or source_census.get("key_index_projection_sha256")
+        != EXPECTED_KEY_INDEX_PROJECTION_SHA256
+        or source_census.get("render_manifest_projection_sha256")
+        != EXPECTED_RENDER_MANIFEST_PROJECTION_SHA256
+    ):
+        raise McqSourceError("freeze source-census projections changed")
+    attestation = {
+        "freeze_manifest_sha256": EXPECTED_FROZEN_BUNDLE_MANIFEST_SHA256,
+        "freeze_manifest_projection_sha256": (
+            EXPECTED_FROZEN_BUNDLE_MANIFEST_PROJECTION_SHA256
+        ),
+        "inventory_file_sha256": EXPECTED_INVENTORY_FILE_SHA256,
+        "inventory_projection_sha256": EXPECTED_INVENTORY_PROJECTION_SHA256,
+        "key_index_file_sha256": EXPECTED_KEY_INDEX_FILE_SHA256,
+        "key_index_projection_sha256": EXPECTED_KEY_INDEX_PROJECTION_SHA256,
+        "render_manifest_file_sha256": EXPECTED_RENDER_MANIFEST_FILE_SHA256,
+        "render_manifest_projection_sha256": (
+            EXPECTED_RENDER_MANIFEST_PROJECTION_SHA256
+        ),
+        "page_payloads_projection_sha256": (
+            EXPECTED_PAGE_PAYLOADS_PROJECTION_SHA256
+        ),
+    }
+    return FrozenMcqBundle(
+        inventory=inventory,
+        key_index=key_index,
+        render_manifest=render_manifest,
+        freeze_manifest_sha256=EXPECTED_FROZEN_BUNDLE_MANIFEST_SHA256,
+        freeze_manifest_projection_sha256=(
+            EXPECTED_FROZEN_BUNDLE_MANIFEST_PROJECTION_SHA256
+        ),
+        page_payloads_projection_sha256=(
+            EXPECTED_PAGE_PAYLOADS_PROJECTION_SHA256
+        ),
+        attestation_projection_sha256=canonical_json_sha256(attestation),
+    )
+
+
 def _evidence_mapping(item: VisualPageEvidence) -> dict[str, Any]:
     value = asdict(item)
     value["mapped_polygon"] = (
@@ -1397,7 +1733,23 @@ def verify_mcq_source_certificate(
     render_manifest: McqRenderManifest,
     key_index: McqKeyIndex,
     certificate: McqSourceCertificate,
+    *,
+    expected_task_image_bytes: bytes,
 ) -> McqPageDecision:
+    """Replay a certificate against exact source objects and expected image bytes.
+
+    Replay validates recorded evidence and bindings; it does not recompute SIFT.
+    A caller that needs fresh visual evidence must call ``resolve_mcq_image_bytes``.
+    """
+
+    assert_frozen_mcq_objects(inventory, key_index, render_manifest)
+    if not isinstance(expected_task_image_bytes, bytes) or not expected_task_image_bytes:
+        raise McqSourceError("expected MCQ task image bytes are empty")
+    if (
+        hashlib.sha256(expected_task_image_bytes).hexdigest()
+        != certificate.task_image_sha256
+    ):
+        raise McqSourceError("MCQ certificate is bound to different expected image bytes")
     question_number = parse_observable_mcq_prompt(prompt)
     if (
         certificate.prompt_sha256 != hashlib.sha256(prompt.encode("utf-8")).hexdigest()
@@ -1568,6 +1920,7 @@ def resolve_mcq_image_bytes(
 ) -> McqSourceCertificate:
     """Sweep all 28 pinned pages and issue an answer-bound certificate."""
 
+    assert_frozen_mcq_objects(inventory, key_index, render_manifest)
     _require_frozen_profile(thresholds, runtime_profile)
     assert_mcq_runtime(require_visual=True)
     parse_observable_mcq_prompt(prompt)
@@ -1603,7 +1956,12 @@ def resolve_mcq_image_bytes(
         key_index,
     )
     verify_mcq_source_certificate(
-        prompt, inventory, render_manifest, key_index, certificate
+        prompt,
+        inventory,
+        render_manifest,
+        key_index,
+        certificate,
+        expected_task_image_bytes=image_bytes,
     )
     return certificate
 
