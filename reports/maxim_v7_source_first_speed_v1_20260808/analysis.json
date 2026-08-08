@@ -1,0 +1,46 @@
+{
+  "anchor_fallbacks": 143,
+  "answer_equivalent_rows": 131,
+  "claims": {
+    "accuracy_or_gold_read": false,
+    "artifact_answer_equivalence_measured": true,
+    "online_wall_clock_speedup_measured": false,
+    "source_lookup_cost_included": false,
+    "task_id_alignment_only": true,
+    "task_id_policy_feature": false
+  },
+  "conflicting_source_rows": [],
+  "inputs": {
+    "final_solver": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\fill_blank_page_activity_history_v7_composed\\solver.jsonl",
+      "sha256": "ba3967cfca3eeb3aca894a6dd00a15d06afc67f8cfd9f3ea7729b9b52baeddbf"
+    },
+    "history_manifest": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\fill_blank_page_activity_history_v7_resolver\\manifest.json",
+      "sha256": "a8d2dbe8b577b1cc8c95bd1a22bb9772a33893164a248c5ed32c2f9a407ef3e5"
+    },
+    "main_manifest": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_samsung_philosophy_biology_imageonly_v7_resolver\\manifest.json",
+      "sha256": "b70a05d9ea117fd3ee910e5bb77e36a86b4ddf29ba33bad1de4277de5b176532"
+    },
+    "profile": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\configs\\maxim_composite_source_pipeline_v7.json",
+      "sha256": "164dc7274c6d8cb10bdd210a6b55569dacf286ef3f3baa46c0da52fbc3517b24"
+    }
+  },
+  "recorded_anchor_usage": {
+    "avoidable_input_fraction": 0.4698210484551875,
+    "avoidable_input_tokens": 434584,
+    "avoidable_latency_fraction": 0.4483744522322509,
+    "avoidable_latency_s": 17700.906,
+    "avoidable_output_fraction": 0.4462882961332996,
+    "avoidable_output_tokens": 171177,
+    "total_input_tokens": 924999,
+    "total_latency_s": 39477.954,
+    "total_output_tokens": 383557
+  },
+  "rows": 274,
+  "schema_version": "maxim-v7-source-first-speedup-v1",
+  "source_shortcut_rate": 0.4781021897810219,
+  "source_shortcuts": 131
+}

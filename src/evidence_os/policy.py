@@ -19,6 +19,7 @@ from .contracts import (
     DecisionReason,
     FrozenProfile,
     InferenceBundle,
+    ProblemInput,
     PolicyDecision,
 )
 
@@ -46,7 +47,11 @@ class EvidencePolicy:
         admitted_by_answer: dict[str, tuple[Certificate, ...]] = {}
         certified_candidates: dict[str, tuple[CandidateEnvelope, ...]] = {}
 
-        anchor_admitted = self._admitted(bundle.anchor, bundle, profile)
+        anchor_admitted = self.admitted_certificates(
+            bundle.anchor,
+            bundle.problem,
+            profile,
+        )
         if len({item.verifier for item in anchor_admitted}) >= profile.min_independent_verifiers:
             admitted_by_answer[anchor_key] = anchor_admitted
 
@@ -56,7 +61,11 @@ class EvidencePolicy:
             for candidate in member_groups[key]:
                 if not self._candidate_is_usable(candidate):
                     continue
-                admitted = self._admitted(candidate, bundle, profile)
+                admitted = self.admitted_certificates(
+                    candidate,
+                    bundle.problem,
+                    profile,
+                )
                 if len({item.verifier for item in admitted}) < profile.min_independent_verifiers:
                     continue
                 admitted_members.append(candidate)
@@ -168,11 +177,19 @@ class EvidencePolicy:
         )
 
     @staticmethod
-    def _admitted(
+    def admitted_certificates(
         candidate: CandidateEnvelope,
-        bundle: InferenceBundle,
+        problem: ProblemInput,
         profile: FrozenProfile,
     ) -> tuple[Certificate, ...]:
+        """Return only certificates that can affect the fail-closed policy.
+
+        This is public because a source-first scheduler must be able to prove
+        that an answer is already decisive before it spends resources on the
+        reasoning anchor.  The admission rules remain defined in one place so
+        the fast path cannot silently become weaker than the full policy.
+        """
+
         unique: dict[str, Certificate] = {}
         for certificate in candidate.certificates:
             if not isinstance(certificate, Certificate):
@@ -193,7 +210,7 @@ class EvidencePolicy:
                 continue
             if not certificate.trace_fingerprint:
                 continue
-            if not certificate_matches(certificate, bundle.problem, candidate):
+            if not certificate_matches(certificate, problem, candidate):
                 continue
             unique[certificate_fingerprint(certificate)] = certificate
         return tuple(unique[key] for key in sorted(unique))

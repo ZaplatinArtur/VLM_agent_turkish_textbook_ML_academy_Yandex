@@ -27,6 +27,12 @@ from .contracts import (
     VerificationCertificate,
 )
 from .policy import DEFAULT_STRONG_KINDS, EvidencePolicy, EvidencePolicyConfig, decide
+from .source_first import (
+    SourceFirstAction,
+    SourceFirstDecision,
+    SourceFirstReason,
+    decide_source_first,
+)
 
 __all__ = [
     "CandidateAnswer",
@@ -46,12 +52,16 @@ __all__ = [
     "InferenceBundle",
     "PolicyDecision",
     "ProblemInput",
+    "SourceFirstAction",
+    "SourceFirstDecision",
+    "SourceFirstReason",
     "VerificationCertificate",
     "answer_fingerprint",
     "canonicalize_text",
     "certificate_fingerprint",
     "certificate_matches",
     "decide",
+    "decide_source_first",
     "input_fingerprint",
     "issue_certificate",
     "trace_fingerprint",
