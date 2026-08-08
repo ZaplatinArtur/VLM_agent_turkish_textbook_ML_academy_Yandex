@@ -4,6 +4,8 @@ import json
 import os
 from pathlib import Path
 
+import pytest
+
 
 REPORT = Path(os.environ.get("VLM_HOLDOUT_REPORT_DIR", Path(__file__).resolve().parents[1])).resolve()
 
@@ -49,13 +51,17 @@ def test_declared_split_and_math_exclusions():
 
 def test_question_asset_hashes():
     workspace = REPORT.parents[1]
+    checked = 0
     for row in rows(REPORT / "selection_manifest.jsonl"):
         for path_text, expected in zip(row["question_assets"], row["question_asset_sha256"]):
             path = (workspace / path_text).resolve()
             if not path.exists():
                 # Assets are intentionally gitignored in the public bundle.
                 continue
+            checked += 1
             assert digest(path) == expected
+    if checked == 0:
+        pytest.skip("question assets are intentionally absent from the public bundle")
 
 
 def test_sealed_gold_belongs_to_frozen_manifest():
@@ -67,7 +73,7 @@ def test_sealed_gold_belongs_to_frozen_manifest():
     gold_path = REPORT / "sealed" / "sealed_gold.jsonl"
     if not gold_path.exists():
         # The public integration bundle ships only the hash/count seal.
-        return
+        pytest.skip("sealed gold is intentionally absent from the public bundle")
     gold = rows(gold_path)
     assert seal["frozen_manifest_sha256"] == freeze["manifest_sha256"]
     assert digest(gold_path) == seal["sealed_gold_sha256"]
@@ -78,16 +84,20 @@ def test_sealed_gold_belongs_to_frozen_manifest():
 
 def test_opaque_resolver_inputs_do_not_leak_source_or_task_ids():
     forbidden = {"task_id", "source_family", "source_pdf", "activity_id", "unit", "question_pages", "official_answer"}
+    checked = 0
     for partition, expected_count in (("math12", 20), ("mcq", 60)):
         input_path = REPORT / "resolver_inputs" / f"{partition}.jsonl"
         if not input_path.exists():
             continue
+        checked += 1
         seal = json.loads((REPORT / "resolver_inputs" / f"{partition}.seal.json").read_text(encoding="utf-8"))
         inputs = rows(input_path)
         assert len(inputs) == expected_count
         assert len({row["input_id"] for row in inputs}) == expected_count
         assert digest(input_path) == seal["public_inputs_sha256"]
         assert all(not (forbidden & set(row)) for row in inputs)
+    if checked == 0:
+        pytest.skip("opaque resolver inputs are intentionally absent from the public bundle")
 
 
 def test_overall_accuracy_is_fail_closed_for_every_incomplete_input_class():

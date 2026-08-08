@@ -80,6 +80,10 @@
 python -m pytest reports/maxim_holdout80_protocol_v1_20260808/tests/test_protocol.py -q
 ```
 
+В публичном checkout эта команда проверяет только tracked metadata; проверки изображений, opaque resolver inputs и sealed gold будут явно помечены `skipped`, потому что эти данные намеренно не входят в Git. Полная проверка выполняется после локального rebuild с PDF и закрытым gold.
+
+Пути внутри `freeze.json` и исходного `selection_manifest.jsonl` сохраняют logical root первого замороженного запуска `reports/holdout80_20260808`. Переписывать их нельзя: это изменит bytes manifest и сломает freeze SHA. portable launcher создаёт новый согласованный report root; внешнему коду не следует механически присоединять старый logical path к каталогу публичного bundle.
+
 Для полного rebuild нужен локальный Math12 PDF в `tmp/remaining_official_source_audit/pdfs`, OCR 274 исходных input и корпус `full_2026_07` с Biology9/Physics12. Если корпус лежит в соседнем проекте `VLM`, portable launcher найдёт его сам; иначе задаётся `VLM_HOLDOUT_TEXTBOOK_ROOT`.
 
 ```powershell
