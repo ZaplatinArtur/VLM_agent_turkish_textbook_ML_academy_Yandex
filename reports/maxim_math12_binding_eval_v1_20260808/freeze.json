@@ -1,0 +1,32 @@
+{
+  "schema_version": "math12-source-binding-evaluator-freeze-v1",
+  "status": "frozen_before_private_map_read",
+  "created_date": "2026-08-08",
+  "scope": "source_activity_binding_only_not_qa_accuracy",
+  "accuracy_claim": null,
+  "private_map_read": false,
+  "dependency_commit": "6f2be0624bdfa825c2f08a828bf9c83e290a11f6",
+  "runner_freeze_projection_sha256": "5cde2115ea4b01e8fff7380fe39a49effff4dc1613bd22d20c69363d7c1e34e5",
+  "files": [
+    {
+      "path": "src/evidence_os/math12_binding_eval.py",
+      "sha256": "e4ff8329ab9ebce90e6fed180c395091048ce92ec79455bbfa53a849fa16c8d1",
+      "size_bytes": 10091
+    },
+    {
+      "path": "scripts/evaluate_math12_binding_v1.py",
+      "sha256": "79b630f3ad8403a0446607f3146989cb0154b3b67626a94e3f5b41b84c31824c",
+      "size_bytes": 1310
+    },
+    {
+      "path": "tests/test_math12_binding_eval.py",
+      "sha256": "b8c80c857f82880f462056772adfb59202333478e017700e8bc2508921781115",
+      "size_bytes": 4368
+    }
+  ],
+  "tests": {
+    "unit": "6 passed",
+    "private_map_used": false
+  },
+  "manifest_projection_sha256": "3bb06d9f162a0397e8352516018f3fd5f31916974214c6ea87505f257e54f36d"
+}
