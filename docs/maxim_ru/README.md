@@ -12,6 +12,7 @@
 | Source-native V6 | 238/274 = **0,8686** | one-shot development replay; 4 изменения ответа относительно V5 |
 | Source-adjudicated V7 | 242/274 = **0,8832** | one-shot development replay; 1 новый ответ + 3 исправления оценки |
 | V7, математика | 112/139 = **0,8058** | frozen dev metric; без прироста относительно V6 |
+| Holdout80 | **protocol-ready / no model score** | 80 новых задач из тех же книг; manifest frozen до gold |
 
 Главная оговорка: **0,8832 — не holdout accuracy и не оценка на новых книгах**. Этот benchmark использовался много раз при разработке. Внутри поздних source-волн код и источники замораживались до подсчёта результата, но весь набор всё равно остаётся development replay.
 
