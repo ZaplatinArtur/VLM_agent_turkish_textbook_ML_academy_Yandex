@@ -15,6 +15,7 @@ import json
 import math
 from pathlib import Path
 import re
+import sys
 import tempfile
 from typing import Any, Mapping, Sequence
 
@@ -26,7 +27,6 @@ from .visual_coordinate_binding import (
     VisualPageEvidence,
     compute_sift_page_evidence,
     geometry_checks,
-    require_strict_activity_visual_thresholds,
     visual_page_evidence_from_mapping,
 )
 
@@ -38,9 +38,94 @@ DOCUMENT_PREFIX = "meb_math12"
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _ACTIVITY_COUNT = 95
 
+# This adapter is intentionally narrower than the generic visual-binding
+# helpers.  A Math12 certificate is meaningful only under this exact profile;
+# accepting a "stronger" caller override would still create a different,
+# post-freeze policy.
+EXPECTED_PYTHON_VERSION = "3.12.13"
+EXPECTED_PDFPLUMBER_VERSION = "0.11.9"
+EXPECTED_NUMPY_VERSION = "2.5.1"
+EXPECTED_OPENCV_VERSION = "5.0.0"
+EXPECTED_POPPLER_VERSION = "26.05.0"
+FROZEN_VISUAL_THRESHOLDS = VisualBindingThresholds()
+FROZEN_SIFT_RUNTIME_PROFILE = SiftRuntimeProfile(
+    render_dpi=144,
+    nfeatures=12_000,
+    contrast_threshold=0.02,
+    edge_threshold=12.0,
+    ratio_test=0.72,
+    ransac_reprojection_px=4.0,
+    ransac_max_iters=5_000,
+    ransac_confidence=0.999,
+    rng_seed=19_870_511,
+    expected_opencv_version=EXPECTED_OPENCV_VERSION,
+)
+
 
 class Math12SourceError(ValueError):
     """The official source or its visual evidence is not certifiable."""
+
+
+def assert_math12_runtime(
+    *, require_pdfplumber: bool = False, require_visual: bool = False
+) -> dict[str, str]:
+    """Fail closed unless the process matches the frozen Math12 runtime.
+
+    Parsing already-written JSON does not need this preflight.  Building or
+    extracting PDF text pins pdfplumber, while computing visual evidence pins
+    NumPy and OpenCV.  Python is pinned for every executable Math12 operation.
+    """
+
+    observed: dict[str, str] = {
+        "python": ".".join(str(value) for value in sys.version_info[:3])
+    }
+    if observed["python"] != EXPECTED_PYTHON_VERSION:
+        raise Math12SourceError(
+            f"Python {observed['python']} differs from pinned "
+            f"{EXPECTED_PYTHON_VERSION}"
+        )
+    if require_pdfplumber:
+        try:
+            import pdfplumber  # type: ignore
+        except ImportError as exc:  # pragma: no cover - optional dependency
+            raise Math12SourceError("pdfplumber is required by the Math12 runtime") from exc
+        observed["pdfplumber"] = str(getattr(pdfplumber, "__version__", ""))
+        if observed["pdfplumber"] != EXPECTED_PDFPLUMBER_VERSION:
+            raise Math12SourceError(
+                f"pdfplumber {observed['pdfplumber']} differs from pinned "
+                f"{EXPECTED_PDFPLUMBER_VERSION}"
+            )
+    if require_visual:
+        try:
+            import cv2  # type: ignore
+            import numpy  # type: ignore
+        except ImportError as exc:  # pragma: no cover - optional dependencies
+            raise Math12SourceError("NumPy and OpenCV are required by the Math12 runtime") from exc
+        observed["numpy"] = str(getattr(numpy, "__version__", ""))
+        observed["opencv"] = str(getattr(cv2, "__version__", ""))
+        if observed["numpy"] != EXPECTED_NUMPY_VERSION:
+            raise Math12SourceError(
+                f"NumPy {observed['numpy']} differs from pinned {EXPECTED_NUMPY_VERSION}"
+            )
+        if observed["opencv"] != EXPECTED_OPENCV_VERSION:
+            raise Math12SourceError(
+                f"OpenCV {observed['opencv']} differs from pinned {EXPECTED_OPENCV_VERSION}"
+            )
+    return observed
+
+
+def _require_frozen_math12_profile(
+    thresholds: VisualBindingThresholds,
+    runtime_profile: SiftRuntimeProfile | None = None,
+) -> None:
+    if thresholds != FROZEN_VISUAL_THRESHOLDS:
+        raise VisualCoordinateBindingError(
+            "Math12 visual thresholds differ from the exact frozen profile"
+        )
+    if runtime_profile is not None and runtime_profile != FROZEN_SIFT_RUNTIME_PROFILE:
+        raise VisualCoordinateBindingError(
+            "Math12 SIFT runtime differs from the exact frozen profile"
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -177,6 +262,7 @@ class Math12Inventory:
 @dataclass(frozen=True, slots=True)
 class Math12RenderedPage:
     page_number: int
+    manifest_path: str
     path: Path
     sha256: str
     size_bytes: int
@@ -184,6 +270,9 @@ class Math12RenderedPage:
     def __post_init__(self) -> None:
         if self.page_number < 1 or _HEX64.fullmatch(self.sha256) is None:
             raise Math12SourceError("rendered page pin is malformed")
+        expected_name = f"page-{self.page_number:03d}.png"
+        if self.manifest_path != expected_name:
+            raise Math12SourceError("rendered page manifest path is not portable")
         if self.size_bytes < 1:
             raise Math12SourceError("rendered page size pin is malformed")
 
@@ -214,6 +303,25 @@ class Math12RenderManifest:
 
     def page_map(self) -> dict[int, Math12RenderedPage]:
         return {item.page_number: item for item in self.pages}
+
+    def projection(self) -> dict[str, Any]:
+        return {
+            "schema_version": self.schema_version,
+            "document_id": self.document_id,
+            "pdf_sha256": self.pdf_sha256,
+            "inventory_projection_sha256": self.inventory_projection_sha256,
+            "render_dpi": self.render_dpi,
+            "color_mode": self.color_mode,
+            "poppler_version": self.poppler_version,
+            "pages": {
+                str(item.page_number): {
+                    "path": item.manifest_path,
+                    "sha256": item.sha256,
+                    "size_bytes": item.size_bytes,
+                }
+                for item in sorted(self.pages, key=lambda value: value.page_number)
+            },
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -295,6 +403,12 @@ class Math12OfficialSolutionRecord:
 
 def _rounded(value: Any) -> float:
     return round(float(value), 4)
+
+
+def _floor4(value: Any) -> float:
+    """Four-decimal lower bound used for half-open key-span markers."""
+
+    return math.floor(float(value) * 10_000.0) / 10_000.0
 
 
 def _word_projection(word: Mapping[str, Any]) -> dict[str, Any]:
@@ -394,6 +508,16 @@ class _KeyMarker:
     marker_projection_sha256: str
 
 
+def _key_marker_locator(
+    physical_page: int, page_width: float, marker_words: Sequence[Mapping[str, Any]]
+) -> KeyLocator:
+    if len(marker_words) != 3:
+        raise Math12SourceError("answer-key marker must contain exactly three words")
+    tops = [float(item["top"]) for item in marker_words]
+    column = "left" if float(marker_words[0]["x0"]) < page_width / 2.0 else "right"
+    return KeyLocator(physical_page, column, _floor4(min(tops)))
+
+
 def _parse_key_markers(document: Any, start: int, end: int) -> tuple[_KeyMarker, ...]:
     markers: list[_KeyMarker] = []
     for physical_page in range(start, end + 1):
@@ -411,22 +535,27 @@ def _parse_key_markers(document: Any, start: int, end: int) -> tuple[_KeyMarker,
             number = int(third["text"])
             if not 1 <= number <= _ACTIVITY_COUNT:
                 continue
-            tops = [float(item["top"]) for item in (first, second, third)]
+            marker_words = (first, second, third)
+            tops = [float(item["top"]) for item in marker_words]
             if max(tops) - min(tops) > 2.0:
                 continue
-            column = "left" if float(first["x0"]) < width / 2.0 else "right"
+            locator = _key_marker_locator(physical_page, width, marker_words)
             markers.append(
                 _KeyMarker(
                     number,
-                    KeyLocator(physical_page, column, _rounded(first["top"])),
+                    # A start locator must precede every word in its own
+                    # three-token header.  An end-exclusive locator must also
+                    # precede every word in the next header.  Flooring the
+                    # minimum (rather than rounding the first word) gives both
+                    # invariants even when PDF glyph tops differ by fractions
+                    # of a point.
+                    locator,
                     canonical_json_sha256(
                         {
                             "physical_page": physical_page,
-                            "column": column,
+                            "column": locator.column,
                             "words": [
-                                _word_projection(first),
-                                _word_projection(second),
-                                _word_projection(third),
+                                _word_projection(item) for item in marker_words
                             ],
                         }
                     ),
@@ -501,10 +630,8 @@ def _key_section_projection(
 def build_math12_inventory(pdf_path: Path) -> Math12Inventory:
     """Parse and hash the complete 95-activity family from one source PDF."""
 
-    try:
-        import pdfplumber  # type: ignore
-    except ImportError as exc:  # pragma: no cover - optional dependency
-        raise Math12SourceError("pdfplumber is required to build the inventory") from exc
+    assert_math12_runtime(require_pdfplumber=True)
+    import pdfplumber  # type: ignore
     pdf_path = pdf_path.resolve()
     if not pdf_path.is_file():
         raise Math12SourceError("Math12 source PDF is missing")
@@ -668,9 +795,17 @@ def load_math12_inventory(path: Path) -> Math12Inventory:
 
 
 def load_math12_render_manifest(
-    path: Path, inventory: Math12Inventory
+    path: Path,
+    inventory: Math12Inventory,
+    *,
+    page_root: Path | None = None,
 ) -> Math12RenderManifest:
-    """Load a pinned deterministic render set and verify every page byte."""
+    """Parse a portable render manifest and verify every external page byte.
+
+    The tracked manifest contains only portable ``page-NNN.png`` names.  Its
+    PNG payload may live beside the manifest or under an explicit ``page_root``;
+    relocation never changes the frozen manifest projection.
+    """
 
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -699,11 +834,15 @@ def load_math12_render_manifest(
         if not isinstance(item, dict):
             raise Math12SourceError("render manifest page is not an object")
         page_number = int(raw_page)
-        raw_path = Path(str(item.get("path") or ""))
-        page_path = raw_path if raw_path.is_absolute() else path.parent / raw_path
+        manifest_path = str(item.get("path") or "")
+        raw_path = Path(manifest_path)
+        if raw_path.is_absolute() or raw_path.name != manifest_path:
+            raise Math12SourceError("render manifest page path is not portable")
+        page_path = (page_root.resolve() if page_root is not None else path.parent) / raw_path
         page_path = page_path.resolve()
         page = Math12RenderedPage(
             page_number=page_number,
+            manifest_path=manifest_path,
             path=page_path,
             sha256=str(item.get("sha256") or ""),
             size_bytes=int(item.get("size_bytes") or 0),
@@ -720,7 +859,7 @@ def load_math12_render_manifest(
         expected
     ):
         raise Math12SourceError("render manifest must pin every content page exactly once")
-    return Math12RenderManifest(
+    manifest = Math12RenderManifest(
         schema_version=raw["schema_version"],
         document_id=raw["document_id"],
         pdf_sha256=raw["pdf_sha256"],
@@ -731,6 +870,47 @@ def load_math12_render_manifest(
         pages=tuple(sorted(pages, key=lambda item: item.page_number)),
         render_manifest_projection_sha256=frozen_pin,
     )
+    validate_math12_render_manifest(inventory, manifest)
+    return manifest
+
+
+def validate_math12_render_manifest(
+    inventory: Math12Inventory, render_manifest: Math12RenderManifest
+) -> None:
+    """Replay manifest projection, source pins, profile and every page hash."""
+
+    if canonical_json_sha256(inventory.projection()) != inventory.inventory_projection_sha256:
+        raise Math12SourceError("Math12 inventory projection pin mismatch")
+    if (
+        render_manifest.document_id != inventory.document_id
+        or render_manifest.pdf_sha256 != inventory.pdf_sha256
+        or render_manifest.inventory_projection_sha256
+        != inventory.inventory_projection_sha256
+        or render_manifest.render_dpi != FROZEN_SIFT_RUNTIME_PROFILE.render_dpi
+        or render_manifest.color_mode != "gray_png"
+        or render_manifest.poppler_version != EXPECTED_POPPLER_VERSION
+    ):
+        raise Math12SourceError("render manifest and frozen source profile differ")
+    if (
+        canonical_json_sha256(render_manifest.projection())
+        != render_manifest.render_manifest_projection_sha256
+    ):
+        raise Math12SourceError("render manifest object projection pin mismatch")
+    pages = render_manifest.page_map()
+    expected_pages = set(
+        range(inventory.content_page_start, inventory.content_page_end + 1)
+    )
+    if set(pages) != expected_pages or len(render_manifest.pages) != len(expected_pages):
+        raise Math12SourceError("rendered page map must contain every content page exactly once")
+    for page_number, page in pages.items():
+        if (
+            page.page_number != page_number
+            or page.manifest_path != f"page-{page_number:03d}.png"
+            or not page.path.is_file()
+            or page.path.stat().st_size != page.size_bytes
+            or sha256_file(page.path) != page.sha256
+        ):
+            raise Math12SourceError("rendered page bytes differ from their manifest pin")
 
 
 def _evidence_to_mapping(item: VisualPageEvidence) -> dict[str, Any]:
@@ -761,7 +941,12 @@ def _decision_from_mapping(value: Mapping[str, Any]) -> Math12BindingDecision:
 
 
 def load_math12_source_certificate(path: Path) -> Math12SourceCertificate:
-    """Load and cryptographically replay a source-binding certificate."""
+    """Parse a certificate and verify only its serialized self-pins.
+
+    This loader does *not* establish that the saved decision follows from the
+    evidence or belongs to a supplied inventory/render set.  Trust decisions
+    only after :func:`verify_math12_source_certificate` succeeds.
+    """
 
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -797,7 +982,6 @@ def load_math12_source_certificate(path: Path) -> Math12SourceCertificate:
     certificate_pin = canonical_json_sha256(projection)
     if certificate_pin != raw.get("certificate_projection_sha256"):
         raise Math12SourceError("source certificate projection pin mismatch")
-    require_strict_activity_visual_thresholds(thresholds)
     return Math12SourceCertificate(
         schema_version=raw["schema_version"],
         document_id=raw["document_id"],
@@ -821,11 +1005,11 @@ def decide_math12_source_binding(
     evidences: Sequence[VisualPageEvidence],
     *,
     task_image_sha256: str,
-    thresholds: VisualBindingThresholds = VisualBindingThresholds(),
+    thresholds: VisualBindingThresholds = FROZEN_VISUAL_THRESHOLDS,
 ) -> Math12BindingDecision:
     """Resolve all-page visual evidence to a source address, or abstain."""
 
-    require_strict_activity_visual_thresholds(thresholds)
+    _require_frozen_math12_profile(thresholds)
     expected_pages = tuple(
         range(inventory.content_page_start, inventory.content_page_end + 1)
     )
@@ -917,11 +1101,12 @@ def issue_math12_source_certificate(
     *,
     task_image_sha256: str,
     render_manifest_projection_sha256: str,
-    thresholds: VisualBindingThresholds = VisualBindingThresholds(),
-    runtime_profile: SiftRuntimeProfile = SiftRuntimeProfile(),
+    thresholds: VisualBindingThresholds = FROZEN_VISUAL_THRESHOLDS,
+    runtime_profile: SiftRuntimeProfile = FROZEN_SIFT_RUNTIME_PROFILE,
 ) -> Math12SourceCertificate:
     if _HEX64.fullmatch(render_manifest_projection_sha256) is None:
         raise Math12SourceError("render manifest projection pin is malformed")
+    _require_frozen_math12_profile(thresholds, runtime_profile)
     frozen_evidence = tuple(sorted(evidences, key=lambda item: item.page_number))
     decision = decide_math12_source_binding(
         inventory, frozen_evidence, task_image_sha256=task_image_sha256, thresholds=thresholds
@@ -955,6 +1140,73 @@ def issue_math12_source_certificate(
         evidence_projection_sha256=evidence_pin,
         certificate_projection_sha256=canonical_json_sha256(projection),
     )
+
+
+def verify_math12_source_certificate(
+    inventory: Math12Inventory,
+    render_manifest: Math12RenderManifest,
+    certificate: Math12SourceCertificate,
+) -> Math12BindingDecision:
+    """Strictly replay a certificate from all evidence and frozen source pins.
+
+    Unlike :func:`load_math12_source_certificate`, this is the authoritative
+    admission API.  It replays the decision, inventory and render projections,
+    exact thresholds/runtime profile, every rendered page byte and every
+    evidence-to-render hash binding.  Any mismatch raises instead of returning
+    a partially trusted decision.
+    """
+
+    if certificate.schema_version != CERTIFICATE_SCHEMA:
+        raise Math12SourceError("unknown Math12 source certificate schema")
+    assert_math12_runtime()
+    _require_frozen_math12_profile(certificate.thresholds, certificate.runtime_profile)
+    validate_math12_render_manifest(inventory, render_manifest)
+    if (
+        certificate.document_id != inventory.document_id
+        or certificate.pdf_sha256 != inventory.pdf_sha256
+        or certificate.inventory_projection_sha256
+        != inventory.inventory_projection_sha256
+        or certificate.render_manifest_projection_sha256
+        != render_manifest.render_manifest_projection_sha256
+    ):
+        raise Math12SourceError("certificate, inventory and render source identity differ")
+    page_map = render_manifest.page_map()
+    if any(
+        item.page_number not in page_map
+        or item.rendered_page_sha256 != page_map[item.page_number].sha256
+        for item in certificate.evidences
+    ):
+        raise Math12SourceError("certificate evidence is not bound to rendered page bytes")
+    evidence_pin = canonical_json_sha256(
+        [_evidence_to_mapping(item) for item in certificate.evidences]
+    )
+    if evidence_pin != certificate.evidence_projection_sha256:
+        raise Math12SourceError("source certificate evidence projection pin mismatch")
+    replayed = decide_math12_source_binding(
+        inventory,
+        certificate.evidences,
+        task_image_sha256=certificate.task_image_sha256,
+        thresholds=certificate.thresholds,
+    )
+    projection = {
+        "schema_version": certificate.schema_version,
+        "document_id": certificate.document_id,
+        "pdf_sha256": certificate.pdf_sha256,
+        "inventory_projection_sha256": certificate.inventory_projection_sha256,
+        "render_manifest_projection_sha256": (
+            certificate.render_manifest_projection_sha256
+        ),
+        "task_image_sha256": certificate.task_image_sha256,
+        "thresholds": asdict(certificate.thresholds),
+        "runtime_profile": asdict(certificate.runtime_profile),
+        "decision": _decision_to_mapping(certificate.decision),
+        "evidence_projection_sha256": evidence_pin,
+    }
+    if canonical_json_sha256(projection) != certificate.certificate_projection_sha256:
+        raise Math12SourceError("source certificate projection pin mismatch")
+    if replayed != certificate.decision:
+        raise Math12SourceError("source certificate decision does not replay from all evidence")
+    return replayed
 
 
 def _solution_text_from_projection(projection: Mapping[str, Any]) -> str:
@@ -1010,6 +1262,7 @@ def _solution_text_from_projection(projection: Mapping[str, Any]) -> str:
 def extract_official_solution(
     pdf_path: Path,
     inventory: Math12Inventory,
+    render_manifest: Math12RenderManifest,
     accepted_certificate: Math12SourceCertificate,
 ) -> Math12OfficialSolutionRecord:
     """Extract only the accepted activity's pinned official key span.
@@ -1031,44 +1284,10 @@ def extract_official_solution(
         or decision.binding_projection_sha256 is None
     ):
         raise Math12SourceError("official solution requires a fully accepted binding")
-    if (
-        accepted_certificate.document_id != inventory.document_id
-        or accepted_certificate.pdf_sha256 != inventory.pdf_sha256
-        or accepted_certificate.inventory_projection_sha256
-        != inventory.inventory_projection_sha256
-    ):
-        raise Math12SourceError("certificate and inventory source identity differ")
-    evidence_pin = canonical_json_sha256(
-        [_evidence_to_mapping(item) for item in accepted_certificate.evidences]
+    replayed = verify_math12_source_certificate(
+        inventory, render_manifest, accepted_certificate
     )
-    replayed = decide_math12_source_binding(
-        inventory,
-        accepted_certificate.evidences,
-        task_image_sha256=accepted_certificate.task_image_sha256,
-        thresholds=accepted_certificate.thresholds,
-    )
-    certificate_projection = {
-        "schema_version": accepted_certificate.schema_version,
-        "document_id": accepted_certificate.document_id,
-        "pdf_sha256": accepted_certificate.pdf_sha256,
-        "inventory_projection_sha256": (
-            accepted_certificate.inventory_projection_sha256
-        ),
-        "render_manifest_projection_sha256": (
-            accepted_certificate.render_manifest_projection_sha256
-        ),
-        "task_image_sha256": accepted_certificate.task_image_sha256,
-        "thresholds": asdict(accepted_certificate.thresholds),
-        "runtime_profile": asdict(accepted_certificate.runtime_profile),
-        "decision": _decision_to_mapping(accepted_certificate.decision),
-        "evidence_projection_sha256": evidence_pin,
-    }
-    if (
-        replayed != decision
-        or evidence_pin != accepted_certificate.evidence_projection_sha256
-        or canonical_json_sha256(certificate_projection)
-        != accepted_certificate.certificate_projection_sha256
-    ):
+    if replayed != decision:  # defensive: verifier already enforces equality
         raise Math12SourceError("source certificate does not replay from its evidence")
     if sha256_file(pdf_path) != inventory.pdf_sha256:
         raise Math12SourceError("official solution PDF differs from the inventory pin")
@@ -1082,10 +1301,8 @@ def extract_official_solution(
         or record.binding_projection_sha256 != decision.binding_projection_sha256
     ):
         raise Math12SourceError("accepted decision does not replay to one inventory record")
-    try:
-        import pdfplumber  # type: ignore
-    except ImportError as exc:  # pragma: no cover - optional dependency
-        raise Math12SourceError("pdfplumber is required to extract official solution text") from exc
+    assert_math12_runtime(require_pdfplumber=True)
+    import pdfplumber  # type: ignore
     with pdfplumber.open(pdf_path) as document:
         projection = _key_section_projection(
             document,
@@ -1145,8 +1362,8 @@ def resolve_math12_image_bytes(
     inventory: Math12Inventory,
     render_manifest: Math12RenderManifest,
     *,
-    thresholds: VisualBindingThresholds = VisualBindingThresholds(),
-    runtime_profile: SiftRuntimeProfile = SiftRuntimeProfile(),
+    thresholds: VisualBindingThresholds = FROZEN_VISUAL_THRESHOLDS,
+    runtime_profile: SiftRuntimeProfile = FROZEN_SIFT_RUNTIME_PROFILE,
 ) -> Math12SourceCertificate:
     """Generic ``image bytes -> source address + certificate`` API.
 
@@ -1156,30 +1373,10 @@ def resolve_math12_image_bytes(
 
     if not isinstance(image_bytes, bytes) or not image_bytes:
         raise Math12SourceError("input image bytes are empty")
-    require_strict_activity_visual_thresholds(thresholds)
-    if (
-        render_manifest.document_id != inventory.document_id
-        or render_manifest.pdf_sha256 != inventory.pdf_sha256
-        or render_manifest.inventory_projection_sha256
-        != inventory.inventory_projection_sha256
-        or runtime_profile.render_dpi != render_manifest.render_dpi
-    ):
-        raise Math12SourceError("render manifest and resolver source identity differ")
+    _require_frozen_math12_profile(thresholds, runtime_profile)
+    assert_math12_runtime(require_visual=True)
+    validate_math12_render_manifest(inventory, render_manifest)
     rendered_pages = render_manifest.page_map()
-    expected_pages = set(
-        range(inventory.content_page_start, inventory.content_page_end + 1)
-    )
-    if set(rendered_pages) != expected_pages:
-        raise Math12SourceError("rendered page map must contain every content page exactly once")
-    for page_number, page in rendered_pages.items():
-        if (
-            not isinstance(page_number, int)
-            or page.page_number != page_number
-            or not page.path.is_file()
-            or page.path.stat().st_size != page.size_bytes
-            or sha256_file(page.path) != page.sha256
-        ):
-            raise Math12SourceError("rendered page map contains an invalid file")
     task_sha = hashlib.sha256(image_bytes).hexdigest()
     with tempfile.TemporaryDirectory(prefix="math12_source_binding_") as directory:
         # OpenCV sniffs image content, while a conventional suffix also keeps

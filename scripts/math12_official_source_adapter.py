@@ -23,25 +23,30 @@ for candidate in (PINNED_PACKAGES, REPO_ROOT / "src"):
         sys.path.insert(0, str(candidate))
 
 from evidence_os.math12_activity_source import (  # noqa: E402
+    EXPECTED_OPENCV_VERSION,
+    EXPECTED_PDFPLUMBER_VERSION,
+    EXPECTED_POPPLER_VERSION,
+    EXPECTED_PYTHON_VERSION,
+    EXPECTED_NUMPY_VERSION,
+    FROZEN_SIFT_RUNTIME_PROFILE,
     Math12SourceError,
+    assert_math12_runtime,
     build_math12_inventory,
     extract_official_solution,
     load_math12_inventory,
     load_math12_render_manifest,
     load_math12_source_certificate,
     resolve_math12_image_bytes,
+    verify_math12_source_certificate,
     write_canonical_json,
 )
 from evidence_os.official_ogm import canonical_json_sha256, sha256_file  # noqa: E402
 from evidence_os.visual_coordinate_binding import (  # noqa: E402
-    SiftRuntimeProfile,
     VisualCoordinateBindingError,
 )
 
 
 RENDER_SCHEMA = "math12-poppler-content-render-manifest-v1"
-EXPECTED_POPPLER_VERSION = "26.05.0"
-EXPECTED_OPENCV_VERSION = "5.0.0"
 _PAGE_NAME = re.compile(r"^page-(\d+)\.png$")
 
 
@@ -78,6 +83,7 @@ def _build_command(args: argparse.Namespace) -> None:
 
 
 def _render_command(args: argparse.Namespace) -> None:
+    assert_math12_runtime()
     inventory = load_math12_inventory(args.inventory)
     if sha256_file(args.pdf) != inventory.pdf_sha256:
         raise Math12SourceError("render input PDF differs from the inventory pin")
@@ -146,14 +152,16 @@ def _render_command(args: argparse.Namespace) -> None:
 
 def _resolve_command(args: argparse.Namespace) -> None:
     inventory = load_math12_inventory(args.inventory)
-    manifest = load_math12_render_manifest(args.render_manifest, inventory)
-    profile = SiftRuntimeProfile(
-        render_dpi=manifest.render_dpi,
-        expected_opencv_version=EXPECTED_OPENCV_VERSION,
+    manifest = load_math12_render_manifest(
+        args.render_manifest, inventory, page_root=args.page_root
     )
     certificate = resolve_math12_image_bytes(
-        args.image.read_bytes(), inventory, manifest, runtime_profile=profile
+        args.image.read_bytes(),
+        inventory,
+        manifest,
+        runtime_profile=FROZEN_SIFT_RUNTIME_PROFILE,
     )
+    verify_math12_source_certificate(inventory, manifest, certificate)
     write_canonical_json(args.output, certificate.to_mapping())
     print(
         json.dumps(
@@ -174,8 +182,12 @@ def _resolve_command(args: argparse.Namespace) -> None:
 
 def _extract_solution_command(args: argparse.Namespace) -> None:
     inventory = load_math12_inventory(args.inventory)
+    manifest = load_math12_render_manifest(
+        args.render_manifest, inventory, page_root=args.page_root
+    )
     certificate = load_math12_source_certificate(args.certificate)
-    solution = extract_official_solution(args.pdf, inventory, certificate)
+    verify_math12_source_certificate(inventory, manifest, certificate)
+    solution = extract_official_solution(args.pdf, inventory, manifest, certificate)
     write_canonical_json(args.output, solution.to_mapping())
     print(
         json.dumps(
@@ -192,6 +204,65 @@ def _extract_solution_command(args: argparse.Namespace) -> None:
             ensure_ascii=False,
         )
     )
+
+
+def _verify_command(args: argparse.Namespace) -> None:
+    inventory = load_math12_inventory(args.inventory)
+    manifest = load_math12_render_manifest(
+        args.render_manifest, inventory, page_root=args.page_root
+    )
+    certificate = load_math12_source_certificate(args.certificate)
+    decision = verify_math12_source_certificate(inventory, manifest, certificate)
+    print(
+        json.dumps(
+            {
+                "verified": True,
+                "accepted": decision.accepted,
+                "reason": decision.reason,
+                "certificate_projection_sha256": (
+                    certificate.certificate_projection_sha256
+                ),
+            },
+            ensure_ascii=False,
+        )
+    )
+
+
+def _preflight_command(args: argparse.Namespace) -> None:
+    observed = assert_math12_runtime(require_pdfplumber=True, require_visual=True)
+    poppler = _poppler_version(args.pdftoppm)
+    if poppler != EXPECTED_POPPLER_VERSION:
+        raise Math12SourceError(
+            f"Poppler {poppler} differs from pinned {EXPECTED_POPPLER_VERSION}"
+        )
+    observed["poppler"] = poppler
+    print(
+        json.dumps(
+            {
+                "passed": True,
+                "observed": observed,
+                "expected": {
+                    "python": EXPECTED_PYTHON_VERSION,
+                    "pdfplumber": EXPECTED_PDFPLUMBER_VERSION,
+                    "numpy": EXPECTED_NUMPY_VERSION,
+                    "opencv": EXPECTED_OPENCV_VERSION,
+                    "poppler": EXPECTED_POPPLER_VERSION,
+                },
+            },
+            ensure_ascii=False,
+        )
+    )
+
+
+def _add_render_inputs(command: argparse.ArgumentParser) -> None:
+    command.add_argument("--render-manifest", type=Path, required=True)
+    command.add_argument(
+        "--page-root",
+        type=Path,
+        help="directory containing the 127 page-NNN.png payloads; defaults to manifest directory",
+    )
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -212,7 +283,7 @@ def _parser() -> argparse.ArgumentParser:
 
     resolve = commands.add_parser("resolve")
     resolve.add_argument("--inventory", type=Path, required=True)
-    resolve.add_argument("--render-manifest", type=Path, required=True)
+    _add_render_inputs(resolve)
     resolve.add_argument("--image", type=Path, required=True)
     resolve.add_argument("--output", type=Path, required=True)
     resolve.set_defaults(handler=_resolve_command)
@@ -220,9 +291,20 @@ def _parser() -> argparse.ArgumentParser:
     extract = commands.add_parser("extract-solution")
     extract.add_argument("--pdf", type=Path, required=True)
     extract.add_argument("--inventory", type=Path, required=True)
+    _add_render_inputs(extract)
     extract.add_argument("--certificate", type=Path, required=True)
     extract.add_argument("--output", type=Path, required=True)
     extract.set_defaults(handler=_extract_solution_command)
+
+    verify = commands.add_parser("verify-certificate")
+    verify.add_argument("--inventory", type=Path, required=True)
+    _add_render_inputs(verify)
+    verify.add_argument("--certificate", type=Path, required=True)
+    verify.set_defaults(handler=_verify_command)
+
+    preflight = commands.add_parser("preflight")
+    preflight.add_argument("--pdftoppm", type=Path, required=True)
+    preflight.set_defaults(handler=_preflight_command)
     return parser
 
 

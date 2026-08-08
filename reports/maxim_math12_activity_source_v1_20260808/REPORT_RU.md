@@ -1,198 +1,218 @@
-# честный отчёт по Math12 official-source adapter
+# Math12 official-source adapter v1.1
 
 ## коротко
 
-я сделал отдельный source-only компонент для одной официальной семьи учебников — турецкого `Matematik 12 Beceri Temelli Etkinlik Kitabı`. он умеет принять произвольную картинку, визуально сопоставить её со всеми 127 страницами содержательной части книги, определить activity и вернуть только привязанный к ней фрагмент официального решения. если геометрия или отрыв от второго кандидата недостаточны, компонент обязан отказаться от ответа.
+это исправленная и повторно собранная версия source-only компонента для официального турецкого учебника `Matematik 12 Beceri Temelli Etkinlik Kitabı`. компонент принимает изображение, сравнивает его со всеми 127 содержательными страницами книги, при достаточной геометрической уверенности определяет activity и извлекает только относящийся к ней фрагмент официального решения.
 
-на пяти уже известных dev-картинках компонент правильно восстановил пять заданных source bindings: 3, 17, 88, 43 и 31. это хороший инженерный sanity check, но не новый accuracy result. семейство Math12 было выбрано после просмотра этих dev-примеров, поэтому результат 5/5 нельзя выдавать за перенос на новые данные. gold answers, correctness, scorer и benchmark outcome в resolver не передавались.
+v1.1 появился после независимого аудита freeze-коммита `9db67f2`. аудит нашёл не подгонку метрики, а четыре инженерные проблемы в границе официального ответа и воспроизводимости:
 
-## что именно является источником
+1. координата заголовка `Etkinlik No.: N` бралась из первого слова и округлялась. из-за дробных координат PDF собственный заголовок иногда терялся, а заголовок следующей activity иногда попадал в текущий ответ;
+2. JSON-loader проверял собственные SHA, но его название создавало впечатление полного replay. сохранённое решение не пересчитывалось из всех evidences в отдельном authoritative API;
+3. Math12 допускал изменение части runtime profile. даже более строгая настройка после freeze была бы уже другой политикой;
+4. версия `pdfplumber` и точное Python-окружение не были включены в обязательный CLI preflight.
 
-- PDF: `tmp/remaining_official_source_audit/pdfs/matematik 12*.pdf`;
+в v1.1 все четыре проблемы исправлены. пять dev-изображений заново прогнаны по всем 127 страницам, сертификаты не переупаковывались из старых решений. source binding остался 5/5. все пять official solution records извлечены заново; в каждом есть собственный заголовок и ни в одном нет заголовка следующей activity.
+
+это по-прежнему не accuracy result. Math12-семейство было выбрано после просмотра пяти dev-примеров. поэтому 5/5 является dev replay и проверкой адресации источника, а не оценкой переноса. holdout, unseen inputs, gold answers и scorer в этой пересборке не читались и не запускались.
+
+## источник и inventory
+
+- официальный PDF: 182 физические страницы;
 - SHA-256 PDF: `16d650177e62dc04b9a8b42fd7aafc3c1a8a38ec8c7040f92d5a26b120cde548`;
-- размер: 36 032 401 байт;
-- физические страницы: 182;
+- размер PDF: 36 032 401 байт;
 - оглавление activities: страницы 2–3;
-- содержательная часть: страницы 4–130;
-- официальные ответы: страницы 131–179;
-- найдено ровно 95 activities и ровно 95 уникальных заголовков `Etkinlik No.: N`.
+- задания: страницы 4–130;
+- официальный ключ: страницы 131–179;
+- activities: ровно 95;
+- диапазоны заданий без дыр и пересечений покрывают 127 страниц;
+- inventory projection SHA-256: `2bf810400de721bb47f02974df47be44e93f87f6796eca09c7375d42c0398b2c`;
+- inventory file SHA-256: `878ddb53cbf1f6ddfe5b332dc9f27a882caea557dccfbab3453546e106637ac5`.
 
-инвентарь лежит в `inventory.json`. его projection SHA-256: `154924c9495d47c2ff5b04da0cb5b420d61d22a13c7081ce1e48ca4d6be9aee2`.
+inventory строится только из PDF-native слов оглавления и официального ключа. benchmark task id, ожидаемый номер activity, ответ и correctness при построении не используются.
 
-## почему нельзя было хранить только одну страницу ответа
+## исправленная граница официального решения
 
-у книги двухколоночная вёрстка. логический порядок ответа иногда выглядит так: остаток левой колонки текущей страницы, затем правая колонка, затем начало следующей страницы до следующего заголовка activity. обычное `extract_text()` может перемешать этот порядок.
-
-поэтому для каждой activity хранится не только грубый диапазон физических страниц, но и точный полуинтервал:
-
-`key_start = (physical page, left/right column, top)`
-
-`key_end_exclusive = (physical page, left/right column, top)`
-
-слова входят в решение только тогда, когда их логический адрес находится внутри `[key_start, key_end_exclusive)`. страница в `key_page_end` может содержать заголовок следующего ответа: этот заголовок уже не входит в текущий фрагмент, потому что правая граница исключающая.
-
-для каждого элемента записаны четыре независимых пина:
-
-1. projection строки оглавления;
-2. projection всех содержательных страниц activity;
-3. projection точного фрагмента официального ключа;
-4. joint binding projection, связывающий PDF, номер activity, диапазоны и три предыдущих пина.
-
-контентные диапазоны всех 95 элементов без дыр и пересечений покрывают страницы 4–130.
-
-## как работает resolver
+у ключа двухколоночная вёрстка. логический порядок идёт по левой колонке, затем по правой, затем по следующей странице. поэтому каждый ответ задаётся полуинтервалом:
 
 ```text
-image bytes
-  -> SHA-256 входного изображения
-  -> проверка inventory + PDF identity
-  -> проверка render manifest и SHA каждого PNG
-  -> SIFT/RANSAC для каждой страницы 4..130 без shortlist
-  -> сортировка только по source-image geometry
-  -> строгие geometry gates
-  -> строгий margin/ratio против второго кандидата
-  -> выбранная страница попадает ровно в один content range
-  -> activity record имеет все source projection pins
-  -> accepted source-binding certificate
-  -> точное извлечение [key_start, key_end_exclusive)
-  -> answer-bound official-solution certificate
+[key_start, key_end_exclusive)
 ```
 
-в production API нет `task_id`, ожидаемого номера activity, gold answer, score или outcome. ожидаемые номера пяти dev-примеров появляются только в отдельном audit-скрипте после того, как resolver уже записал сертификаты.
+заголовок состоит из трёх PDF-слов: `Etkinlik`, `No.:`, `N`. теперь его верхняя координата вычисляется так:
 
-вызов `resolve_math12_image_bytes(image_bytes, inventory, render_manifest, ...)` обязательно перебирает все 127 содержательных страниц. неполный или дублированный sweep приводит к abstention.
+```text
+marker_top = floor(min(top_Etkinlik, top_No, top_N), 4 decimals)
+```
 
-## зафиксированный visual profile
+используется именно нижнее округление минимума, а не `round(first.top, 4)`. поэтому locator гарантированно расположен не ниже любого слова собственного заголовка. та же координата следующего заголовка используется как исключающая правая граница и гарантированно расположена не выше его слов. regression test отдельно проверяет три условия: собственные три слова включены, следующий заголовок исключён, его body также исключён.
 
-использован существующий строгий safety floor проекта, без ослабления под эти пять строк:
+на реальном PDF результат такой:
 
-| параметр | значение |
-|---|---:|
-| `min_good_matches` | 50 |
-| `min_inliers` | 40 |
-| `min_inlier_ratio` | 0.65 |
-| `min_task_hull_fraction` | 0.30 |
-| `max_median_reprojection_error` | 1.0 |
-| `min_mapped_inside_fraction` | 0.98 |
-| `max_scale_anisotropy` | 1.15 |
-| `min_rank_score_margin` | 10.0 |
-| `min_rank_score_ratio` | 5.0 |
+| input | activity | собственный header | header следующей activity | длина текста |
+|---|---:|---|---|---:|
+| `val_0054` | 3 | есть | отсутствует | 1 875 |
+| `val_0055` | 17 | есть | отсутствует | 1 950 |
+| `val_0056` | 88 | есть | отсутствует | 2 288 |
+| `val_0057` | 43 | есть | отсутствует | 751 |
+| `val_0058` | 31 | есть | отсутствует | 930 |
 
-runtime profile:
+## strict replay
 
-| параметр | значение |
-|---|---:|
-| render | Poppler 26.05.0, 144 dpi, grayscale PNG |
+`load_math12_source_certificate(path)` теперь явно является parse/self-pin loader. он проверяет JSON schema, evidence projection и certificate projection, но один он не делает сертификат доверенным. это специально записано в docstring.
+
+authoritative API:
+
+```python
+verify_math12_source_certificate(inventory, render_manifest, certificate)
+```
+
+он заново проверяет:
+
+1. projection всего inventory;
+2. source identity: document id, PDF SHA и inventory SHA;
+3. projection portable render manifest;
+4. точный render profile;
+5. присутствие всех 127 страниц ровно один раз;
+6. размер и SHA каждого внешнего PNG;
+7. связь `evidence.rendered_page_sha256` с конкретным PNG manifest;
+8. SHA полного списка из 127 evidences;
+9. точное равенство thresholds и SIFT runtime frozen-профилю;
+10. повторный вызов decision policy на всех evidences;
+11. полное равенство replayed decision сохранённому decision;
+12. итоговую certificate projection.
+
+самосогласованно переподписанный post-hoc decision verifier отвергает. аналогично отвергается evidence, перепривязанный к другому render SHA. `extract_official_solution(...)`, команда `extract-solution`, dev audit и команда `verify-certificate` используют strict verifier, а не доверяют loader.
+
+## portable render manifest
+
+в git хранится `render_manifest.json`, но не 127 PNG и не PDF. в manifest находятся только переносимые имена `page-NNN.png`, размеры и SHA. внешняя директория с payload передаётся через `--page-root`; её расположение не входит в projection и не меняет freeze.
+
+- render DPI: 144;
+- режим: grayscale PNG;
+- Poppler: 26.05.0;
+- страниц: 127;
+- render manifest projection SHA-256: `d8a7c55d11a5d5affb0368d39ebda5e3d4c6f5fd79d1b6ae8f367af827846b66`;
+- tracked manifest file SHA-256: `903039725bb5c9e3894a928fa124153b0c2b5ec4b81fb06ae615344f49eff26a`.
+
+loader принимает tracked manifest и `--page-root`, после чего всё равно читает и хеширует каждый PNG. отсутствие payload или несовпадение хотя бы одного байта приводит к fail closed.
+
+## exact frozen runtime
+
+разрешён только один профиль:
+
+| часть | версия или значение |
+|---|---|
+| Python | 3.12.13 |
+| pdfplumber | 0.11.9 |
+| NumPy | 2.5.1 |
 | OpenCV | 5.0.0 |
-| SIFT `nfeatures` | 12 000 |
-| contrast / edge | 0.02 / 12.0 |
+| Poppler | 26.05.0 |
+| render | 144 dpi, grayscale PNG |
+| SIFT nfeatures | 12 000 |
+| SIFT contrast / edge | 0.02 / 12.0 |
 | Lowe ratio | 0.72 |
 | RANSAC reprojection | 4 px |
 | RANSAC max iterations | 5 000 |
 | RANSAC confidence | 0.999 |
 | RNG seed | 19 870 511 |
 
-render manifest содержит 127 PNG и имеет projection SHA-256 `6f6e406a1eaf20e43d1384bbceda157602dd81258081e9c6eebb066dd8aa708c`.
+thresholds также равны frozen profile, а не просто не слабее его:
 
-## dev-5 source-binding audit
+| gate | значение |
+|---|---:|
+| min good matches | 50 |
+| min inliers | 40 |
+| min inlier ratio | 0.65 |
+| min task hull fraction | 0.30 |
+| max median reprojection error | 1.0 |
+| min mapped-inside fraction | 0.98 |
+| max scale anisotropy | 1.15 |
+| min rank-score margin | 10.0 |
+| min rank-score ratio | 5.0 |
 
-| input | ожидаемая source activity, только для audit | выбранная content page | activity | точный key span | best / runner rank | результат |
-|---|---:|---:|---:|---|---:|---|
-| `val_0054` | 3 | 7 | 3 | `131/right/216.0853` → `132/left/382.8293` | 389.703 / 4.206 | accepted, match |
-| `val_0055` | 17 | 24 | 17 | `139/left/78.2717` → `139/right/78.2717` | 486.347 / 1.910 | accepted, match |
-| `val_0056` | 88 | 119 | 88 | `174/left/77.4738` → `175/left/78.3347` | 415.434 / 4.143 | accepted, match |
-| `val_0057` | 43 | 60 | 43 | `152/right/431.4961` → `153/left/78.1049` | 422.585 / 4.701 | accepted, match |
-| `val_0058` | 31 | 41 | 31 | `145/right/430.7505` → `146/right/78.1049` | 200.172 / 38.638 | accepted, match |
+любой override, в том числе более строгий, отвергается direct API. если нужен другой профиль, это должна быть новая версия и новый freeze до просмотра новых результатов.
 
-последняя строка тоже проходит frozen ratio floor, но она заметно ближе к границе: `200.172 / 38.638 = 5.18`, при минимуме 5.0. это надо сохранить как честный caveat, а не округлять до «огромного запаса».
-
-projection SHA-256 итогового dev audit: `cff121df9c3c72c96595574a7165485e51787603559ee2c1b739fea032447ed1`.
-
-## официальный solution record
-
-`extract_official_solution(pdf, inventory, accepted_certificate)` сначала полностью переигрывает visual decision из всех 127 evidences, проверяет certificate SHA, PDF SHA, inventory SHA и binding projection. только после этого читается точный key span.
-
-функция не пытается угадать canonical short answer. она возвращает PDF-native текст официального решения и его SHA. математические формулы в PDF иногда извлекаются текстовым движком неидеально, поэтому downstream-модель должна видеть этот текст как evidence, а не как гарантированно чистую символьную запись. при нарушении span hash или certificate replay функция падает fail-closed.
-
-| input | activity | длина извлечённого текста, символов | solution text SHA-256 |
-|---|---:|---:|---|
-| `val_0054` | 3 | 1 859 | `9c1daf61de3423710542e9fb77f865b0e7736e799091678c98abc21ce9ec4b6c` |
-| `val_0055` | 17 | 1 950 | `ec80ed6b09d2820acca3cbb8a98253e7f2b15dde506b31ced9a01aa9a66bf297` |
-| `val_0056` | 88 | 2 271 | `6698dd4bda37a9553a62e29ee5fcff5039e5a6f4b1bbbd57167d9bb767e9632e` |
-| `val_0057` | 43 | 768 | `a1e815a4aa822a1cfcdb553e22a933c7ad51c2b228fff8018a1a885f6f0552a1` |
-| `val_0058` | 31 | 947 | `0ef8878007abcbde90ffff035e0a44d2f7278b02fbbf4f903bfd077c57475ec1` |
-
-это уже usable evidence component: официальный solution можно передать solver/judge. но сам по себе этот audit всё равно ничего не говорит о том, улучшился ли final benchmark answer.
-
-## где здесь возможен самообман
-
-главный риск не в SIFT thresholds. главный риск — post-hoc выбор семьи источника. пять dev-картинок сначала позволили понять, что они относятся к одной Math12 книге, и только потом для неё был построен полный adapter. поэтому 5/5 отвечает на вопрос «можем ли мы воспроизвести source address для уже рассмотренной семьи», но не отвечает на вопросы:
-
-- узнает ли frozen resolver новые картинки этой книги;
-- как часто он будет abstain;
-- не выберет ли уверенно неправильную страницу на новых crop/layout;
-- улучшит ли официальный solution конечный ответ модели;
-- как компонент поведёт себя на другой книге или другом языке.
-
-в отчёте намеренно нет `accuracy=...`, `0.9` или заявления о победе над baseline. correctness не вычислялась.
-
-## что нужно сделать до валидного результата
-
-1. зафиксировать одним commit код, тесты, inventory, render manifest и frozen profile SHA до любого нового запуска;
-2. один раз применить этот commit к независимо замороженным непросмотренным изображениям Math12;
-3. сначала раскрыть только transfer source-binding audit: coverage, abstentions, wrong bindings и confidence margins;
-4. не менять thresholds и family rules после просмотра результата; любые изменения — новая версия и новый holdout;
-5. отдельно preregister downstream policy: когда официальный solution разрешает заменить ответ модели, когда только добавляется как context, когда надо abstain;
-6. только после этого считать correctness/accuracy тем же неизменённым scorer;
-7. для заявлений о мультиязычности повторить source inventory и hidden transfer audit минимум на независимых книгах каждого языка.
-
-если frozen transfer audit провалится, честный вывод будет не «SIFT плохой», а «dev family replay не перенёсся». если source binding перенесётся, но accuracy не вырастет, проблема уже находится в extraction-to-solver handoff или в интерпретации решения, а не в retrieval.
-
-## воспроизводимость
-
-основной CLI: `scripts/math12_official_source_adapter.py`.
+рабочий preflight:
 
 ```powershell
-# 1. построить inventory только из PDF
-python scripts/math12_official_source_adapter.py build-inventory `
-  --pdf <math12.pdf> `
-  --output reports/maxim_math12_activity_source_v1_20260808/inventory.json
+$env:PYTHONPATH=(Resolve-Path 'tmp\portfolio_official_sources\python_pkgs').Path+';'+(Resolve-Path 'src').Path
+& 'C:\Users\kmaxc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
+  scripts\math12_official_source_adapter.py preflight `
+  --pdftoppm 'C:\Users\kmaxc\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\pdftoppm.exe'
+```
 
-# 2. один раз отрендерить все 127 content pages
-python scripts/math12_official_source_adapter.py render-pages `
-  --pdf <math12.pdf> `
-  --inventory reports/maxim_math12_activity_source_v1_20260808/inventory.json `
-  --pdftoppm <pinned-pdftoppm.exe> `
-  --output-dir <render-dir> `
-  --manifest <render-dir>/render_manifest.json
+фактический результат preflight: все пять версий совпали с pins.
 
-# 3. generic resolve; ожидаемый номер activity здесь отсутствует
-python scripts/math12_official_source_adapter.py resolve `
-  --inventory reports/maxim_math12_activity_source_v1_20260808/inventory.json `
-  --render-manifest <render-dir>/render_manifest.json `
-  --image <arbitrary-image.png> `
-  --output <source-certificate.json>
+## повторный dev-5 прогон
 
-# 4. извлечь только pinned official solution span
-python scripts/math12_official_source_adapter.py extract-solution `
+каждый сертификат заново вычислялся из исходного PNG, SIFT/RANSAC и всех 127 content pages. expected activity использовался только позднее в отдельном audit-скрипте.
+
+| input | page | activity | key span | best / runner rank | checks |
+|---|---:|---:|---|---:|---:|
+| `val_0054` | 7 | 3 | `131/right/216.0852` → `132/left/382.8293` | 389.703 / 4.206 | 16/16 |
+| `val_0055` | 24 | 17 | `139/left/78.2717` → `139/right/78.2717` | 486.347 / 1.910 | 16/16 |
+| `val_0056` | 119 | 88 | `174/left/77.4737` → `175/left/78.3347` | 415.434 / 4.143 | 16/16 |
+| `val_0057` | 60 | 43 | `152/right/431.4961` → `153/left/78.1048` | 422.585 / 4.701 | 16/16 |
+| `val_0058` | 41 | 31 | `145/right/430.7505` → `146/right/78.1048` | 200.172 / 38.638 | 16/16 |
+
+последний случай остаётся честно отмеченным как наиболее близкий к ratio floor: примерно 5.18 при минимуме 5.0.
+
+dev audit projection SHA-256: `cbb043f453e65dce9a5ec93b466277b1e80fbd9484f8d07d239354f8540d39d8`.
+
+## official solution records
+
+| input | activity | solution text SHA-256 | answer-bound projection SHA-256 |
+|---|---:|---|---|
+| `val_0054` | 3 | `e1016f8034a48b57db2d526f201357e9802b5e1b241ffd9068265131dafa80fe` | `3286182fa5505d0b82d0457d06d213e83f83a4a21f0387ceeb373867095ad4dd` |
+| `val_0055` | 17 | `ec80ed6b09d2820acca3cbb8a98253e7f2b15dde506b31ced9a01aa9a66bf297` | `351014c357e707b2c6431d70334585359ba75d3a260cd1908da0f034a87ea548` |
+| `val_0056` | 88 | `a3e17117e9adebd42d9ba0dd79a1b48d4bb7eb71f4df7f824cf3def38295e8bd` | `b188926886b9000b3f6b5fd204ad80ff81cc67ae83759076d76804d82e71fcf0` |
+| `val_0057` | 43 | `7bb9fbc31b4816aa5cba7dfc5d0a2b1fd44c3de5fcb0ca0fb315763c93b14721` | `9c855646b84ad7326bbb322bc3aa0b10062ce76468fd588ebf3295c5ee5ba2f5` |
+| `val_0058` | 31 | `0f4bfb5434238a2995354069cada50e02fee186a658c3f657892b0041c151ef4` | `2a9fe7877fc8d0c6ba19e3902157d8c57d1ca1c5c36cbfb97dc0623a464d4617` |
+
+это PDF-native evidence для downstream solver/judge, а не автоматически правильный короткий ответ. формулы в PDF могут извлекаться текстовым движком неидеально. component scope не содержит gold, correctness или score.
+
+## команды
+
+```powershell
+# resolve arbitrary image; ожидаемого activity здесь нет
+python scripts\math12_official_source_adapter.py resolve `
+  --inventory reports\maxim_math12_activity_source_v1_20260808\inventory.json `
+  --render-manifest reports\maxim_math12_activity_source_v1_20260808\render_manifest.json `
+  --page-root <directory-with-page-NNN.png> `
+  --image <image.png> `
+  --output <certificate.json>
+
+# отдельно проверить сохранённый сертификат полным replay
+python scripts\math12_official_source_adapter.py verify-certificate `
+  --inventory reports\maxim_math12_activity_source_v1_20260808\inventory.json `
+  --render-manifest reports\maxim_math12_activity_source_v1_20260808\render_manifest.json `
+  --page-root <directory-with-page-NNN.png> `
+  --certificate <certificate.json>
+
+# извлечь официальный span только после strict replay
+python scripts\math12_official_source_adapter.py extract-solution `
   --pdf <math12.pdf> `
-  --inventory reports/maxim_math12_activity_source_v1_20260808/inventory.json `
-  --certificate <source-certificate.json> `
+  --inventory reports\maxim_math12_activity_source_v1_20260808\inventory.json `
+  --render-manifest reports\maxim_math12_activity_source_v1_20260808\render_manifest.json `
+  --page-root <directory-with-page-NNN.png> `
+  --certificate <certificate.json> `
   --output <official-solution.json>
 ```
 
-использование GPU и сети не требуется. dev-5 был прогнан последовательно на локальном CPU.
+## проверки v1.1
 
-## проверки
+- unit/fail-closed/tamper/runtime/marker: `14 passed, 1 skipped`;
+- opt-in real-PDF inventory integration: `1 passed, 14 deselected`, 149.32 s;
+- полный inventory: 95/95 activities;
+- portable render manifest: 127/127 page pins;
+- full visual recomputation: 5/5 accepted;
+- dev source-address alignment: 5/5;
+- official extraction: 5/5 projection hashes;
+- own marker fully present: 5/5;
+- next marker absent: 5/5;
+- Python compile и CLI help/preflight: passed;
+- GPU: не использовался;
+- сеть: не использовалась;
+- holdout/unseen/gold/scorer: не читались и не запускались.
 
-- unit/fail-closed suite: 9 passed;
-- opt-in real-PDF inventory integration: 1 passed за 121.86 s;
-- полный inventory build: 95/95 activities;
-- official key marker uniqueness: 95/95;
-- content partition: страницы 4–130 покрыты ровно один раз;
-- visual dev audit: 5 accepted, 5 source-address matches;
-- official solution extraction: 5/5 projection hashes совпали;
-- holdout, gold answers, benchmark scorer и correctness в этой работе не читались и не запускались.
-
-финальные хеши кода и профиля записываются отдельно в `freeze_candidate_manifest.json`; именно этот manifest должен попасть в freeze commit до transfer run.
-
+старый `freeze_candidate_manifest.json` относится к v1 и сохранён как исторический артефакт commit `9db67f2`. актуальные code/artifact/runtime pins находятся в новом `freeze_manifest_v1_1.json`. до отдельного frozen transfer run нельзя называть этот dev replay переносом или новым benchmark score.

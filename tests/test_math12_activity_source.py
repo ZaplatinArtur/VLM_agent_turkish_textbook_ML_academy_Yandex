@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import hashlib
 import inspect
 import json
 import os
@@ -14,9 +15,13 @@ import evidence_os.math12_activity_source as math12_source
 
 from evidence_os.math12_activity_source import (
     INVENTORY_SCHEMA,
+    FROZEN_SIFT_RUNTIME_PROFILE,
+    FROZEN_VISUAL_THRESHOLDS,
     KeyLocator,
     Math12ActivityRecord,
     Math12Inventory,
+    Math12RenderedPage,
+    Math12RenderManifest,
     Math12SourceError,
     build_math12_inventory,
     decide_math12_source_binding,
@@ -25,6 +30,7 @@ from evidence_os.math12_activity_source import (
     load_math12_inventory,
     load_math12_source_certificate,
     resolve_math12_image_bytes,
+    verify_math12_source_certificate,
 )
 from evidence_os.official_ogm import canonical_json_sha256
 from evidence_os.visual_coordinate_binding import (
@@ -101,7 +107,7 @@ def _evidence(page: int, *, strong: bool = False) -> VisualPageEvidence:
         document_id="meb_math12_bbbbbbbbbbbb",
         pdf_sha256=HEX_B,
         page_number=page,
-        rendered_page_sha256=canonical_json_sha256({"page": page}),
+        rendered_page_sha256=hashlib.sha256(f"page-{page}".encode("ascii")).hexdigest(),
         good_matches=good,
         inliers=inliers,
         inlier_ratio=inliers / good if good else 0.0,
@@ -121,6 +127,70 @@ def _evidence(page: int, *, strong: bool = False) -> VisualPageEvidence:
 
 def _all_page_evidence(selected_page: int = 54) -> tuple[VisualPageEvidence, ...]:
     return tuple(_evidence(page, strong=page == selected_page) for page in range(4, 131))
+
+
+def _render_manifest(tmp_path: Path, inventory: Math12Inventory) -> Math12RenderManifest:
+    pages: list[Math12RenderedPage] = []
+    for page_number in range(4, 131):
+        payload = f"page-{page_number}".encode("ascii")
+        name = f"page-{page_number:03d}.png"
+        path = tmp_path / name
+        path.write_bytes(payload)
+        pages.append(
+            Math12RenderedPage(
+                page_number=page_number,
+                manifest_path=name,
+                path=path,
+                sha256=hashlib.sha256(payload).hexdigest(),
+                size_bytes=len(payload),
+            )
+        )
+    prototype = Math12RenderManifest(
+        schema_version=math12_source.RENDER_MANIFEST_SCHEMA,
+        document_id=inventory.document_id,
+        pdf_sha256=inventory.pdf_sha256,
+        inventory_projection_sha256=inventory.inventory_projection_sha256,
+        render_dpi=FROZEN_SIFT_RUNTIME_PROFILE.render_dpi,
+        color_mode="gray_png",
+        poppler_version=math12_source.EXPECTED_POPPLER_VERSION,
+        pages=tuple(pages),
+        render_manifest_projection_sha256=HEX_C,
+    )
+    return replace(
+        prototype,
+        render_manifest_projection_sha256=canonical_json_sha256(prototype.projection()),
+    )
+
+
+def _repin_certificate(certificate):
+    evidence_pin = canonical_json_sha256(
+        [math12_source._evidence_to_mapping(item) for item in certificate.evidences]
+    )
+    provisional = replace(
+        certificate,
+        evidence_projection_sha256=evidence_pin,
+        certificate_projection_sha256=HEX_C,
+    )
+    mapping = provisional.to_mapping()
+    projection = {
+        key: mapping[key]
+        for key in (
+            "schema_version",
+            "document_id",
+            "pdf_sha256",
+            "inventory_projection_sha256",
+            "render_manifest_projection_sha256",
+            "task_image_sha256",
+            "thresholds",
+            "runtime_profile",
+            "decision",
+            "evidence_projection_sha256",
+        )
+    }
+    return replace(
+        provisional,
+        certificate_projection_sha256=canonical_json_sha256(projection),
+    )
 
 
 def test_all_page_source_binding_returns_range_and_generic_key_span() -> None:
@@ -156,6 +226,65 @@ def test_safety_floor_cannot_be_weakened() -> None:
         )
 
 
+def test_exact_frozen_thresholds_and_runtime_cannot_be_overridden() -> None:
+    with pytest.raises(VisualCoordinateBindingError, match="exact frozen profile"):
+        decide_math12_source_binding(
+            _inventory(),
+            _all_page_evidence(),
+            task_image_sha256=HEX_A,
+            thresholds=replace(FROZEN_VISUAL_THRESHOLDS, min_inliers=41),
+        )
+    with pytest.raises(VisualCoordinateBindingError, match="exact frozen profile"):
+        issue_math12_source_certificate(
+            _inventory(),
+            _all_page_evidence(),
+            task_image_sha256=HEX_A,
+            render_manifest_projection_sha256=HEX_C,
+            runtime_profile=replace(FROZEN_SIFT_RUNTIME_PROFILE, nfeatures=12_001),
+        )
+    with pytest.raises(VisualCoordinateBindingError, match="exact frozen profile"):
+        resolve_math12_image_bytes(
+            b"not-decoded-because-profile-fails-first",
+            _inventory(),
+            None,  # type: ignore[arg-type]
+            runtime_profile=replace(FROZEN_SIFT_RUNTIME_PROFILE, rng_seed=7),
+        )
+
+
+def test_marker_floor_includes_own_header_and_excludes_next_header_and_body() -> None:
+    def word(text: str, x0: float, top: float) -> dict[str, object]:
+        return {"text": text, "x0": x0, "x1": x0 + 10.0, "top": top, "bottom": top + 1.0}
+
+    own = (
+        word("Etkinlik", 10.0, 10.00019),
+        word("No.:", 25.0, 10.00005),
+        word("1", 38.0, 10.00012),
+    )
+    following = (
+        word("Etkinlik", 10.0, 20.00019),
+        word("No.:", 25.0, 20.00005),
+        word("2", 38.0, 20.00012),
+    )
+    words = [*own, word("own-body", 10.0, 15.0), *following, word("next-body", 10.0, 21.0)]
+
+    class _Page:
+        width = 100.0
+
+        def extract_words(self, **_kwargs):
+            return words
+
+    document = SimpleNamespace(pages=[_Page()])
+    start = math12_source._key_marker_locator(1, 100.0, own)
+    end = math12_source._key_marker_locator(1, 100.0, following)
+    assert start.top == 10.0
+    assert end.top == 20.0
+    projection = math12_source._key_section_projection(document, 1, start, end)
+    selected = [item["text"] for item in projection["words"]]
+    assert selected == ["Etkinlik", "No.:", "1", "own-body"]
+    assert "2" not in selected
+    assert "next-body" not in selected
+
+
 def test_certificate_is_answer_free_and_pins_all_evidence() -> None:
     certificate = issue_math12_source_certificate(
         _inventory(),
@@ -180,11 +309,14 @@ def test_official_solution_extraction_rejects_an_abstained_certificate_before_pd
     )
     assert not certificate.decision.accepted
     with pytest.raises(Math12SourceError, match="fully accepted"):
-        extract_official_solution(Path("does-not-exist.pdf"), _inventory(), certificate)
+        extract_official_solution(
+            Path("does-not-exist.pdf"), _inventory(), None, certificate  # type: ignore[arg-type]
+        )
 
 
 def test_official_solution_success_is_bound_to_only_the_pinned_key_span(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     projection = {
         "activity_number": 51,
@@ -228,11 +360,12 @@ def test_official_solution_success_is_bound_to_only_the_pinned_key_span(
         prototype,
         inventory_projection_sha256=canonical_json_sha256(prototype.projection()),
     )
+    manifest = _render_manifest(tmp_path, inventory)
     certificate = issue_math12_source_certificate(
         inventory,
         _all_page_evidence(54),
         task_image_sha256=HEX_A,
-        render_manifest_projection_sha256=HEX_C,
+        render_manifest_projection_sha256=manifest.render_manifest_projection_sha256,
     )
 
     class _FakeDocument:
@@ -242,14 +375,25 @@ def test_official_solution_success_is_bound_to_only_the_pinned_key_span(
         def __exit__(self, *_args):
             return False
 
-    monkeypatch.setattr(math12_source, "sha256_file", lambda _path: inventory.pdf_sha256)
+    monkeypatch.setattr(
+        math12_source,
+        "sha256_file",
+        lambda path: (
+            inventory.pdf_sha256
+            if Path(path).name == "pinned.pdf"
+            else hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        ),
+    )
     monkeypatch.setattr(
         math12_source,
         "_key_section_projection",
         lambda *_args, **_kwargs: projection,
     )
     monkeypatch.setitem(sys.modules, "pdfplumber", SimpleNamespace(open=lambda _path: _FakeDocument()))
-    solution = extract_official_solution(Path("pinned.pdf"), inventory, certificate)
+    monkeypatch.setattr(math12_source, "assert_math12_runtime", lambda **_kwargs: {})
+    solution = extract_official_solution(
+        Path("pinned.pdf"), inventory, manifest, certificate
+    )
     assert solution.activity_number == 51
     assert solution.official_solution_text == "Etkinlik\nçözüm"
     assert solution.source_certificate_projection_sha256 == (
@@ -283,6 +427,63 @@ def test_certificate_loader_rejects_post_hoc_route_tampering(tmp_path: Path) -> 
     path.write_text(json.dumps(certificate), encoding="utf-8")
     with pytest.raises(Math12SourceError, match="projection pin mismatch"):
         load_math12_source_certificate(path)
+
+
+def test_strict_replay_rejects_self_consistent_post_hoc_decision(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory()
+    manifest = _render_manifest(tmp_path, inventory)
+    certificate = issue_math12_source_certificate(
+        inventory,
+        _all_page_evidence(),
+        task_image_sha256=HEX_A,
+        render_manifest_projection_sha256=manifest.render_manifest_projection_sha256,
+    )
+    tampered = _repin_certificate(
+        replace(
+            certificate,
+            decision=replace(certificate.decision, selected_activity_number=95),
+        )
+    )
+    with pytest.raises(Math12SourceError, match="does not replay"):
+        verify_math12_source_certificate(inventory, manifest, tampered)
+
+
+def test_strict_replay_rejects_evidence_rebound_to_other_render_bytes(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory()
+    manifest = _render_manifest(tmp_path, inventory)
+    certificate = issue_math12_source_certificate(
+        inventory,
+        _all_page_evidence(),
+        task_image_sha256=HEX_A,
+        render_manifest_projection_sha256=manifest.render_manifest_projection_sha256,
+    )
+    evidences = list(certificate.evidences)
+    evidences[0] = replace(evidences[0], rendered_page_sha256=HEX_C)
+    tampered = _repin_certificate(replace(certificate, evidences=tuple(evidences)))
+    with pytest.raises(Math12SourceError, match="not bound to rendered page bytes"):
+        verify_math12_source_certificate(inventory, manifest, tampered)
+
+
+def test_generated_dev_solutions_do_not_contain_the_next_activity_header() -> None:
+    root = Path(__file__).resolve().parents[1]
+    directory = (
+        root
+        / "reports"
+        / "maxim_math12_activity_source_v1_20260808"
+        / "official_solutions"
+    )
+    if not directory.is_dir():
+        pytest.skip("generated official solution records are not present")
+    files = sorted(directory.glob("val_*.json"))
+    assert len(files) == 5
+    for path in files:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        activity = int(value["activity_number"])
+        assert f"Etkinlik No.: {activity + 1}" not in value["official_solution_text"]
 
 
 @pytest.mark.skipif(
