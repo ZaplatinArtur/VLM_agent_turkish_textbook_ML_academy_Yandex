@@ -4,6 +4,7 @@
   "claims": {
     "accuracy_or_gold_read": false,
     "artifact_answer_equivalence_measured": true,
+    "certificate_artifacts_replayed": true,
     "online_wall_clock_speedup_measured": false,
     "source_lookup_cost_included": false,
     "task_id_alignment_only": true,
@@ -15,9 +16,27 @@
       "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\fill_blank_page_activity_history_v7_composed\\solver.jsonl",
       "sha256": "ba3967cfca3eeb3aca894a6dd00a15d06afc67f8cfd9f3ea7729b9b52baeddbf"
     },
+    "history_candidate": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\fill_blank_page_activity_history_v7_resolver\\candidate.jsonl",
+      "sha256": "e5aaf747d5c757f5dd1025e8530d8e46ebf27b156bffa8a75540dbe3d79928b7"
+    },
+    "history_certificates": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\fill_blank_page_activity_history_v7_resolver\\certificates.jsonl",
+      "rows": 1,
+      "sha256": "e51af497a958f43831e8e7121186f05f762ce90318f84eb2b8c7b7b49259faa2"
+    },
     "history_manifest": {
       "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\fill_blank_page_activity_history_v7_resolver\\manifest.json",
       "sha256": "a8d2dbe8b577b1cc8c95bd1a22bb9772a33893164a248c5ed32c2f9a407ef3e5"
+    },
+    "main_candidate": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_samsung_philosophy_biology_imageonly_v7_resolver\\candidate.jsonl",
+      "sha256": "36073a05e4de3e3b423ce352f62b9036d33f85ff0d081710b882eea8323f7cb5"
+    },
+    "main_certificates": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_samsung_philosophy_biology_imageonly_v7_resolver\\certificates.jsonl",
+      "rows": 130,
+      "sha256": "991f1287b4575cfa59b5a0be032b69147820585b104f33fcb6836f4304ceb3c2"
     },
     "main_manifest": {
       "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_samsung_philosophy_biology_imageonly_v7_resolver\\manifest.json",

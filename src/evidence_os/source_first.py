@@ -57,7 +57,7 @@ def decide_source_first(
     candidates: tuple[CandidateEnvelope, ...],
     *,
     profile: FrozenProfile | None = None,
-    anchor_may_emit_strong_certificates: bool = False,
+    anchor_may_emit_strong_certificates: bool,
 ) -> SourceFirstDecision:
     """Decide whether a certified source can safely bypass the anchor.
 
@@ -65,8 +65,9 @@ def decide_source_first(
     production contract: the deferred anchor is not itself a producer of
     strong certificates.  This matches the current architecture, where the
     reasoning model is an unverified fallback and official source adapters are
-    the strong proof producers.  Callers must set
-    ``anchor_may_emit_strong_certificates=True`` if that contract changes.
+    the strong proof producers.  The capability is a required keyword instead
+    of a permissive default so that a future caller cannot silently inherit an
+    outdated scheduling assumption.
     """
 
     if anchor_may_emit_strong_certificates:

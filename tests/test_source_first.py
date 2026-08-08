@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from evidence_os import (
     CandidateEnvelope,
     CertificateKind,
@@ -45,7 +47,11 @@ def test_unique_certified_source_can_skip_unverified_anchor() -> None:
     problem = _problem()
     source = _certified(problem, "4")
 
-    shortcut = decide_source_first(problem, (source,))
+    shortcut = decide_source_first(
+        problem,
+        (source,),
+        anchor_may_emit_strong_certificates=False,
+    )
 
     assert shortcut.action is SourceFirstAction.RETURN_CERTIFIED_SOURCE
     assert shortcut.selected == source
@@ -66,7 +72,11 @@ def test_missing_or_weak_source_runs_anchor() -> None:
     problem = _problem()
     weak = CandidateEnvelope(source="retrieval", final_answer="4")
 
-    decision = decide_source_first(problem, (weak,))
+    decision = decide_source_first(
+        problem,
+        (weak,),
+        anchor_may_emit_strong_certificates=False,
+    )
 
     assert decision.action is SourceFirstAction.RUN_ANCHOR
     assert decision.reason is SourceFirstReason.NO_CERTIFIED_SOURCE
@@ -78,6 +88,7 @@ def test_conflicting_certified_sources_run_anchor() -> None:
     decision = decide_source_first(
         problem,
         (_certified(problem, "4", verifier="key-a"), _certified(problem, "5", verifier="key-b")),
+        anchor_may_emit_strong_certificates=False,
     )
 
     assert decision.action is SourceFirstAction.RUN_ANCHOR
@@ -97,3 +108,9 @@ def test_anchor_certificate_capability_disables_shortcut() -> None:
 
     assert decision.action is SourceFirstAction.RUN_ANCHOR
     assert decision.reason is SourceFirstReason.ANCHOR_MAY_EMIT_STRONG_CERTIFICATES
+
+
+def test_anchor_certificate_capability_must_be_explicit() -> None:
+    problem = _problem()
+    with pytest.raises(TypeError, match="anchor_may_emit_strong_certificates"):
+        decide_source_first(problem, (_certified(problem, "4"),))

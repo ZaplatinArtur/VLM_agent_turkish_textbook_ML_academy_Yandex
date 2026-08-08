@@ -12,12 +12,16 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import tempfile
+import unicodedata
 from pathlib import Path
 from typing import Any
 
 
 SCHEMA = "maxim-v7-source-first-speedup-v1"
+_HEX64 = re.compile(r"^[0-9a-f]{64}$")
+_WHITESPACE = re.compile(r"\s+")
 
 
 def _sha256(path: Path) -> str:
@@ -80,6 +84,97 @@ def _usable_source(row: dict[str, Any]) -> bool:
         and not row.get("error")
         and str(row.get("final_answer", "")).strip()
     )
+
+
+def _answer_fingerprint(value: object) -> str:
+    canonical = _WHITESPACE.sub(
+        " ", unicodedata.normalize("NFKC", str(value or ""))
+    ).strip()
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _stable_trace(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+
+
+def _validate_certificate(
+    task_id: str,
+    certificate: dict[str, Any],
+    candidate: dict[str, Any],
+) -> None:
+    checks = certificate.get("deterministic_checks")
+    trace = certificate.get("trace")
+    trace_checks = trace.get("checks") if isinstance(trace, dict) else None
+    expected_answer = _answer_fingerprint(candidate.get("final_answer"))
+    declared_trace = str(certificate.get("trace_fingerprint") or "")
+    actual_trace = hashlib.sha256(_stable_trace(trace)).hexdigest()
+    conditions = {
+        "status_pass": certificate.get("status") == "pass",
+        "strength_strong": certificate.get("strength") == "strong",
+        "input_bound": certificate.get("input_bound") is True,
+        "answer_bound": certificate.get("answer_bound") is True,
+        "input_fingerprint": bool(
+            _HEX64.fullmatch(str(certificate.get("input_fingerprint") or ""))
+        ),
+        "answer_fingerprint": certificate.get("answer_fingerprint")
+        == expected_answer,
+        "full_claim_coverage": float(certificate.get("claim_coverage", 0.0))
+        == 1.0,
+        "no_contradictions": int(certificate.get("contradiction_count", -1))
+        == 0,
+        "deterministic_checks": isinstance(checks, list)
+        and bool(checks)
+        and all(value is True for value in checks),
+        "verifier": bool(str(certificate.get("verifier") or "").strip()),
+        "trace_accepted": isinstance(trace, dict)
+        and trace.get("accepted") is True,
+        "trace_checks": isinstance(trace_checks, dict)
+        and bool(trace_checks)
+        and all(value is True for value in trace_checks.values()),
+        "trace_fingerprint": bool(_HEX64.fullmatch(declared_trace))
+        and declared_trace == actual_trace,
+    }
+    failed = [name for name, passed in conditions.items() if not passed]
+    if failed:
+        raise ValueError(f"invalid source certificate for {task_id}: {failed}")
+
+
+def _validated_stage(
+    manifest_path: Path,
+    repo_root: Path,
+) -> tuple[
+    dict[str, dict[str, Any]],
+    dict[str, dict[str, Any]],
+    dict[str, Any],
+    Path,
+    Path,
+]:
+    candidate_path, manifest = _artifact_from_manifest(
+        manifest_path, repo_root, "candidate"
+    )
+    certificate_path, certificate_manifest = _artifact_from_manifest(
+        manifest_path, repo_root, "certificates"
+    )
+    if certificate_manifest != manifest:
+        raise ValueError("resolver manifest changed between artifact reads")
+    candidate_rows = _jsonl(candidate_path)
+    certificate_rows = _jsonl(certificate_path)
+    usable = {
+        task_id: row for task_id, row in candidate_rows.items() if _usable_source(row)
+    }
+    expected = int(manifest.get("accepted_certificates", -1))
+    if len(certificate_rows) != expected or set(certificate_rows) != set(usable):
+        raise ValueError(
+            "certificate rows do not match usable source candidates or manifest count"
+        )
+    for task_id, certificate in certificate_rows.items():
+        _validate_certificate(task_id, certificate, usable[task_id])
+    return candidate_rows, certificate_rows, manifest, candidate_path, certificate_path
 
 
 def _usage(row: dict[str, Any], key: str) -> float:
@@ -168,14 +263,20 @@ def analyze(
         if _sha256(path) != expected:
             raise ValueError(f"frozen V7 hash mismatch: {path}")
 
-    main_candidate_path, main_manifest = _artifact_from_manifest(
-        main_manifest_path, repo_root, "candidate"
-    )
-    history_candidate_path, history_manifest = _artifact_from_manifest(
-        history_manifest_path, repo_root, "candidate"
-    )
-    main_rows = _jsonl(main_candidate_path)
-    history_rows = _jsonl(history_candidate_path)
+    (
+        main_rows,
+        main_certificates,
+        main_manifest,
+        main_candidate_path,
+        main_certificate_path,
+    ) = _validated_stage(main_manifest_path, repo_root)
+    (
+        history_rows,
+        history_certificates,
+        history_manifest,
+        history_candidate_path,
+        history_certificate_path,
+    ) = _validated_stage(history_manifest_path, repo_root)
     final_rows = _jsonl(final_solver_path)
     expected_rows = int(profile["expected_rows"])
     if not all(len(rows) == expected_rows for rows in (main_rows, history_rows, final_rows)):
@@ -246,6 +347,7 @@ def analyze(
         },
         "claims": {
             "artifact_answer_equivalence_measured": True,
+            "certificate_artifacts_replayed": True,
             "online_wall_clock_speedup_measured": False,
             "source_lookup_cost_included": False,
             "accuracy_or_gold_read": False,
@@ -258,9 +360,27 @@ def analyze(
                 "path": str(main_manifest_path),
                 "sha256": _sha256(main_manifest_path),
             },
+            "main_candidate": {
+                "path": str(main_candidate_path),
+                "sha256": _sha256(main_candidate_path),
+            },
+            "main_certificates": {
+                "path": str(main_certificate_path),
+                "sha256": _sha256(main_certificate_path),
+                "rows": len(main_certificates),
+            },
             "history_manifest": {
                 "path": str(history_manifest_path),
                 "sha256": _sha256(history_manifest_path),
+            },
+            "history_candidate": {
+                "path": str(history_candidate_path),
+                "sha256": _sha256(history_candidate_path),
+            },
+            "history_certificates": {
+                "path": str(history_certificate_path),
+                "sha256": _sha256(history_certificate_path),
+                "rows": len(history_certificates),
             },
             "final_solver": {
                 "path": str(final_solver_path),
