@@ -1,4 +1,5 @@
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -13,6 +14,15 @@ def digest(path: Path) -> str:
 
 def rows(path: Path):
     return [json.loads(line) for line in path.open(encoding="utf-8") if line.strip()]
+
+
+def evaluator_module():
+    path = REPORT / "tools" / "evaluate.py"
+    spec = importlib.util.spec_from_file_location("holdout80_evaluate", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_frozen_manifest_is_intact_and_gold_free():
@@ -78,3 +88,27 @@ def test_opaque_resolver_inputs_do_not_leak_source_or_task_ids():
         assert len({row["input_id"] for row in inputs}) == expected_count
         assert digest(input_path) == seal["public_inputs_sha256"]
         assert all(not (forbidden & set(row)) for row in inputs)
+
+
+def test_overall_accuracy_is_fail_closed_for_every_incomplete_input_class():
+    evaluate = evaluator_module()
+    valid, reasons = evaluate.reportability(
+        manual_scored=20,
+        manual_required=20,
+        duplicates=[],
+        unknown=[],
+        missing=[],
+    )
+    assert valid is True
+    assert reasons == []
+
+    cases = (
+        {"manual_scored": 19, "duplicates": [], "unknown": [], "missing": []},
+        {"manual_scored": 20, "duplicates": ["x"], "unknown": [], "missing": []},
+        {"manual_scored": 20, "duplicates": [], "unknown": ["x"], "missing": []},
+        {"manual_scored": 20, "duplicates": [], "unknown": [], "missing": ["x"]},
+    )
+    for case in cases:
+        valid, reasons = evaluate.reportability(manual_required=20, **case)
+        assert valid is False
+        assert reasons

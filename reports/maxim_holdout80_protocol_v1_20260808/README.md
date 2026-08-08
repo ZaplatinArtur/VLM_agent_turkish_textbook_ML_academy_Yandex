@@ -107,3 +107,4 @@ python reports/maxim_holdout80_protocol_v1_20260808/tools/evaluate.py path/to/pr
 ```
 
 Evaluator отдельно показывает accuracy на 60 MCQ и не выпускает общую accuracy, пока нет 20 ручных оценок и полного набора task ID.
+При missing, duplicate, unknown task ID или неполной ручной разметке поля `overall.correct`, `overall.total` и `overall.accuracy` остаются `null`, `overall.reportable=false`, а процесс завершается с кодом `2`. Это сделано fail-closed: потребитель не должен случайно опубликовать частичную цифру, проигнорировав статус.
