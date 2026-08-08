@@ -19,6 +19,21 @@ python -m venv .venv
 .\.venv\Scripts\python.exe main.py
 ```
 
+## Демонстрация финального V7 trace
+
+Отдельный read-only экран показывает 274 joined-задачи, сохранённые шаги решения,
+маршрут, official-source certificates, сравнение anchor/challenger/final и честные
+границы метрик. Он не запускает модель и не изменяет SQLite-базу приложения.
+
+```powershell
+.\.venv\Scripts\python.exe trace_viewer.py `
+  --artifact-root C:\path\to\VLM_agent_turkish_textbook_basic_rag
+```
+
+Перед демонстрацией проверьте bundle командой `trace_viewer.py --validate-only`.
+Полное описание, режим скриншотов и трактовка source-first профиля находятся в
+[`vlm_trace_viewer/README.md`](vlm_trace_viewer/README.md).
+
 ## Синхронизация без интерфейса
 
 Перед первой синхронизацией задайте адрес источника через настройки приложения
