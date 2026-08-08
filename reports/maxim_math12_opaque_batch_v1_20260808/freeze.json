@@ -1,0 +1,80 @@
+{
+  "accuracy_claim": null,
+  "created_date": "2026-08-08",
+  "data_boundary": {
+    "clean_or_stress_batch_executed": false,
+    "forbidden_gold_selection_maps_evaluation_predictions_read": false,
+    "gpu_used": false,
+    "network_used": false,
+    "opaque_assets_processed_by_resolver": false,
+    "opaque_schema_samples_and_stress_readme_freeze_read": true,
+    "unit_tests_use_fake_bytes_and_fake_resolver_only": true
+  },
+  "dependency": {
+    "commit": "cb13b66156126b7a4ffab74450b62128b7b2ec92",
+    "core_file": {
+      "path": "src/evidence_os/math12_activity_source.py",
+      "sha256": "3a29fb9f497c420655bf7098ed54ce30419ad6bf9d37f6621edd813476f8edcd",
+      "size_bytes": 58292
+    },
+    "freeze_manifest": {
+      "manifest_projection_sha256": "2f9068d4822351fb8ea7183bfb816d6bf5f01e0aa548754127ae3f2426f0b24e",
+      "path": "reports/maxim_math12_activity_source_v1_20260808/freeze_manifest_v1_1.json",
+      "sha256": "23a5ed3b0f2d108d4d90fe5b6cab6e435fb74b27c3a7062eb5ecb4d2f95f6f1c",
+      "size_bytes": 9000
+    },
+    "frozen_profile_projection_sha256": "4630cd9c253feb9992f346e2f1b9620f5c99535f3c2f621e1f72fe06362f02f6",
+    "inventory": {
+      "inventory_projection_sha256": "2bf810400de721bb47f02974df47be44e93f87f6796eca09c7375d42c0398b2c",
+      "path": "reports/maxim_math12_activity_source_v1_20260808/inventory.json",
+      "sha256": "878ddb53cbf1f6ddfe5b332dc9f27a882caea557dccfbab3453546e106637ac5",
+      "size_bytes": 78093
+    },
+    "render_manifest": {
+      "path": "reports/maxim_math12_activity_source_v1_20260808/render_manifest.json",
+      "render_manifest_projection_sha256": "d8a7c55d11a5d5affb0368d39ebda5e3d4c6f5fd79d1b6ae8f367af827846b66",
+      "sha256": "903039725bb5c9e3894a928fa124153b0c2b5ec4b81fb06ae615344f49eff26a",
+      "size_bytes": 16341
+    },
+    "required_public_api": [
+      "FROZEN_VISUAL_THRESHOLDS",
+      "FROZEN_SIFT_RUNTIME_PROFILE",
+      "resolve_math12_image_bytes",
+      "verify_math12_source_certificate",
+      "extract_official_solution"
+    ],
+    "schema_version": "math12-source-adapter-freeze-v1.1"
+  },
+  "manifest_projection_sha256": "5cde2115ea4b01e8fff7380fe39a49effff4dc1613bd22d20c69363d7c1e34e5",
+  "runner_files": [
+    {
+      "path": "reports/maxim_math12_opaque_batch_v1_20260808/README.md",
+      "sha256": "cf84c88078c75f5909da9a1237c3674508001fc8e676ca28c04e15aa602357e6",
+      "size_bytes": 8588
+    },
+    {
+      "path": "scripts/run_math12_opaque_batch_v1.py",
+      "sha256": "3f5d9138b50c2388f5a9b4f8342c9855804170f407df72063084a2b297d0726a",
+      "size_bytes": 1606
+    },
+    {
+      "path": "src/evidence_os/math12_opaque_batch.py",
+      "sha256": "1bd954e49c718f875eb06120cb43292f8eaea979517c85243202ae9c5d35663f",
+      "size_bytes": 23943
+    },
+    {
+      "path": "tests/test_math12_opaque_batch.py",
+      "sha256": "07a3503fbcc40a2435365ba0affd99742a06779e37415a128b8066a3f0b6977b",
+      "size_bytes": 15054
+    }
+  ],
+  "schema_version": "math12-opaque-batch-runner-freeze-v1",
+  "scope": "opaque_source_resolution_orchestration_only_no_evaluation",
+  "status": "unit_only_frozen_no_opaque_batch_run",
+  "tests": {
+    "combined_runner_and_math12_source": "25 passed, 1 skipped",
+    "pinned_python": "3.12.13",
+    "runner_unit": "11 passed",
+    "skip_scope": "pre_existing_opt_in_real_pdf_integration"
+  }
+}
