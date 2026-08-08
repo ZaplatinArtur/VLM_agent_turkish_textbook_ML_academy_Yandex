@@ -1,0 +1,179 @@
+{
+  "schema_version": "math12-source-adapter-freeze-candidate-v1",
+  "status": "freeze_candidate_not_yet_committed",
+  "created_date": "2026-08-08",
+  "scope": "source_binding_and_official_solution_extraction_only",
+  "selection_disclosure": "Math12 family selection was post-hoc after five dev inputs; dev5 is replay/alignment evidence, not a transfer estimate or accuracy result.",
+  "required_next_action": "Commit this exact code/profile before any unseen transfer run; do not tune after observing transfer outputs.",
+  "holdout_status_for_this_build": "not_read_not_run",
+  "correctness_status": "not_computed",
+  "accuracy_claim": null,
+  "network_used": false,
+  "gpu_used": false,
+  "source": {
+    "pdf_sha256": "16d650177e62dc04b9a8b42fd7aafc3c1a8a38ec8c7040f92d5a26b120cde548",
+    "pdf_size_bytes": 36032401,
+    "page_count": 182,
+    "activities": 95,
+    "content_page_range": [4, 130],
+    "official_key_page_range": [131, 179],
+    "inventory_projection_sha256": "154924c9495d47c2ff5b04da0cb5b420d61d22a13c7081ce1e48ca4d6be9aee2",
+    "render_manifest_projection_sha256": "6f6e406a1eaf20e43d1384bbceda157602dd81258081e9c6eebb066dd8aa708c"
+  },
+  "frozen_profile": {
+    "schema_version": "math12-frozen-source-profile-v1",
+    "candidate_page_policy": "all_content_pages_no_shortlist",
+    "content_page_range": [4, 130],
+    "poppler_version": "26.05.0",
+    "render_color_mode": "gray_png",
+    "visual_thresholds": {
+      "min_good_matches": 50,
+      "min_inliers": 40,
+      "min_inlier_ratio": 0.65,
+      "min_task_hull_fraction": 0.3,
+      "max_median_reprojection_error": 1.0,
+      "min_mapped_inside_fraction": 0.98,
+      "max_scale_anisotropy": 1.15,
+      "min_rank_score_margin": 10.0,
+      "min_rank_score_ratio": 5.0
+    },
+    "sift_runtime_profile": {
+      "render_dpi": 144,
+      "nfeatures": 12000,
+      "contrast_threshold": 0.02,
+      "edge_threshold": 12.0,
+      "ratio_test": 0.72,
+      "ransac_reprojection_px": 4.0,
+      "ransac_max_iters": 5000,
+      "ransac_confidence": 0.999,
+      "rng_seed": 19870511,
+      "expected_opencv_version": "5.0.0"
+    },
+    "profile_projection_sha256": "fe438bfe3d151edab60f8b96d9b90f5a6bf45456f9449c71ff07fa2cc9a2ddbd"
+  },
+  "code": {
+    "combined_code_projection_sha256": "1c28f56870f6ced84c942352bb8d11b0a16c3b19f3bead5a1b25c092492e4f38",
+    "files": [
+      {
+        "path": "src/evidence_os/math12_activity_source.py",
+        "sha256": "6239b1ce0cc57da756629cb2e59c07a638fb68c4470984759a7c8f72b6f33d6a",
+        "size_bytes": 49740
+      },
+      {
+        "path": "scripts/math12_official_source_adapter.py",
+        "sha256": "6bae47edfa16031220fa82c8bbedc5104d4ce60c6469d50072792c391d5f06b0",
+        "size_bytes": 9001
+      },
+      {
+        "path": "scripts/audit_math12_dev5_source_bindings.py",
+        "sha256": "2b1279ab43c2acd8c6373b5b0b820f94d7a1c1bfe9ef4aff08a8e47d1bbd081f",
+        "size_bytes": 5268
+      },
+      {
+        "path": "tests/test_math12_activity_source.py",
+        "sha256": "ef4a99f56727673fc1fe211b77074e57b6975bc8d603ea722fb9d17eb6e348b4",
+        "size_bytes": 11418
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "reports/maxim_math12_activity_source_v1_20260808/inventory.json",
+      "sha256": "ee7c720ec8679bf317b2e5b46a755bc280031a367d3316fc859f770a99508d44",
+      "size_bytes": 78093
+    },
+    {
+      "path": "tmp/maxim_math12_activity_source_v1_20260808/renders_144_gray_png/render_manifest.json",
+      "sha256": "06834a3b605f4bfa29477342c9b51d153e29792e9774270574a4f8f362886ceb",
+      "size_bytes": 16341
+    },
+    {
+      "path": "reports/maxim_math12_activity_source_v1_20260808/dev5_source_binding_audit.json",
+      "sha256": "c22b47d8af555dbce19a999012842d1663b26f225ad1fc1475968fa5d1d41ee0",
+      "size_bytes": 3375,
+      "projection_sha256": "cff121df9c3c72c96595574a7165485e51787603559ee2c1b739fea032447ed1"
+    },
+    {
+      "path": "reports/maxim_math12_activity_source_v1_20260808/REPORT_RU.md",
+      "sha256": "0c8c147f08e1c0788bfed64ab36eeda2b5f20cfd4fd2909cd71e553e4e4224b0",
+      "size_bytes": 15063
+    }
+  ],
+  "dev_certificates": [
+    {
+      "label": "val_0054",
+      "resolved_content_page": 7,
+      "resolved_activity": 3,
+      "file_sha256": "b051574117f09b33c4684cd29b4fd211b068ccbd5a0dc6f15c90f058daf92fa9",
+      "certificate_projection_sha256": "eada18cab8433bbbdc17d8d240cc536a05803a79d3381d6353f1f8ac39d47c8c"
+    },
+    {
+      "label": "val_0055",
+      "resolved_content_page": 24,
+      "resolved_activity": 17,
+      "file_sha256": "2e86683f1514d7d6589e25d8bddd97b213ee92e7f30a7df298933d236a402c5e",
+      "certificate_projection_sha256": "6ed4e97f33e5bfa6070c208ed200fafb135015cf9aa43eac1082665500e0f247"
+    },
+    {
+      "label": "val_0056",
+      "resolved_content_page": 119,
+      "resolved_activity": 88,
+      "file_sha256": "ef9c91359314e4031f3313614b7ec476b54816f00b073a6f0ee6b87680ebb5d3",
+      "certificate_projection_sha256": "23c6a102426ec00b4937274e7c0728daa477ffdfb7ab65f9062c82c0706dbdbc"
+    },
+    {
+      "label": "val_0057",
+      "resolved_content_page": 60,
+      "resolved_activity": 43,
+      "file_sha256": "3133417fbf8f0c980d1285d88c46aa7bc1d2b9b614472a022e4eafb18cd98b6d",
+      "certificate_projection_sha256": "d89d32d1fad20aee36cc43100c26b72de7aa5262c4f37a301d1b73a86069e8c1"
+    },
+    {
+      "label": "val_0058",
+      "resolved_content_page": 41,
+      "resolved_activity": 31,
+      "file_sha256": "ca7eb4ecd495fc2ae6f61f621f1fa3139c059ab6461a5e246422957240cafba6",
+      "certificate_projection_sha256": "3e64d27c124237b9ddd830606aacb02d80b38d19437bdd1f135764a5dd1cc165"
+    }
+  ],
+  "official_solution_records": [
+    {
+      "label": "val_0054",
+      "activity": 3,
+      "file_sha256": "8f1d841362d79a431145ab923aa15ebb8cd00b2672a2df72ba55a3ce507d09c4",
+      "answer_bound_certificate_projection_sha256": "9bcbfa35f5413f9f49e81911cb624bf1e7e1f1e0ddf2bbfd96d081c09a6e1e96"
+    },
+    {
+      "label": "val_0055",
+      "activity": 17,
+      "file_sha256": "a0809e123ccc761ac412f06bc4f0237449798edb96bba74b531047008cb1ff8e",
+      "answer_bound_certificate_projection_sha256": "8b199a437730d3e75176b38029365eb5b422c6f7b9239865bec871716034c8b2"
+    },
+    {
+      "label": "val_0056",
+      "activity": 88,
+      "file_sha256": "f21e778021043f322d3d664017d8e560331df261487ea1627db89534b13701c5",
+      "answer_bound_certificate_projection_sha256": "392cdb4983b7dfc946013bcf8a40f0c2e03cf5f9bff3f9da31123c3e361f2c0b"
+    },
+    {
+      "label": "val_0057",
+      "activity": 43,
+      "file_sha256": "841c2072a92d7250c8e5d8b0055a84f53dfcd7439294041790b6791ed6429eb1",
+      "answer_bound_certificate_projection_sha256": "3d75af20ed0e82149ce129183508252c80f09e4aad85370f8111c5b64b5d82fc"
+    },
+    {
+      "label": "val_0058",
+      "activity": 31,
+      "file_sha256": "06d5b2d73a9cb109dabf4bb9cbec97ce8de9e0fdd37cd391903617f0c51069dd",
+      "answer_bound_certificate_projection_sha256": "c2d2c030b3d9e4d409032a720027411bc58b544b11bf0de888d277edfe8e413d"
+    }
+  ],
+  "checks": {
+    "unit_fail_closed": "9 passed, 1 opt-in integration deselected",
+    "real_pdf_inventory_integration": "1 passed, 8 deselected, 121.86 seconds",
+    "dev_source_binding": "5 accepted, 5 audit matches",
+    "official_solution_extraction": "5 records, 5 pinned key projections",
+    "python_compile": "passed"
+  },
+  "manifest_projection_sha256": "ce3e0534dfc734087513fe97de2f67ef33ba9a577a13b8ff423e2ba14102d0b8"
+}
