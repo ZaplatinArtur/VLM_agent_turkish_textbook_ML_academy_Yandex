@@ -7,6 +7,8 @@ param(
 
     [string]$Task = "val_0178",
 
+    [switch]$Holdout,
+
     [switch]$Metrics
 )
 
@@ -118,8 +120,10 @@ Run from ${appDir}:
 }
 
 $launchArgs = @($viewer, "--artifact-root", $resolvedArtifacts, "--task", $Task)
-if ($Metrics) {
+if ($Holdout) {
     $launchArgs += @("--screenshot-tab", "1")
+} elseif ($Metrics) {
+    $launchArgs += @("--screenshot-tab", "2")
 }
 
 $ErrorActionPreference = "Continue"

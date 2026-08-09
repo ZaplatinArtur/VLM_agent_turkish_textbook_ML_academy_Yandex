@@ -41,6 +41,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from .holdout80 import Holdout80Summary, load_holdout80_summary
 from .model import PipelineStage, RunSummary, TaskTrace, TraceDataset
 from .style import TRACE_STYLESHEET
 
@@ -516,6 +517,299 @@ class SourceFirstProjectionChart(QWidget):
         if not self.summary.speed_source_lookup_cost_included:
             caveat += " · lookup cost исключён"
         painter.drawText(QRectF(18, 174, self.width() - 36, 20), caveat)
+
+
+class HoldoutComparisonChart(QWidget):
+    """Raw, corrected-inclusive and valid-task views on one fixed scale."""
+
+    def __init__(self, summary: Holdout80Summary):
+        super().__init__()
+        self.summary = summary
+        self.setMinimumHeight(250)
+
+    def paintEvent(self, event) -> None:  # type: ignore[override]
+        super().paintEvent(event)
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.fillRect(self.rect(), QColor("#0d1924"))
+        painter.setPen(QColor("#f4f9fd"))
+        painter.setFont(QFont("Segoe UI", 11, QFont.Weight.DemiBold))
+        painter.drawText(
+            QRectF(20, 14, self.width() - 40, 26),
+            "Raw и protocol erratum — две отдельные проекции",
+        )
+        painter.setPen(QColor("#8194a7"))
+        painter.setFont(QFont("Segoe UI", 8))
+        painter.drawText(
+            QRectF(20, 41, self.width() - 40, 22),
+            "официальная перепроверка не перезаписывает frozen raw",
+        )
+
+        rows = (
+            ("RAW · FROZEN", self.summary.raw, "#f0ad62"),
+            ("ERRATUM · 80", self.summary.erratum_inclusive, "#b99cff"),
+            ("VALID · 79", self.summary.valid, "#4be1c3"),
+        )
+        label_width = min(178.0, max(128.0, self.width() * 0.25))
+        bar_left = label_width + 22.0
+        bar_width = max(150.0, self.width() - bar_left - 112.0)
+        for index, (label, score, color) in enumerate(rows):
+            y = 82.0 + index * 51.0
+            painter.setFont(QFont("Segoe UI", 8, QFont.Weight.DemiBold))
+            painter.setPen(QColor("#9db0c0"))
+            painter.drawText(
+                QRectF(20, y - 3, label_width - 10, 25),
+                Qt.AlignmentFlag.AlignVCenter,
+                label,
+            )
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.setBrush(QColor("#162738"))
+            painter.drawRoundedRect(QRectF(bar_left, y + 2, bar_width, 16), 8, 8)
+            painter.setBrush(QColor(color))
+            painter.drawRoundedRect(
+                QRectF(bar_left, y + 2, bar_width * score.accuracy, 16), 8, 8
+            )
+            painter.setPen(QColor("#eef7fc"))
+            painter.setFont(QFont("Segoe UI", 9, QFont.Weight.DemiBold))
+            painter.drawText(
+                QRectF(bar_left + bar_width + 10, y - 4, 88, 26),
+                Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter,
+                f"{score.accuracy:.2%}",
+            )
+            painter.setPen(QColor("#71869a"))
+            painter.setFont(QFont("Segoe UI", 8))
+            painter.drawText(
+                QRectF(bar_left, y + 22, bar_width, 19),
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter,
+                f"{score.correct}/{score.total} · {score.label}",
+            )
+
+
+def _chronology_card(step: dict[str, Any]) -> QFrame:
+    card = QFrame()
+    card.setObjectName("ChronologyCard")
+    layout = QHBoxLayout(card)
+    layout.setContentsMargins(10, 8, 10, 8)
+    layout.setSpacing(9)
+    number = QLabel(f"{int(step['step']):02d}")
+    number.setObjectName("TimelineNumber")
+    number.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    number.setFixedSize(34, 34)
+    text_box = QVBoxLayout()
+    text_box.setSpacing(1)
+    title = QLabel(str(step["title"]))
+    title.setObjectName("TimelineTitle")
+    detail = QLabel(str(step["detail"]))
+    detail.setObjectName("Tiny")
+    detail.setWordWrap(True)
+    text_box.addWidget(title)
+    text_box.addWidget(detail)
+    layout.addWidget(number)
+    layout.addLayout(text_box, 1)
+    return card
+
+
+class Holdout80Page(QWidget):
+    """Public aggregate only; deliberately contains no private holdout rows."""
+
+    def __init__(self, summary: Holdout80Summary):
+        super().__init__()
+        self.summary = summary
+        root = QVBoxLayout(self)
+        root.setContentsMargins(14, 14, 14, 14)
+        root.setSpacing(10)
+
+        heading = QHBoxLayout()
+        title_box = QVBoxLayout()
+        title = QLabel("Holdout80 · source evidence без подмены метрики")
+        title.setObjectName("SectionTitle")
+        subtitle = QLabel(
+            "80 новых задач из уже доступных учебников: task-disjoint, но не book-disjoint. "
+            "Здесь измеряется поиск и привязка официального источника — не качество ответа "
+            "модели и не математическое reasoning."
+        )
+        subtitle.setObjectName("Subtle")
+        subtitle.setWordWrap(True)
+        title_box.addWidget(title)
+        title_box.addWidget(subtitle)
+        heading.addLayout(title_box, 1)
+        heading.addWidget(_badge("SEALED BEFORE GOLD", "good"))
+        heading.addWidget(_badge("AUDIT · PASS", "info"))
+        heading.addWidget(_badge("SOURCE ≠ QA", "warn"))
+        root.addLayout(heading)
+
+        cards = QHBoxLayout()
+        cards.addWidget(
+            MetricCard(
+                "Raw protocol",
+                f"{summary.raw.accuracy:.2%}",
+                f"{summary.raw.correct}/{summary.raw.total} · immutable",
+                "#f0ad62",
+            )
+        )
+        cards.addWidget(
+            MetricCard(
+                "Erratum inclusive",
+                f"{summary.erratum_inclusive.accuracy:.2%}",
+                f"{summary.erratum_inclusive.correct}/{summary.erratum_inclusive.total} · denominator retained",
+                "#b99cff",
+            )
+        )
+        cards.addWidget(
+            MetricCard(
+                "Valid tasks",
+                f"{summary.valid.accuracy:.2%}",
+                f"{summary.valid.correct}/{summary.valid.total} · one invalid excluded",
+                "#4be1c3",
+            )
+        )
+        v7_correct = int(summary.v7_reference["correct"])
+        v7_total = int(summary.v7_reference["total"])
+        cards.addWidget(
+            MetricCard(
+                "V7 QA · separate",
+                f"{v7_correct / v7_total:.2%}",
+                f"{v7_correct}/{v7_total} · development replay",
+                "#71aef5",
+            )
+        )
+        root.addLayout(cards)
+
+        upper = QSplitter(Qt.Orientation.Horizontal)
+        chart_panel = QFrame()
+        chart_panel.setObjectName("Panel")
+        chart_layout = QVBoxLayout(chart_panel)
+        chart_layout.setContentsMargins(4, 4, 4, 4)
+        chart_layout.addWidget(HoldoutComparisonChart(summary))
+        upper.addWidget(chart_panel)
+
+        subject_panel = QFrame()
+        subject_panel.setObjectName("Panel")
+        subject_layout = QVBoxLayout(subject_panel)
+        subject_layout.setContentsMargins(14, 12, 14, 12)
+        subject_title = QLabel("Предметные срезы")
+        subject_title.setObjectName("SectionTitle")
+        subject_layout.addWidget(subject_title)
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(18)
+        grid.setVerticalSpacing(8)
+        for column, label_text in enumerate(("ПРЕДМЕТ", "RAW", "VALID", "ЧТО ИЗМЕРЯЕМ")):
+            label = QLabel(label_text)
+            label.setObjectName("MetricLabel")
+            grid.addWidget(label, 0, column)
+        for row_index, row in enumerate(summary.subjects, start=1):
+            name = QLabel(row.subject)
+            name.setObjectName("TimelineTitle")
+            raw = QLabel(f"{row.raw_correct}/{row.raw_total}")
+            raw.setObjectName("Accent" if row.raw_correct == row.raw_total else "Danger")
+            valid = QLabel(f"{row.valid_correct}/{row.valid_total}")
+            valid.setObjectName("Success")
+            measurement = QLabel(row.measurement)
+            measurement.setObjectName("Tiny")
+            measurement.setWordWrap(True)
+            grid.addWidget(name, row_index, 0)
+            grid.addWidget(raw, row_index, 1)
+            grid.addWidget(valid, row_index, 2)
+            grid.addWidget(measurement, row_index, 3)
+        grid.setColumnStretch(3, 1)
+        subject_layout.addLayout(grid)
+        mcq = summary.mcq
+        mcq_note = QLabel(
+            f"MCQ: raw {mcq['raw_correct']}/{mcq['raw_total']} = "
+            f"{mcq['raw_correct'] / mcq['raw_total']:.2%}  →  "
+            f"official-key erratum {mcq['erratum_correct']}/{mcq['erratum_total']} = "
+            f"{mcq['erratum_correct'] / mcq['erratum_total']:.2%}  →  "
+            f"valid {mcq['valid_correct']}/{mcq['valid_total']} = 100%"
+        )
+        mcq_note.setObjectName("Subtle")
+        mcq_note.setWordWrap(True)
+        subject_layout.addWidget(mcq_note)
+        scope_note = QLabel(
+            "Math 20/20 — точность activity binding. Biology/Physics — exact-choice "
+            "lookup по официальному ключу. Эти числа нельзя складывать с QA как одну "
+            "reasoning-метрику."
+        )
+        scope_note.setObjectName("HoldoutCaveat")
+        scope_note.setWordWrap(True)
+        subject_layout.addWidget(scope_note)
+        subject_layout.addStretch(1)
+        upper.addWidget(subject_panel)
+        upper.setSizes([950, 850])
+        root.addWidget(upper)
+
+        lower = QSplitter(Qt.Orientation.Horizontal)
+        chronology_panel = QFrame()
+        chronology_panel.setObjectName("Panel")
+        chronology_layout = QVBoxLayout(chronology_panel)
+        chronology_layout.setContentsMargins(12, 10, 12, 10)
+        chronology_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        chronology_title = QLabel("Хронология целостности")
+        chronology_title.setObjectName("SectionTitle")
+        chronology_layout.addWidget(chronology_title)
+        chronology_grid = QGridLayout()
+        chronology_grid.setSpacing(7)
+        for index, step in enumerate(summary.chronology):
+            chronology_grid.addWidget(_chronology_card(step), index // 2, index % 2)
+        chronology_layout.addLayout(chronology_grid)
+        lower.addWidget(chronology_panel)
+
+        audit_panel = QFrame()
+        audit_panel.setObjectName("Panel")
+        audit_layout = QVBoxLayout(audit_panel)
+        audit_layout.setContentsMargins(14, 10, 14, 10)
+        audit_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        audit_heading = QHBoxLayout()
+        audit_title = QLabel("Errata и проверяемый след")
+        audit_title.setObjectName("SectionTitle")
+        audit_heading.addWidget(audit_title, 1)
+        audit_heading.addWidget(_badge("RAW PRESERVED", "warn"))
+        audit_layout.addLayout(audit_heading)
+        for item in summary.errata:
+            row = QFrame()
+            row.setObjectName("ErratumCard")
+            row_layout = QHBoxLayout(row)
+            row_layout.setContentsMargins(10, 7, 10, 7)
+            count = QLabel(str(item.affected_rows))
+            count.setObjectName("ErratumCount")
+            count.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            count.setFixedWidth(38)
+            text_box = QVBoxLayout()
+            text_box.setSpacing(1)
+            finding = QLabel(item.finding)
+            finding.setObjectName("TimelineTitle")
+            finding.setWordWrap(True)
+            treatment = QLabel(item.treatment)
+            treatment.setObjectName("Tiny")
+            treatment.setWordWrap(True)
+            text_box.addWidget(finding)
+            text_box.addWidget(treatment)
+            row_layout.addWidget(count)
+            row_layout.addLayout(text_box, 1)
+            audit_layout.addWidget(row)
+
+        hashes = summary.integrity
+        hash_label = QLabel(
+            "manifest  " + hashes["selection_manifest_sha256"][:16] + "…   "
+            "gold  " + hashes["sealed_gold_sha256"][:16] + "…\n"
+            "MCQ output  " + hashes["mcq_prediction_sha256"][:16] + "…   "
+            "Math seal  " + hashes["math_output_seal_sha256"][:16] + "…\n"
+            "public summary projection  " + summary.projection_sha256
+        )
+        hash_label.setObjectName("HashTrace")
+        hash_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        hash_label.setWordWrap(True)
+        hash_label.setMinimumHeight(60)
+        audit_layout.addWidget(hash_label)
+        audit_scope = QLabel(
+            "PASS: aggregate arithmetic, official-PDF key alignment и классификация errata. "
+            "Приватные строки и ответы в приложение не встроены."
+        )
+        audit_scope.setObjectName("Success")
+        audit_scope.setWordWrap(True)
+        audit_layout.addWidget(audit_scope)
+        lower.addWidget(audit_panel)
+        lower.setSizes([1040, 760])
+        root.addWidget(lower, 1)
 
 
 class TaskDetail(QWidget):
@@ -1197,9 +1491,14 @@ class MetricsPage(QWidget):
 
 
 class TraceViewerWindow(QMainWindow):
-    def __init__(self, dataset: TraceDataset):
+    def __init__(
+        self,
+        dataset: TraceDataset,
+        holdout80: Holdout80Summary | None = None,
+    ):
         super().__init__()
         self.dataset = dataset
+        self.holdout80 = holdout80 or load_holdout80_summary()
         self.setWindowTitle("VLM Trace · V7 Evidence OS")
         self.resize(1860, 1050)
         self.setMinimumSize(1280, 760)
@@ -1208,7 +1507,8 @@ class TraceViewerWindow(QMainWindow):
         self.tabs = QTabWidget()
         self.explorer = TraceExplorer(dataset)
         self.tabs.addTab(self.explorer, "Trace explorer")
-        self.tabs.addTab(MetricsPage(dataset), "Метрики и границы")
+        self.tabs.addTab(Holdout80Page(self.holdout80), "Holdout80 · source evidence")
+        self.tabs.addTab(MetricsPage(dataset), "V7 · метрики и границы")
         self.setCentralWidget(self.tabs)
         status = QStatusBar()
         status.showMessage(
@@ -1234,7 +1534,8 @@ class TraceViewerWindow(QMainWindow):
         spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         toolbar.addWidget(spacer)
         toolbar.addWidget(_badge("OFFLINE", "good"))
-        toolbar.addWidget(_badge("DEV REPLAY", "warn"))
+        toolbar.addWidget(_badge("H80 · SEALED", "good"))
+        toolbar.addWidget(_badge("V7 · DEV REPLAY", "warn"))
         toolbar.addWidget(
             _badge(
                 f"V7 · {self.dataset.summary.correct}/{self.dataset.summary.rows}",

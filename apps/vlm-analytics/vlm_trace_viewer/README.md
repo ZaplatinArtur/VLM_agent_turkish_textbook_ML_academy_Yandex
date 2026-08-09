@@ -38,7 +38,9 @@ cd C:\Users\kmaxc\PycharmProjects\VLM_Analytics_App
   --screenshot artifacts\trace-viewer-smoke.png
 ```
 
-Для снимка страницы с общими метриками добавьте `--screenshot-tab 1`.
+По умолчанию приложение открывает новую вкладку `Holdout80 · source evidence`.
+Для снимка trace explorer используйте `--screenshot-tab 0`, для Holdout80 —
+`--screenshot-tab 1`, для прежней страницы V7 — `--screenshot-tab 2`.
 Для снимка маршрута или сертификата используйте соответственно
 `--detail-tab 1` или `--detail-tab 2`.
 
@@ -60,6 +62,24 @@ cd C:\Users\kmaxc\PycharmProjects\VLM_Analytics_App
   сильных source shortcuts, эквивалентных финальным V7-ответам; потенциально
   устраняется `44.84%` записанной latency reasoning-модели и `46.98%` её input
   tokens.
+
+Отдельная вкладка Holdout80 показывает только замороженный публичный aggregate:
+
+- raw frozen-protocol source-evidence: `71/80 = 0.8875`;
+- official-key erratum с исходным знаменателем: `79/80 = 0.9875`;
+- срез по 79 валидным заданиям: `79/79 = 1.0000`;
+- Math source-activity binding `20/20`, Biology lookup `30/30`, Physics raw
+  `21/30` и valid `29/29`;
+- хронологию freeze → blind run → output seal → raw score → independent audit →
+  отдельный erratum;
+- два дефекта протокола: 8 перепутанных строк sealed gold и одно открытое задание,
+  ошибочно объявленное тестом A–E.
+
+Эта вкладка не загружает приватные строки holdout. Публичный JSON содержит только
+агрегаты и SHA-256 связей, а loader сверяет его каноническую проекцию fail-closed.
+Raw не заменяется исправленным числом. На экране отдельно стоит V7 QA
+`242/274 = 0.883212`: это development replay и другая метрика. Holdout80 здесь
+измеряет source lookup/source binding, а не QA или правильность рассуждения.
 
 Подсветка OCR-блоков не называется attention модели. Это честная визуализация:
 сохранённый шаг решения эвристически сопоставляется с сохранённым OCR-блоком.

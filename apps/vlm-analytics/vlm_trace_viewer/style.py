@@ -26,17 +26,47 @@ QLabel#Success { color: #67e8b2; font-weight: 650; }
 QLabel#Danger { color: #ff8290; font-weight: 650; }
 QLabel#Accent { color: #70b7ff; font-weight: 650; }
 QFrame#Panel, QFrame#MetricCard, QFrame#AnswerCard, QFrame#EvidenceCard,
-QFrame#CompareCard, QFrame#NoticeCard {
+QFrame#CompareCard, QFrame#NoticeCard, QFrame#ChronologyCard,
+QFrame#ErratumCard {
     background: #0d1924;
     border: 1px solid #203244;
     border-radius: 12px;
 }
 QFrame#MetricCard { min-height: 78px; }
 QFrame#NoticeCard { background: #101b25; border-color: #2d4256; }
+QFrame#ChronologyCard { background: #0f1d29; border-color: #1d3448; border-radius: 9px; }
+QFrame#ErratumCard { background: #111d28; border-color: #314358; border-radius: 9px; }
 QFrame#AnswerCard { background: #0f1d29; }
 QLabel#MetricLabel { color: #7f93a7; font-size: 8.5pt; font-weight: 650; }
 QLabel#MetricValue { color: #ffffff; font-size: 22pt; font-weight: 750; }
 QLabel#MetricHint { color: #6f8498; font-size: 8pt; }
+QLabel#TimelineNumber {
+    color: #4be1c3;
+    background: #12372e;
+    border: 1px solid #205e4d;
+    border-radius: 17px;
+    font-size: 9pt;
+    font-weight: 750;
+}
+QLabel#TimelineTitle { color: #eaf3fa; font-size: 9pt; font-weight: 650; }
+QLabel#ErratumCount { color: #ffd68a; font-size: 18pt; font-weight: 750; }
+QLabel#HashTrace {
+    color: #71869a;
+    background: #09141e;
+    border: 1px solid #1c3042;
+    border-radius: 7px;
+    padding: 7px;
+    font-family: "Cascadia Mono";
+    font-size: 7.5pt;
+}
+QLabel#HoldoutCaveat {
+    color: #ffd68a;
+    background: #2b2215;
+    border: 1px solid #5a4624;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 8.5pt;
+}
 QLabel#TaskTitle { color: #ffffff; font-size: 16pt; font-weight: 720; }
 QTextBrowser#AnswerValue {
     color: #4be1c3;

@@ -35,7 +35,15 @@ python -m venv .venv
 [`vlm_trace_viewer/README.md`](vlm_trace_viewer/README.md). Готовый Windows launcher и
 трёхминутный сценарий показа описаны в [`DEMO_GUIDE_RU.md`](DEMO_GUIDE_RU.md).
 
+В отдельной вкладке Holdout80 показан честный source-evidence aggregate: неизменный
+raw `71/80`, отдельный official-key erratum `79/80` и `79/79` по валидным строкам.
+Он явно отделён от V7 QA `242/274`: source lookup/binding не выдаётся за качество
+ответа или reasoning. В приложение встроена только fail-closed публичная сводка с
+хешами, без приватных строк holdout.
+
 ![VLM Trace — сохранённый V7 trace](docs/assets/trace-viewer-final.png)
+
+![VLM Trace — Holdout80 source evidence](docs/assets/holdout80-source-evidence.png)
 
 ## Синхронизация без интерфейса
 
