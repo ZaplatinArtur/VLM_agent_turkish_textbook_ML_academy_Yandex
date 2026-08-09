@@ -5,11 +5,14 @@ from pathlib import Path
 import pytest
 
 from vlm_trace_viewer.adapter import ArtifactError, discover_artifact_root
+from vlm_trace_viewer.nine_b_adapter import NineBV7ArtifactAdapter
+from vlm_trace_viewer.replay_aggregate import load_frozen_9b_comparison
 from vlm_trace_viewer.selector_wave import (
     COMPARISON,
     SelectorWaveAdapter,
     _declared_path_matches,
     _safe_manifest_path,
+    build_active_selector_dataset,
 )
 
 
@@ -28,6 +31,8 @@ def test_real_selector_wave_is_bound_to_240_and_seven_canonical_milestones() -> 
     assert summary.rows == 274
     assert summary.math_correct == 109
     assert summary.history_correct == 10
+    assert (summary.deterministic_correct, summary.deterministic_rows) == (158, 177)
+    assert (summary.image_correct, summary.image_rows) == (82, 97)
     assert summary.fixes == 2
     assert summary.regressions == 0
     assert summary.passthrough_rows == 272
@@ -52,6 +57,37 @@ def test_selector_adapter_fails_closed_on_a_frozen_hash_change(
     monkeypatch.setattr(selector_wave, "_sha256", corrupt_comparison)
     with pytest.raises(ArtifactError, match="frozen hash mismatch"):
         SelectorWaveAdapter(root).load()
+
+
+def test_active_analytics_projects_exactly_two_selector_fixes() -> None:
+    root = _real_root_or_skip()
+    selector = SelectorWaveAdapter(root).load()
+    source_v7 = NineBV7ArtifactAdapter(
+        load_frozen_9b_comparison(root / COMPARISON),
+        display_asset_root=root,
+    ).load()
+
+    active = build_active_selector_dataset(source_v7, selector)
+
+    assert (active.summary.correct, active.summary.rows) == (240, 274)
+    assert active.summary.accuracy == pytest.approx(0.8759124087591241)
+    assert (active.summary.math_correct, active.summary.math_rows) == (109, 139)
+    assert active.summary.by_subject["History"] == {
+        "n": 10,
+        "new_correct": 10,
+        "new_accuracy": 1.0,
+    }
+    changed = {
+        task.task_id: task
+        for task in active.tasks
+        if "selector_v1_2" in task.raw
+    }
+    assert {task_id: task.final_answer for task_id, task in changed.items()} == {
+        "val_0089": "D",
+        "val_0251": "B",
+    }
+    assert all(task.correct for task in changed.values())
+    assert sum(task.correct for task in active.tasks) == 240
 
 
 @pytest.mark.parametrize(

@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 
 from .adapter import ArtifactError, discover_artifact_root
+from .model import TraceDataset
 
 
 MODEL = "Qwen/Qwen3.5-9B"
@@ -129,6 +130,113 @@ class SelectorWaveSummary:
     @property
     def accuracy(self) -> float:
         return self.correct / self.rows
+
+
+def build_active_selector_dataset(
+    source_v7: TraceDataset,
+    selector: SelectorWaveSummary,
+) -> TraceDataset:
+    """Project the audited selector decisions onto the Source V7 task trace.
+
+    The Source V7 artifacts stay immutable. Only the two hash-bound selector
+    decisions are overlaid, so task filters and the active aggregate cannot
+    disagree. The original task trace remains embedded in ``raw`` and the UI
+    labels its recorded reasoning as Source V7 evidence rather than selector
+    reasoning.
+    """
+
+    if (source_v7.summary.correct, source_v7.summary.rows) != (238, 274):
+        raise ArtifactError("active selector projection requires Source V7=238/274")
+    if (selector.correct, selector.rows, selector.fixes, selector.regressions) != (
+        240,
+        274,
+        2,
+        0,
+    ):
+        raise ArtifactError("active selector projection requires audited 240/274")
+
+    changes = {task.task_id: task for task in selector.tasks}
+    if set(changes) != {"val_0089", "val_0251"}:
+        raise ArtifactError("active selector projection has an unexpected task set")
+
+    projected_tasks = []
+    for task in source_v7.tasks:
+        decision = changes.get(task.task_id)
+        if decision is None:
+            projected_tasks.append(task)
+            continue
+        if task.correct:
+            raise ArtifactError(f"{task.task_id}: selector fix must start incorrect")
+        if task.subject != decision.subject:
+            raise ArtifactError(f"{task.task_id}: selector subject mismatch")
+        if task.final_answer != decision.anchor_answer:
+            raise ArtifactError(f"{task.task_id}: selector anchor mismatch")
+
+        selector_trace = {
+            **asdict(decision),
+            "source_v7_final_answer": task.final_answer,
+            "source_v7_final_origin": task.final_origin,
+            "source_v7_decision_action": task.decision_action,
+            "source_v7_decision_reason": task.decision_reason,
+            "claim_boundary": (
+                "recorded reasoning belongs to Source V7; selector evidence is "
+                "vote/provenance only and is not hidden chain-of-thought"
+            ),
+        }
+        projected_tasks.append(
+            replace(
+                task,
+                final_answer=decision.selected_answer,
+                challenger_answer=decision.selected_answer,
+                correct=True,
+                score_source="Baseline Selector v1.2 frozen score",
+                score_method="three preregistered groups unanimous",
+                transition="wrong->correct",
+                final_origin="Baseline Selector v1.2",
+                decision_action="selector_replace",
+                decision_reason=decision.reason,
+                raw={**task.raw, "selector_v1_2": selector_trace},
+            )
+        )
+
+    by_subject = {
+        subject: dict(metrics)
+        for subject, metrics in source_v7.summary.by_subject.items()
+    }
+    expected_subjects = {
+        "Math": (selector.math_correct, selector.math_rows),
+        "History": (selector.history_correct, selector.history_rows),
+    }
+    for subject, (correct, rows) in expected_subjects.items():
+        metrics = by_subject.get(subject)
+        if metrics is None or int(metrics.get("n") or 0) != rows:
+            raise ArtifactError(f"active selector {subject} slice mismatch")
+        metrics["new_correct"] = correct
+        metrics["new_accuracy"] = correct / rows
+
+    projected_summary = replace(
+        source_v7.summary,
+        label="Baseline Selector v1.2 · audited all-9B development result",
+        correct=selector.correct,
+        accuracy=selector.accuracy,
+        math_correct=selector.math_correct,
+        math_accuracy=selector.math_correct / selector.math_rows,
+        pipeline_provenance="9B audited selector v1.2 over Source V7",
+        by_subject=by_subject,
+        limitations=source_v7.summary.limitations
+        + (
+            "Active headline is the frozen one-shot selector development layer; Source V7 remains the seven-step lineage endpoint.",
+            "Only val_0089 and val_0251 are selector replacements; their recorded reasoning remains Source V7 reasoning.",
+        ),
+    )
+    projected = TraceDataset(
+        summary=projected_summary,
+        tasks=tuple(projected_tasks),
+        artifact_root=source_v7.artifact_root,
+        source_files=source_v7.source_files + selector.verified_files,
+    )
+    projected.validate()
+    return projected
 
 
 MILESTONE_SPECS = (

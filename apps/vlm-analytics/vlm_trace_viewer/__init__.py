@@ -23,6 +23,7 @@ from .selector_wave import (
     SelectorTaskProvenance,
     SelectorWaveAdapter,
     SelectorWaveSummary,
+    build_active_selector_dataset,
 )
 
 __all__ = [
@@ -42,6 +43,7 @@ __all__ = [
     "TaskTrace",
     "TraceDataset",
     "V7ArtifactAdapter",
+    "build_active_selector_dataset",
     "discover_artifact_root",
     "empty_milestone_schema",
     "intermediate_timeline_schema",

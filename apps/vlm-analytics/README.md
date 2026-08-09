@@ -66,11 +66,23 @@ provenance двух замен (`val_0089`, `val_0251`) по SHA-256. На эк�
 и 97 image строк. Post-score repair `val_0223` вынесен в отдельный null-result:
 content изменился, но score остался `240 → 240`; число 241 не заявляется.
 
+Когда этот bundle прошёл проверку, основные вкладки задач и аналитики показывают
+selector как активный all-9B результат: `240/274 = 87.5912%`, Math `109/139`,
+History `10/10`, deterministic `158/177`, image `82/97`. Две замены проецируются
+на task-level view, поэтому фильтры и aggregate согласованы. Их reasoning при этом
+остаётся явно подписанным как записанный Source V7 trace; интерфейс не сочиняет
+для selector новый chain-of-thought. Лестница семи этапов по-прежнему честно
+заканчивается на `238/274`, а archived QA V7 `242/274` остаётся отдельным reference.
+
 ![VLM Trace — сохранённый V7 trace](docs/assets/trace-viewer-final.png)
 
 ![VLM Trace — Holdout80 source evidence](docs/assets/holdout80-source-evidence.png)
 
 ![VLM Trace — audited Baseline Selector v1.2](docs/assets/selector-wave-v1.2-audited.png)
+
+![VLM Trace — active selector task view](docs/assets/selector-active-tasks.png)
+
+![VLM Trace — active selector analytics](docs/assets/selector-active-analytics.png)
 
 ## Синхронизация без интерфейса
 

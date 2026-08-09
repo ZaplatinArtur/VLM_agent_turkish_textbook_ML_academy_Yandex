@@ -12,6 +12,7 @@ from vlm_trace_viewer import (
     ReplayAggregateError,
     SelectorWaveAdapter,
     V7ArtifactAdapter,
+    build_active_selector_dataset,
     empty_milestone_schema,
     intermediate_timeline_schema,
     load_frozen_9b_comparison,
@@ -132,6 +133,11 @@ def main() -> int:
                 if nine_b_comparison
                 else None
             )
+            active_selector_trace = (
+                build_active_selector_dataset(nine_b_trace, selector_summary)
+                if nine_b_trace is not None and selector_summary is not None
+                else None
+            )
             print(
                 json.dumps(
                     {
@@ -152,6 +158,7 @@ def main() -> int:
                         "nine_b_v7_trace": (
                             {
                                 "status": "ok",
+                                "role": "canonical seven-step lineage endpoint; not active headline",
                                 "rows": nine_b_trace.summary.rows,
                                 "correct": nine_b_trace.summary.correct,
                                 "accuracy": nine_b_trace.summary.accuracy,
@@ -162,6 +169,36 @@ def main() -> int:
                                 ),
                             }
                             if nine_b_trace
+                            else unloaded_replay_report()
+                        ),
+                        "active_all_9b_analytics": (
+                            {
+                                "status": "ok",
+                                "label": "Baseline Selector v1.2 · active audited development result",
+                                "correct": active_selector_trace.summary.correct,
+                                "rows": active_selector_trace.summary.rows,
+                                "accuracy": active_selector_trace.summary.accuracy,
+                                "math": [
+                                    selector_summary.math_correct,
+                                    selector_summary.math_rows,
+                                ],
+                                "history": [
+                                    selector_summary.history_correct,
+                                    selector_summary.history_rows,
+                                ],
+                                "deterministic": [
+                                    selector_summary.deterministic_correct,
+                                    selector_summary.deterministic_rows,
+                                ],
+                                "image_judge": [
+                                    selector_summary.image_correct,
+                                    selector_summary.image_rows,
+                                ],
+                                "task_overlay_correct": sum(
+                                    task.correct for task in active_selector_trace.tasks
+                                ),
+                            }
+                            if active_selector_trace is not None
                             else unloaded_replay_report()
                         ),
                         "nine_b_selector_v1_2": (

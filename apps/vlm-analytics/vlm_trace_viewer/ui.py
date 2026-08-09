@@ -50,7 +50,7 @@ from .replay_aggregate import (
     intermediate_timeline_schema,
 )
 from .selector_ui import SelectorWavePage
-from .selector_wave import SelectorWaveSummary
+from .selector_wave import SelectorWaveSummary, build_active_selector_dataset
 from .style import TRACE_STYLESHEET
 
 
@@ -1196,11 +1196,20 @@ class TaskDetail(QWidget):
         self.raw_text.setPlainText(json.dumps(task.raw, ensure_ascii=False, indent=2))
 
     def _fill_reasoning(self, task: TaskTrace) -> None:
-        self.reasoning_notice.setText(
-            f"Источник reasoning: {task.reasoning_origin}. Финальный ответ имеет отдельное "
-            f"происхождение: {task.final_origin}. Показанный trace не является скрытым "
-            "chain-of-thought и не доказывает, что base model породила source replacement."
-        )
+        selector = task.raw.get("selector_v1_2")
+        if isinstance(selector, dict):
+            self.reasoning_notice.setText(
+                f"Источник reasoning: {task.reasoning_origin}; это неизменённый Source V7 trace. "
+                "Baseline Selector v1.2 выбрал сохранённый кандидат после этого trace по "
+                "hash-bound согласию трёх групп. Для selector не показывается и не "
+                "выдумывается отдельный chain-of-thought."
+            )
+        else:
+            self.reasoning_notice.setText(
+                f"Источник reasoning: {task.reasoning_origin}. Финальный ответ имеет отдельное "
+                f"происхождение: {task.final_origin}. Показанный trace не является скрытым "
+                "chain-of-thought и не доказывает, что base model породила source replacement."
+            )
         self.step_list.clear()
         steps = task.solution_steps or ("у сохранённого ответа нет отдельных solution_steps",)
         for index, step in enumerate(steps, start=1):
@@ -1272,13 +1281,29 @@ class TaskDetail(QWidget):
         self.copy_trace_button.setEnabled(bool(source.trace_fingerprint))
 
     def _fill_comparison(self, task: TaskTrace) -> None:
-        self.anchor_card.title_label.setText("PRE-V7 COMPOSITE ANCHOR")
-        self.challenger_card.title_label.setText("DETERMINISTIC SOURCE CHALLENGER")
+        selector = task.raw.get("selector_v1_2")
+        if isinstance(selector, dict):
+            self.anchor_card.title_label.setText("SOURCE V7 INPUT TO SELECTOR")
+            self.challenger_card.title_label.setText("UNANIMOUS SELECTOR CANDIDATE")
+            self.anchor_card.value.setText(
+                str(selector.get("source_v7_final_answer") or "—")
+            )
+            self.challenger_card.value.setText(task.final_answer or "—")
+        else:
+            self.anchor_card.title_label.setText("PRE-V7 COMPOSITE ANCHOR")
+            self.challenger_card.title_label.setText("DETERMINISTIC SOURCE CHALLENGER")
+            self.anchor_card.value.setText(task.anchor_answer or "—")
+            self.challenger_card.value.setText(task.challenger_answer or "ABSTAIN")
         self.final_card.title_label.setText(f"FINAL · {task.final_origin}".upper())
-        self.anchor_card.value.setText(task.anchor_answer or "—")
-        self.challenger_card.value.setText(task.challenger_answer or "ABSTAIN")
         self.final_card.value.setText(task.final_answer or "—")
-        if task.decision_action == "replace_anchor":
+        if isinstance(selector, dict):
+            self.composer_explanation.setText(
+                "selector заменил Source V7 answer только после единогласия structural, "
+                "native и parallel groups; это выбор между сохранёнными кандидатами, "
+                "не новый source lookup и не новое reasoning. "
+                f"route = {selector.get('route')}; reason = {selector.get('reason')}"
+            )
+        elif task.decision_action == "replace_anchor":
             self.composer_explanation.setText(
                 "финал создан deterministic source layer, а не моделью из поля base row: "
                 "challenger прошёл строгую привязку к официальному PDF, странице и ключу. "
@@ -1384,7 +1409,11 @@ class TaskDetail(QWidget):
 
 
 class TraceExplorer(QWidget):
-    def __init__(self, dataset: TraceDataset):
+    def __init__(
+        self,
+        dataset: TraceDataset,
+        selector_summary: SelectorWaveSummary | None = None,
+    ):
         super().__init__()
         self.dataset = dataset
         self.filtered_tasks: list[TaskTrace] = []
@@ -1393,39 +1422,83 @@ class TraceExplorer(QWidget):
         root.setSpacing(10)
 
         metrics = QHBoxLayout()
-        metrics.addWidget(
-            MetricCard(
-                "V7 composite accuracy",
-                f"{dataset.summary.accuracy:.2%}",
-                f"{dataset.summary.correct}/{dataset.summary.rows} · {dataset.summary.pipeline_provenance}",
-                "#4be1c3",
+        if selector_summary is not None:
+            metrics.addWidget(
+                MetricCard(
+                    "Selector v1.2 · active",
+                    f"{selector_summary.accuracy:.4%}",
+                    f"{selector_summary.correct}/{selector_summary.rows} · audited dev",
+                    "#4be1c3",
+                )
             )
-        )
-        metrics.addWidget(
-            MetricCard(
-                "Math",
-                f"{dataset.summary.math_accuracy:.2%}",
-                f"{dataset.summary.math_correct}/{dataset.summary.math_rows}",
-                "#71aef5",
+            metrics.addWidget(
+                MetricCard(
+                    "Math",
+                    f"{selector_summary.math_correct / selector_summary.math_rows:.2%}",
+                    f"{selector_summary.math_correct}/{selector_summary.math_rows}",
+                    "#71aef5",
+                )
             )
-        )
-        metrics.addWidget(
-            MetricCard(
-                "Source certificates",
-                str(dataset.summary.source_certificates),
-                "strong · input/page/key bound",
-                "#b99cff",
+            metrics.addWidget(
+                MetricCard(
+                    "History",
+                    f"{selector_summary.history_correct / selector_summary.history_rows:.2%}",
+                    f"{selector_summary.history_correct}/{selector_summary.history_rows}",
+                    "#b99cff",
+                )
             )
-        )
-        metrics.addWidget(
-            MetricCard(
-                "Inherited anchor p50",
-                _format_seconds(dataset.summary.latency_median_s),
-                f"recorded, not E2E · p95 {_format_seconds(dataset.summary.latency_p95_s)}",
-                "#f0ad62",
+            metrics.addWidget(
+                MetricCard(
+                    "Deterministic split",
+                    f"{selector_summary.deterministic_correct}/{selector_summary.deterministic_rows}",
+                    f"image {selector_summary.image_correct}/{selector_summary.image_rows}",
+                    "#f0ad62",
+                )
             )
-        )
+        else:
+            metrics.addWidget(
+                MetricCard(
+                    "Source V7 lineage accuracy",
+                    f"{dataset.summary.accuracy:.2%}",
+                    f"{dataset.summary.correct}/{dataset.summary.rows} · {dataset.summary.pipeline_provenance}",
+                    "#4be1c3",
+                )
+            )
+            metrics.addWidget(
+                MetricCard(
+                    "Math",
+                    f"{dataset.summary.math_accuracy:.2%}",
+                    f"{dataset.summary.math_correct}/{dataset.summary.math_rows}",
+                    "#71aef5",
+                )
+            )
+            metrics.addWidget(
+                MetricCard(
+                    "Source certificates",
+                    str(dataset.summary.source_certificates),
+                    "strong · input/page/key bound",
+                    "#b99cff",
+                )
+            )
+            metrics.addWidget(
+                MetricCard(
+                    "Inherited anchor p50",
+                    _format_seconds(dataset.summary.latency_median_s),
+                    f"recorded, not E2E · p95 {_format_seconds(dataset.summary.latency_p95_s)}",
+                    "#f0ad62",
+                )
+            )
         root.addLayout(metrics)
+
+        if selector_summary is not None:
+            scope = QLabel(
+                "ACTIVE VIEW · frozen selector overlay: +2 fixes / 0 regressions over "
+                "Source V7. Only val_0089 and val_0251 changed; their reasoning panel "
+                "remains the recorded Source V7 trace, not selector chain-of-thought."
+            )
+            scope.setObjectName("Subtle")
+            scope.setWordWrap(True)
+            root.addWidget(scope)
 
         splitter = QSplitter(Qt.Orientation.Horizontal)
         sidebar = QFrame()
@@ -1444,7 +1517,14 @@ class TraceExplorer(QWidget):
         self.certificate = QComboBox()
         self.certificate.addItems(("Любой source status", "Есть certificate", "Нет certificate"))
         self.action = QComboBox()
-        self.action.addItems(("Любое действие", "Source replacement", "Anchor kept"))
+        self.action.addItems(
+            (
+                "Любое действие",
+                "Source replacement",
+                "Selector replacement",
+                "Anchor kept",
+            )
+        )
         filters = QGridLayout()
         filters.setContentsMargins(0, 0, 0, 0)
         filters.addWidget(self.subject, 0, 0, 1, 2)
@@ -1514,7 +1594,12 @@ class TraceExplorer(QWidget):
                 continue
             if action == 1 and task.decision_action != "replace_anchor":
                 continue
-            if action == 2 and task.decision_action == "replace_anchor":
+            if action == 2 and task.decision_action != "selector_replace":
+                continue
+            if action == 3 and task.decision_action in {
+                "replace_anchor",
+                "selector_replace",
+            }:
                 continue
             filtered.append(task)
 
@@ -1524,7 +1609,11 @@ class TraceExplorer(QWidget):
         selected_row = 0
         for row, task in enumerate(filtered):
             state = "✓" if task.correct else "×"
-            cert = "CERT" if task.has_certificate else "ANCHOR"
+            cert = (
+                "SELECTOR"
+                if task.decision_action == "selector_replace"
+                else "CERT" if task.has_certificate else "ANCHOR"
+            )
             answer = task.final_answer.replace("\n", " ")
             if len(answer) > 44:
                 answer = answer[:41] + "…"
@@ -1561,26 +1650,43 @@ class TraceExplorer(QWidget):
 
 
 class MetricsPage(QWidget):
-    def __init__(self, dataset: TraceDataset):
+    def __init__(
+        self,
+        dataset: TraceDataset,
+        selector_summary: SelectorWaveSummary | None = None,
+    ):
         super().__init__()
         summary = dataset.summary
         is_nine_b = summary.pipeline_provenance.startswith("9B ")
+        is_selector = is_nine_b and selector_summary is not None
         root = QVBoxLayout(self)
         root.setContentsMargins(14, 14, 14, 14)
         root.setSpacing(12)
         heading = QHBoxLayout()
         title_box = QVBoxLayout()
         title = QLabel(
-            "9B V7 · profile-bound source-adjudicated replay"
+            (
+                "Baseline Selector v1.2 · active audited all-9B analytics"
+                if is_selector
+                else "9B Source V7 · canonical lineage replay"
+            )
             if is_nine_b
             else "V7 reference · META-27B anchor + deterministic source layers"
         )
         title.setObjectName("SectionTitle")
         subtitle = QLabel(
             (
-                f"{summary.correct}/{summary.rows} — отдельный Qwen3.5-9B replay с exact "
-                "benchmark/model/hash closure. Evaluator split и deterministic source "
-                "origins не свёрнуты в model gain."
+                (
+                    f"{selector_summary.correct}/{selector_summary.rows} — frozen one-shot "
+                    "development selector поверх полностью завершённого Source V7 "
+                    "238/274: +2 исправления, 0 откатов. Canonical lineage не переписана."
+                )
+                if is_selector
+                else (
+                    f"{summary.correct}/{summary.rows} — отдельный Qwen3.5-9B replay с exact "
+                    "benchmark/model/hash closure. Evaluator split и deterministic source "
+                    "origins не свёрнуты в model gain."
+                )
             )
             if is_nine_b
             else (
@@ -1596,41 +1702,89 @@ class MetricsPage(QWidget):
         heading.addLayout(title_box, 1)
         heading.addWidget(
             _badge(
-                "9B · PROFILE-BOUND REPLAY" if is_nine_b else "ARCHIVED 27B REFERENCE",
+                (
+                    "SELECTOR v1.2 · ACTIVE 240/274"
+                    if is_selector
+                    else "9B · PROFILE-BOUND REPLAY"
+                )
+                if is_nine_b
+                else "ARCHIVED 27B REFERENCE",
                 "good" if is_nine_b else "warn",
             )
         )
         root.addLayout(heading)
 
         cards = QHBoxLayout()
-        cards.addWidget(MetricCard("Overall", f"{summary.accuracy:.2%}", f"{summary.correct}/{summary.rows}", "#4be1c3"))
-        cards.addWidget(MetricCard("Math", f"{summary.math_accuracy:.2%}", f"{summary.math_correct}/{summary.math_rows}", "#71aef5"))
-        cards.addWidget(
-            MetricCard(
-                "vs Active Crop" if is_nine_b else "vs page-RAG",
-                f"+{(summary.accuracy-summary.baseline_accuracy):.1%}",
-                f"baseline {summary.baseline_accuracy:.2%}",
-                "#b99cff",
+        if is_selector:
+            cards.addWidget(
+                MetricCard(
+                    "Overall · active",
+                    f"{selector_summary.accuracy:.4%}",
+                    f"{selector_summary.correct}/{selector_summary.rows}",
+                    "#4be1c3",
+                )
             )
-        )
-        delta_v6 = summary.direct_gain_vs_v6 + summary.evaluator_corrections_vs_v6
-        cards.addWidget(
-            MetricCard(
-                "Source origins" if is_nine_b else "vs V6",
-                (
-                    f"{summary.answer_overrides} / "
-                    f"{summary.source_certificates - summary.answer_overrides}"
-                    if is_nine_b
-                    else f"+{delta_v6}"
-                ),
-                (
-                    "replacements / confirmations"
-                    if is_nine_b
-                    else f"+{summary.direct_gain_vs_v6} answer · +{summary.evaluator_corrections_vs_v6} eval"
-                ),
-                "#f0ad62",
+            cards.addWidget(
+                MetricCard(
+                    "Math",
+                    f"{selector_summary.math_correct / selector_summary.math_rows:.2%}",
+                    f"{selector_summary.math_correct}/{selector_summary.math_rows}",
+                    "#71aef5",
+                )
             )
-        )
+            cards.addWidget(
+                MetricCard(
+                    "History",
+                    f"{selector_summary.history_correct / selector_summary.history_rows:.2%}",
+                    f"{selector_summary.history_correct}/{selector_summary.history_rows}",
+                    "#b99cff",
+                )
+            )
+            cards.addWidget(
+                MetricCard(
+                    "Deterministic",
+                    f"{selector_summary.deterministic_correct}/{selector_summary.deterministic_rows}",
+                    f"{selector_summary.deterministic_correct / selector_summary.deterministic_rows:.2%}",
+                    "#f0ad62",
+                )
+            )
+            cards.addWidget(
+                MetricCard(
+                    "Image judge",
+                    f"{selector_summary.image_correct}/{selector_summary.image_rows}",
+                    f"{selector_summary.image_correct / selector_summary.image_rows:.2%}",
+                    "#e8899c",
+                )
+            )
+        else:
+            cards.addWidget(MetricCard("Overall", f"{summary.accuracy:.2%}", f"{summary.correct}/{summary.rows}", "#4be1c3"))
+            cards.addWidget(MetricCard("Math", f"{summary.math_accuracy:.2%}", f"{summary.math_correct}/{summary.math_rows}", "#71aef5"))
+            cards.addWidget(
+                MetricCard(
+                    "vs Active Crop" if is_nine_b else "vs page-RAG",
+                    f"+{(summary.accuracy-summary.baseline_accuracy):.1%}",
+                    f"baseline {summary.baseline_accuracy:.2%}",
+                    "#b99cff",
+                )
+            )
+            delta_v6 = summary.direct_gain_vs_v6 + summary.evaluator_corrections_vs_v6
+            cards.addWidget(
+                MetricCard(
+                    "Source origins" if is_nine_b else "vs V6",
+                    (
+                        f"{summary.answer_overrides} / "
+                        f"{summary.source_certificates - summary.answer_overrides}"
+                        if is_nine_b
+                        else f"+{delta_v6}"
+                    ),
+                    (
+                        "replacements / confirmations"
+                        if is_nine_b
+                        else f"+{summary.direct_gain_vs_v6} answer · +{summary.evaluator_corrections_vs_v6} eval"
+                    ),
+                    "#f0ad62",
+                )
+            )
         root.addLayout(cards)
 
         splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -1668,22 +1822,39 @@ class MetricsPage(QWidget):
         info = QVBoxLayout(interpretation)
         info.setContentsMargins(14, 12, 14, 12)
         label = QLabel(
-            "Evaluator/origin split 9B V7"
+            (
+                "Что изменил selector и что он не доказывает"
+                if is_selector
+                else "Evaluator/origin split 9B V7"
+            )
             if is_nine_b
             else "Provenance: что реально изменилось между V6 и V7"
         )
         label.setObjectName("SectionTitle")
         text = QLabel(
             (
-                f"• {summary.source_certificates} строк входят в проверенный source union; "
-                f"{summary.answer_overrides} финалов имеют deterministic source origin.\n"
-                f"• cumulative image-verdict split: source-adjudicated "
-                f"{summary.source_adjudicated_image_rows} / original ActiveCrop 9B "
-                f"{summary.original_9b_judge_rows}. Original означает byte-identical с исходным "
-                "9B judge, а не только копию immediate base.\n"
-                "• deterministic evaluator и image-judge остаются разными ветками; их "
-                "вклад не называется чистым model gain.\n"
-                "• latency/tokens — inherited Active Crop anchor usage, не полный E2E."
+                (
+                    "• active aggregate: 240/274 = 87.5912%; Math 109/139, "
+                    "History 10/10, deterministic 158/177, image 82/97.\n"
+                    "• selector заменил только val_0089 A→D и val_0251 A→B; "
+                    "остальные 272 строки сохранены byte-exact.\n"
+                    "• Source V7 = 238/274 остаётся завершением канонической "
+                    "семиступенчатой lineage, а не активным headline.\n"
+                    "• это известный development benchmark и один frozen one-shot arm; "
+                    "selector provenance не является новым reasoning или source lookup."
+                )
+                if is_selector
+                else (
+                    f"• {summary.source_certificates} строк входят в проверенный source union; "
+                    f"{summary.answer_overrides} финалов имеют deterministic source origin.\n"
+                    f"• cumulative image-verdict split: source-adjudicated "
+                    f"{summary.source_adjudicated_image_rows} / original ActiveCrop 9B "
+                    f"{summary.original_9b_judge_rows}. Original означает byte-identical с исходным "
+                    "9B judge, а не только копию immediate base.\n"
+                    "• deterministic evaluator и image-judge остаются разными ветками; их "
+                    "вклад не называется чистым model gain.\n"
+                    "• latency/tokens — inherited Active Crop anchor usage, не полный E2E."
+                )
             )
             if is_nine_b
             else (
@@ -1740,13 +1911,23 @@ class TraceViewerWindow(QMainWindow):
         qa_reference_summary: RunSummary | None = None,
     ):
         super().__init__()
+        self.source_v7_dataset = dataset
+        self.active_selector = (
+            active_dataset == "nine-b-v7" and selector_summary is not None
+        )
+        if self.active_selector:
+            dataset = build_active_selector_dataset(dataset, selector_summary)
         self.dataset = dataset
         self.holdout80 = holdout80 or load_holdout80_summary()
         self.nine_b_comparison = nine_b_comparison
         self.selector_summary = selector_summary
         self.active_dataset = active_dataset
         self.setWindowTitle(
-            "VLM Trace · 9B V7 Evidence OS"
+            (
+                "VLM Trace · 9B Baseline Selector v1.2 Evidence OS"
+                if self.active_selector
+                else "VLM Trace · 9B V7 Evidence OS"
+            )
             if active_dataset == "nine-b-v7"
             else "VLM Trace · archived 27B V7 reference"
         )
@@ -1755,15 +1936,33 @@ class TraceViewerWindow(QMainWindow):
         self.setStyleSheet(TRACE_STYLESHEET)
         self._build_toolbar()
         self.tabs = QTabWidget()
-        self.explorer = TraceExplorer(dataset)
+        self.explorer = TraceExplorer(
+            dataset,
+            selector_summary if self.active_selector else None,
+        )
         self.tabs.addTab(
             self.explorer,
-            "9B V7 · trace" if active_dataset == "nine-b-v7" else "Archived 27B · trace",
+            (
+                "9B selector · tasks"
+                if self.active_selector
+                else "9B Source V7 · trace"
+            )
+            if active_dataset == "nine-b-v7"
+            else "Archived 27B · trace",
         )
         self.tabs.addTab(Holdout80Page(self.holdout80), "Holdout80 · source evidence")
         self.tabs.addTab(
-            MetricsPage(dataset),
-            "9B V7 · metrics" if active_dataset == "nine-b-v7" else "Archived 27B · metrics",
+            MetricsPage(
+                dataset,
+                selector_summary if self.active_selector else None,
+            ),
+            (
+                "9B selector · analytics"
+                if self.active_selector
+                else "9B Source V7 · metrics"
+            )
+            if active_dataset == "nine-b-v7"
+            else "Archived 27B · metrics",
         )
         self.tabs.addTab(
             NineBMilestonesPage(nine_b_comparison),
@@ -1788,14 +1987,18 @@ class TraceViewerWindow(QMainWindow):
             )
         self.setCentralWidget(self.tabs)
         status = QStatusBar()
-        selector_status = (
-            f" · selector {selector_summary.correct}/{selector_summary.rows}"
-            if selector_summary is not None
-            else ""
+        active_view = (
+            "nine-b-selector-v1.2"
+            if self.active_selector
+            else (
+                "nine-b-source-v7-lineage"
+                if active_dataset == "nine-b-v7"
+                else active_dataset
+            )
         )
         status.showMessage(
-            f"offline · active dataset: {active_dataset} · {dataset.summary.rows} joined tasks · "
-            f"{len(dataset.source_files)} provenance files{selector_status}"
+            f"offline · active view: {active_view} · {dataset.summary.rows} joined tasks · "
+            f"{len(dataset.source_files)} hash-bound provenance files"
         )
         self.setStatusBar(status)
 
@@ -1820,7 +2023,13 @@ class TraceViewerWindow(QMainWindow):
         toolbar.addWidget(_badge("H80 · SEALED", "good"))
         toolbar.addWidget(
             _badge(
-                "9B V7 · ACTIVE" if self.active_dataset == "nine-b-v7" else "27B · ARCHIVED REFERENCE",
+                (
+                    "9B SELECTOR v1.2 · ACTIVE"
+                    if self.active_selector
+                    else "9B SOURCE V7 · LINEAGE"
+                )
+                if self.active_dataset == "nine-b-v7"
+                else "27B · ARCHIVED REFERENCE",
                 "good" if self.active_dataset == "nine-b-v7" else "warn",
             )
         )
@@ -1832,7 +2041,7 @@ class TraceViewerWindow(QMainWindow):
         )
         if self.nine_b_comparison is None:
             toolbar.addWidget(_badge("9B · AWAITING PINS", "warn"))
-        if self.selector_summary is not None:
+        if self.selector_summary is not None and not self.active_selector:
             toolbar.addWidget(
                 _badge(
                     f"SELECTOR · {self.selector_summary.correct}/{self.selector_summary.rows}",

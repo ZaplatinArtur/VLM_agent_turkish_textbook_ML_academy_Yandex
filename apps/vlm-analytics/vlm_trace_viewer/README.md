@@ -75,6 +75,13 @@ Post-score answer-contract repair изменил строку `val_0223`, одн
 остался `240/274`; он подписан как non-blind, non-preregistered null-result, а не
 как новый milestone или 241.
 
+После успешной hash-проверки selector становится активной проекцией на первых двух
+вкладках: headline и task filters считают `240/274`, а `val_0089` и `val_0251`
+показывают выбранные selector-ответы. Исходный Source V7 trace не мутируется:
+записанное reasoning этих строк маркируется как lineage evidence, selector добавляет
+только проверяемую provenance выбора. Вкладка семи milestone продолжает заканчиваться
+на Source V7 `238/274`.
+
 Для image evaluator интерфейс показывает cumulative split: сколько финальных
 verdict уже source-adjudicated и сколько осталось byte-identical исходному
 ActiveCrop 9B judge. Число строк, скопированных только из immediate base, не

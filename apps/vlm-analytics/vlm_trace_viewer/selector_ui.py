@@ -313,7 +313,7 @@ class SelectorWavePage(QWidget):
         metrics.addWidget(
             SelectorMetricCard(
                 "Selector v1.2",
-                f"{summary.accuracy:.2%}",
+                f"{summary.accuracy:.4%}",
                 f"{summary.correct}/{summary.rows} · audited; 241 не заявлен",
                 "#4be1c3",
             )

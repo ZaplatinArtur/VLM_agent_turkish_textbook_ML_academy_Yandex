@@ -85,13 +85,26 @@ class TaskTrace:
 
     @property
     def pipeline(self) -> tuple[PipelineStage, ...]:
+        selector = self.raw.get("selector_v1_2")
+        if not isinstance(selector, dict):
+            selector = None
         source_state = "pass" if self.has_certificate else "skipped"
-        composer_state = "active" if self.decision_action == "replace_anchor" else "pass"
+        source_v7_action = (
+            str(selector.get("source_v7_decision_action") or "")
+            if selector
+            else self.decision_action
+        )
+        source_v7_origin = (
+            str(selector.get("source_v7_final_origin") or "")
+            if selector
+            else self.final_origin
+        )
+        composer_state = "active" if source_v7_action == "replace_anchor" else "pass"
         decision_label = {
             "replace_anchor": "замена разрешена",
             "keep_anchor": "anchor сохранён",
-        }.get(self.decision_action, self.decision_action or "anchor сохранён")
-        return (
+        }.get(source_v7_action, source_v7_action or "anchor сохранён")
+        stages = [
             PipelineStage(
                 "Reasoning anchor",
                 f"META row · {self.base_row_model or 'model metadata absent'}",
@@ -119,15 +132,26 @@ class TaskTrace:
             ),
             PipelineStage(
                 "Deterministic composer",
-                f"{decision_label} · {self.final_origin}",
+                f"{decision_label} · {source_v7_origin}",
                 composer_state,
             ),
+        ]
+        if selector:
+            stages.append(
+                PipelineStage(
+                    "Baseline Selector v1.2",
+                    "three frozen groups unanimous · answer replaced",
+                    "active",
+                )
+            )
+        stages.append(
             PipelineStage(
                 "Evaluation",
                 f"{self.score_source} · {'correct' if self.correct else 'incorrect'}",
                 "pass" if self.correct else "fail",
             ),
         )
+        return tuple(stages)
 
 
 @dataclass(frozen=True)
