@@ -64,7 +64,10 @@ class TaskTrace:
     transition: str
     reasoning: str
     solution_steps: tuple[str, ...]
-    model: str
+    base_row_model: str
+    final_origin: str
+    reasoning_origin: str
+    usage_origin: str
     prompt_version: str
     latency_s: float | None
     input_tokens: int | None
@@ -89,7 +92,11 @@ class TaskTrace:
             "keep_anchor": "anchor сохранён",
         }.get(self.decision_action, self.decision_action or "anchor сохранён")
         return (
-            PipelineStage("Reasoning anchor", self.model or "сохранённый ответ", "pass"),
+            PipelineStage(
+                "Reasoning anchor",
+                f"META row · {self.base_row_model or 'model metadata absent'}",
+                "pass",
+            ),
             PipelineStage("Router", self.subject or "предмет определён", "pass"),
             PipelineStage(
                 "Exact-source lookup",
@@ -110,7 +117,11 @@ class TaskTrace:
                 self.source.strength if self.has_certificate else "нет достаточного доказательства",
                 source_state,
             ),
-            PipelineStage("Composer", decision_label, composer_state),
+            PipelineStage(
+                "Deterministic composer",
+                f"{decision_label} · {self.final_origin}",
+                composer_state,
+            ),
             PipelineStage(
                 "Evaluation",
                 f"{self.score_source} · {'correct' if self.correct else 'incorrect'}",
@@ -136,6 +147,11 @@ class RunSummary:
     latency_median_s: float | None
     latency_p95_s: float | None
     latency_max_s: float | None
+    pipeline_provenance: str
+    base_row_models: tuple[str, ...]
+    recorded_usage_scope: str
+    source_adjudicated_image_rows: int = 0
+    original_9b_judge_rows: int = 0
     by_subject: dict[str, dict[str, Any]] = field(default_factory=dict)
     limitations: tuple[str, ...] = ()
     source_shortcuts: int = 0

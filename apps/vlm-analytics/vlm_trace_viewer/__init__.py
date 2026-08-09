@@ -7,16 +7,36 @@ from .holdout80 import (
     load_holdout80_summary,
 )
 from .model import RunSummary, SourceEvidence, TaskTrace, TraceDataset
+from .nine_b_adapter import NineBV7ArtifactAdapter
+from .replay_aggregate import (
+    FrozenReplayComparison,
+    FrozenReplayAggregate,
+    ReplayAggregateError,
+    empty_milestone_schema,
+    intermediate_timeline_schema,
+    load_frozen_9b_comparison,
+    load_frozen_9b_replay_aggregate,
+    unloaded_replay_report,
+)
 
 __all__ = [
     "ArtifactError",
     "Holdout80Summary",
     "HoldoutIntegrityError",
+    "NineBV7ArtifactAdapter",
+    "FrozenReplayAggregate",
+    "FrozenReplayComparison",
+    "ReplayAggregateError",
     "RunSummary",
     "SourceEvidence",
     "TaskTrace",
     "TraceDataset",
     "V7ArtifactAdapter",
     "discover_artifact_root",
+    "empty_milestone_schema",
+    "intermediate_timeline_schema",
     "load_holdout80_summary",
+    "load_frozen_9b_comparison",
+    "load_frozen_9b_replay_aggregate",
+    "unloaded_replay_report",
 ]

@@ -1,5 +1,10 @@
 # VLM Trace
 
+> Важно: существующий V7 trace — archived/reference development replay. Его
+> provenance: `META-27B anchor + deterministic source layers`. `base row model`
+> и `final origin` показываются отдельно; source replacements не приписываются
+> META-27B. Latency и tokens — recorded inherited-anchor usage, не end-to-end.
+
 Локальный экран для демонстрации финального пайплайна V7. Он построен на той же
 PySide6-основе, что и существующий `VLM Analytics`, но запускается отдельно и не
 меняет его SQLite-базу.
@@ -44,6 +49,31 @@ cd C:\Users\kmaxc\PycharmProjects\VLM_Analytics_App
 Для снимка маршрута или сертификата используйте соответственно
 `--detail-tab 1` или `--detail-tab 2`.
 
+Полный новый 9B comparison подключается отдельно:
+
+```powershell
+.\.venv\Scripts\python.exe trace_viewer.py `
+  --nine-b-comparison C:\path\to\comparison.json `
+  --dataset auto
+```
+
+`auto` переключает task trace на новый source-adjudicated 9B V7 только после
+успешной проверки всех семи SHA-pinned milestones. `--dataset nine-b-v7` без
+полного валидного manifest завершается ошибкой. Формат и все fail-closed проверки
+описаны в [`../NINE_B_COMPARISON_CONTRACT_RU.md`](../NINE_B_COMPARISON_CONTRACT_RU.md).
+
+Для image evaluator интерфейс показывает cumulative split: сколько финальных
+verdict уже source-adjudicated и сколько осталось byte-identical исходному
+ActiveCrop 9B judge. Число строк, скопированных только из immediate base, не
+называется «original 9B»: после первого source stage такая копия может уже не быть
+модельным verdict.
+
+Локальные изображения для 9B trace подключаются только как display-only assets из
+ограниченного каталога внутри artifact root. Loader сверяет task id, запрещает
+absolute/`..` locators и не читает из archived V7 ни solver answers, ни judge
+verdicts, ни provenance rows. На текущем bundle доступны 27 таких изображений;
+это число выводится отдельно в `--validate-only` и не участвует в score.
+
 ## Что видно в интерфейсе
 
 - список всех 274 задач с фильтрами по предмету, correctness, сертификату и
@@ -56,8 +86,8 @@ cd C:\Users\kmaxc\PycharmProjects\VLM_Analytics_App
 - официальный PDF, страницу вопроса, страницу ключа, bbox, coverage, margin,
   fingerprint и все детерминированные проверки сертификата;
 - сравнение V6 anchor, source challenger и финального V7;
-- итог `242/274 = 0.8832`, математику `112/139 = 0.8058`, предметные срезы и
-  latency сохранённого запуска.
+- archived/reference итог `242/274 = 0.8832`, математику `112/139 = 0.8058`,
+  предметные срезы и recorded inherited-anchor latency (не E2E).
 - source-first профиль из отдельного artifact replay: `131/274 = 47.8%`
   сильных source shortcuts, эквивалентных финальным V7-ответам; потенциально
   устраняется `44.84%` записанной latency reasoning-модели и `46.98%` её input

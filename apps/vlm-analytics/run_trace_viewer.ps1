@@ -5,7 +5,7 @@ param(
 
     [switch]$ValidateOnly,
 
-    [string]$Task = "val_0178",
+    [string]$Task = "val_0163",
 
     [switch]$Holdout,
 

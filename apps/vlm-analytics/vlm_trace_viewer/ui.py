@@ -29,6 +29,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QMainWindow,
+    QProgressBar,
     QPushButton,
     QScrollArea,
     QSizePolicy,
@@ -43,6 +44,11 @@ from PySide6.QtWidgets import (
 
 from .holdout80 import Holdout80Summary, load_holdout80_summary
 from .model import PipelineStage, RunSummary, TaskTrace, TraceDataset
+from .replay_aggregate import (
+    FrozenReplayComparison,
+    empty_milestone_schema,
+    intermediate_timeline_schema,
+)
 from .style import TRACE_STYLESHEET
 
 
@@ -94,8 +100,8 @@ class MetricCard(QFrame):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(14, 10, 14, 10)
         layout.setSpacing(2)
-        title_label = QLabel(title.upper())
-        title_label.setObjectName("MetricLabel")
+        self.title_label = QLabel(title.upper())
+        self.title_label.setObjectName("MetricLabel")
         value_label = QLabel(value)
         value_label.setObjectName("MetricValue")
         if accent:
@@ -103,7 +109,7 @@ class MetricCard(QFrame):
         hint_label = QLabel(hint)
         hint_label.setObjectName("MetricHint")
         hint_label.setWordWrap(True)
-        layout.addWidget(title_label)
+        layout.addWidget(self.title_label)
         layout.addWidget(value_label)
         layout.addWidget(hint_label)
 
@@ -115,8 +121,8 @@ class AnswerCard(QFrame):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 9, 12, 9)
         layout.setSpacing(2)
-        title_label = QLabel(title.upper())
-        title_label.setObjectName("MetricLabel")
+        self.title_label = QLabel(title.upper())
+        self.title_label.setObjectName("MetricLabel")
         # Answers such as fill-blank maps can be several hundred characters long.
         # A QLabel silently clipped them inside the three-column comparison view;
         # keep the card compact but make the complete frozen answer scrollable.
@@ -124,7 +130,7 @@ class AnswerCard(QFrame):
         self.value.setPlainText("—")
         self.value.setObjectName("AnswerValue")
         self.value.setOpenExternalLinks(False)
-        layout.addWidget(title_label)
+        layout.addWidget(self.title_label)
         layout.addWidget(self.value, 1)
 
 
@@ -180,8 +186,9 @@ class QuestionCanvas(QFrame):
         font = QFont("Segoe UI", 11, QFont.Weight.DemiBold)
         painter.setFont(font)
         painter.drawText(QRectF(header.left(), header.top(), header.width(), 24), "Вход задачи")
+        provenance = self.task.raw.get("provenance") or {}
         source_label = (
-            "локальный исходник"
+            str(provenance.get("question_image_origin") or "локальный исходник")
             if not self.pixmap.isNull()
             else "OCR-реконструкция · исходный файл не сохранён в bundle"
         )
@@ -419,7 +426,7 @@ class LatencyChart(QWidget):
         painter.setFont(QFont("Segoe UI", 9, QFont.Weight.DemiBold))
         painter.drawText(
             QRectF(18, 10, self.width() - 36, 24),
-            "Latency reasoning anchor в сохранённом прогоне",
+            "Recorded inherited-anchor latency · not E2E",
         )
         for index, (label, value, color) in enumerate(values):
             y = 52 + index * 45
@@ -466,12 +473,12 @@ class SourceFirstProjectionChart(QWidget):
         values = [
             ("shortcuts", self.summary.source_shortcut_rate, "#4be1c3"),
             (
-                "recorded latency",
+                "anchor latency",
                 self.summary.avoidable_recorded_latency_fraction,
                 "#71aef5",
             ),
             (
-                "input tokens",
+                "anchor input",
                 self.summary.avoidable_input_tokens_fraction,
                 "#b99cff",
             ),
@@ -513,7 +520,7 @@ class SourceFirstProjectionChart(QWidget):
         )
         painter.setFont(QFont("Segoe UI", 7))
         painter.setPen(QColor("#f0ad62"))
-        caveat = "не online speedup · wall-clock не измерен"
+        caveat = "inherited anchor usage · не online/E2E speedup"
         if not self.summary.speed_source_lookup_cost_included:
             caveat += " · lookup cost исключён"
         painter.drawText(QRectF(18, 174, self.width() - 36, 20), caveat)
@@ -812,6 +819,156 @@ class Holdout80Page(QWidget):
         root.addWidget(lower, 1)
 
 
+class NineBMilestonesPage(QWidget):
+    """Seven honest 9B comparison slots; empty until the full freeze chain exists."""
+
+    def __init__(self, comparison: FrozenReplayComparison | None):
+        super().__init__()
+        self.comparison = comparison
+        root = QVBoxLayout(self)
+        root.setContentsMargins(14, 14, 14, 14)
+        root.setSpacing(10)
+
+        heading = QHBoxLayout()
+        title_box = QVBoxLayout()
+        title = QLabel("9B replay · семь честных milestones")
+        title.setObjectName("SectionTitle")
+        subtitle = QLabel(
+            "Каждая цифра появится только после проверки exact aggregate hash, "
+            "одного task set и Qwen3.5-9B model closure. Сила provenance показывается "
+            "отдельно: legacy controls не выдаются за preregistered replay. Старые 27B "
+            "stage scores сюда не импортируются."
+        )
+        subtitle.setObjectName("Subtle")
+        subtitle.setWordWrap(True)
+        title_box.addWidget(title)
+        title_box.addWidget(subtitle)
+        heading.addLayout(title_box, 1)
+        heading.addWidget(
+            _badge(
+                "7× HASH CLOSURE · PASS" if comparison else "NO FROZEN 9B AGGREGATES",
+                "good" if comparison else "warn",
+            )
+        )
+        root.addLayout(heading)
+
+        panel = QFrame()
+        panel.setObjectName("Panel")
+        grid = QGridLayout(panel)
+        grid.setContentsMargins(12, 10, 12, 10)
+        grid.setHorizontalSpacing(12)
+        grid.setVerticalSpacing(6)
+        loaded = (
+            {item.milestone_id: item for item in comparison.milestones}
+            if comparison
+            else {}
+        )
+        for index, spec in enumerate(empty_milestone_schema(), start=1):
+            milestone_id = spec["milestone_id"]
+            result = loaded.get(milestone_id)
+            row = QFrame()
+            row.setObjectName("NoticeCard")
+            row_layout = QHBoxLayout(row)
+            row_layout.setContentsMargins(11, 7, 11, 7)
+            number = QLabel(f"{index:02d}")
+            number.setObjectName("TimelineNumber")
+            number.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            number.setFixedSize(34, 34)
+            copy = QVBoxLayout()
+            label = QLabel(spec["label"])
+            label.setObjectName("TimelineTitle")
+            detail_parts = [f"pipeline: {spec['pipeline']}"]
+            if milestone_id == "query_active_crop_v2_9b":
+                detail_parts.append("preregistered final 9B anchor")
+            if result:
+                detail_parts.append(result.provenance_status)
+                if result.source_union["size"]:
+                    detail_parts.append(
+                        "source origin "
+                        f"{result.source_union['replacements']} replacements / "
+                        f"{result.source_union['confirmations']} confirmations"
+                    )
+                detail_parts.append(
+                    "evaluator "
+                    f"det {result.evaluator['deterministic_rows']} / "
+                    f"image {result.evaluator['image_rows']}"
+                )
+                if "source_adjudicated_image_rows" in result.evaluator:
+                    detail_parts.append(
+                        "final image verdicts "
+                        f"source-adjudicated {result.evaluator['source_adjudicated_image_rows']} / "
+                        f"original 9B {result.evaluator['original_9b_judge_rows']}"
+                    )
+                active_delta = next(
+                    (
+                        item
+                        for item in result.comparisons
+                        if item["baseline_milestone_id"] == "query_active_crop_v2_9b"
+                    ),
+                    None,
+                )
+                if active_delta:
+                    detail_parts.append(
+                        f"vs ActiveCrop +{active_delta['fixes']} / "
+                        f"−{active_delta['regressions']}"
+                    )
+            detail = QLabel(" · ".join(detail_parts))
+            detail.setObjectName("Tiny")
+            detail.setWordWrap(True)
+            copy.addWidget(label)
+            copy.addWidget(detail)
+            value = QLabel(
+                f"{result.correct}/{result.rows} · {result.accuracy:.4f}"
+                if result
+                else "—  awaiting frozen aggregate + pins"
+            )
+            value.setObjectName("Success" if result else "Subtle")
+            progress = QProgressBar()
+            progress.setFixedSize(310, 12)
+            progress.setTextVisible(False)
+            progress.setRange(0, result.rows if result else 1)
+            progress.setValue(result.correct if result else 0)
+            progress.setToolTip(
+                f"{result.correct}/{result.rows} = {result.accuracy:.4%}"
+                if result
+                else "awaiting validated aggregate"
+            )
+            fill = "#4be1c3" if result and index >= 4 else "#71aef5"
+            progress.setStyleSheet(
+                "QProgressBar { background: #142536; border: 1px solid #244159; "
+                "border-radius: 5px; } "
+                f"QProgressBar::chunk {{ background: {fill}; border-radius: 4px; }}"
+            )
+            row_layout.addWidget(number)
+            row_layout.addLayout(copy, 1)
+            row_layout.addWidget(progress)
+            row_layout.addWidget(value)
+            grid.addWidget(row, index - 1, 0)
+        root.addWidget(panel, 1)
+
+        timeline = QFrame()
+        timeline.setObjectName("NoticeCard")
+        timeline_layout = QVBoxLayout(timeline)
+        timeline_layout.setContentsMargins(12, 8, 12, 8)
+        timeline_title = QLabel("Промежуточная provenance timeline")
+        timeline_title.setObjectName("MetricLabel")
+        timeline_layout.addWidget(timeline_title)
+        intermediate = QLabel(
+            "  →  ".join(item["label"] for item in intermediate_timeline_schema())
+        )
+        intermediate.setObjectName("Subtle")
+        intermediate.setWordWrap(True)
+        timeline_layout.addWidget(intermediate)
+        timeline_note = QLabel(
+            "Source V2/V4/V5 сохраняются для объяснения эволюции, но не подменяют "
+            "семь основных comparison points. До frozen 9B aggregate здесь нет score."
+        )
+        timeline_note.setObjectName("Tiny")
+        timeline_note.setWordWrap(True)
+        timeline_layout.addWidget(timeline_note)
+        root.addWidget(timeline)
+
+
 class TaskDetail(QWidget):
     def __init__(self):
         super().__init__()
@@ -838,6 +995,7 @@ class TaskDetail(QWidget):
         top.addWidget(self.correct_badge)
         self.meta = QLabel("—")
         self.meta.setObjectName("Subtle")
+        self.meta.setWordWrap(True)
         self.meta.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         header_layout.addLayout(top)
         header_layout.addWidget(self.meta)
@@ -878,14 +1036,14 @@ class TaskDetail(QWidget):
         notice_layout.setContentsMargins(11, 8, 11, 8)
         title = QLabel("ЗАПИСАННЫЙ TRACE")
         title.setObjectName("MetricLabel")
-        body = QLabel(
+        self.reasoning_notice = QLabel(
             "показываются сохранённые solution_steps и reasoning. это объяснение ответа, "
             "а не доступ к скрытому chain-of-thought модели."
         )
-        body.setObjectName("Subtle")
-        body.setWordWrap(True)
+        self.reasoning_notice.setObjectName("Subtle")
+        self.reasoning_notice.setWordWrap(True)
         notice_layout.addWidget(title)
-        notice_layout.addWidget(body)
+        notice_layout.addWidget(self.reasoning_notice)
         layout.addWidget(notice)
 
         controls = QHBoxLayout()
@@ -978,9 +1136,9 @@ class TaskDetail(QWidget):
         layout = QVBoxLayout(page)
         layout.setContentsMargins(12, 12, 12, 12)
         cards = QHBoxLayout()
-        self.anchor_card = AnswerCard("Anchor · V6")
-        self.challenger_card = AnswerCard("Source challenger")
-        self.final_card = AnswerCard("Final · V7")
+        self.anchor_card = AnswerCard("Pre-V7 composite anchor")
+        self.challenger_card = AnswerCard("Deterministic source challenger")
+        self.final_card = AnswerCard("Final · origin pending")
         cards.addWidget(self.anchor_card)
         cards.addWidget(self.challenger_card)
         cards.addWidget(self.final_card)
@@ -1022,9 +1180,11 @@ class TaskDetail(QWidget):
         self.correct_badge.style().unpolish(self.correct_badge)
         self.correct_badge.style().polish(self.correct_badge)
         self.meta.setText(
-            f"{task.answer_type} · grade {task.grade} · {task.model} · "
-            f"{_format_seconds(task.latency_s)} · in {_format_tokens(task.input_tokens)} / "
-            f"out {_format_tokens(task.output_tokens)}"
+            f"BASE ROW MODEL · {task.base_row_model or 'metadata absent'}    |    "
+            f"FINAL ORIGIN · {task.final_origin}\n"
+            f"RECORDED INHERITED-ANCHOR USAGE · {_format_seconds(task.latency_s)} · "
+            f"in {_format_tokens(task.input_tokens)} / out {_format_tokens(task.output_tokens)} "
+            "· NOT E2E"
         )
         self.canvas.set_task(task)
         self.pipeline.set_stages(task.pipeline)
@@ -1034,6 +1194,11 @@ class TaskDetail(QWidget):
         self.raw_text.setPlainText(json.dumps(task.raw, ensure_ascii=False, indent=2))
 
     def _fill_reasoning(self, task: TaskTrace) -> None:
+        self.reasoning_notice.setText(
+            f"Источник reasoning: {task.reasoning_origin}. Финальный ответ имеет отдельное "
+            f"происхождение: {task.final_origin}. Показанный trace не является скрытым "
+            "chain-of-thought и не доказывает, что base model породила source replacement."
+        )
         self.step_list.clear()
         steps = task.solution_steps or ("у сохранённого ответа нет отдельных solution_steps",)
         for index, step in enumerate(steps, start=1):
@@ -1105,13 +1270,17 @@ class TaskDetail(QWidget):
         self.copy_trace_button.setEnabled(bool(source.trace_fingerprint))
 
     def _fill_comparison(self, task: TaskTrace) -> None:
+        self.anchor_card.title_label.setText("PRE-V7 COMPOSITE ANCHOR")
+        self.challenger_card.title_label.setText("DETERMINISTIC SOURCE CHALLENGER")
+        self.final_card.title_label.setText(f"FINAL · {task.final_origin}".upper())
         self.anchor_card.value.setText(task.anchor_answer or "—")
         self.challenger_card.value.setText(task.challenger_answer or "ABSTAIN")
         self.final_card.value.setText(task.final_answer or "—")
         if task.decision_action == "replace_anchor":
             self.composer_explanation.setText(
-                "composer заменил anchor: challenger прошёл строгую привязку к официальному PDF, "
-                "странице и ключу. reason = " + task.decision_reason
+                "финал создан deterministic source layer, а не моделью из поля base row: "
+                "challenger прошёл строгую привязку к официальному PDF, странице и ключу. "
+                "reason = " + task.decision_reason
             )
         elif task.has_certificate:
             self.composer_explanation.setText(
@@ -1224,9 +1393,9 @@ class TraceExplorer(QWidget):
         metrics = QHBoxLayout()
         metrics.addWidget(
             MetricCard(
-                "V7 accuracy",
+                "V7 composite accuracy",
                 f"{dataset.summary.accuracy:.2%}",
-                f"{dataset.summary.correct}/{dataset.summary.rows} · development replay",
+                f"{dataset.summary.correct}/{dataset.summary.rows} · {dataset.summary.pipeline_provenance}",
                 "#4be1c3",
             )
         )
@@ -1248,9 +1417,9 @@ class TraceExplorer(QWidget):
         )
         metrics.addWidget(
             MetricCard(
-                "Anchor latency p50",
+                "Inherited anchor p50",
                 _format_seconds(dataset.summary.latency_median_s),
-                f"recorded · p95 {_format_seconds(dataset.summary.latency_p95_s)}",
+                f"recorded, not E2E · p95 {_format_seconds(dataset.summary.latency_p95_s)}",
                 "#f0ad62",
             )
         )
@@ -1393,32 +1562,73 @@ class MetricsPage(QWidget):
     def __init__(self, dataset: TraceDataset):
         super().__init__()
         summary = dataset.summary
+        is_nine_b = summary.pipeline_provenance.startswith("9B ")
         root = QVBoxLayout(self)
         root.setContentsMargins(14, 14, 14, 14)
         root.setSpacing(12)
         heading = QHBoxLayout()
         title_box = QVBoxLayout()
-        title = QLabel("V7 · результат и границы утверждения")
+        title = QLabel(
+            "9B V7 · profile-bound source-adjudicated replay"
+            if is_nine_b
+            else "V7 reference · META-27B anchor + deterministic source layers"
+        )
         title.setObjectName("SectionTitle")
         subtitle = QLabel(
-            f"{summary.correct}/{summary.rows} — честный one-shot development replay "
-            "с официальной source-adjudication. "
-            "это не unseen holdout и не production accuracy."
+            (
+                f"{summary.correct}/{summary.rows} — отдельный Qwen3.5-9B replay с exact "
+                "benchmark/model/hash closure. Evaluator split и deterministic source "
+                "origins не свёрнуты в model gain."
+            )
+            if is_nine_b
+            else (
+                f"{summary.correct}/{summary.rows} — archived/reference development replay. "
+                "Base-row model metadata и final origin разделены: source replacements не "
+                "приписываются 27B. Это не unseen holdout и не production accuracy."
+            )
         )
         subtitle.setObjectName("Subtle")
         subtitle.setWordWrap(True)
         title_box.addWidget(title)
         title_box.addWidget(subtitle)
         heading.addLayout(title_box, 1)
-        heading.addWidget(_badge("DEV · V7 · FROZEN BEFORE SCORE", "warn"))
+        heading.addWidget(
+            _badge(
+                "9B · PROFILE-BOUND REPLAY" if is_nine_b else "ARCHIVED 27B REFERENCE",
+                "good" if is_nine_b else "warn",
+            )
+        )
         root.addLayout(heading)
 
         cards = QHBoxLayout()
         cards.addWidget(MetricCard("Overall", f"{summary.accuracy:.2%}", f"{summary.correct}/{summary.rows}", "#4be1c3"))
         cards.addWidget(MetricCard("Math", f"{summary.math_accuracy:.2%}", f"{summary.math_correct}/{summary.math_rows}", "#71aef5"))
-        cards.addWidget(MetricCard("vs page-RAG", f"+{(summary.accuracy-summary.baseline_accuracy):.1%}", f"baseline {summary.baseline_accuracy:.2%}", "#b99cff"))
+        cards.addWidget(
+            MetricCard(
+                "vs Active Crop" if is_nine_b else "vs page-RAG",
+                f"+{(summary.accuracy-summary.baseline_accuracy):.1%}",
+                f"baseline {summary.baseline_accuracy:.2%}",
+                "#b99cff",
+            )
+        )
         delta_v6 = summary.direct_gain_vs_v6 + summary.evaluator_corrections_vs_v6
-        cards.addWidget(MetricCard("vs V6", f"+{delta_v6}", f"+{summary.direct_gain_vs_v6} answer · +{summary.evaluator_corrections_vs_v6} eval", "#f0ad62"))
+        cards.addWidget(
+            MetricCard(
+                "Source origins" if is_nine_b else "vs V6",
+                (
+                    f"{summary.answer_overrides} / "
+                    f"{summary.source_certificates - summary.answer_overrides}"
+                    if is_nine_b
+                    else f"+{delta_v6}"
+                ),
+                (
+                    "replacements / confirmations"
+                    if is_nine_b
+                    else f"+{summary.direct_gain_vs_v6} answer · +{summary.evaluator_corrections_vs_v6} eval"
+                ),
+                "#f0ad62",
+            )
+        )
         root.addLayout(cards)
 
         splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -1455,14 +1665,34 @@ class MetricsPage(QWidget):
         interpretation.setObjectName("NoticeCard")
         info = QVBoxLayout(interpretation)
         info.setContentsMargins(14, 12, 14, 12)
-        label = QLabel("Что реально изменилось между V6 и V7")
+        label = QLabel(
+            "Evaluator/origin split 9B V7"
+            if is_nine_b
+            else "Provenance: что реально изменилось между V6 и V7"
+        )
         label.setObjectName("SectionTitle")
         text = QLabel(
-            f"• {summary.direct_gain_vs_v6} задача получила новый правильный solver-answer из официального источника.\n"
-            f"• {summary.evaluator_corrections_vs_v6} неизменённых правильных ответа получили исправленный verdict.\n"
-            f"• {summary.source_certificates} сильных сертификатов доступны в trace; layered composer заменил anchor "
-            f"в {summary.answer_overrides} задачах.\n"
-            "• весь набор уже изучался при разработке, поэтому экран явно маркирован как development replay."
+            (
+                f"• {summary.source_certificates} строк входят в проверенный source union; "
+                f"{summary.answer_overrides} финалов имеют deterministic source origin.\n"
+                f"• cumulative image-verdict split: source-adjudicated "
+                f"{summary.source_adjudicated_image_rows} / original ActiveCrop 9B "
+                f"{summary.original_9b_judge_rows}. Original означает byte-identical с исходным "
+                "9B judge, а не только копию immediate base.\n"
+                "• deterministic evaluator и image-judge остаются разными ветками; их "
+                "вклад не называется чистым model gain.\n"
+                "• latency/tokens — inherited Active Crop anchor usage, не полный E2E."
+            )
+            if is_nine_b
+            else (
+                f"• {summary.direct_gain_vs_v6} задача получила новый правильный solver-answer из официального источника.\n"
+                f"• {summary.evaluator_corrections_vs_v6} неизменённых правильных ответа получили исправленный verdict.\n"
+                f"• {summary.source_certificates} сильных сертификатов доступны в trace; layered composer заменил anchor "
+                f"в {summary.answer_overrides} задачах.\n"
+                "• latency и tokens относятся к записанной inherited-anchor строке; lookup, "
+                "certificate, composer и полный E2E wall clock в них не входят.\n"
+                "• весь набор уже изучался при разработке, поэтому экран явно маркирован как development replay."
+            )
         )
         text.setObjectName("Subtle")
         text.setWordWrap(True)
@@ -1474,15 +1704,21 @@ class MetricsPage(QWidget):
         limitations.setObjectName("NoticeCard")
         lim_layout = QVBoxLayout(limitations)
         lim_layout.setContentsMargins(14, 12, 14, 12)
-        lim_title = QLabel("Ограничения из V7_POST_SCORE_RESULT")
+        lim_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        lim_title = QLabel(
+            "Ограничения replay"
+            if is_nine_b
+            else "Ограничения из V7_POST_SCORE_RESULT"
+        )
         lim_title.setObjectName("MetricLabel")
         lim_layout.addWidget(lim_title)
-        for limitation in summary.limitations:
-            line = QLabel("• " + limitation)
-            line.setObjectName("Subtle")
-            line.setWordWrap(True)
-            lim_layout.addWidget(line)
-        right_layout.addWidget(limitations, 1)
+        caveats = QLabel("\n".join("• " + item for item in summary.limitations))
+        caveats.setObjectName("Subtle")
+        caveats.setWordWrap(True)
+        caveats.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        lim_layout.addWidget(caveats)
+        right_layout.addWidget(limitations)
+        right_layout.addStretch(1)
         splitter.addWidget(right)
         splitter.setStretchFactor(0, 3)
         splitter.setStretchFactor(1, 2)
@@ -1495,24 +1731,44 @@ class TraceViewerWindow(QMainWindow):
         self,
         dataset: TraceDataset,
         holdout80: Holdout80Summary | None = None,
+        nine_b_comparison: FrozenReplayComparison | None = None,
+        *,
+        active_dataset: str = "archived-27b-v7",
     ):
         super().__init__()
         self.dataset = dataset
         self.holdout80 = holdout80 or load_holdout80_summary()
-        self.setWindowTitle("VLM Trace · V7 Evidence OS")
+        self.nine_b_comparison = nine_b_comparison
+        self.active_dataset = active_dataset
+        self.setWindowTitle(
+            "VLM Trace · 9B V7 Evidence OS"
+            if active_dataset == "nine-b-v7"
+            else "VLM Trace · archived 27B V7 reference"
+        )
         self.resize(1860, 1050)
         self.setMinimumSize(1280, 760)
         self.setStyleSheet(TRACE_STYLESHEET)
         self._build_toolbar()
         self.tabs = QTabWidget()
         self.explorer = TraceExplorer(dataset)
-        self.tabs.addTab(self.explorer, "Trace explorer")
+        self.tabs.addTab(
+            self.explorer,
+            "9B V7 · trace" if active_dataset == "nine-b-v7" else "Archived 27B · trace",
+        )
         self.tabs.addTab(Holdout80Page(self.holdout80), "Holdout80 · source evidence")
-        self.tabs.addTab(MetricsPage(dataset), "V7 · метрики и границы")
+        self.tabs.addTab(
+            MetricsPage(dataset),
+            "9B V7 · metrics" if active_dataset == "nine-b-v7" else "Archived 27B · metrics",
+        )
+        self.tabs.addTab(
+            NineBMilestonesPage(nine_b_comparison),
+            "9B · seven milestones",
+        )
         self.setCentralWidget(self.tabs)
         status = QStatusBar()
         status.showMessage(
-            f"offline · {dataset.summary.rows} joined tasks · {len(dataset.source_files)} frozen artifact files"
+            f"offline · active dataset: {active_dataset} · {dataset.summary.rows} joined tasks · "
+            f"{len(dataset.source_files)} provenance files"
         )
         self.setStatusBar(status)
 
@@ -1535,13 +1791,20 @@ class TraceViewerWindow(QMainWindow):
         toolbar.addWidget(spacer)
         toolbar.addWidget(_badge("OFFLINE", "good"))
         toolbar.addWidget(_badge("H80 · SEALED", "good"))
-        toolbar.addWidget(_badge("V7 · DEV REPLAY", "warn"))
         toolbar.addWidget(
             _badge(
-                f"V7 · {self.dataset.summary.correct}/{self.dataset.summary.rows}",
+                "9B V7 · ACTIVE" if self.active_dataset == "nine-b-v7" else "27B · ARCHIVED REFERENCE",
+                "good" if self.active_dataset == "nine-b-v7" else "warn",
+            )
+        )
+        toolbar.addWidget(
+            _badge(
+                f"{self.dataset.summary.correct}/{self.dataset.summary.rows}",
                 "info",
             )
         )
+        if self.nine_b_comparison is None:
+            toolbar.addWidget(_badge("9B · AWAITING PINS", "warn"))
 
 
 def run_gui(dataset: TraceDataset, argv: list[str] | None = None) -> int:

@@ -37,6 +37,11 @@ PARSER_RESULTS = Path(
 SPEED_ANALYSIS = Path(
     "reports/maxim_v7_source_first_speed_v1_20260808/analysis.json"
 )
+PIPELINE_PROVENANCE = "META-27B anchor + deterministic source layers"
+RECORDED_USAGE_SCOPE = (
+    "recorded inherited-anchor usage only; excludes deterministic lookup, "
+    "certificate/composer work and end-to-end wall clock"
+)
 
 
 def _looks_like_v7_root(path: Path) -> bool:
@@ -461,6 +466,28 @@ class V7ArtifactAdapter:
                 challenger_answer = str(source_candidate.get("final_answer") or "")
 
             usage = solver.get("usage") or {}
+            final_answer = str(
+                solver.get("final_answer") or decision.get("selected_answer") or ""
+            )
+            base_row_model = str(solver.get("model") or "")
+            if decision.get("action") == "replace_anchor":
+                if not evidence.accepted or not challenger_answer:
+                    raise ArtifactError(
+                        f"{task_id}: source replacement lacks an accepted certificate "
+                        "or a non-abstaining challenger"
+                    )
+                final_origin = "deterministic official-source replacement"
+            else:
+                if final_answer != anchor_answer:
+                    raise ArtifactError(
+                        f"{task_id}: final answer differs from its anchor without a "
+                        "recorded deterministic replacement"
+                    )
+                final_origin = "inherited pre-V7 composite anchor"
+            reasoning_origin = (
+                "recorded inherited-anchor trace · "
+                + (base_row_model or "model metadata absent")
+            )
             solution_steps = split_solution_steps(solver.get("solution_steps"))
             if not solution_steps:
                 solution_steps = split_solution_steps(solver.get("reasoning"))
@@ -471,7 +498,7 @@ class V7ArtifactAdapter:
                 answer_type=str(outcome.get("answer_type") or queue.get("answer_type") or ""),
                 question_text=_question_from_queue(queue, regions),
                 question_image=self._resolve_question_image(queue),
-                final_answer=str(solver.get("final_answer") or decision.get("selected_answer") or ""),
+                final_answer=final_answer,
                 anchor_answer=anchor_answer,
                 challenger_answer=challenger_answer,
                 correct=bool(outcome.get("new_correct")),
@@ -485,7 +512,10 @@ class V7ArtifactAdapter:
                 transition=str(outcome.get("transition") or ""),
                 reasoning=str(solver.get("reasoning") or ""),
                 solution_steps=solution_steps,
-                model=str(solver.get("model") or ""),
+                base_row_model=base_row_model,
+                final_origin=final_origin,
+                reasoning_origin=reasoning_origin,
+                usage_origin=RECORDED_USAGE_SCOPE,
                 prompt_version=str(solver.get("prompt_version") or ""),
                 latency_s=_as_float(usage.get("latency_s")),
                 input_tokens=_as_int(usage.get("input_tokens")),
@@ -496,7 +526,14 @@ class V7ArtifactAdapter:
                 attention_regions=regions,
                 candidates=self._compact_candidates(queue),
                 raw={
-                    "solver": solver,
+                    "provenance": {
+                        "pipeline": PIPELINE_PROVENANCE,
+                        "base_row_model": base_row_model,
+                        "final_origin": final_origin,
+                        "reasoning_origin": reasoning_origin,
+                        "usage_origin": RECORDED_USAGE_SCOPE,
+                    },
+                    "composed_solver_row": solver,
                     "decision": decision,
                     "main_decision": main_decision,
                     "final_wave_decision": final_decision,
@@ -535,6 +572,7 @@ class V7ArtifactAdapter:
         combined_overrides = sum(task.decision_action == "replace_anchor" for task in tasks)
         measured_latencies = [task.latency_s for task in tasks if task.latency_s is not None]
         measured_median, measured_p95, measured_max = latency_summary(measured_latencies)
+        base_row_models = tuple(sorted({task.base_row_model for task in tasks if task.base_row_model}))
 
         summary = RunSummary(
             label="V7 · official-certificate-adjudicated development replay",
@@ -552,6 +590,9 @@ class V7ArtifactAdapter:
             latency_median_s=_as_float(operational_latency.get("latency_s_median")) or measured_median,
             latency_p95_s=_as_float(operational_latency.get("latency_s_p95_nearest_rank")) or measured_p95,
             latency_max_s=_as_float(operational_latency.get("latency_s_max")) or measured_max,
+            pipeline_provenance=PIPELINE_PROVENANCE,
+            base_row_models=base_row_models,
+            recorded_usage_scope=RECORDED_USAGE_SCOPE,
             by_subject={str(key): value for key, value in by_subject.items()},
             limitations=tuple(str(value) for value in post_score.get("limitations") or ()),
             source_shortcuts=int(speed_analysis.get("source_shortcuts") or 0),
@@ -626,6 +667,22 @@ class V7ArtifactAdapter:
             "math_accuracy": dataset.summary.math_accuracy,
             "accepted_source_certificates": dataset.summary.source_certificates,
             "layered_answer_overrides": dataset.summary.answer_overrides,
+            "provenance": {
+                "pipeline": dataset.summary.pipeline_provenance,
+                "base_row_models": list(dataset.summary.base_row_models),
+                "final_origin_counts": {
+                    "deterministic_official_source": sum(
+                        task.decision_action == "replace_anchor"
+                        for task in dataset.tasks
+                    ),
+                    "inherited_anchor": sum(
+                        task.decision_action != "replace_anchor"
+                        for task in dataset.tasks
+                    ),
+                },
+                "usage_scope": dataset.summary.recorded_usage_scope,
+                "latency_and_tokens_are_end_to_end": False,
+            },
             "local_question_images": local_images,
             "ocr_reconstructable_questions": ocr_reconstructions,
             "source_first_projection": {

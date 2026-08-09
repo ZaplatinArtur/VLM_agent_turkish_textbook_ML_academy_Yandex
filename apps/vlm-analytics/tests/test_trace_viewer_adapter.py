@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pytest
 
+from trace_viewer import DEFAULT_NINE_B_COMPARISON, resolve_nine_b_comparison_path
+
 from vlm_trace_viewer.adapter import (
     ArtifactError,
     FINAL_COMPOSED,
@@ -195,11 +197,23 @@ def test_adapter_joins_v7_and_normalizes_layered_override(tmp_path: Path) -> Non
     assert overridden.source.accepted is True
     assert overridden.source.matched_page == 4
     assert overridden.pipeline[4].state == "pass"
+    assert overridden.base_row_model == "demo-model"
+    assert overridden.final_origin == "deterministic official-source replacement"
+    assert overridden.reasoning_origin.startswith("recorded inherited-anchor trace")
+    assert "end-to-end" in overridden.usage_origin
+    assert overridden.raw["provenance"]["final_origin"] == overridden.final_origin
 
     fallback = next(task for task in dataset.tasks if task.task_id == "t2")
     assert fallback.decision_action == "keep_anchor"
     assert fallback.source.accepted is False
     assert fallback.pipeline[2].state == "skipped"
+    assert fallback.final_origin == "inherited pre-V7 composite anchor"
+    assert dataset.summary.pipeline_provenance == (
+        "META-27B anchor + deterministic source layers"
+    )
+    assert dataset.summary.recorded_usage_scope.startswith(
+        "recorded inherited-anchor usage only"
+    )
 
 
 def test_split_solution_steps_keeps_content_and_removes_markers() -> None:
@@ -240,3 +254,14 @@ def test_explicit_artifact_root_fails_instead_of_silently_falling_back(
 ) -> None:
     with pytest.raises(ArtifactError, match="explicit --artifact-root"):
         discover_artifact_root(tmp_path / "wrong-project")
+
+
+def test_canonical_9b_comparison_is_the_only_implicit_default(tmp_path: Path) -> None:
+    assert resolve_nine_b_comparison_path(None, tmp_path) is None
+
+    canonical = tmp_path / DEFAULT_NINE_B_COMPARISON
+    _json(canonical, {"schema_version": "fixture"})
+    assert resolve_nine_b_comparison_path(None, tmp_path) == canonical.resolve()
+
+    explicit = tmp_path / "explicit.json"
+    assert resolve_nine_b_comparison_path(explicit, tmp_path) == explicit.resolve()

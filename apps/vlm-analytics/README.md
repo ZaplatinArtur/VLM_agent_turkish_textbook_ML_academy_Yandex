@@ -19,11 +19,14 @@ python -m venv .venv
 .\.venv\Scripts\python.exe main.py
 ```
 
-## Демонстрация финального V7 trace
+## Демонстрация trace и provenance
 
 Отдельный read-only экран показывает 274 joined-задачи, сохранённые шаги решения,
 маршрут, official-source certificates, сравнение anchor/challenger/final и честные
-границы метрик. Он не запускает модель и не изменяет SQLite-базу приложения.
+границы метрик. Он не запускает модель и не изменяет SQLite-базу приложения. Старый
+V7 явно подписан как archived/reference: это META-27B anchor с последующими
+детерминированными source layers, а не цельный output одной 27B модели. Показанные
+latency/tokens относятся только к сохранённому inherited anchor и не являются E2E.
 
 ```powershell
 .\.venv\Scripts\python.exe trace_viewer.py `
@@ -34,6 +37,19 @@ python -m venv .venv
 Полное описание, режим скриншотов и трактовка source-first профиля находятся в
 [`vlm_trace_viewer/README.md`](vlm_trace_viewer/README.md). Готовый Windows launcher и
 трёхминутный сценарий показа описаны в [`DEMO_GUIDE_RU.md`](DEMO_GUIDE_RU.md).
+
+Новый 9B-only режим включается только с полным SHA-замкнутым manifest:
+
+```powershell
+.\.venv\Scripts\python.exe trace_viewer.py `
+  --nine-b-comparison C:\path\to\comparison.json `
+  --dataset auto
+```
+
+При успешной проверке он становится default trace. При отсутствии manifest старый
+27B экран остаётся только явно помеченным reference; 27B task trace и 9B score не
+смешиваются. Exact wrapper/native contract описан в
+[`NINE_B_COMPARISON_CONTRACT_RU.md`](NINE_B_COMPARISON_CONTRACT_RU.md).
 
 В отдельной вкладке Holdout80 показан честный source-evidence aggregate: неизменный
 raw `71/80`, отдельный official-key erratum `79/80` и `79/79` по валидным строкам.
@@ -75,6 +91,17 @@ $env:VLM_ANALYTICS_REMOTE_ROOT = "/path/to/v2_274/app"
 ```powershell
 .\build.ps1
 ```
+
+Отдельная SHA-проверяемая 9B trace-сборка создаётся командой:
+
+```powershell
+.\build_trace_viewer.ps1 -CopyToDesktop
+```
+
+Она собирает `VLM Analytics 9B.exe`; при наличии canonical frozen comparison под
+обнаруженным artifact root приложение валидирует все семь milestones и открывает
+9B V7 как default dataset. При отсутствии comparison остаётся только явно
+помеченный archived 27B reference.
 
 В Git хранится только код приложения. Локальные SQLite-базы, синхронизированные
 JSONL, judge-кэши, изображения учебников и собранные EXE исключены через
