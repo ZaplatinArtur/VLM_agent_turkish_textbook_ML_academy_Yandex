@@ -12,9 +12,10 @@
 | Source-native V6 | 238/274 = **0,8686** | one-shot development replay; 4 изменения ответа относительно V5 |
 | Source-adjudicated V7 | 242/274 = **0,8832** | one-shot development replay; 1 новый ответ + 3 исправления оценки |
 | V7, математика | 112/139 = **0,8058** | frozen dev metric; без прироста относительно V6 |
-| Holdout80 | **protocol-ready / no model score** | 80 новых задач из тех же книг; manifest frozen до gold |
+| Holdout80 raw source evidence | 71/80 = **0,8875** | same-book task-disjoint; неоднородный source composite, не QA accuracy |
+| Holdout80 после принятого protocol erratum | 79/80 = **0,9875**; valid-only 79/79 | 8 переставленных Physics labels и один open-response подтверждены отдельно |
 
-Главная оговорка: **0,8832 — не holdout accuracy и не оценка на новых книгах**. Этот benchmark использовался много раз при разработке. Внутри поздних source-волн код и источники замораживались до подсчёта результата, но весь набор всё равно остаётся development replay.
+Главная оговорка: **0,8832 — V7 QA на development replay, а 0,8875/0,9875 — source evidence на same-book Holdout80**. Это разные метрики, их нельзя сравнивать как две версии одной accuracy. Holdout проверяет точную адресацию новых заданий внутри уже известных книг, но не end-to-end reasoning и не перенос на новые книги.
 
 ## Что читать
 
@@ -27,6 +28,7 @@
 7. [Жёсткие вопросы](07_жесткие_вопросы.md) — короткие честные ответы руководителям.
 8. [Статьи и заимствованные идеи](08_статьи_и_статус_реализации.md) — что было только inspiration, а что реально проверялось.
 9. [Первичные локальные источники](09_первичные_источники.md) — отчёты, SHA и границы текущего checkout.
+10. [Финальный публичный Holdout80 source-evidence report](../../reports/maxim_holdout80_final_source_evidence_20260809/REPORT_RU.md) — frozen raw, erratum, хронология и ограничения blind-процедуры.
 
 ## Короткая формулировка для защиты
 
@@ -41,6 +43,7 @@
 - у V7 один прямой solver-answer gain и три source-backed исправления прежней оценки;
 - source-native этапы не используют `task_id` как признак поиска или выбора ответа;
 - ранние task-ID keyed результаты 0,766/0,832/0,960 были выявлены и исключены из production claim.
+- frozen raw Holdout80 source-evidence composite равен 71/80; после явно опубликованного erratum — 79/80, а на 79 валидных строках — 79/79.
 
 Нельзя:
 
@@ -49,3 +52,4 @@
 - приписывать element-level proxy результат 0,4489 методу ColPali;
 - считать post-hoc 0,832 или 0,960 переносимым результатом;
 - утверждать, что clean-room replay из чистого клона уже доказан.
+- называть Holdout80 0,9875 end-to-end QA accuracy или доказательством переноса на новые книги.
