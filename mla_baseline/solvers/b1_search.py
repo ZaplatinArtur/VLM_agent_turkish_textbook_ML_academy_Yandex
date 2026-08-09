@@ -11,7 +11,7 @@ from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 
 from ..config import Settings
 from ..contracts import Task
-from ..parsing import parse_solve_output
+from ..parsing import parse_solve_output  # noqa: F401  (используется в _react_loop)
 from ..schemas import SolveResult, ToolCallLog, Usage
 from ..tools import ToolUnavailable
 from ..tools.search import WEB_SEARCH_TOOL_SCHEMA, searxng_search
@@ -132,6 +132,13 @@ class B1Search(B0NoTools):
             if not response.tool_calls:
                 content = (response.content if isinstance(response.content, str)
                            else str(response.content))
+                # Шаг мог оборваться на бюджете посреди размышления: тогда
+                # текст ушёл в reasoning_content, а content пуст или без JSON.
+                # Замер b1_search на V100: 49 из 89 таких задач упирались
+                # ровно в 4096 токенов шага. Добиваем полным бюджетом здесь,
+                # а не аварийной лестницей в solve() — она даёт 28% точности.
+                if parse_solve_output(content) is None:
+                    content = self._finish_call(messages, task, usage)
                 break
             for tc in response.tool_calls:
                 result, keep, diag = self._run_tool(

@@ -18,6 +18,7 @@ from mla_baseline.config import Settings          # noqa: E402
 from mla_baseline.contracts import Task           # noqa: E402
 from mla_baseline.schemas import Usage            # noqa: E402
 from mla_baseline.tools import ToolUnavailable    # noqa: E402
+from mla_baseline.parsing import parse_solve_output as parse  # noqa: E402
 from mla_baseline.solvers.agent_rag import AgentRag  # noqa: E402
 
 TASK = Task(task_id="t1", question="2+2?", answer_type="numeric", grade=8,
@@ -155,11 +156,23 @@ def main() -> int:
     ok &= check("мёртвый бэкенд: диагностика попала в лог прогона",
                 log[0].diag == {"attempts": [{"error": "TimeoutError"}]})
 
-    # 6. Модель ответила сразу — цикл не делает лишних вызовов
-    solver, _, journal = build([FakeResponse(content='{"final_answer": "4"}')])
+    # 6. Модель ответила сразу валидным JSON — цикл не делает лишних вызовов
+    good = '{"solution_steps": "2+2", "final_answer": "4"}'
+    solver, _, journal = build([FakeResponse(content=good)])
     content, log, _ = run(solver)
     ok &= check("ответ без поиска: ни одного тул-вызова и один запрос к модели",
                 not log and len(journal) == 1)
+
+    # 7. Шаг оборвался посреди размышления: content пуст, тул-вызовов нет.
+    #    Раньше цикл выходил с пустотой и уходил в аварийную лестницу
+    #    (28% точности на замере V100); теперь добиваем полным бюджетом.
+    solver, settings, journal = build([FakeResponse(content="")],
+                                      script_plain=[FakeResponse(content=good)])
+    content, log, _ = run(solver)
+    ok &= check("обрыв на бюджете шага: цикл добивает ответ, а не отдаёт пустоту",
+                parse(content) is not None)
+    ok &= check("добивание идёт без инструмента и полным бюджетом",
+                journal[-1]["llm"] == "plain" and not journal[-1]["has_tools"])
 
     print("\nИТОГ:", "все проверки пройдены" if ok else "ЕСТЬ ПАДЕНИЯ")
     return 0 if ok else 1
