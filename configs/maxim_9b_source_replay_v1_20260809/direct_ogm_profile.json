@@ -1,0 +1,52 @@
+{
+  "schema_version": "maxim-official-ogm-exact-source-profile-v2",
+  "profile_name": "maxim-9b-only-ogm-exact-source-replay-v1",
+  "expected_rows": 274,
+  "anchor": {
+    "path": "artifacts/baselines/no_tools_v1/b0_no_tools_raw.jsonl",
+    "sha256": "496236da966ed68aa81af3d33da1c40b85c5a11b342de253ada244f97320de8f",
+    "role": "opaque_fail_closed_qwen35_9b_anchor_only"
+  },
+  "inputs": {
+    "parser_observations": {
+      "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/parser_artifacts/parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038",
+      "allowed_role": "observable_ocr_and_image_binding_only"
+    },
+    "source_locators": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a",
+      "allowed_role": "exact_public_evidence_locator_only"
+    }
+  },
+  "official": {
+    "book_id": "67c04bba2ff8d02ed00e890f",
+    "book_api_url": "https://ogmmateryal.eba.gov.tr/ogm-test-api/v1/general/books/67c04bba2ff8d02ed00e890f",
+    "test_api_template": "https://ogmmateryal.eba.gov.tr/ogm-test-api/v1/general/tests/{test_id}",
+    "safe_snapshot_sha256": "6a67794049bec1dcaebcddd8dee2aa724f7020407ecdf5c224aea9e2cfc487d1",
+    "pdf_url": "https://ogmmateryal.eba.gov.tr/dosya/cikmis_sorular/ayt-ea/CIKMIS SORULAR-AYT-EA.pdf",
+    "pdf_sha256": "cb07b1d18af5426ad6d23e037fbe4bab8bab0e2672e2072687f6c66276e9632f",
+    "api_methods_allowed": [
+      "GET"
+    ],
+    "stats_and_outcome_ids_projected": false
+  },
+  "policy": {
+    "min_idf_coverage": 0.65,
+    "min_matched_tokens": 15,
+    "min_page_margin": 0.1,
+    "min_candidate_margin": 0.4,
+    "max_aspect_log_delta": 0.4,
+    "pdf_page_index_offset": 2,
+    "require_unique_global_pdf_page": true,
+    "require_visually_checked_official_key": true,
+    "ambiguous_or_malformed_action": "abstain_keep_anchor",
+    "task_id_is_policy_feature": false,
+    "benchmark_candidate_or_outcome_access": false
+  },
+  "evaluation": {
+    "profile_must_be_frozen_before_scoring": true,
+    "target_split_status": "previously_inspected_development_replay_not_holdout"
+  }
+}
+

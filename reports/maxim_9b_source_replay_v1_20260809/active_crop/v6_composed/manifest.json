@@ -1,0 +1,69 @@
+{
+  "activity_visual_reproduction": {
+    "benchmark_answer_candidate_outcome_artifacts_read": false,
+    "command_projection_sha256": "6d128a94eba9401012a783b5d3709c3bacf5bb16a877cfd03a39f1c019486e28",
+    "exact_byte_identity": true,
+    "frozen_artifact": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\activity_visual_binding_sociology_biology_strict_v6.json",
+      "sha256": "131170a808a7455e5be1674399b3d5b444ee088e0185d590fdaf074597f7ac88",
+      "size_bytes": 570459
+    },
+    "generator": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\scripts\\build_maxim_activity_visual_binding_v1.py",
+      "sha256": "1cc71470242fc5d16a1d813daf13f4b9b7de5810e5977f2a30c1e7dff9075efa"
+    },
+    "mode": "fresh_source_only_poppler_sift_exact_bytes_v1",
+    "reproduced_artifact": {
+      "sha256": "131170a808a7455e5be1674399b3d5b444ee088e0185d590fdaf074597f7ac88",
+      "size_bytes": 570459
+    },
+    "runtime": {
+      "pdfinfo_sha256": "bc2c0f980c9a2a29cd1e06aacd8d1c7b67a5304e9d1d6f75190bdeb9c81a4365",
+      "pdftoppm_sha256": "742cbbd9a00931ad16c6618410bc40471375d639a45c61c1d86f3dcfc54b6388",
+      "python_executable_sha256": "3c6a206b7d93cca823934a83732220dcffd413fd1036d9fb82eebb64599cf7f3",
+      "runtime_projection_sha256": "d21a4b6289154293a2dcce574f58e1af98ea189068cc69d4425fdb4a276d0b76"
+    },
+    "summary": {
+      "activity_documents": 1,
+      "activity_observations": 4,
+      "activity_records": 4,
+      "decision_layer": "not_applied_raw_evidence_only",
+      "raw_page_evidences": 712
+    }
+  },
+  "anchor": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_9b_source_replay_v1_20260809\\active_crop\\direct_pdf_composed\\solver.jsonl",
+    "sha256": "453b6cedd03f0e3000d4e466466ae5a9cc57a63b4d9006417ad28f3884bb866f"
+  },
+  "certificates_seen": 124,
+  "certified_equal_anchor": 89,
+  "created_at_utc": "2026-08-09T09:28:43.720573+00:00",
+  "decision_reasons": {
+    "equivalent_to_anchor": 89,
+    "no_challengers": 150,
+    "strongly_verified_challenger": 35
+  },
+  "gold_access": false,
+  "output": {
+    "decisions": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_9b_source_replay_v1_20260809\\active_crop\\v6_composed\\decisions.jsonl",
+      "sha256": "65a447a9b8c16401ce4c8cc92745db862027fb47e86f4d283c07b56dfef25beb"
+    },
+    "solver": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_9b_source_replay_v1_20260809\\active_crop\\v6_composed\\solver.jsonl",
+      "sha256": "2d18fc738b3757590cb3c92e7c0a76ad9410620d6bf13a928198f3a8df42ca19"
+    }
+  },
+  "overrides": 35,
+  "profile": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\configs\\maxim_9b_source_replay_v1_20260809\\active_crop_v6_profile.json",
+    "sha256": "ab806d932128194400166d9b4c2b56f186bbb4625aa2006917c6db155872267c"
+  },
+  "resolver_manifest": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_9b_source_replay_v1_20260809\\active_crop\\v6_resolver\\manifest.json",
+    "sha256": "ecaa4ae35f61b16161d1e17549b66a8f53b14eb92e43499a3204ebf299502d35"
+  },
+  "rows": 274,
+  "schema_version": "maxim-official-source-failclosed-composition-v2",
+  "score_or_outcome_access": false
+}

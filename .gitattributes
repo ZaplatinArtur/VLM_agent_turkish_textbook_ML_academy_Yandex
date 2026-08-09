@@ -6,3 +6,15 @@
 *.jsonl text eol=lf
 *.md text eol=lf
 *.sha256 text eol=lf
+
+# Byte-pinned Qwen3.5-9B replay bundle.  These files are verified by SHA-256,
+# so Git must store and restore their exact bytes instead of normalizing EOLs.
+configs/maxim_9b_source_replay_v1_20260809/** binary
+reports/maxim_9b_source_replay_v1_20260809/** binary
+artifacts/baselines/basic_page_rag_v1/** binary
+artifacts/baselines/no_tools_v1/b0_no_tools_raw.jsonl binary
+reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation_orchestrated/matched_image97_judge_manifest.json binary
+reports/maxim_query_active_crop_v2_20260803/composition_manifest.json binary
+reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/score.json binary
+reports/maxim_query_active_crop_v2_20260803/preregistered_profile.json binary
+reports/maxim_query_active_crop_v2_20260803/solver.jsonl binary

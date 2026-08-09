@@ -1,0 +1,59 @@
+{
+  "schema_version": "maxim-query-active-crop-composition-manifest-v2",
+  "condition": "maxim_query_conditioned_active_crop_verifier_v2_failclosed_no_tools_v1",
+  "scoring_performed": false,
+  "gold_access": false,
+  "sources": {
+    "benchmark": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\artifacts\\baselines\\basic_page_rag_v1\\validation_274.jsonl",
+      "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+    },
+    "fallback": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\artifacts\\baselines\\no_tools_v1\\b0_no_tools_raw.jsonl",
+      "sha256": "496236da966ed68aa81af3d33da1c40b85c5a11b342de253ada244f97320de8f"
+    },
+    "queue": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_query_active_crop_v2_20260803\\public_queue.jsonl",
+      "sha256": "90ebdc19e6452b68c57b1c29404e1ba76bba04a69b3e9dc1ce5ec7695edc95ea"
+    },
+    "profile": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_query_active_crop_v2_20260803\\preregistered_profile.json",
+      "sha256": "92f847eca08bc5b8b0d8377f57650f1411e3e734e1a064dab41c22cbf66e576e"
+    },
+    "results": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_query_active_crop_v2_20260803\\solver.raw.jsonl",
+      "sha256": "7a5f0090abd6ab909e6d253a041a8fdb60b288c45c10f4e25d713b1af290014a"
+    }
+  },
+  "code_sha256": "3fd10c6ccb6decf26eff5373a1b6e121d731cf50f9a1fc5b8da441b0dbe33a27",
+  "stats": {
+    "rows": 274,
+    "routed_rows": 43,
+    "nonroute_fallback_rows": 231,
+    "gate_fallback_rows": 36,
+    "active_crop_selected_rows": 7,
+    "active_crop_selected_task_ids": [
+      "val_0022",
+      "val_0084",
+      "val_0101",
+      "val_0178",
+      "val_0196",
+      "val_0204",
+      "val_0253"
+    ],
+    "failure_clause_counts": {
+      "baseline_not_explicitly_refuted": 25,
+      "no_canonical_disagreement": 31,
+      "verifier_confidence_below_0_90": 1
+    }
+  },
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_query_active_crop_v2_20260803\\solver.jsonl",
+    "rows": 274,
+    "sha256": "6697c043f3142a736b817ead5da494eea334f5349e0db833bd72f23fe35cb17c"
+  },
+  "decisions": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_query_active_crop_v2_20260803\\decisions.json",
+    "sha256": "4eb7a67d5681ed1ca68ef00f027f950e9c6ed63853c5859a9bb39d2cf7d9583b"
+  }
+}

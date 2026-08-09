@@ -1,0 +1,99 @@
+{
+  "schema_version": "maxim-official-direct-pdf-profile-v2",
+  "profile_name": "maxim-9b-only-active-crop-direct-pdf-source-replay-v1",
+  "expected_rows": 274,
+  "anchor": {
+    "path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/ogm_composed/solver.jsonl",
+    "sha256": "715515e9c35228dab8ba2dcbf454c193a3f5d6ad1e108e5bc6db78b19d5cd0b3",
+    "role": "opaque_fail_closed_qwen35_9b_active_crop_ogm_source_anchor_only"
+  },
+  "inputs": {
+    "parser_observations": {
+      "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/parser_artifacts/parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038"
+    },
+    "source_locators": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a"
+    }
+  },
+  "documents": [
+    {
+      "name": "meb-odsgm-2025-sayisal-a",
+      "source_url": "https://cdn.eba.gov.tr/yardimcikaynaklar/2025/06/lgss/2025sayisal.pdf",
+      "pdf_sha256": "6a66a8d5668451ee6958fbd1e39537b4c8c16c21fd48be9c29af04c2f63a9f14",
+      "page_count": 33,
+      "key_page_number": 33,
+      "sections": [
+        {
+          "subject": "math",
+          "start_page": 3,
+          "end_page": 16
+        },
+        {
+          "subject": "science",
+          "start_page": 17,
+          "end_page": 30
+        }
+      ],
+      "key_regions": [
+        {
+          "subject": "math",
+          "heading": "matematik",
+          "expected_count": 20,
+          "heading_bbox": [145, 90, 235, 112],
+          "answers_bbox": [150, 115, 230, 400]
+        },
+        {
+          "subject": "science",
+          "heading": "fen bilimleri",
+          "expected_count": 20,
+          "heading_bbox": [295, 90, 400, 112],
+          "answers_bbox": [310, 115, 395, 400]
+        }
+      ]
+    },
+    {
+      "name": "samsung-il-mem-lgs-deneme-1",
+      "source_url": "https://samsungis.meb.gov.tr/storage/denemeler/lgs/lgs1.pdf",
+      "pdf_sha256": "f88c9f40e3c6f3a2494090ee7635d1f7254b736da561b0f0b98125cb25ad5997",
+      "page_count": 25,
+      "key_page_number": 25,
+      "sections": [
+        {"subject": "turkish", "start_page": 1, "end_page": 7},
+        {"subject": "history", "start_page": 8, "end_page": 9},
+        {"subject": "religion", "start_page": 10, "end_page": 10},
+        {"subject": "english", "start_page": 11, "end_page": 13},
+        {"subject": "math", "start_page": 14, "end_page": 18},
+        {"subject": "science", "start_page": 19, "end_page": 24}
+      ],
+      "key_regions": [
+        {"subject": "turkish", "heading": "turkce", "expected_count": 20, "heading_bbox": [100, 65, 150, 82], "answers_bbox": [105, 80, 145, 300]},
+        {"subject": "history", "heading": "t c inkilap tarihi ve ataturkculuk", "expected_count": 10, "heading_bbox": [30, 320, 220, 340], "answers_bbox": [105, 337, 145, 447]},
+        {"subject": "religion", "heading": "din kulturu ve ahlak bilgisi", "expected_count": 10, "heading_bbox": [45, 462, 205, 482], "answers_bbox": [105, 480, 145, 590]},
+        {"subject": "english", "heading": "ingilizce", "expected_count": 10, "heading_bbox": [95, 615, 155, 635], "answers_bbox": [105, 632, 145, 742]},
+        {"subject": "math", "heading": "matematik", "expected_count": 20, "heading_bbox": [375, 65, 450, 84], "answers_bbox": [395, 82, 430, 300]},
+        {"subject": "science", "heading": "fen bilimleri", "expected_count": 20, "heading_bbox": [370, 320, 450, 342], "answers_bbox": [390, 337, 430, 555]}
+      ]
+    }
+  ],
+  "policy": {
+    "min_page_coverage": 0.75,
+    "min_page_matched_tokens": 15,
+    "min_page_margin": 0.2,
+    "rescue_min_page_coverage": 0.4,
+    "rescue_min_page_margin": 0.05,
+    "rescue_min_anchor_coverage": 0.9,
+    "rescue_min_anchor_matched_tokens": 8,
+    "rescue_min_anchor_margin": 0.5,
+    "ambiguous_or_malformed_action": "abstain_keep_anchor",
+    "task_id_is_policy_feature": false,
+    "benchmark_candidate_or_outcome_access": false
+  },
+  "evaluation": {
+    "profile_must_be_frozen_before_scoring": true,
+    "target_split_status": "previously_inspected_development_replay_not_holdout"
+  }
+}
+
+

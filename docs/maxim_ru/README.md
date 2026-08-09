@@ -8,6 +8,10 @@
 |---|---:|---|
 | Frozen page-RAG | 141/274 = **0,5146** | исходный контрольный RAG |
 | Historical no-tools reasoning | 191/274 = **0,6971** | сильный исторический baseline; другая lineage судьи |
+| Matched clean no-tools 9B | 193/274 = **0,7044** | exact all-9B anchor, пересчитанный текущим judge-v2 |
+| Query Active Crop 9B | 194/274 = **0,7080** | all-9B tuned development anchor |
+| Clean 9B source rebase | 237/274 = **0,8650** | post-hoc deterministic development replay; Math 107/139 |
+| Active Crop 9B source rebase | 238/274 = **0,8686** | tuned post-hoc development replay; Math 108/139 |
 | Gold-blind V2.1 + conservative V3.1 repair | 205/274 = **0,7482** | dev-selected anchor |
 | Source-native V6 | 238/274 = **0,8686** | one-shot development replay; 4 изменения ответа относительно V5 |
 | Source-adjudicated V7 | 242/274 = **0,8832** | one-shot development replay; 1 новый ответ + 3 исправления оценки |
@@ -16,6 +20,10 @@
 | Holdout80 после принятого protocol erratum | 79/80 = **0,9875**; valid-only 79/79 | 8 переставленных Physics labels и один open-response подтверждены отдельно |
 
 Главная оговорка: **0,8832 — V7 QA на development replay, а 0,8875/0,9875 — source evidence на same-book Holdout80**. Это разные метрики, их нельзя сравнивать как две версии одной accuracy. Holdout проверяет точную адресацию новых заданий внутри уже известных книг, но не end-to-end reasoning и не перенос на новые книги.
+
+Ещё одна важная оговорка относится к модели. Historical no-tools и более поздняя source-native ladder имеют разную model lineage. Историческая цепочка V1–V7 наследует meta-verifier anchor, в котором 272 из 274 строк были сгенерированы `Qwen/Qwen3.5-27B`, а две строки fail-closed сохранили 9B-ответ. Поэтому historical V6/V7 нельзя называть результатом «9B + RAG».
+
+Отдельный all-9B replay прошёл независимый read-only аудит. Clean rebase дал 237/274, а Active Crop rebase — 238/274. В обоих вариантах source union содержит 156 задач: 45 ответов заменены, 111 подтверждены источником, 118 строк прошли из anchor без source certificate. Относительно каждого собственного anchor получено 44 fixes и 0 regressions. Разница clean/tuned по correctness состоит только в `val_0084`, которая находится вне source union; поэтому 237/274 — более консервативная цифра, а 238/274 — post-hoc tuned development result. Записанные latency и token usage унаследованы от 9B anchor и не являются end-to-end временем source replay.
 
 ## Что читать
 
@@ -41,6 +49,7 @@
 - на фиксированном development benchmark V6 получил 238/274, а V7 — 242/274;
 - V6 был заморожен и оценён одним запуском без post-score rollback;
 - у V7 один прямой solver-answer gain и три source-backed исправления прежней оценки;
+- clean all-9B source rebase воспроизводится как 237/274, tuned Active Crop rebase — как 238/274; оба результата имеют 44 fixes и 0 regressions относительно своих 9B anchors;
 - source-native этапы не используют `task_id` как признак поиска или выбора ответа;
 - ранние task-ID keyed результаты 0,766/0,832/0,960 были выявлены и исключены из production claim.
 - frozen raw Holdout80 source-evidence composite равен 71/80; после явно опубликованного erratum — 79/80, а на 79 валидных строках — 79/79.

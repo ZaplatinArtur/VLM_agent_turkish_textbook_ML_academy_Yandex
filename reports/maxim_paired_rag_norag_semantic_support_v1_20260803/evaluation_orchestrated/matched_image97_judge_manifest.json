@@ -1,0 +1,44 @@
+{
+  "operation": "merge-only; no solver or routing inputs are read",
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_paired_rag_norag_semantic_support_v1_20260803\\evaluation_orchestrated\\matched_image97_judge.jsonl",
+    "rows": 97,
+    "sha256": "28f3d107a0840970e0f82c46157cd85c0f6200f82e1cf105ff39409e58c636b5"
+  },
+  "schema_version": "maxim-judge-v2-merge-v1",
+  "script": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\scripts\\merge_maxim_judge_v2_results.py",
+    "sha256": "c839b4658bd946ed9fbe7d2f4ea73de723415339d0de741e9b02b811546c0427"
+  },
+  "sources": {
+    "fresh_judge_v2": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_paired_rag_norag_semantic_support_v1_20260803\\evaluation_orchestrated\\fresh_judge_v2_result.jsonl",
+      "sha256": "f089f49edc174c39e61e118624f2ec384da4ef3034698e4622aefd3abe7ca34e"
+    },
+    "image_template": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_paired_rag_norag_semantic_support_v1_20260803\\evaluation_orchestrated\\image97_input.jsonl",
+      "sha256": "64c7a71332f73fc2c8c326e3b12b3bbf61c40a2db6544e2ab2143cbb60754dea"
+    },
+    "reusable_judge_v2": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_paired_rag_norag_semantic_support_v1_20260803\\evaluation_orchestrated\\reusable_judge_v2.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "validation": {
+    "expected_prompt_version": "judge-v2",
+    "partition": {
+      "fresh_rows": 97,
+      "missing_rows": 0,
+      "overlap_rows": 0,
+      "reusable_rows": 0,
+      "unexpected_rows": 0
+    },
+    "rows": 97,
+    "strict_correct": {
+      "fresh": 61,
+      "reusable": 0,
+      "total": 61
+    },
+    "template_order_preserved": true
+  }
+}

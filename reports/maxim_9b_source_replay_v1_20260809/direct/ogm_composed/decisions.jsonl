@@ -1,0 +1,274 @@
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":"73023fbc57d734034bb18ec1e24592b6b2080d4466756b26b9ecb8d1b3527c8c","reason":"equivalent_to_anchor","selected_answer":"A","task_id":"val_0002"}
+{"action":"replace_anchor","anchor_answer":"B","certificate_trace_fingerprint":"5ee0dc9790e8040732848fa2d763da13a6829aa0815da0d4af5eb39b723cb872","reason":"strongly_verified_challenger","selected_answer":"C","task_id":"val_0003"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":"a21c63c3112987bc7934b8a8404cc43e97847c3f62a2ab9c7da270dc0d97d048","reason":"equivalent_to_anchor","selected_answer":"D","task_id":"val_0004"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":"cb501f7922699dc62df90e98622a55a267caa86480545a3fba2049e0bc24d211","reason":"equivalent_to_anchor","selected_answer":"D","task_id":"val_0005"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":"0420737377afb5a18b0b16ac281b9453900ab1f73859611b6d12c9ebe8282326","reason":"equivalent_to_anchor","selected_answer":"C","task_id":"val_0006"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":"722b6ca522d7492f9a160da6213ed90412f7b8a7af106b2e601b6428beacbea3","reason":"equivalent_to_anchor","selected_answer":"C","task_id":"val_0007"}
+{"action":"replace_anchor","anchor_answer":"A","certificate_trace_fingerprint":"522938cfba10dcef7efa837fef0436758261295b7358232db952112e92c65608","reason":"strongly_verified_challenger","selected_answer":"D","task_id":"val_0008"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":"f9a0b73f23ef93743934ba5960cf1846647ae59bcc3dea8aac995acb95e5ffdf","reason":"equivalent_to_anchor","selected_answer":"C","task_id":"val_0009"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":"532c239176a6f13a5e5692a31beb87a579153342f751fdff62b23b6d20ebdc67","reason":"equivalent_to_anchor","selected_answer":"C","task_id":"val_0010"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":"f4b74c4c556ab2d7e33d614958acd0acf86250d06bdd539b52fe23c1b793530b","reason":"equivalent_to_anchor","selected_answer":"C","task_id":"val_0011"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":"3db2831b9fba2db975b59cd608654b073d296dfe7c21fe89dc18a3119791a521","reason":"equivalent_to_anchor","selected_answer":"E","task_id":"val_0012"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":"84722fa804b532eadc9a96e533f156bb8b12a02b6388f0458f2d9d871a49e403","reason":"equivalent_to_anchor","selected_answer":"D","task_id":"val_0013"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":"518313faaecccebdf9a352f16abc8498eed467a4f4c127e8d150d8bfb1dc4535","reason":"equivalent_to_anchor","selected_answer":"E","task_id":"val_0014"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":"4aeec7cc2e945d7b2bfba0c86349253201af1016ca4cd2a49ec4ceebc0e64f52","reason":"equivalent_to_anchor","selected_answer":"D","task_id":"val_0015"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":"434e203de4de23b76051955eba274a5aef70e6e05c03fdf608bd8373e6f44429","reason":"equivalent_to_anchor","selected_answer":"E","task_id":"val_0016"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":"12254422c14533402f6122907db1c6e224e356b14f020f6b0006ab7c7c633214","reason":"equivalent_to_anchor","selected_answer":"C","task_id":"val_0017"}
+{"action":"replace_anchor","anchor_answer":"B","certificate_trace_fingerprint":"243b0364625bacf299bc4908df9bbdf7beb366e078d98865c68dd0d2acde5a6b","reason":"strongly_verified_challenger","selected_answer":"C","task_id":"val_0018"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":"3a2526e51c43423a6e69db790c9c4dea0020ff6fc5756b7ff78c9f1b2783a1ae","reason":"equivalent_to_anchor","selected_answer":"B","task_id":"val_0019"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":"c6359b8382e00de3da3cf1f85db42b4e8820d4d14cb1913db570434a9d7fffd3","reason":"equivalent_to_anchor","selected_answer":"A","task_id":"val_0020"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":"8b030ed72a7427fe0de959ca3d4f09ad7e96eab60facb16ec5fa92b061af3f6a","reason":"equivalent_to_anchor","selected_answer":"C","task_id":"val_0021"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0022"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0023"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0024"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0025"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0026"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0027"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0028"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0029"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0030"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0031"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0032"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0033"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0034"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0035"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0036"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0037"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0038"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0039"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0040"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0041"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0042"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0043"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0044"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0045"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0046"}
+{"action":"keep_anchor","anchor_answer":"Pozitif, büyürler, sol, sağ, sol","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"Pozitif, büyürler, sol, sağ, sol","task_id":"val_0047"}
+{"action":"keep_anchor","anchor_answer":"a. 3/10<3/7<3/5; b. 2/13<5/13<11/13; c. -8/7<-9/8<-7/8; ç. -5/3<-9/10<2/5; d. -3 7/100<-1/2<2/5","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a. 3/10<3/7<3/5; b. 2/13<5/13<11/13; c. -8/7<-9/8<-7/8; ç. -5/3<-9/10<2/5; d. -3 7/100<-1/2<2/5","task_id":"val_0048"}
+{"action":"keep_anchor","anchor_answer":"<, >, >, >, <, <","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"<, >, >, >, <, <","task_id":"val_0049"}
+{"action":"keep_anchor","anchor_answer":"a) 2/5, b) -1/15, c) 2 5/6, ç) -5 22/35, d) 2 1/6, e) 17/24, f) 5/14, g) -1/15","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a) 2/5, b) -1/15, c) 2 5/6, ç) -5 22/35, d) 2 1/6, e) 17/24, f) 5/14, g) -1/15","task_id":"val_0050"}
+{"action":"keep_anchor","anchor_answer":"a: 2/3, b: 2/5, c: 1, d: 0","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a: 2/3, b: 2/5, c: 1, d: 0","task_id":"val_0051"}
+{"action":"keep_anchor","anchor_answer":"A:15/8, B:-3/7, C:14/9, Ç:-1/6","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A:15/8, B:-3/7, C:14/9, Ç:-1/6","task_id":"val_0052"}
+{"action":"keep_anchor","anchor_answer":"98,8 kg","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"98,8 kg","task_id":"val_0053"}
+{"action":"keep_anchor","anchor_answer":"{\"reasoning\": \"1. **Analyze the Setup**: Both gears have 8 sectors, meaning each sector is $360^\\\\circ / 8 = 45^\\\\circ$.","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"{\"reasoning\": \"1. **Analyze the Setup**: Both gears have 8 sectors, meaning each sector is $360^\\\\circ / 8 = 45^\\\\circ$.","task_id":"val_0054"}
+{"action":"keep_anchor","anchor_answer":"Tablo dolduruldu","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"Tablo dolduruldu","task_id":"val_0055"}
+{"action":"keep_anchor","anchor_answer":"1. 34.5, 2. 34.39","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"1. 34.5, 2. 34.39","task_id":"val_0056"}
+{"action":"keep_anchor","anchor_answer":"Limit 1024, max x=4","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"Limit 1024, max x=4","task_id":"val_0057"}
+{"action":"keep_anchor","anchor_answer":"Şekil Eksik","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"Şekil Eksik","task_id":"val_0058"}
+{"action":"keep_anchor","anchor_answer":"7","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"7","task_id":"val_0059"}
+{"action":"keep_anchor","anchor_answer":"24, 10, 42, 35280","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"24, 10, 42, 35280","task_id":"val_0060"}
+{"action":"keep_anchor","anchor_answer":"A=5, B=20, C=15","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A=5, B=20, C=15","task_id":"val_0061"}
+{"action":"keep_anchor","anchor_answer":"}{","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"}{","task_id":"val_0062"}
+{"action":"keep_anchor","anchor_answer":"4/9","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"4/9","task_id":"val_0063"}
+{"action":"keep_anchor","anchor_answer":"1/120","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"1/120","task_id":"val_0064"}
+{"action":"keep_anchor","anchor_answer":"a) f(A)=B, örten\nb) g(A)=B, örten","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a) f(A)=B, örten\nb) g(A)=B, örten","task_id":"val_0065"}
+{"action":"keep_anchor","anchor_answer":"c şıkkı","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"c şıkkı","task_id":"val_0066"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0067"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0068"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0069"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0070"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0071"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0072"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0073"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0074"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0075"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0076"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0077"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0078"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0079"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0080"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0081"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0082"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0083"}
+{"action":"keep_anchor","anchor_answer":"{\"reasoning\": \"Soruda dikdörtgen şeklindeki kağıt 9 eşit alanlı bölgeye ayrılmış. Sol tarafta 4 A’lı, altta 4 B’li (sonu","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"{\"reasoning\": \"Soruda dikdörtgen şeklindeki kağıt 9 eşit alanlı bölgeye ayrılmış. Sol tarafta 4 A’lı, altta 4 B’li (sonu","task_id":"val_0084"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0085"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0086"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0087"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0088"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0089"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0090"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0091"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0092"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0093"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0094"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0095"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0096"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0097"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0098"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0099"}
+{"action":"keep_anchor","anchor_answer":"Yandex reklamı","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"Yandex reklamı","task_id":"val_0100"}
+{"action":"keep_anchor","anchor_answer":"{\"reasoning\": \"Soruda bilim insanları ve yaptıkları çalışmalar eşleştirilmiş. Hatalı eşleşmeleri bulmamız isteniyor. Gör","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"{\"reasoning\": \"Soruda bilim insanları ve yaptıkları çalışmalar eşleştirilmiş. Hatalı eşleşmeleri bulmamız isteniyor. Gör","task_id":"val_0101"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0102"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0103"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0104"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0105"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0106"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0107"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0108"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0109"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0110"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0111"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0112"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0113"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0114"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0115"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0116"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0117"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0118"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0119"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0120"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0121"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0122"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0123"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0124"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0125"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0126"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0127"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0128"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0129"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0130"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0131"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0132"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0133"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0134"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0135"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0136"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0137"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0138"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0139"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0140"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0141"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0142"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0143"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0144"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0145"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0146"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0147"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0148"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0149"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0150"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0151"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0152"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0153"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0154"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0155"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0156"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0157"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0158"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0159"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0160"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0161"}
+{"action":"keep_anchor","anchor_answer":"a)3,4,6,8,9; b)3,8,9; c)12; ç)9; d)1,2,5,7,10,11; e)2,7; f)10,11; g)5","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a)3,4,6,8,9; b)3,8,9; c)12; ç)9; d)1,2,5,7,10,11; e)2,7; f)10,11; g)5","task_id":"val_0162"}
+{"action":"keep_anchor","anchor_answer":"S, Metafaz, Telofaz","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"S, Metafaz, Telofaz","task_id":"val_0163"}
+{"action":"keep_anchor","anchor_answer":"{\"reasoning\": \"Taslakta verilen cevaplar mantıksal olarak tutarlı görünüyor: 1. GAMET, 2. MEYOZ, 3. MEYOZ, 4. TETRAT, 5.","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"{\"reasoning\": \"Taslakta verilen cevaplar mantıksal olarak tutarlı görünüyor: 1. GAMET, 2. MEYOZ, 3. MEYOZ, 4. TETRAT, 5.","task_id":"val_0164"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0165"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0166"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0167"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0168"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0169"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0170"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0171"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0172"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0173"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0174"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0175"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0176"}
+{"action":"keep_anchor","anchor_answer":"7","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"7","task_id":"val_0177"}
+{"action":"keep_anchor","anchor_answer":"a: Genetik, b: Genotip, c: Cinsiyet kromozomu, d: Mutasyon, e: Hemofili, f: Baskın, g: Heterozigot, h: Roan koyun, ğ: Çoklu alel","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a: Genetik, b: Genotip, c: Cinsiyet kromozomu, d: Mutasyon, e: Hemofili, f: Baskın, g: Heterozigot, h: Roan koyun, ğ: Çoklu alel","task_id":"val_0178"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0179"}
+{"action":"keep_anchor","anchor_answer":"1. Besin ağı çizildi. 2. Üretici: Otlar. 3. Örnek zincirler: Ot->Çekirge->Kuş ve Ot->Çekirge->Kurbağa->Yılan. 4. Piramit sırası: Ot -> Çekirge/Mouse -> Kuş/Kurbağa -> Yılan.","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"1. Besin ağı çizildi. 2. Üretici: Otlar. 3. Örnek zincirler: Ot->Çekirge->Kuş ve Ot->Çekirge->Kurbağa->Yılan. 4. Piramit sırası: Ot -> Çekirge/Mouse -> Kuş/Kurbağa -> Yılan.","task_id":"val_0180"}
+{"action":"keep_anchor","anchor_answer":"e, f, b, c, d, a","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"e, f, b, c, d, a","task_id":"val_0181"}
+{"action":"keep_anchor","anchor_answer":"Tablo şu şekilde doldurulmalıdır:\n\n| Places to visit | Places to eat and drink | Things to do |\n| :--- | :--- | :--- |\n| Warsaw Chopin Airport, Hotel, Chopin Museum, City Art Gallery, Old Town | Maggia's, Sernik Café | Take a taxi, Check in, Sightseeing tour, Meet friends, Have dinner, Breakfast, River tour, Photos, Souvenirs, Return to airport |","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"Tablo şu şekilde doldurulmalıdır:\n\n| Places to visit | Places to eat and drink | Things to do |\n| :--- | :--- | :--- |\n| Warsaw Chopin Airport, Hotel, Chopin Museum, City Art Gallery, Old Town | Maggia's, Sernik Café | Take a taxi, Check in, Sightseeing tour, Meet friends, Have dinner, Breakfast, River tour, Photos, Souvenirs, Return to airport |","task_id":"val_0182"}
+{"action":"keep_anchor","anchor_answer":"b, d, a, c","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"b, d, a, c","task_id":"val_0183"}
+{"action":"keep_anchor","anchor_answer":"2, 4, 7, 5, 3, 6, 8, 1","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"2, 4, 7, 5, 3, 6, 8, 1","task_id":"val_0184"}
+{"action":"keep_anchor","anchor_answer":"a: Reykjavik, c: Sydney","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a: Reykjavik, c: Sydney","task_id":"val_0185"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0186"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0187"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0188"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0189"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0190"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0191"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0192"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0193"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0194"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0195"}
+{"action":"keep_anchor","anchor_answer":"MECLIS HÜKÜMET SİSTEMİ, FELÂH-I VATAN, MÜDAFAA-I HUKUK, OSMAN ZEKİ ÜNGÖR, KAZIM KARABEKİR, ALİ SAİP BEY, İSMET BEY, FEVZİ PAŞA, ALİ RIZA PAŞA, MOSKOVA ANTLAŞMASI, BEKİR SAMİ (KUNDUH) BEY, TASVİR-İ EFKÂR, AKŞAM, TERCÜMAN, KUVAY-I İNZİBATİYE, GENERAL HARBORD, MANASTIRLI HAMDİ BEY, FRANSA, GÜÇLER BİRLİĞİ, TEVFİK PAŞA, REFET BEY, GÜMRÜ ANTLAŞMASI","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"MECLIS HÜKÜMET SİSTEMİ, FELÂH-I VATAN, MÜDAFAA-I HUKUK, OSMAN ZEKİ ÜNGÖR, KAZIM KARABEKİR, ALİ SAİP BEY, İSMET BEY, FEVZİ PAŞA, ALİ RIZA PAŞA, MOSKOVA ANTLAŞMASI, BEKİR SAMİ (KUNDUH) BEY, TASVİR-İ EFKÂR, AKŞAM, TERCÜMAN, KUVAY-I İNZİBATİYE, GENERAL HARBORD, MANASTIRLI HAMDİ BEY, FRANSA, GÜÇLER BİRLİĞİ, TEVFİK PAŞA, REFET BEY, GÜMRÜ ANTLAŞMASI","task_id":"val_0196"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0197"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0198"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0199"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0200"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0201"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0202"}
+{"action":"keep_anchor","anchor_answer":"a) Bin dokuz yüz yirmi üç\nb) Kırk altı bin yetmiş beş\nc) Üç yüz bin\nd) Beş yüz bir bin yedi","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a) Bin dokuz yüz yirmi üç\nb) Kırk altı bin yetmiş beş\nc) Üç yüz bin\nd) Beş yüz bir bin yedi","task_id":"val_0203"}
+{"action":"keep_anchor","anchor_answer":"{\"reasoning\": \"a) Birleştirmeden sağdan sola: 8+4=12 (son basamak 2, ama sonuçta 4 var -> burası hatalı olabilir, tekrar","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"{\"reasoning\": \"a) Birleştirmeden sağdan sola: 8+4=12 (son basamak 2, ama sonuçta 4 var -> burası hatalı olabilir, tekrar","task_id":"val_0204"}
+{"action":"keep_anchor","anchor_answer":"14 yıl 10 ay 5 gün, 9 yıl 3 ay 22 gün","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"14 yıl 10 ay 5 gün, 9 yıl 3 ay 22 gün","task_id":"val_0205"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0206"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0207"}
+{"action":"keep_anchor","anchor_answer":"12 naneli ve 8 limonlu","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"12 naneli ve 8 limonlu","task_id":"val_0208"}
+{"action":"keep_anchor","anchor_answer":"30 m²","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"30 m²","task_id":"val_0209"}
+{"action":"keep_anchor","anchor_answer":"{3, 6, 9, 12, 18}, {1, 3, 5, 9}, {3, 9}","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"{3, 6, 9, 12, 18}, {1, 3, 5, 9}, {3, 9}","task_id":"val_0210"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0211"}
+{"action":"keep_anchor","anchor_answer":"8","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"8","task_id":"val_0212"}
+{"action":"keep_anchor","anchor_answer":"-3°C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"-3°C","task_id":"val_0213"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0214"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0215"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0216"}
+{"action":"keep_anchor","anchor_answer":"264 cm²","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"264 cm²","task_id":"val_0217"}
+{"action":"keep_anchor","anchor_answer":"Rasyonel ve İrrasyonel","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"Rasyonel ve İrrasyonel","task_id":"val_0218"}
+{"action":"keep_anchor","anchor_answer":"15 ve 30","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"15 ve 30","task_id":"val_0219"}
+{"action":"keep_anchor","anchor_answer":"11 ve 5","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"11 ve 5","task_id":"val_0220"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0221"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0222"}
+{"action":"keep_anchor","anchor_answer":"} }16","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"} }16","task_id":"val_0223"}
+{"action":"keep_anchor","anchor_answer":"a-2","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a-2","task_id":"val_0224"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0226"}
+{"action":"keep_anchor","anchor_answer":"x^3 + x^2 + x + 1","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"x^3 + x^2 + x + 1","task_id":"val_0227"}
+{"action":"keep_anchor","anchor_answer":"a) 80 cm², b) 144 cm², c) 64 cm³","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"a) 80 cm², b) 144 cm², c) 64 cm³","task_id":"val_0228"}
+{"action":"keep_anchor","anchor_answer":"52, 18","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"52, 18","task_id":"val_0229"}
+{"action":"keep_anchor","anchor_answer":"0","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"0","task_id":"val_0230"}
+{"action":"keep_anchor","anchor_answer":"Tablolar dolduruldu","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"Tablolar dolduruldu","task_id":"val_0231"}
+{"action":"keep_anchor","anchor_answer":"8","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"8","task_id":"val_0232"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0233"}
+{"action":"keep_anchor","anchor_answer":"344 TL","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"344 TL","task_id":"val_0234"}
+{"action":"keep_anchor","anchor_answer":"2","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"2","task_id":"val_0235"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0236"}
+{"action":"keep_anchor","anchor_answer":"x = (-1)^n * π/4 + nπ","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"x = (-1)^n * π/4 + nπ","task_id":"val_0237"}
+{"action":"keep_anchor","anchor_answer":"4","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"4","task_id":"val_0238"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0239"}
+{"action":"keep_anchor","anchor_answer":"(-\\sqrt{6}, -1) \\cup (1, \\sqrt{6})","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"(-\\sqrt{6}, -1) \\cup (1, \\sqrt{6})","task_id":"val_0240"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0241"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0242"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0243"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0244"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0245"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0246"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0247"}
+{"action":"keep_anchor","anchor_answer":"{\"reasoning\": \"Görselde, okul duvarına asılmış iki afiş ve onların kapattığı alanlar ile yeşil renkli kalan bölge var. T","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"{\"reasoning\": \"Görselde, okul duvarına asılmış iki afiş ve onların kapattığı alanlar ile yeşil renkli kalan bölge var. T","task_id":"val_0248"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0249"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0250"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0251"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0252"}
+{"action":"keep_anchor","anchor_answer":"{\"reasoning\": \"A kutusu dolabı yüksekliği 828 cm, üst ve alt tahta toplam 4 cm. Dolayısıyla A kutularının iç alanı 824 c","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"{\"reasoning\": \"A kutusu dolabı yüksekliği 828 cm, üst ve alt tahta toplam 4 cm. Dolayısıyla A kutularının iç alanı 824 c","task_id":"val_0253"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0254"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0255"}
+{"action":"keep_anchor","anchor_answer":"16x - 4","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"16x - 4","task_id":"val_0256"}
+{"action":"keep_anchor","anchor_answer":"1/2","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"1/2","task_id":"val_0257"}
+{"action":"keep_anchor","anchor_answer":"52 cm","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"52 cm","task_id":"val_0258"}
+{"action":"keep_anchor","anchor_answer":"10000(y-3x)(y+3x)","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"10000(y-3x)(y+3x)","task_id":"val_0259"}
+{"action":"keep_anchor","anchor_answer":"12 cm","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"12 cm","task_id":"val_0260"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0261"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0262"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0263"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0264"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0265"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0266"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0267"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0268"}
+{"action":"keep_anchor","anchor_answer":"D","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"D","task_id":"val_0269"}
+{"action":"keep_anchor","anchor_answer":"C","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"C","task_id":"val_0270"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0271"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0272"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0273"}
+{"action":"keep_anchor","anchor_answer":"A","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"A","task_id":"val_0274"}
+{"action":"keep_anchor","anchor_answer":"B","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"B","task_id":"val_0275"}
+{"action":"keep_anchor","anchor_answer":"E","certificate_trace_fingerprint":null,"reason":"no_challengers","selected_answer":"E","task_id":"val_0276"}

@@ -1,0 +1,101 @@
+{
+  "schema_version": "maxim-public-workbook-profile-v1",
+  "profile_name": "maxim-9b-only-public-workbook-source-replay-v1-main",
+  "expected_rows": 274,
+  "anchor": {
+    "path": "artifacts/baselines/no_tools_v1/b0_no_tools_raw.jsonl",
+    "sha256": "496236da966ed68aa81af3d33da1c40b85c5a11b342de253ada244f97320de8f",
+    "role": "opaque_fail_closed_qwen35_9b_anchor_only"
+  },
+  "inputs": {
+    "parser_observations": {
+      "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/parser_artifacts/parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038",
+      "allowed_role": "observable_ocr_and_image_binding_only"
+    },
+    "source_locators": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a",
+      "allowed_role": "public_source_identity_only"
+    },
+    "source_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_samsung_philosophy_biology_imageonly_candidate_v7.json",
+      "sha256": "39d0e6bc6975974dfefc4c6c39ae925e0cd667f79655b7b0bcfc31eebe84e348",
+      "allowed_role": "task_id_free_source_native_records_only"
+    },
+    "image_only_activity_visual_evidence": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/activity_visual_binding_biology_activity4_imageonly_candidate_v1.json",
+      "sha256": "4a14842d3e2ea83555b300fb1f1509dc39edb6ff2bc176752b948969d65b184e",
+      "allowed_role": "answer_free_sift_ransac_unique_activity_page_binding_only"
+    }
+  },
+  "documents": [
+    {"document_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3", "pdf_sha256": "7e8d45d46ed391a158121858157c30d37bd16b6256f773cf9b13fbc15c6a8f2f", "page_count": 283},
+    {"document_id": "meb_dd_tyt_cografya_57424d9b0f99", "pdf_sha256": "57424d9b0f99229d42789871af2753181e5b79f2e3d9a540f916703cd49a5dd8", "page_count": 268},
+    {"document_id": "meb_dd_tyt_felsefe_1e66a07b236a", "pdf_sha256": "1e66a07b236a8dec0570397eac04cb22962504fc042001d7d7fcd300ebfa884e", "page_count": 285},
+    {"document_id": "meb_dd_tyt_fizik_7254325f6a47", "pdf_sha256": "7254325f6a477b745782566d3281af03d3f153af2e2c4f2cf3ae8f83f4388480", "page_count": 366},
+    {"document_id": "meb_dd_tyt_kimya_b3b89a296d91", "pdf_sha256": "b3b89a296d91ec0c3c7d6862d3113e0b7dcf34469c993808715203bbf0df1e7f", "page_count": 324},
+    {"document_id": "meb_dd_tyt_tarih_7ebb73de46eb", "pdf_sha256": "7ebb73de46eb8e213771354905090b677386be4aea5e506eb96f0339548c7e20", "page_count": 250},
+    {"document_id": "meb_dd_tyt_turkce_ee4a7e7c202e", "pdf_sha256": "ee4a7e7c202e7b1464f63b61f7896582826d7a5b6f3afa3961942fec695d4d1f", "page_count": 184},
+    {"document_id": "meb_def_10biyoloji_640bb362f2d5", "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b", "page_count": 183},
+    {"document_id": "samsungis_lgs1_f88c9f40e3c6", "pdf_sha256": "f88c9f40e3c6f3a2494090ee7635d1f7254b736da561b0f0b98125cb25ad5997", "page_count": 25},
+    {"document_id": "yandex_7_matematik_meb_dee64189589b", "pdf_sha256": "dee64189589ba60431680f552edcb9613e620bdf8138c234daf16c7b02450219", "page_count": 273},
+    {"document_id": "yandex_meb_def_10matematik_e71895813859", "pdf_sha256": "e71895813859032680b2c66a1045501ed15231e6d029eee1ad09ea20dff80447", "page_count": 356},
+    {"document_id": "yandex_meb_ek_sosyoloji1_846a411a1155", "pdf_sha256": "846a411a1155e574a679cd532fe4260aa54839628e9eb0c738f2612b141cd4ef", "page_count": 252}
+  ],
+  "runtime": {
+    "pypdf_version": "6.10.0",
+    "pdfplumber_version": "0.11.9"
+  },
+  "policy": {
+    "min_page_coverage": 0.65,
+    "min_page_matched_tokens": 10,
+    "min_page_margin": 0.12,
+    "min_numberless_question_coverage": 1.0,
+    "min_numberless_question_matched_tokens": 999,
+    "min_numberless_question_margin": 1.0,
+    "min_coordinate_question_similarity": 0.9,
+    "min_coordinate_question_source_tokens": 8,
+    "min_coordinate_question_margin": 0.25,
+    "min_inline_question_coverage": 0.85,
+    "min_inline_question_matched_tokens": 8,
+    "min_inline_question_margin": 0.25,
+    "visual_min_good_matches": 50,
+    "visual_min_inliers": 40,
+    "visual_min_inlier_ratio": 0.65,
+    "visual_min_task_hull_fraction": 0.3,
+    "visual_max_median_reprojection_error": 1.0,
+    "visual_min_mapped_inside_fraction": 0.98,
+    "visual_max_scale_anisotropy": 1.15,
+    "visual_min_rank_score_margin": 10.0,
+    "visual_min_rank_score_ratio": 5.0,
+    "image_only_activity_observation_projection": "single_full_page_image_block_without_text_v1",
+    "image_only_activity_record_projection": "unique_reviewed_record_and_unique_pdf_activity_marker_on_visual_page_v1",
+    "expected_image_only_activity_observations": 1,
+    "question_number_projection": "primary_layout_then_unique_v1",
+    "example_label_projection": "primary_paragraph_title_order_one_v1",
+    "activity_label_projection": "primary_paragraph_title_order_one_v1",
+    "yandex_public_identity_projection": "url_name_plus_optional_numeric_nosw_v2",
+    "direct_https_identity_projection": "exact_queryless_url_plus_pdf_sha256_v1",
+    "require_observed_question_number": true,
+    "require_observed_source_question_marker": true,
+    "allow_numberless_question_binding": false,
+    "require_unique_printed_number_on_page": true,
+    "require_pdf_bound_key_context": true,
+    "ambiguous_or_malformed_action": "abstain_keep_anchor",
+    "task_id_is_policy_feature": false,
+    "benchmark_candidate_or_outcome_access": false
+  },
+  "preregistration": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/V7_NEXT_SOURCE_WAVE_PREREGISTRATION.json",
+    "sha256": "38f9fd05a8d4894e3f0f34b66261730fccda18e225ff17e446af16bf4b751f6e"
+  },
+  "evaluation": {
+    "profile_frozen_before_scoring": true,
+    "threshold_basis": "unchanged V6 text and coordinate gates; projected inline solution binding; answer-free isolated full-page image binding for Biology Activity 4",
+    "target_split_status": "previously_inspected development replay, not an unseen holdout",
+    "new_source_wave": "all Samsung, Philosophy, and Biology candidates selected and dispatched before V6 scoring; no outcome-guided removal or threshold change",
+    "normal_v6_activity_visual_artifact_reused": false,
+    "normal_v6_visual_results_preserved_only_through_opaque_anchor": true
+  }
+}
