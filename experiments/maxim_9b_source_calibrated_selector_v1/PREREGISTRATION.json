@@ -1,0 +1,130 @@
+{
+  "schema_version": "maxim-9b-source-calibrated-selector-preregistration-v1",
+  "selector_id": "maxim_9b_source_calibrated_selector_v1",
+  "status": "rules_and_runtime_frozen_before_evaluation_of_this_new_candidate; runtime_reads_no_benchmark_gold_score_judge_correctness_or_outcomes",
+  "purpose": "fit_source_only_candidate_reliability_then_select_only_on_118_without_official_source_coverage; publish deterministic-only primary with image-route byte-preservation veto",
+  "model_closure": [
+    "Qwen/Qwen3.5-9B"
+  ],
+  "candidate_roles": [
+    "active_crop_v2",
+    "no_tools_v1",
+    "native_thinking_v4",
+    "native_thinking_v5",
+    "parallel8_v1",
+    "parallel8_reasoning_first_v2"
+  ],
+  "candidate_groups": {
+    "active_crop_v2": "active_crop_anchor",
+    "no_tools_v1": "direct_no_tools",
+    "native_thinking_v4": "native_thinking_pair",
+    "native_thinking_v5": "native_thinking_pair",
+    "parallel8_v1": "parallel8_pair",
+    "parallel8_reasoning_first_v2": "parallel8_pair"
+  },
+  "source_authority": {
+    "aggregate_path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/source_v7_aggregate/aggregate.json",
+    "aggregate_sha256": "3de5129dee80d2f2fda544bdf7eecfa7d0f467d56bb7e43afc8eac89a6a5dacd",
+    "freeze_manifest_path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/source_v7_aggregate/freeze_manifest.json",
+    "freeze_manifest_sha256": "68b11fd254ce698a7da6f13c154e3d291a43701f065211c0a29c60854098c773",
+    "final_solver_path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/fill_composed/solver.jsonl",
+    "final_solver_sha256": "9d26067064ee07fe480391759782c86d66adbb76dbc0da0d86ccc1b3f035211e",
+    "source_union_size": 156,
+    "source_union_projection_sha256": "7e5e0c972e82d87d164cb3ef03b13fbb4c8084bf07c2512129958882871508cd",
+    "calibration_label": "final_answer_whose_exact_sha256_matches_the_frozen_source_union_projection",
+    "source_family_for_crossfit": "owner_stage"
+  },
+  "outcome_free_input_authority": {
+    "package_path": "experiments/maxim_9b_baseline_selector_v1/input/frozen/input_package_v1_1.json",
+    "package_sha256": "f2e7bdf8ea0cd8d44d073c3cc3f7a6933a98de2b032d44e1e5625e98eb869f0e",
+    "benchmark_sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "benchmark_order_sha256": "7140c7c01b48053f6a15a3b0113f68cad37bbb887744828b570a6eaa0447d62b",
+    "route_map_sha256": "f89ef00f95b9d83610b66948fcb11667dc927f2452b000ef62e031a1a0de26f6",
+    "row_bindings_sha256": "ababaf1ff19b48275f5a6718177a4391984460e475ba475a40620dffab2e9aa6",
+    "source_union_membership_sha256": "93a1018a63e2b9dfeef841541df3b566d6bd6275471accb9f167c7c60c44416a",
+    "candidate_pool_sha256_integrity_checked_but_content_not_parsed": "b755e730c0841fc154ce83f3f82ec8a136cbb177c54b0c0233bb3e118926c1b3",
+    "route_counts": {
+      "deterministic": 177,
+      "image_judge": 97
+    },
+    "route_policy": "safety_veto_only_not_quality_feature; all image_judge rows in primary candidate copy exact ActiveCrop row bytes"
+  },
+  "identity_authority": {
+    "policy": "exact intersection of six independently SHA-pinned upstream solver task sets plus independently pinned source-union membership",
+    "self_labelled_pool_trusted": false,
+    "route_used_as_selection_feature": false,
+    "task_specific_answer_type_used": false,
+    "generic_answer_schema": "nonempty scalar final_answer or strict single-path JSON scalar salvage; no reference-dependent validation",
+    "answer_schema_authority": "this preregistered generic schema; no benchmark-input answer_type file is read because no independently pinned gold-free answer-type projection is in the v1 closure"
+  },
+  "upstream_candidate_sha256": {
+    "active_crop_v2": "6697c043f3142a736b817ead5da494eea334f5349e0db833bd72f23fe35cb17c",
+    "no_tools_v1": "496236da966ed68aa81af3d33da1c40b85c5a11b342de253ada244f97320de8f",
+    "native_thinking_v4": "0fd0e6fef6b220749faa015e7a163cdf596e070afaaad407e4d36bc9b1337307",
+    "native_thinking_v5": "45dc8c16f834d27e5d114f9162b7984c8baec4037fef011730e91ba13f192845",
+    "parallel8_v1": "b1b7a1b785a9a3fc076c04c37fa72f4a82169f137651ff57b40e984901b0d645",
+    "parallel8_reasoning_first_v2": "6115effd03d7eac3e11e9726ecd9822802a04f235a0b361e1863b9bc7e221023"
+  },
+  "calibration": {
+    "labels": "only_156_frozen_official_source_final_answers",
+    "normalization": "unicode_NFKC_casefold_collapsed_whitespace_and_single_choice_wrapper",
+    "global_weight": "on_source_rows_where_candidate_differs_from_ActiveCrop_use_Beta(1,1)_posterior_fix_rate_over_fixes_plus_regressions_then_nonnegative_logit_clipped_to_3; agreement_rows_add_zero_override_weight",
+    "leave_one_source_family_out_gate": "repeat_conditional_fixes_vs_regressions_after_each_owner_stage_holdout; require_at_least_20_total_training_rows_in_every_fold_no_fold_posterior_below_0.50_and_at_least_3_global_decisive_fix_or_regression_rows",
+    "correlation_control": "within_each_candidate_group_total_effective_weight_is_capped_at_the_largest_member_global_weight",
+    "parameters": {
+      "beta_alpha": 1.0,
+      "beta_beta": 1.0,
+      "minimum_total_training_rows_per_fold": 20,
+      "minimum_fold_posterior_conditional_fix_rate": 0.5,
+      "minimum_global_decisive_fixes_plus_regressions": 3,
+      "maximum_nonnegative_logit_weight": 3.0
+    },
+    "task_id_is_feature": false,
+    "subject_or_slice_rule": false
+  },
+  "selection": {
+    "covered_156": "full candidate copies frozen source final solver row bytes; primary does so only on deterministic routes and preserves ActiveCrop bytes on image routes",
+    "uncovered_118": "source_calibrated_group_capped_weighted_plurality",
+    "anchor": "active_crop_v2",
+    "anchor_prior_bonus": 0.25,
+    "replacement_min_normalized_margin_over_anchor": 0.10,
+    "replacement_min_top_share": 0.50,
+    "replacement_min_independent_candidate_groups": 2,
+    "invalid_anchor": "when ActiveCrop violates the preregistered generic answer schema, allow highest-weight valid answer only when at least two correlation groups with nonzero cross-fitted-gated weights agree and top-share threshold passes; otherwise preserve malformed anchor bytes with explicit fail_closed decision",
+    "strict_json_salvage": "entire raw_response must be JSON with one key per level from final_answer_answer_choice_result_output and one scalar leaf; no extra keys lists or task rules",
+    "tie_invalid_missing_low_margin_or_failed_gate": "copy_active_crop_v2_row_bytes",
+    "primary_candidate": "deterministic_only_changes; frozen outcome-free route map forces all 97 image_judge rows to byte-copy ActiveCrop so prior image judgments cannot be silently reused on changed rows",
+    "full_candidate": "separate full source-overlay artifact is frozen but not evaluable without a fresh image judge whenever any image row differs from ActiveCrop",
+    "donor_tie_break": [
+      "active_crop_v2",
+      "no_tools_v1",
+      "native_thinking_v5",
+      "native_thinking_v4",
+      "parallel8_reasoning_first_v2",
+      "parallel8_v1"
+    ]
+  },
+  "forbidden": {
+    "benchmark_gold_or_reference_answers": true,
+    "benchmark_score_or_correctness": true,
+    "judge_verdicts_or_judge_correctness": true,
+    "task_id_quality_rules_or_overrides": true,
+    "known_error_memory": true,
+    "27b_or_foreign_model_outputs": true,
+    "network_or_gpu": true,
+    "post_score_weight_or_threshold_tuning": true
+  },
+  "access_attestation": {
+    "historical_aggregate_and_prior_project_outcomes_known_before_this_experiment": true,
+    "source_union_labels_allowed": true,
+    "candidate_final_answers_allowed": true,
+    "runtime_benchmark_gold_accessed": false,
+    "runtime_benchmark_score_accessed": false,
+    "runtime_benchmark_correctness_accessed": false,
+    "runtime_judge_outcomes_accessed": false,
+    "task_specific_known_error_rules_used": false,
+    "network_used": false,
+    "gpu_used": false
+  },
+  "evaluation_status": "must_remain_not_evaluated_until_candidate_solver_manifest_and_freeze_are_finalized"
+}

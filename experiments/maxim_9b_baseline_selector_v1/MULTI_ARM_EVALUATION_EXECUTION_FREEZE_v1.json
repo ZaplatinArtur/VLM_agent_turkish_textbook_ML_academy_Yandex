@@ -1,0 +1,50 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-multi-arm-execution-freeze-v1",
+  "wave_id": "maxim_9b_baseline_selector_v1_1_v1_2_one_shot_wave",
+  "status": "launcher_frozen_not_executed",
+  "base_evaluation_freeze_sha256": "e9fe41db583a02044d9f693c013cc19a6c9b40c96eca03bb559b356f731db7f1",
+  "base_freeze_no_execution_superseded_only_by_explicit_execute_invocation_of_this_pinned_launcher": true,
+  "requires_explicit_execute_flag": true,
+  "attempt_marker_created_atomically_before_any_scorer": true,
+  "all_four_processes_launched_and_awaited_before_status_decision": true,
+  "subprocess_stdout_stderr_captured_and_never_forwarded": true,
+  "individual_score_content_not_parsed_or_printed_before_completion_barrier": true,
+  "attempt_marker_preserved_on_failure": true,
+  "completion_manifest_written_only_after_all_four_successes_and_outputs_exist": true,
+  "same_wave_retuning_forbidden": true,
+  "output_bundles": {
+    "v1_1_primary": {
+      "json": "evaluation_wave_v1/results/v1_1_primary_score.json",
+      "md": "evaluation_wave_v1/results/v1_1_primary_score.md",
+      "sha256": "evaluation_wave_v1/results/v1_1_primary_score.sha256"
+    },
+    "v1_1_secondary": {
+      "json": "evaluation_wave_v1/results/v1_1_secondary_score.json",
+      "md": "evaluation_wave_v1/results/v1_1_secondary_score.md",
+      "sha256": "evaluation_wave_v1/results/v1_1_secondary_score.sha256"
+    },
+    "v1_2_primary": {
+      "json": "evaluation_wave_v1/results/v1_2_primary_score.json",
+      "md": "evaluation_wave_v1/results/v1_2_primary_score.md",
+      "sha256": "evaluation_wave_v1/results/v1_2_primary_score.sha256"
+    },
+    "v1_2_exploratory": {
+      "json": "evaluation_wave_v1/results/v1_2_exploratory_score.json",
+      "md": "evaluation_wave_v1/results/v1_2_exploratory_score.md",
+      "sha256": "evaluation_wave_v1/results/v1_2_exploratory_score.sha256"
+    }
+  },
+  "attempt_marker_path": "evaluation_wave_v1/ATTEMPT_STARTED.json",
+  "completion_manifest_path": "evaluation_wave_v1/WAVE_COMPLETION_MANIFEST.json",
+  "completion_sha256_path": "evaluation_wave_v1/WAVE_COMPLETION_MANIFEST.sha256",
+  "artifacts": {
+    "launcher": {
+      "path": "execute_multi_arm_evaluation_wave_v1.py",
+      "sha256": "30bf5d1a7ee1b4c715dd984c4e55eff8751358fbdb2314fd7df35ac271bd7fab"
+    },
+    "tests": {
+      "path": "test_execute_multi_arm_evaluation_wave_v1.py",
+      "sha256": "de65bade72cc44efda6179d36faa6423f11c406955d46d35cb16bd6374246ce7"
+    }
+  }
+}

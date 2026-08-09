@@ -1,0 +1,23 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-compositor-preregistered-freeze-v1.1",
+  "compositor_id": "maxim_9b_baseline_selector_compositor_v1_1",
+  "status": "preregistered_not_composed_not_evaluated",
+  "frozen_before_composition": true,
+  "frozen_before_any_gold_score_correctness_or_judge_evaluation_of_composited_outputs": true,
+  "selector_freeze_sha256": "858ef54c3bb558bdd31f8d0ead605bf3a3bcdb8816f97c0d0d93f86b1eaf4193",
+  "selector_output_manifest_sha256": "c978351b5d482b6af87c8731e7f3f1cb3b0f208397bca0d8ed3ae2043f7b77ae",
+  "artifacts": {
+    "profile": {
+      "path": "compositor_profile_v1_1.json",
+      "sha256": "aab66d4589d3cad29bbf31b2a23a6f8c23a9a4063a8ea7464b6be59a50ef346b"
+    },
+    "code": {
+      "path": "compositor_v1_1.py",
+      "sha256": "696b1c43300c28ff59ba55e65c84daedc0f6d9c878c77d819bb6d67e8f8fef9c"
+    },
+    "tests": {
+      "path": "test_compositor_v1_1.py",
+      "sha256": "9c2027667c8777b364aa445ec5a9298e680e19c9c8f33d57dc56965b3c605693"
+    }
+  }
+}

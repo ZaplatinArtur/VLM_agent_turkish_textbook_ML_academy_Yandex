@@ -1,0 +1,23 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-preregistered-freeze-v1.2",
+  "selector_id": "maxim_9b_baseline_selector_v1_2",
+  "status": "preregistered_locked_not_generated_not_evaluated",
+  "historical_outcomes_known_before_freeze": true,
+  "frozen_before_any_evaluation_of_v1_2_outputs": true,
+  "runtime_outcome_access": false,
+  "input_package_sha256": "12d73ab5cd5955dffee921c97b84fb8bc6c99e3b0152c295e74aa287ad3666e8",
+  "artifacts": {
+    "profile": {
+      "path": "profile_v1_2.json",
+      "sha256": "e8a39bc0e3460eccf1c756e03eba713e286a1a642831ee6a4c300d950e8d11b0"
+    },
+    "code": {
+      "path": "selector_v1_2.py",
+      "sha256": "7feb48bec3987696c2cc10d0b108d5a0826795ba885aee56de65a81e226361bd"
+    },
+    "tests": {
+      "path": "test_selector_v1_2.py",
+      "sha256": "028f5d105d0f27f394f91774f62b270f3fd1f3ec88cfd7a39c98414b8c7f6938"
+    }
+  }
+}

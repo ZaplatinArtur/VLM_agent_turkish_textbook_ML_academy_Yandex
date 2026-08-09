@@ -1,0 +1,31 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-preregistered-freeze-v1.1",
+  "selector_id": "maxim_9b_baseline_selector_v1_1",
+  "status": "preregistered_locked_not_evaluated",
+  "historical_benchmark_aggregate_score_and_prior_task_outcomes_were_known_before_freeze": true,
+  "rules_and_profile_frozen_before_generation_and_any_gold_score_correctness_or_judge_evaluation_of_new_selector_arm_outputs": true,
+  "selector_runtime_inputs_and_algorithm_do_not_read_gold_reference_correctness_outcomes_or_judge_verdicts": true,
+  "supersedes": {
+    "selector_id": "maxim_9b_baseline_selector_v1",
+    "freeze_sha256": "001b4d5664c44e7ba686a4457a838e6f50991611751e7cb6fb8ad70f1a5619b4",
+    "status": "superseded_not_executed"
+  },
+  "artifacts": {
+    "profile": {
+      "path": "profile_v1_1.json",
+      "sha256": "260b7998e196e78db121ea0783747ae3eaa6736262200ba38d4c56ccbd8fef46"
+    },
+    "selector_code": {
+      "path": "selector_v1_1.py",
+      "sha256": "56816ee66d5e197e91d61a7f2de2dd2ca5af75254e8a58344d47d5aaca50b468"
+    },
+    "tests": {
+      "path": "test_selector_v1_1.py",
+      "sha256": "8177db4d77ebf1c5429ad5dc33cdd26477c74d3df8592464615daab842fa8a49"
+    },
+    "superseded_freeze_record": {
+      "path": "SUPERSEDED_FREEZE_v1.json",
+      "sha256": "1f222d0619ce03182db811f5bb0cfcbec60ae146baea6cf99317558d9aa3da64"
+    }
+  }
+}

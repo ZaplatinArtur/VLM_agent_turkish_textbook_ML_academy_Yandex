@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "maxim-9b-baseline-selector-input-package-v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "rows", "benchmark_sha256", "created_before_new_arm_evaluation",
+    "runtime_outcome_access", "benchmark_order", "route_map", "source_union_membership", "upstream_artifacts",
+    "row_bindings", "candidate_pool"
+  ],
+  "properties": {
+    "schema_version": {"const": "maxim-9b-baseline-selector-input-package-v1.1"},
+    "rows": {"const": 274},
+    "benchmark_sha256": {"const": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"},
+    "created_before_new_arm_evaluation": {"const": true},
+    "runtime_outcome_access": {"const": false},
+    "benchmark_order": {"$ref": "#/$defs/descriptor"},
+    "route_map": {"$ref": "#/$defs/descriptor"},
+    "source_union_membership": {"$ref": "#/$defs/descriptor"},
+    "upstream_artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "active_crop_v2", "native_thinking_math_router_v4", "native_thinking_math_router_v5",
+        "parallel8_v1", "parallel8_reasoning_first_v2"
+      ],
+      "properties": {
+        "active_crop_v2": {"$ref": "#/$defs/descriptor"},
+        "native_thinking_math_router_v4": {"$ref": "#/$defs/descriptor"},
+        "native_thinking_math_router_v5": {"$ref": "#/$defs/descriptor"},
+        "parallel8_v1": {"$ref": "#/$defs/descriptor"},
+        "parallel8_reasoning_first_v2": {"$ref": "#/$defs/descriptor"}
+      }
+    },
+    "row_bindings": {"$ref": "#/$defs/descriptor"},
+    "candidate_pool": {"$ref": "#/$defs/descriptor"}
+  },
+  "$defs": {
+    "descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:|/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

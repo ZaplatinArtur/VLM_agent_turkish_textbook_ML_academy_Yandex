@@ -1,0 +1,107 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-profile-v1",
+  "selector_id": "maxim_9b_baseline_selector_v1",
+  "status": "preregistered_after_candidate_pool_structural_audit_before_any_gold_score_or_judge_outcome_access",
+  "model_closure": [
+    "Qwen/Qwen3.5-9B"
+  ],
+  "allowed_signal_families": [
+    "observable_question_image_and_evaluator_format_metadata",
+    "answer_format_validity_and_completion",
+    "candidate_answer_agreement",
+    "generation_metadata",
+    "source_independent_deterministic_confidence"
+  ],
+  "forbidden_signal_families": [
+    "task_id_quality_rules_or_task_specific_overrides",
+    "gold_or_reference_answers",
+    "benchmark_score_correctness_or_outcomes",
+    "judge_verdicts",
+    "known_error_memory",
+    "official_or_web_source_evidence_as_a_quality_signal",
+    "trained_or_fitted_quality_selector"
+  ],
+  "upstream_artifact_sha256": {
+    "active_crop_v2": "6697c043f3142a736b817ead5da494eea334f5349e0db833bd72f23fe35cb17c",
+    "native_thinking_math_router_v4": "0fd0e6fef6b220749faa015e7a163cdf596e070afaaad407e4d36bc9b1337307",
+    "native_thinking_math_router_v5": "45dc8c16f834d27e5d114f9162b7984c8baec4037fef011730e91ba13f192845",
+    "parallel8_v1": "b1b7a1b785a9a3fc076c04c37fa72f4a82169f137651ff57b40e984901b0d645",
+    "parallel8_reasoning_first_v2": "6115effd03d7eac3e11e9726ecd9822802a04f235a0b361e1863b9bc7e221023"
+  },
+  "candidate_provenance": {
+    "native_router_pair": "two_correlated_native_thinking_ablations_with_same_routed86_model_and_seeds_but_different_max_tokens_and_treatment",
+    "parallel_pair": "two_separately_executed_8_route_batches_with_same_routes_and_model_v2_core_and_v1_diversity_donor",
+    "independence_claim": "not_four_fully_independent_systems",
+    "endpoint_revision_caveat": "parallel_batches_have_no_immutable_endpoint_revision_manifest"
+  },
+  "input_contract": {
+    "candidate_model": "Qwen/Qwen3.5-9B",
+    "opaque_row_id_is_join_only_and_never_a_quality_feature": true,
+    "answer_alphabet": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "parallel_votes_per_batch": 8,
+    "parallel_batches": [
+      "parallel8_v1",
+      "parallel8_reasoning_first_v2"
+    ],
+    "all_candidates_are_source_independent": true
+  },
+  "protected_scope": {
+    "purpose": "safety_veto_only_never_challenger_selection",
+    "aggregate_repository_relative_path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/source_v7_aggregate/aggregate.json",
+    "aggregate_schema": "maxim-9b-source-replay-aggregate-v1",
+    "aggregate_file_sha256": "3de5129dee80d2f2fda544bdf7eecfa7d0f467d56bb7e43afc8eac89a6a5dacd",
+    "source_union_projection_field": "source_union.latest_stage_owner_projection",
+    "source_union_size": 156,
+    "source_union_projection_sha256": "7e5e0c972e82d87d164cb3ef03b13fbb4c8084bf07c2512129958882871508cd",
+    "policy": "both_arms_preserve_anchor_inside_frozen_source_union"
+  },
+  "algorithm": {
+    "shared_gates": [
+      "observable_evaluation_route_is_deterministic",
+      "opaque_id_is_outside_pinned_source_union",
+      "anchor_is_valid_A_to_E",
+      "native_router_v4_and_v5_are_valid_and_agree",
+      "router_challenger_differs_from_anchor"
+    ],
+    "primary_arm": {
+      "name": "router_agreement_plus_parallel16_supermajority",
+      "role": "primary_conservative",
+      "rule": "V4_equals_V5_and_challenger_has_at_least_13_of_16_raw_parallel_votes",
+      "raw_vote_threshold": 13,
+      "raw_vote_denominator": 16,
+      "threshold_rationale": "fixed_81.25_percent_supermajority_with_iid_fair_null_tail_697_of_65536_but_no_independence_claim",
+      "fallback": "preserve_active_crop_v2_anchor"
+    },
+    "secondary_arm": {
+      "name": "four_final_answers_unanimous",
+      "role": "preregistered_exploratory",
+      "rule": "V4_equals_V5_equals_parallel8_v1_final_equals_parallel8_reasoning_first_v2_final",
+      "fallback": "preserve_active_crop_v2_anchor"
+    },
+    "image_judge_policy": "always_preserve_anchor_byte_for_byte",
+    "source_stack_policy": "selector_emits_proposals_only_and_never_mutates_the_frozen_source_stack",
+    "missing_invalid_tie_or_profile_mismatch_policy": "emit_no_patch_and_preserve_anchor",
+    "no_training_calibration_or_post_score_threshold_change": true
+  },
+  "access_attestations": {
+    "candidate_pool_access_before_profile_freeze": true,
+    "candidate_answer_agreement_counts_access": true,
+    "source_union_membership_for_safety_veto": true,
+    "evaluation_route_format_metadata_access": true,
+    "upstream_provenance_summary_access_before_freeze": true,
+    "gold_access": false,
+    "reference_answer_access": false,
+    "benchmark_score_access": false,
+    "benchmark_correctness_access": false,
+    "benchmark_outcome_access": false,
+    "judge_access": false,
+    "known_error_memory_access": false,
+    "official_or_web_source_access_for_selection": false
+  }
+}

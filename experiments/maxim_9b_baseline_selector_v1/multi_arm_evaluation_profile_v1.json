@@ -1,0 +1,88 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-multi-arm-evaluation-profile-v1",
+  "wave_id": "maxim_9b_baseline_selector_v1_1_v1_2_one_shot_wave",
+  "status": "preregistered_not_scored_not_executed",
+  "chronology": {
+    "historical_benchmark_aggregate_score_and_prior_task_outcomes_were_known_before_this_wave": true,
+    "all_four_candidate_solvers_were_frozen_before_any_score_of_any_arm_in_this_wave": true,
+    "evaluation_profile_and_output_paths_were_frozen_before_any_score_of_any_arm_in_this_wave": true,
+    "same_wave_retuning_after_any_arm_score_is_forbidden": true,
+    "freeze_construction_read_gold_reference_correctness_score_or_judge_outcomes": false
+  },
+  "benchmark": {
+    "repository_relative_path": "artifacts/baselines/basic_page_rag_v1/validation_274.jsonl",
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "rows": 274
+  },
+  "scorer": {
+    "repository_relative_path": "scripts/score_maxim_full274.py",
+    "sha256": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf"
+  },
+  "evaluator_split": {
+    "deterministic_rows": 177,
+    "image_judge_rows": 97,
+    "final_image_judge": {
+      "repository_relative_path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/final_evaluation/matched_image97_judge.jsonl",
+      "sha256": "c22075cf5f64fb08b073beb2bf33920b37047be7a964776dad8fe90b7660bc98"
+    },
+    "page_rag_baseline_judge": {
+      "repository_relative_path": "artifacts/baselines/basic_page_rag_v1/agent_rag_judge.jsonl",
+      "sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4"
+    }
+  },
+  "model_closure": [
+    "Qwen/Qwen3.5-9B"
+  ],
+  "routing_authority": {
+    "experiment_relative_input_package_path": "input/v1_2/frozen/input_package_v1_2.json",
+    "input_package_sha256": "12d73ab5cd5955dffee921c97b84fb8bc6c99e3b0152c295e74aa287ad3666e8",
+    "benchmark_order_sha256": "7140c7c01b48053f6a15a3b0113f68cad37bbb887744828b570a6eaa0447d62b",
+    "outcome_free_route_map_sha256": "f89ef00f95b9d83610b66948fcb11667dc927f2452b000ef62e031a1a0de26f6"
+  },
+  "candidate_arms": [
+    {
+      "arm_id": "v1_1_primary",
+      "experiment_relative_solver_path": "compositor_output_v1_1/primary_solver.jsonl",
+      "solver_sha256": "93905be2f9e5c63bf2eec1c6c22e0037de617b48288e3fa5adca2d680ef1a704",
+      "experiment_relative_composition_output_freeze_path": "compositor_output_v1_1/COMPOSITION_OUTPUT_FREEZE.json",
+      "composition_output_freeze_sha256": "729012b01b4ebb083b0fa6500bcebccf503a909a9cd8b79fae3da113a0a6fb51",
+      "expected_rows": 274,
+      "experiment_relative_score_output_path": "evaluation_wave_v1/results/v1_1_primary_score.json"
+    },
+    {
+      "arm_id": "v1_1_secondary",
+      "experiment_relative_solver_path": "compositor_output_v1_1/secondary_solver.jsonl",
+      "solver_sha256": "9fc8298f0a81d269f26bba65f11bf5afa5581ea8c76295a501b8605552a5cc73",
+      "experiment_relative_composition_output_freeze_path": "compositor_output_v1_1/COMPOSITION_OUTPUT_FREEZE.json",
+      "composition_output_freeze_sha256": "729012b01b4ebb083b0fa6500bcebccf503a909a9cd8b79fae3da113a0a6fb51",
+      "expected_rows": 274,
+      "experiment_relative_score_output_path": "evaluation_wave_v1/results/v1_1_secondary_score.json"
+    },
+    {
+      "arm_id": "v1_2_primary",
+      "experiment_relative_solver_path": "compositor_output_v1_2/primary_solver.jsonl",
+      "solver_sha256": "09aa8d69e7de3a02bbc9b28b2b269b845a0dee1a40ef2d6aa55f7e966a779bef",
+      "experiment_relative_composition_output_freeze_path": "compositor_output_v1_2/COMPOSITION_OUTPUT_FREEZE_v1_2.json",
+      "composition_output_freeze_sha256": "da26ddb88f6e8d0773a0f42ec2775c42e15edd0d19af5eadb214b0bb354ef30b",
+      "expected_rows": 274,
+      "experiment_relative_score_output_path": "evaluation_wave_v1/results/v1_2_primary_score.json"
+    },
+    {
+      "arm_id": "v1_2_exploratory",
+      "experiment_relative_solver_path": "compositor_output_v1_2/exploratory_solver.jsonl",
+      "solver_sha256": "cf18e0836b9af729fcfee337599e724de368a4fb78f4d62442d0dea71057da80",
+      "experiment_relative_composition_output_freeze_path": "compositor_output_v1_2/COMPOSITION_OUTPUT_FREEZE_v1_2.json",
+      "composition_output_freeze_sha256": "da26ddb88f6e8d0773a0f42ec2775c42e15edd0d19af5eadb214b0bb354ef30b",
+      "expected_rows": 274,
+      "experiment_relative_score_output_path": "evaluation_wave_v1/results/v1_2_exploratory_score.json"
+    }
+  ],
+  "execution_policy": {
+    "one_shot_multi_arm_wave": true,
+    "run_all_four_arms_under_the_same_pinned_evaluator_inputs": true,
+    "do_not_inspect_any_arm_score_before_all_four_outputs_exist": true,
+    "do_not_change_rules_candidates_or_evaluator_after_any_arm_score": true,
+    "score_output_paths_must_be_unique_and_absent_at_freeze": true,
+    "freeze_does_not_authorize_or_execute_scoring": true
+  }
+}

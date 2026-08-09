@@ -1,0 +1,80 @@
+{
+  "schema_version": "maxim-9b-answer-canonicalization-profile-v1",
+  "experiment_id": "maxim_9b_answer_canonicalization_v1",
+  "status": "post_score_motivated_development_not_blind_not_preregistered",
+  "chronology": {
+    "historical_240_score_and_task_outcomes_known_before_design": true,
+    "post_score_motivated": true,
+    "blind_claim": false,
+    "preregistered_claim": false,
+    "rules_frozen_before_candidate_materialization_and_new_arm_evaluation": true,
+    "candidate_must_remain_unscored_and_unevaluated": true
+  },
+  "model_closure": [
+    "Qwen/Qwen3.5-9B"
+  ],
+  "runtime_outcome_access": false,
+  "inputs": {
+    "base_solver": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/compositor_output_v1_2/primary_solver.jsonl",
+      "sha256": "09aa8d69e7de3a02bbc9b28b2b269b845a0dee1a40ef2d6aa55f7e966a779bef"
+    },
+    "benchmark_order": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/input/frozen/benchmark_order_v1_1.json",
+      "sha256": "7140c7c01b48053f6a15a3b0113f68cad37bbb887744828b570a6eaa0447d62b"
+    },
+    "route_map": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/input/frozen/evaluator_route_map_v1_1.json",
+      "sha256": "f89ef00f95b9d83610b66948fcb11667dc927f2452b000ef62e031a1a0de26f6"
+    },
+    "source_union_membership": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/input/frozen/source_union_membership_v1_1.json",
+      "sha256": "93a1018a63e2b9dfeef841541df3b566d6bd6275471accb9f167c7c60c44416a"
+    },
+    "observable_projection": {
+      "path": "observable_question_projection.jsonl",
+      "sha256": "83636cdea696c70c069c562cfa6b7b20729331947cc534df79df205b2f3f43ff"
+    },
+    "observable_projection_manifest": {
+      "path": "OBSERVABLE_PROJECTION_MANIFEST.json",
+      "sha256": "581860b18507ec4657c826a6fc0c83a7ff879495417cf2b87c45aeafa93532eb"
+    }
+  },
+  "scope": {
+    "eligible_route": "deterministic",
+    "eligible_membership": "outside_pinned_source_union",
+    "preserve_source_union_156_as_exact_base_line_bytes": true,
+    "preserve_image_judge_97_as_exact_base_line_bytes": true,
+    "task_id_lists_or_rules": false,
+    "scorer_or_gold_edits": false
+  },
+  "division_of_responsibility": {
+    "explicit_json_recovery_owned_by": "maxim_9b_answer_contract_repair_v1_1",
+    "this_experiment_reads_or_parses_raw_response": false,
+    "invalid_or_absent_top_level_answers_are_never_changed_here": true
+  },
+  "arms": {
+    "choice_nfkc_only": {
+      "role": "primary_conservative",
+      "rule": "answer_type_choice_and_single_codepoint_NFKC_maps_exactly_to_ASCII_A_E"
+    },
+    "choice_curated_confusable_exploratory": {
+      "role": "post_score_exploratory",
+      "rule": "primary_rule_or_single_whole_answer_codepoint_in_frozen_Greek_Cyrillic_A_B_C_E_map"
+    },
+    "fraction_percent_explicit_question_contract_exploratory": {
+      "role": "post_score_exploratory",
+      "rule": "short_text_only_and_observable_question_contains_frozen_multilingual_explicit_output_form_phrase",
+      "bare_percent_symbol_is_not_a_contract_signal": true,
+      "placeholder_or_image_only_question_never_triggers": true,
+      "fraction_to_percent_requires_exact_terminating_decimal_at_most_6_places": true
+    }
+  },
+  "mutation": {
+    "copy_full_base_row": true,
+    "replace_only_top_level_final_answer": true,
+    "retain_raw_response_byte_content": true,
+    "add_explicit_generation_provenance": true,
+    "fail_closed": true
+  }
+}

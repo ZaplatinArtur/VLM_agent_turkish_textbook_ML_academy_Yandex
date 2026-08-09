@@ -1,0 +1,124 @@
+{
+  "schema_version": "maxim-9b-answer-contract-repair-profile-v1.1",
+  "experiment_id": "maxim_9b_answer_contract_repair_v1_1",
+  "status": "post_score_motivated_development_rule_not_blind_not_preregistered",
+  "chronology": {
+    "historical_residual_outcomes_known_before_design": true,
+    "post_score_motivated": true,
+    "blind_claim": false,
+    "preregistered_claim": false,
+    "rules_must_be_frozen_before_candidate_materialization": true,
+    "candidate_must_remain_unscored_and_unevaluated": true
+  },
+  "model_closure": [
+    "Qwen/Qwen3.5-9B"
+  ],
+  "runtime_outcome_access": false,
+  "inputs": {
+    "base_solver": {
+      "path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/fill_composed/solver.jsonl",
+      "sha256": "9d26067064ee07fe480391759782c86d66adbb76dbc0da0d86ccc1b3f035211e"
+    },
+    "v1_2_primary_240_solver": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/compositor_output_v1_2/primary_solver.jsonl",
+      "sha256": "09aa8d69e7de3a02bbc9b28b2b269b845a0dee1a40ef2d6aa55f7e966a779bef"
+    },
+    "benchmark_order": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/input/frozen/benchmark_order_v1_1.json",
+      "sha256": "7140c7c01b48053f6a15a3b0113f68cad37bbb887744828b570a6eaa0447d62b"
+    },
+    "route_map": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/input/frozen/evaluator_route_map_v1_1.json",
+      "sha256": "f89ef00f95b9d83610b66948fcb11667dc927f2452b000ef62e031a1a0de26f6"
+    },
+    "source_union_membership": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/input/frozen/source_union_membership_v1_1.json",
+      "sha256": "93a1018a63e2b9dfeef841541df3b566d6bd6275471accb9f167c7c60c44416a"
+    }
+  },
+  "scope": {
+    "preserve_source_union_rows_as_exact_base_line_bytes": true,
+    "preserve_image_judge_rows_as_exact_base_line_bytes": true,
+    "eligible_route": "deterministic",
+    "eligible_membership": "outside_pinned_source_union",
+    "eligible_answer_state": "top_level_final_answer_absent_or_strictly_invalid",
+    "task_id_specific_rules": false,
+    "base_variants": [
+      "on_final_9b_source",
+      "on_v1_2_primary_240"
+    ]
+  },
+  "strict_answer_contract": {
+    "accepted_scalar_types": [
+      "string",
+      "integer",
+      "finite_number"
+    ],
+    "normalize": "unicode_preserving_outer_whitespace_strip_only",
+    "max_characters": 256,
+    "reject_empty": true,
+    "reject_control_characters": true,
+    "reject_json_container_or_quoted_json_prefix": true,
+    "require_balanced_round_square_curly_delimiters": true
+  },
+  "arms": {
+    "strict": {
+      "source_field": "raw_response",
+      "parser": "context_aware_exact_outer_response_object_members_only",
+      "candidate_key": "final_answer",
+      "max_raw_response_bytes": 262144,
+      "max_outer_members": 64,
+      "accepted_outer_parse_modes": [
+        "exact_json_object_preserving_duplicate_keys"
+      ],
+      "exactly_one_outer_final_answer_key_required": true,
+      "json_string_values_are_atomic": true,
+      "keys_inside_reasoning_or_any_other_value_are_forbidden": true,
+      "unique_distinct_strict_candidate_required": true,
+      "zero_multiple_invalid_or_parse_failure": "preserve_base_exact_bytes",
+      "reasoning_text_regex_or_numeric_salvage": false
+    },
+    "exploratory_explicit_key_scalar": {
+      "label": "explicitly_post_score_motivated_exploratory_not_blind_not_preregistered",
+      "source_field": "raw_response",
+      "parser": "context_aware_outer_response_object_members_only",
+      "candidate_keys": [
+        "final_answer",
+        "answer",
+        "choice",
+        "result"
+      ],
+      "exactly_one_key_occurrence_required": true,
+      "max_raw_response_bytes": 262144,
+      "max_value_characters_before_and_after_normalization": 64,
+      "max_outer_members": 64,
+      "accepted_outer_parse_modes": [
+        "exact_json_object_preserving_duplicate_keys",
+        "missing_final_outer_curly_only"
+      ],
+      "json_string_values_are_atomic": true,
+      "keys_inside_reasoning_or_any_other_value_are_forbidden": true,
+      "global_unescape_or_key_search_over_value_text": false,
+      "normalization": "strip_only_unmatched_leading_closing_or_trailing_opening_square_curly_braces_from_the_single_top_level_scalar_value",
+      "unique_distinct_strict_candidate_required": true,
+      "zero_multiple_ambiguous_or_parse_failure": "preserve_base_exact_bytes",
+      "free_reasoning_or_unkeyed_number_mining": false
+    }
+  },
+  "mutation": {
+    "copy_full_base_row": true,
+    "replace_only_top_level_final_answer": true,
+    "retain_raw_response": true,
+    "add_explicit_generation_provenance": true,
+    "no_fallback_repair": true,
+    "fail_closed": true
+  },
+  "supersedes": {
+    "experiment_id": "maxim_9b_answer_contract_repair_v1",
+    "record": {
+      "path": "experiments/maxim_9b_answer_contract_repair_v1/SUPERSEDED.json",
+      "sha256": "ef597a82f61138d586ec352e063e7ea1a73c2c4b7d4c4278752af70d774aa197"
+    },
+    "reason": "independent_audit_rejected_global_unescape_then_regex_as_not_value_context_safe"
+  }
+}

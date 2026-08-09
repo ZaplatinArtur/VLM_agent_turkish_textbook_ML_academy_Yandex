@@ -1,0 +1,57 @@
+{
+  "schema_version": "maxim-failclosed-composition-manifest-v1",
+  "condition": "maxim_structural_evidence_rag_v1_failclosed_router_v1",
+  "policy_sha256": "6f23cd2280adcaa8b9c6214ebf74f9a9f341f28bebb38bd0579682445e5e0627",
+  "sources": {
+    "benchmark": {
+      "path": "/home/m.kulyamin/maxim_structural_evidence_rag_v1_20260803/bundle/validation_274.jsonl",
+      "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+    },
+    "candidate": {
+      "path": "/home/m.kulyamin/maxim_structural_evidence_rag_v1_20260803/output/solver.jsonl",
+      "sha256": "02824db2e3ad36d77a5541caeab737710d5227fff32d9c21fdb3942d1088e5ef"
+    },
+    "router": {
+      "path": "/home/m.kulyamin/maxim_structural_evidence_rag_v1_20260803/bundle/frozen_subject_router_solver.jsonl",
+      "sha256": "34da8ef69619a8ba1f184cdfd1e6dcaf0fbdbdd1bfc50c711244a68f7d26a574"
+    }
+  },
+  "stats": {
+    "rows": 274,
+    "candidate_rows_retained": 248,
+    "router_fallback_rows": 26,
+    "router_fallback_task_ids": [
+      "val_0037",
+      "val_0039",
+      "val_0044",
+      "val_0046",
+      "val_0076",
+      "val_0141",
+      "val_0146",
+      "val_0147",
+      "val_0155",
+      "val_0156",
+      "val_0158",
+      "val_0159",
+      "val_0221",
+      "val_0230",
+      "val_0232",
+      "val_0233",
+      "val_0235",
+      "val_0241",
+      "val_0246",
+      "val_0247",
+      "val_0248",
+      "val_0253",
+      "val_0254",
+      "val_0260",
+      "val_0266",
+      "val_0267"
+    ]
+  },
+  "output": {
+    "path": "/home/m.kulyamin/maxim_structural_evidence_rag_v1_20260803/output/solver.failclosed.jsonl",
+    "sha256": "4c73b6eb326e5790b19e14c01a79df853be23bb5f55b498ce4c58b78ebc3dff5"
+  },
+  "gold_access": false
+}

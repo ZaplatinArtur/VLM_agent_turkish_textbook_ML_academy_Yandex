@@ -18,3 +18,8 @@ reports/maxim_query_active_crop_v2_20260803/composition_manifest.json binary
 reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/score.json binary
 reports/maxim_query_active_crop_v2_20260803/preregistered_profile.json binary
 reports/maxim_query_active_crop_v2_20260803/solver.jsonl binary
+
+# These two checksum manifests are themselves compared byte-for-byte.  They use
+# LF and must not be converted by core.autocrlf on Windows checkouts.
+experiments/maxim_9b_baseline_selector_v1/input/frozen/SHA256SUMS.txt binary
+experiments/maxim_9b_baseline_selector_v1/input/v1_2/frozen/SHA256SUMS.txt binary
