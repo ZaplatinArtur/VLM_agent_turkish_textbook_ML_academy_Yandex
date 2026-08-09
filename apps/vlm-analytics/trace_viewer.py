@@ -10,6 +10,7 @@ from vlm_trace_viewer import (
     HoldoutIntegrityError,
     NineBV7ArtifactAdapter,
     ReplayAggregateError,
+    SelectorWaveAdapter,
     V7ArtifactAdapter,
     empty_milestone_schema,
     intermediate_timeline_schema,
@@ -79,7 +80,7 @@ def parse_args() -> argparse.Namespace:
         default=1,
         help=(
             "0 = trace explorer, 1 = Holdout80 source evidence, 2 = V7 metrics, "
-            "3 = honest 9B milestone schema"
+            "3 = honest 9B milestone schema, 4 = audited selector v1.2"
         ),
     )
     parser.add_argument(
@@ -115,6 +116,11 @@ def main() -> int:
         nine_b_comparison = (
             load_frozen_9b_comparison(comparison_path)
             if comparison_path
+            else None
+        )
+        selector_summary = (
+            SelectorWaveAdapter(archived_adapter.root).load()
+            if nine_b_comparison
             else None
         )
         if args.validate_only:
@@ -158,6 +164,11 @@ def main() -> int:
                             if nine_b_trace
                             else unloaded_replay_report()
                         ),
+                        "nine_b_selector_v1_2": (
+                            SelectorWaveAdapter(archived_adapter.root).validation_report()
+                            if selector_summary
+                            else unloaded_replay_report()
+                        ),
                     },
                     ensure_ascii=False,
                     indent=2,
@@ -180,6 +191,11 @@ def main() -> int:
         else:
             dataset = archived_adapter.load()
             active_dataset = "archived-27b-v7"
+        qa_reference_summary = (
+            dataset.summary
+            if active_dataset == "archived-27b-v7"
+            else archived_adapter.load().summary
+        )
     except (ArtifactError, HoldoutIntegrityError, ReplayAggregateError) as exc:
         print(f"artifact error: {exc}", file=sys.stderr)
         return 2
@@ -196,11 +212,13 @@ def main() -> int:
         dataset,
         holdout80,
         nine_b_comparison,
+        selector_summary,
         active_dataset=active_dataset,
+        qa_reference_summary=qa_reference_summary,
     )
     window.explorer.select_task_id(args.task)
     window.explorer.detail.tabs.setCurrentIndex(max(0, min(args.detail_tab, 4)))
-    window.tabs.setCurrentIndex(max(0, min(args.screenshot_tab, 3)))
+    window.tabs.setCurrentIndex(max(0, min(args.screenshot_tab, 4)))
     window.resize(1900, 1080)
     if args.screenshot:
         # Keep the requested logical geometry even on a smaller/high-DPI desktop.

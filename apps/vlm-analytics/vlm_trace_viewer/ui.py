@@ -49,6 +49,8 @@ from .replay_aggregate import (
     empty_milestone_schema,
     intermediate_timeline_schema,
 )
+from .selector_ui import SelectorWavePage
+from .selector_wave import SelectorWaveSummary
 from .style import TRACE_STYLESHEET
 
 
@@ -1732,13 +1734,16 @@ class TraceViewerWindow(QMainWindow):
         dataset: TraceDataset,
         holdout80: Holdout80Summary | None = None,
         nine_b_comparison: FrozenReplayComparison | None = None,
+        selector_summary: SelectorWaveSummary | None = None,
         *,
         active_dataset: str = "archived-27b-v7",
+        qa_reference_summary: RunSummary | None = None,
     ):
         super().__init__()
         self.dataset = dataset
         self.holdout80 = holdout80 or load_holdout80_summary()
         self.nine_b_comparison = nine_b_comparison
+        self.selector_summary = selector_summary
         self.active_dataset = active_dataset
         self.setWindowTitle(
             "VLM Trace · 9B V7 Evidence OS"
@@ -1764,11 +1769,33 @@ class TraceViewerWindow(QMainWindow):
             NineBMilestonesPage(nine_b_comparison),
             "9B · seven milestones",
         )
+        if selector_summary is not None:
+            self.tabs.addTab(
+                SelectorWavePage(
+                    selector_summary,
+                    qa_correct=(
+                        qa_reference_summary.correct
+                        if qa_reference_summary is not None
+                        else None
+                    ),
+                    qa_rows=(
+                        qa_reference_summary.rows
+                        if qa_reference_summary is not None
+                        else None
+                    ),
+                ),
+                "9B · selector v1.2",
+            )
         self.setCentralWidget(self.tabs)
         status = QStatusBar()
+        selector_status = (
+            f" · selector {selector_summary.correct}/{selector_summary.rows}"
+            if selector_summary is not None
+            else ""
+        )
         status.showMessage(
             f"offline · active dataset: {active_dataset} · {dataset.summary.rows} joined tasks · "
-            f"{len(dataset.source_files)} provenance files"
+            f"{len(dataset.source_files)} provenance files{selector_status}"
         )
         self.setStatusBar(status)
 
@@ -1805,6 +1832,13 @@ class TraceViewerWindow(QMainWindow):
         )
         if self.nine_b_comparison is None:
             toolbar.addWidget(_badge("9B · AWAITING PINS", "warn"))
+        if self.selector_summary is not None:
+            toolbar.addWidget(
+                _badge(
+                    f"SELECTOR · {self.selector_summary.correct}/{self.selector_summary.rows}",
+                    "good",
+                )
+            )
 
 
 def run_gui(dataset: TraceDataset, argv: list[str] | None = None) -> int:

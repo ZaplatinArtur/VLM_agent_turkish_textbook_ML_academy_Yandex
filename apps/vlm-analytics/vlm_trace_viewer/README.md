@@ -45,7 +45,9 @@ cd C:\Users\kmaxc\PycharmProjects\VLM_Analytics_App
 
 По умолчанию приложение открывает новую вкладку `Holdout80 · source evidence`.
 Для снимка trace explorer используйте `--screenshot-tab 0`, для Holdout80 —
-`--screenshot-tab 1`, для прежней страницы V7 — `--screenshot-tab 2`.
+`--screenshot-tab 1`, для прежней страницы V7 — `--screenshot-tab 2`, для
+канонической семёрки 9B — `--screenshot-tab 3`, для audited selector —
+`--screenshot-tab 4`.
 Для снимка маршрута или сертификата используйте соответственно
 `--detail-tab 1` или `--detail-tab 2`.
 
@@ -61,6 +63,17 @@ cd C:\Users\kmaxc\PycharmProjects\VLM_Analytics_App
 успешной проверки всех семи SHA-pinned milestones. `--dataset nine-b-v7` без
 полного валидного manifest завершается ошибкой. Формат и все fail-closed проверки
 описаны в [`../NINE_B_COMPARISON_CONTRACT_RU.md`](../NINE_B_COMPARISON_CONTRACT_RU.md).
+
+При наличии полного comparison loader также требует frozen selector-wave bundle.
+На пятой вкладке семь canonical milestone остаются неизменными и заканчиваются
+Source V7 `238/274`; Baseline Selector v1.2 показан отдельным восьмым слоем
+`240/274 = 0.875912`. Это Qwen3.5-9B-only development wave на известном наборе,
+не blind holdout. Две замены (`val_0089: A→D`, `val_0251: A→B`) разрешены только
+при согласии structural, native и parallel групп. Интерфейс показывает их
+decision/proposal/source row hashes, но не имитирует скрытый chain-of-thought.
+Post-score answer-contract repair изменил строку `val_0223`, однако повторный score
+остался `240/274`; он подписан как non-blind, non-preregistered null-result, а не
+как новый milestone или 241.
 
 Для image evaluator интерфейс показывает cumulative split: сколько финальных
 verdict уже source-adjudicated и сколько осталось byte-identical исходному

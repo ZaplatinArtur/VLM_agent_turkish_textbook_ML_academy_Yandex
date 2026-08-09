@@ -57,9 +57,20 @@ raw `71/80`, отдельный official-key erratum `79/80` и `79/79` по в�
 ответа или reasoning. В приложение встроена только fail-closed публичная сводка с
 хешами, без приватных строк holdout.
 
+Отдельная вкладка `9B · selector v1.2` продолжает каноническую 9B-историю, не
+переписывая её: семь milestone остаются завершёнными на Source V7 `238/274`, а
+selector показан самостоятельным восьмым development-слоем `240/274 = 0.875912`.
+Loader сверяет completion manifest, score, composition, solver, все четыре arm и
+provenance двух замен (`val_0089`, `val_0251`) по SHA-256. На экране явно отмечены
+`+2 fixes`, `0 regressions`, `272/274` byte-exact passthrough, сохранение 156 source
+и 97 image строк. Post-score repair `val_0223` вынесен в отдельный null-result:
+content изменился, но score остался `240 → 240`; число 241 не заявляется.
+
 ![VLM Trace — сохранённый V7 trace](docs/assets/trace-viewer-final.png)
 
 ![VLM Trace — Holdout80 source evidence](docs/assets/holdout80-source-evidence.png)
+
+![VLM Trace — audited Baseline Selector v1.2](docs/assets/selector-wave-v1.2-audited.png)
 
 ## Синхронизация без интерфейса
 

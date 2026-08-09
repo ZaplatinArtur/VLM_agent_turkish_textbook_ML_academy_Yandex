@@ -18,16 +18,26 @@ from .replay_aggregate import (
     load_frozen_9b_replay_aggregate,
     unloaded_replay_report,
 )
+from .selector_wave import (
+    Milestone,
+    SelectorTaskProvenance,
+    SelectorWaveAdapter,
+    SelectorWaveSummary,
+)
 
 __all__ = [
     "ArtifactError",
     "Holdout80Summary",
     "HoldoutIntegrityError",
+    "Milestone",
     "NineBV7ArtifactAdapter",
     "FrozenReplayAggregate",
     "FrozenReplayComparison",
     "ReplayAggregateError",
     "RunSummary",
+    "SelectorTaskProvenance",
+    "SelectorWaveAdapter",
+    "SelectorWaveSummary",
     "SourceEvidence",
     "TaskTrace",
     "TraceDataset",
