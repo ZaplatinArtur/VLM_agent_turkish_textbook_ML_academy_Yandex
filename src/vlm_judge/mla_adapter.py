@@ -19,6 +19,7 @@ CONDITION_TO_SETUP = {
     "b0_no_tools": "no_tools",
     "b1_search": "web_search",
     "agent_rag": "textbook_retrieval",
+    "agent_rag_routed": "textbook_retrieval",
 }
 
 _ANSWER_TYPE_TO_BASELINE = {

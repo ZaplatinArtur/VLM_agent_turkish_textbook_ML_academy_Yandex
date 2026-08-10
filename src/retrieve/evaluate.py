@@ -188,6 +188,15 @@ def _format_report(systems: list[str], results: dict[str, dict], cutoffs: list[i
 
 
 def main(argv: list[str] | None = None) -> int:
+    if argv is None:
+        import sys
+
+        argv = sys.argv[1:]
+    if argv and argv[0] in {"prepare-qrels", "run"}:
+        from .dense_mmr_cli import main as dense_mmr_main
+
+        return dense_mmr_main(argv)
+
     parser = argparse.ArgumentParser(description="Сравнить профили ретрива на qrels")
     parser.add_argument("--qrels", required=True, type=Path)
     parser.add_argument("--systems", nargs="+", default=["bm25", "dense", "hybrid_rerank"],

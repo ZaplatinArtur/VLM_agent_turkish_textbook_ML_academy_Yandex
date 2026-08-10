@@ -1,0 +1,61 @@
+{
+  "request_id": "518296934e7411cd59c95cfe4bab9c8ea65c9a044095625a23975d8ebddbf768",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"fully_correct\",\n  \"score\": 4,\n  \"strict_correct\": true,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 0.95,\n  \"error_types\": [],\n  \"rationale\": \"The candidate correctly identifies the main idea of the text as a critique of phone addiction (nomophobia) and the need to use phones as tools rather than letting them control life. The reasoning accurately evaluates the options, correctly rejecting A and D as too extreme and B as ambiguous, while selecting C as the best fit for the text's message. The final answer matches the reference.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785866015-ksVMHtiAc7Bo9pAAyfB3",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785866015,
+    "usage": {
+      "prompt_tokens": 1281,
+      "completion_tokens": 162,
+      "total_tokens": 1443,
+      "cost": 0.0001524,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0001524,
+        "upstream_inference_prompt_cost": 0.0001281,
+        "upstream_inference_completions_cost": 2.43e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "fully_correct",
+    "score": 4,
+    "strict_correct": true,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 0.95,
+    "error_types": [],
+    "rationale": "The candidate correctly identifies the main idea of the text as a critique of phone addiction (nomophobia) and the need to use phones as tools rather than letting them control life. The reasoning accurately evaluates the options, correctly rejecting A and D as too extreme and B as ambiguous, while selecting C as the best fit for the text's message. The final answer matches the reference.",
+    "reference_quality_issue": false
+  }
+}

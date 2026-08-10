@@ -1,0 +1,61 @@
+{
+  "request_id": "1ceb30fc337c8c63897748e86f46582bce940657f24536116c5f4b8e6e55bd91",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"fully_correct\",\n  \"score\": 4,\n  \"strict_correct\": true,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 0.95,\n  \"error_types\": [],\n  \"rationale\": \"The candidate correctly identifies that I, II, and III are all true based on the chemical properties of the substances in the table. The reasoning for each part is sound: I (mixtures have no formula), II (tin is an element), and III (compounds have fixed ratios). The final answer E correctly selects all three parts.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785856125-fnDDfPK9Z1XwN7gH1srq",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785856125,
+    "usage": {
+      "prompt_tokens": 1168,
+      "completion_tokens": 155,
+      "total_tokens": 1323,
+      "cost": 0.00023731,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00023731,
+        "upstream_inference_prompt_cost": 0.00019856,
+        "upstream_inference_completions_cost": 3.875e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "fully_correct",
+    "score": 4,
+    "strict_correct": true,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 0.95,
+    "error_types": [],
+    "rationale": "The candidate correctly identifies that I, II, and III are all true based on the chemical properties of the substances in the table. The reasoning for each part is sound: I (mixtures have no formula), II (tin is an element), and III (compounds have fixed ratios). The final answer E correctly selects all three parts.",
+    "reference_quality_issue": false
+  }
+}

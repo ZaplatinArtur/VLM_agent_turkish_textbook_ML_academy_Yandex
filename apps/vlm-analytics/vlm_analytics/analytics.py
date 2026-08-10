@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any
@@ -13,6 +14,15 @@ def percentage(numerator: int | float, denominator: int | float) -> float:
     if not denominator:
         return 0.0
     return round(float(numerator) * 100.0 / float(denominator), 1)
+
+
+def mcnemar_exact_p(fixed: int, regressed: int) -> float:
+    discordant = fixed + regressed
+    if discordant == 0:
+        return 1.0
+    smaller = min(fixed, regressed)
+    tail = sum(math.comb(discordant, index) for index in range(smaller + 1))
+    return min(1.0, 2.0 * tail / (2**discordant))
 
 
 @dataclass(frozen=True)
@@ -149,6 +159,88 @@ class AnalyticsService:
         subjects = sorted(values, key=lambda value: value.casefold())
         return subjects, modes, values
 
+    def paired_comparisons(
+        self,
+        baseline_run_key: str = "b0_no_tools",
+    ) -> list[dict[str, Any]]:
+        """Compare every latest run with the latest no-tools run by task_id."""
+        latest = {str(row["run_key"]): row for row in self.database.latest_runs()}
+        baseline = latest.get(baseline_run_key)
+        if baseline is None:
+            return []
+
+        comparisons: list[dict[str, Any]] = []
+        for candidate_key, candidate in latest.items():
+            if candidate_key == baseline_run_key:
+                continue
+            if candidate["dataset_version"] != baseline["dataset_version"]:
+                continue
+            pairs = self.database.rows(
+                """
+                SELECT baseline.strict_correct AS baseline_correct,
+                       candidate.strict_correct AS candidate_correct
+                FROM task_results baseline
+                JOIN task_results candidate
+                  ON candidate.task_id = baseline.task_id
+                WHERE baseline.run_id = ? AND candidate.run_id = ?
+                  AND baseline.strict_correct IS NOT NULL
+                  AND candidate.strict_correct IS NOT NULL
+                """,
+                (int(baseline["id"]), int(candidate["id"])),
+            )
+            if not pairs:
+                continue
+            baseline_correct = sum(row["baseline_correct"] == 1 for row in pairs)
+            candidate_correct = sum(row["candidate_correct"] == 1 for row in pairs)
+            fixed = sum(
+                row["baseline_correct"] == 0 and row["candidate_correct"] == 1
+                for row in pairs
+            )
+            regressed = sum(
+                row["baseline_correct"] == 1 and row["candidate_correct"] == 0
+                for row in pairs
+            )
+            both_correct = sum(
+                row["baseline_correct"] == 1 and row["candidate_correct"] == 1
+                for row in pairs
+            )
+            both_wrong = sum(
+                row["baseline_correct"] == 0 and row["candidate_correct"] == 0
+                for row in pairs
+            )
+            paired_tasks = len(pairs)
+            baseline_accuracy = percentage(baseline_correct, paired_tasks)
+            candidate_accuracy = percentage(candidate_correct, paired_tasks)
+            comparisons.append(
+                {
+                    "baseline_run_key": baseline_run_key,
+                    "baseline_display_name": str(baseline["display_name"]),
+                    "dataset_version": str(baseline["dataset_version"]),
+                    "candidate_run_key": candidate_key,
+                    "candidate_display_name": str(candidate["display_name"]),
+                    "paired_tasks": paired_tasks,
+                    "baseline_correct": baseline_correct,
+                    "candidate_correct": candidate_correct,
+                    "baseline_accuracy": baseline_accuracy,
+                    "candidate_accuracy": candidate_accuracy,
+                    "delta_pp": round(candidate_accuracy - baseline_accuracy, 1),
+                    "fixed": fixed,
+                    "regressed": regressed,
+                    "net_fixes": fixed - regressed,
+                    "both_correct": both_correct,
+                    "both_wrong": both_wrong,
+                    "oracle_accuracy": percentage(
+                        paired_tasks - both_wrong,
+                        paired_tasks,
+                    ),
+                    "mcnemar_exact_p": round(mcnemar_exact_p(fixed, regressed), 6),
+                }
+            )
+        return sorted(
+            comparisons,
+            key=lambda item: MODE_ORDER.get(str(item["candidate_run_key"]), 99),
+        )
+
     def run_metrics(
         self,
         metric: str,
@@ -252,6 +344,18 @@ class AnalyticsService:
                 """,
                 (mode.run_id,),
             )
+            trace = self.database.rows(
+                """
+                SELECT
+                    SUM(CASE WHEN retrieval_conflict = 1 THEN 1 ELSE 0 END)
+                        AS conflicts,
+                    SUM(CASE WHEN retrieval_route = 'skip' THEN 1 ELSE 0 END)
+                        AS router_skips
+                FROM task_results
+                WHERE run_id = ?
+                """,
+                (mode.run_id,),
+            )[0]
             no_result = sum(
                 1
                 for call in calls
@@ -273,6 +377,15 @@ class AnalyticsService:
                     ),
                     "errors": sum(1 for call in calls if call["error"]),
                     "no_result": no_result,
+                    "confident_calls": sum(
+                        call["relevance_label"] == "confident" for call in calls
+                    ),
+                    "weak_calls": sum(
+                        call["relevance_label"] in {"weak", "empty", "error"}
+                        for call in calls
+                    ),
+                    "conflicts": int(trace["conflicts"] or 0),
+                    "router_skips": int(trace["router_skips"] or 0),
                     "returned_chunks": returned,
                     "accuracy": mode.accuracy,
                 }
@@ -577,7 +690,8 @@ class AnalyticsService:
                 WHEN 'b0_no_tools' THEN 0
                 WHEN 'web_search' THEN 1
                 WHEN 'agent_rag' THEN 2
-                WHEN 'agent_rag_thinking' THEN 3
+                WHEN 'agent_rag_routed' THEN 3
+                WHEN 'agent_rag_thinking' THEN 4
                 ELSE 99 END,
                 {column}
             """,

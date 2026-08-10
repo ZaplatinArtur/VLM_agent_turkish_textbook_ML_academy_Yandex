@@ -6,6 +6,73 @@ from typing import Any, Iterable
 from .schema import JudgeVerdict
 
 
+def validate_judge_completion(
+    expected_records: Iterable[dict[str, Any]],
+    judge_records: Iterable[dict[str, Any]],
+) -> dict[str, Any]:
+    """Verify that judge output is complete and safe to import into analytics."""
+
+    expected_values = [dict(record) for record in expected_records]
+    judge_values = [dict(record) for record in judge_records]
+    expected_ids = [str(record.get("task_id") or "").strip() for record in expected_values]
+    judge_ids = [str(record.get("task_id") or "").strip() for record in judge_values]
+    expected_counts = Counter(expected_ids)
+    judge_counts = Counter(judge_ids)
+    duplicate_expected = sorted(
+        task_id for task_id, count in expected_counts.items() if task_id and count > 1
+    )
+    duplicate_judge = sorted(
+        task_id for task_id, count in judge_counts.items() if task_id and count > 1
+    )
+    expected_set = {task_id for task_id in expected_ids if task_id}
+    judge_set = {task_id for task_id in judge_ids if task_id}
+    invalid_verdict_ids: list[str] = []
+    judge_error_ids: list[str] = []
+
+    for record, task_id in zip(judge_values, judge_ids):
+        judge = record.get("judge") if isinstance(record.get("judge"), dict) else {}
+        if judge.get("error"):
+            judge_error_ids.append(task_id or "<missing-task-id>")
+        verdict = record.get("verdict")
+        try:
+            if not isinstance(verdict, dict):
+                raise ValueError("verdict is missing")
+            JudgeVerdict.from_dict(verdict)
+        except (KeyError, TypeError, ValueError):
+            invalid_verdict_ids.append(task_id or "<missing-task-id>")
+
+    missing_task_ids = sorted(expected_set - judge_set)
+    unexpected_task_ids = sorted(judge_set - expected_set)
+    missing_expected_ids = expected_ids.count("")
+    missing_judge_ids = judge_ids.count("")
+    valid = not any(
+        (
+            missing_expected_ids,
+            missing_judge_ids,
+            duplicate_expected,
+            duplicate_judge,
+            missing_task_ids,
+            unexpected_task_ids,
+            invalid_verdict_ids,
+            judge_error_ids,
+        )
+    )
+    return {
+        "schema_version": "judge-completion-v1",
+        "valid": valid,
+        "expected_records": len(expected_values),
+        "judge_records": len(judge_values),
+        "missing_expected_task_ids": missing_expected_ids,
+        "missing_judge_task_ids": missing_judge_ids,
+        "duplicate_expected_task_ids": duplicate_expected[:25],
+        "duplicate_judge_task_ids": duplicate_judge[:25],
+        "missing_task_ids": missing_task_ids[:25],
+        "unexpected_task_ids": unexpected_task_ids[:25],
+        "invalid_verdict_task_ids": invalid_verdict_ids[:25],
+        "judge_error_task_ids": judge_error_ids[:25],
+    }
+
+
 def audit_judge_run(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
     values = [dict(record) for record in records]
     valid = 0

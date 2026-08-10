@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "id": {"type": "string", "required": true},
+    "name": {"type": "string", "required": true},
+    "mechanism": {"type": "string", "required": true},
+    "novelty_vs_existing": {"type": "string", "required": true},
+    "project_failure_mode": {"type": "string", "required": true},
+    "minimal_ablation": {"type": "array", "required": true},
+    "primary_metrics": {"type": "array", "required": true},
+    "paper_evidence": {"type": "array", "required": true},
+    "github_implementation": {"type": "array", "required": true},
+    "integration_point": {"type": "string", "required": true},
+    "effort": {"type": "string", "required": true},
+    "risks": {"type": "array", "required": true},
+    "confidence": {"type": "string", "required": true}
+  }
+}

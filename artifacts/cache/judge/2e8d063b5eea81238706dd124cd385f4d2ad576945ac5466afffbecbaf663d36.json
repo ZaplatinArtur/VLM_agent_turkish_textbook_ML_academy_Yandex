@@ -1,0 +1,63 @@
+{
+  "request_id": "876731b5fdf5ce08b832c2a9983e5de02290f9be3fa8ca74b725175145d60e99",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"mostly_correct\",\n  \"score\": 3,\n  \"strict_correct\": false,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 0.95,\n  \"error_types\": [\n    \"incomplete_text\"\n  ],\n  \"rationale\": \"The candidate correctly identifies the mathematical properties (commutative, associative, identity, and multiplication of negatives) and provides the correct final answers for all four parts. The reasoning is sound. However, the text is cut off mid-sentence in part (d), making it incomplete. Despite this formatting issue, the core mathematical content and final results are fully correct.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785866133-OMLscfVdh28CMGXyqiPO",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785866133,
+    "usage": {
+      "prompt_tokens": 1532,
+      "completion_tokens": 169,
+      "total_tokens": 1701,
+      "cost": 0.00017855,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00017855,
+        "upstream_inference_prompt_cost": 0.0001532,
+        "upstream_inference_completions_cost": 2.535e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "mostly_correct",
+    "score": 3,
+    "strict_correct": false,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 0.95,
+    "error_types": [
+      "incomplete_text"
+    ],
+    "rationale": "The candidate correctly identifies the mathematical properties (commutative, associative, identity, and multiplication of negatives) and provides the correct final answers for all four parts. The reasoning is sound. However, the text is cut off mid-sentence in part (d), making it incomplete. Despite this formatting issue, the core mathematical content and final results are fully correct.",
+    "reference_quality_issue": false
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "request_id": "3ff00584955d80bd98a4cd5bcd6d5b4362c1a557cad0bdee1c2c1fc1301a54a1",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"incorrect\",\n  \"score\": 0,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": false,\n  \"confidence\": 0.95,\n  \"error_types\": [\n    \"incorrect_reasoning\",\n    \"misinterpretation_of_question\",\n    \"factual_error\"\n  ],\n  \"rationale\": \"The candidate answer is incorrect. It misinterprets the question, which asks to identify the word that does not fit a pair of phonological events (specifically, vowel harmony). The candidate incorrectly analyzes vowel harmony instead of the actual phonological changes (vowel softening, consonant softening, and vowel dropping) described in the reference. The reference correctly identifies that words II and V undergo vowel softening, while III and IV undergo consonant softening, leaving I (vowel dropping) as the outlier. The candidate's reasoning is fundamentally flawed and does not address the actual question.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785856800-9UVcp5lCVpG8o4bzk656",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785856800,
+    "usage": {
+      "prompt_tokens": 1310,
+      "completion_tokens": 231,
+      "total_tokens": 1541,
+      "cost": 0.00018875,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00018875,
+        "upstream_inference_prompt_cost": 0.000131,
+        "upstream_inference_completions_cost": 5.775e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "incorrect",
+    "score": 0,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": false,
+    "confidence": 0.95,
+    "error_types": [
+      "incorrect_reasoning",
+      "misinterpretation_of_question",
+      "factual_error"
+    ],
+    "rationale": "The candidate answer is incorrect. It misinterprets the question, which asks to identify the word that does not fit a pair of phonological events (specifically, vowel harmony). The candidate incorrectly analyzes vowel harmony instead of the actual phonological changes (vowel softening, consonant softening, and vowel dropping) described in the reference. The reference correctly identifies that words II and V undergo vowel softening, while III and IV undergo consonant softening, leaving I (vowel dropping) as the outlier. The candidate's reasoning is fundamentally flawed and does not address the actual question.",
+    "reference_quality_issue": false
+  }
+}

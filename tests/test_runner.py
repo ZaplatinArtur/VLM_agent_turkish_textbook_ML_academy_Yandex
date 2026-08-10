@@ -118,6 +118,38 @@ class RunnerTests(unittest.TestCase):
             self.assertFalse(second["judge"]["cache_hit"])
             self.assertEqual(len(other_model.requests), 1)
 
+    def test_cache_is_scoped_to_provider(self) -> None:
+        class ProviderReplayBackend(ReplayBackend):
+            def __init__(self, responses, *, provider: str) -> None:
+                super().__init__(responses, model="judge")
+                self.provider = provider
+
+        item = EvaluationItem(
+            task_id="provider-scope",
+            candidate_answer="C",
+            question_text="Choose one.",
+            reference_answer="C",
+            answer_type="multiple_choice",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            evaluate_items(
+                [item],
+                ProviderReplayBackend([VALID_RESPONSE], provider="vllm"),
+                root / "first.jsonl",
+                cache_dir=root / "cache",
+            )
+            openrouter = ProviderReplayBackend([VALID_RESPONSE], provider="openrouter")
+            evaluate_items(
+                [item],
+                openrouter,
+                root / "second.jsonl",
+                cache_dir=root / "cache",
+            )
+            second = json.loads((root / "second.jsonl").read_text(encoding="utf-8"))
+            self.assertFalse(second["judge"]["cache_hit"])
+            self.assertEqual(len(openrouter.requests), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

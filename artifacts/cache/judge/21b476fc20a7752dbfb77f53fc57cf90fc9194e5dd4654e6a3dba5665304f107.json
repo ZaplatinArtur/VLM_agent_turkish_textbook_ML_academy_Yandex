@@ -1,0 +1,64 @@
+{
+  "request_id": "89f519f1a1058bffa25d8cb64cc9bf4f1b606db3b2a09a9b81364a77705228af",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"partially_correct\",\n  \"score\": 2,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": true,\n  \"confidence\": 0.95,\n  \"error_types\": [\n    \"incorrect_answer\",\n    \"missing_answer\"\n  ],\n  \"rationale\": \"The candidate answer is mostly incorrect. It fails to answer sub-question (c) 'DNA eşlenmesi' (DNA replication), which occurs in Interphase (12), but the candidate incorrectly states it happens only in Interphase (12) without listing the number, and the reference answer for (c) is 12. More critically, the candidate completely misses sub-question (d) 'kromozom sayısı geçici olarak artar' (chromosome number temporarily increases), which occurs in Anaphase (9). The candidate's answers for (a), (b), (e), (f), and (g) are also incorrect or incomplete compared to the reference. For example, (a) should be 3,4,6,8,9, not the full list provided. The candidate's final answer summary is also wrong.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785780237-7nZxVRbId5GJgED4kq3R",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785780237,
+    "usage": {
+      "prompt_tokens": 2128,
+      "completion_tokens": 277,
+      "total_tokens": 2405,
+      "cost": 0.00025435,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00025435,
+        "upstream_inference_prompt_cost": 0.0002128,
+        "upstream_inference_completions_cost": 4.155e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "partially_correct",
+    "score": 2,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": true,
+    "confidence": 0.95,
+    "error_types": [
+      "incorrect_answer",
+      "missing_answer"
+    ],
+    "rationale": "The candidate answer is mostly incorrect. It fails to answer sub-question (c) 'DNA eşlenmesi' (DNA replication), which occurs in Interphase (12), but the candidate incorrectly states it happens only in Interphase (12) without listing the number, and the reference answer for (c) is 12. More critically, the candidate completely misses sub-question (d) 'kromozom sayısı geçici olarak artar' (chromosome number temporarily increases), which occurs in Anaphase (9). The candidate's answers for (a), (b), (e), (f), and (g) are also incorrect or incomplete compared to the reference. For example, (a) should be 3,4,6,8,9, not the full list provided. The candidate's final answer summary is also wrong.",
+    "reference_quality_issue": false
+  }
+}

@@ -186,7 +186,7 @@ class B1Search(B0NoTools):
         return SolveResult(
             task_id=task.task_id,
             condition=self.condition,
-            model=self.settings.model_name,
+            model=self.settings.llm_model_name,
             prompt_version=self.settings.prompt_version,
             final_answer=parsed.final_answer if parsed else None,
             solution_steps=parsed.solution_steps if parsed else None,

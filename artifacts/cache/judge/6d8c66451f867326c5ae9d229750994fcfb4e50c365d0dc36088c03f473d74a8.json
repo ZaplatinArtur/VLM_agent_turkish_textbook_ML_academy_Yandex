@@ -1,0 +1,64 @@
+{
+  "request_id": "176d47a5b944d12fe1b8d602bad3ad41609a01e761c3d9296ed367b56ed51525",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"incorrect\",\n  \"score\": 0,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": false,\n  \"confidence\": 0.95,\n  \"error_types\": [\n    \"factual_error\",\n    \"missing_sub_answer\"\n  ],\n  \"rationale\": \"The candidate's reasoning contains two major factual errors. First, it claims the sea in location II (Aegean) is saltier than location I (Black Sea), which is incorrect; the Black Sea is significantly less salty. Second, it incorrectly states that linear speed increases towards the equator, whereas it actually decreases. Consequently, the candidate selects option A, which is incorrect. The correct answer is B, as the day length in the north (I) is longer than in the south (III) on June 21, and the sun rises later in the west (IV) than in the east (V).\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785856453-ro1VFCkmFUxXdcoth8XO",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785856453,
+    "usage": {
+      "prompt_tokens": 1417,
+      "completion_tokens": 230,
+      "total_tokens": 1647,
+      "cost": 0.0001762,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0001762,
+        "upstream_inference_prompt_cost": 0.0001417,
+        "upstream_inference_completions_cost": 3.45e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "incorrect",
+    "score": 0,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": false,
+    "confidence": 0.95,
+    "error_types": [
+      "factual_error",
+      "missing_sub_answer"
+    ],
+    "rationale": "The candidate's reasoning contains two major factual errors. First, it claims the sea in location II (Aegean) is saltier than location I (Black Sea), which is incorrect; the Black Sea is significantly less salty. Second, it incorrectly states that linear speed increases towards the equator, whereas it actually decreases. Consequently, the candidate selects option A, which is incorrect. The correct answer is B, as the day length in the north (I) is longer than in the south (III) on June 21, and the sun rises later in the west (IV) than in the east (V).",
+    "reference_quality_issue": false
+  }
+}

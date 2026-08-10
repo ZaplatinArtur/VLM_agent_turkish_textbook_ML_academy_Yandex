@@ -1,0 +1,35 @@
+{
+  "id": "option-aware-retrieval",
+  "title": "Retrieval с учётом вариантов ответа",
+  "mechanism": "Для answer_type=choice учитывать не только вопрос, но и варианты ответа при формировании retrieval score. В минимальном варианте сравнить query-only, question+all-options и внутреннюю агрегацию score по query+каждая option без дополнительных agent tool calls.",
+  "why_new_for_project": "Существующая image-first query строится по условию и неизвестным понятиям, но не имеет специальной option-conditioned оценки кандидатов. Это не общий task router.",
+  "target_failure_mode": "Вопрос сформулирован широко, а различающие термины находятся только в вариантах ответа.",
+  "minimal_ablation": {
+    "subset": "только задания answer_type=choice",
+    "control": "текущий image-evidence query",
+    "arms": [
+      "question + все варианты одним query",
+      "внутренний max/mean fusion score по question+option, один внешний вызов tool"
+    ],
+    "fixed": ["top_k", "модель", "чанки", "prompts ответа", "judge"]
+  },
+  "metrics": [
+    "strict accuracy на choice subset",
+    "paired flips",
+    "доля задач, где top-k изменился",
+    "retrieval relevance и latency"
+  ],
+  "paper_evidence": [
+    {
+      "title": "Options-Aware Dense Retrieval for Multiple-Choice Question Answering",
+      "url": "https://arxiv.org/abs/2501.16111",
+      "claim": "Работа специально рассматривает dense retrieval, обусловленный вариантами ответа, для multiple-choice QA."
+    }
+  ],
+  "github_code": [],
+  "github_note": "Через GitHub code search найдены только обзоры и упоминания статьи; официальный или убедительный публичный код реализации не найден.",
+  "integration_point": "построение retrieval query и scoring внутри textbook_search, только для choice",
+  "effort": "средний",
+  "risk": "Неверные варианты могут увести retrieval; эксперимент нельзя смешивать с новым router или новым embedding model.",
+  "confidence": "medium"
+}

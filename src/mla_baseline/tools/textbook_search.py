@@ -67,10 +67,21 @@ class LocalTextbookSearchClient:
     def __init__(
         self,
         retriever: Callable[..., Any] | None = None,
+        *,
+        retrieval_fetch_k: int | None = None,
+        mmr_lambda: float | None = None,
+        context_order: Literal["score", "edge"] = "score",
     ) -> None:
+        if retrieval_fetch_k is not None and retrieval_fetch_k <= 0:
+            raise ValueError("retrieval_fetch_k must be positive")
+        if mmr_lambda is not None and not 0.0 <= mmr_lambda <= 1.0:
+            raise ValueError("mmr_lambda must be between 0 and 1")
         # The default import is intentionally lazy: importing the agent should
         # not load FAISS or sentence-transformers before the tool is called.
         self._retriever = retriever
+        self.retrieval_fetch_k = retrieval_fetch_k
+        self.mmr_lambda = mmr_lambda
+        self.context_order = context_order
 
     def _get_retriever(self) -> Callable[..., Any]:
         if self._retriever is None:
@@ -124,6 +135,15 @@ class LocalTextbookSearchClient:
         )
         return {key: value for key, value in hit.items() if value is not None}
 
+    @staticmethod
+    def _order_for_context(
+        ranked_chunks: list[tuple[int, Any]],
+        order: Literal["score", "edge"],
+    ) -> list[tuple[int, Any]]:
+        if order == "score":
+            return ranked_chunks
+        return ranked_chunks[::2] + ranked_chunks[1::2][::-1]
+
     def search(
         self,
         query: str,
@@ -146,11 +166,15 @@ class LocalTextbookSearchClient:
         fetch_k = arguments.top_k if arguments.grade is None else arguments.top_k * 5
         started = time.perf_counter()
         try:
-            retrieved = self._get_retriever()(
-                arguments.query,
-                k=fetch_k,
-                subject=arguments.subject,
-            )
+            retrieval_kwargs: dict[str, Any] = {
+                "k": fetch_k,
+                "subject": arguments.subject,
+            }
+            if self.retrieval_fetch_k is not None:
+                retrieval_kwargs["fetch_k"] = self.retrieval_fetch_k
+            if self.mmr_lambda is not None:
+                retrieval_kwargs["mmr_lambda"] = self.mmr_lambda
+            retrieved = self._get_retriever()(arguments.query, **retrieval_kwargs)
         except Exception as exc:
             raise TextbookSearchError(f"local retrieval failed: {exc}") from exc
 
@@ -177,13 +201,21 @@ class LocalTextbookSearchClient:
             verdict = assess_relevance(chunks)
         relevance = self._relevance_payload(verdict)
         visible_chunks = chunks if relevance["is_useful"] else []
-        hits = [
-            self._as_hit(chunk, rank)
-            for rank, chunk in enumerate(visible_chunks, 1)
-        ]
+        ranked_chunks = list(enumerate(visible_chunks, 1))
+        ordered_chunks = self._order_for_context(
+            ranked_chunks,
+            self.context_order,
+        )
+        hits = []
+        for context_position, (rank, chunk) in enumerate(ordered_chunks, 1):
+            hit = self._as_hit(chunk, rank)
+            if self.context_order == "edge":
+                hit["context_position"] = context_position
+            hits.append(hit)
         return {
             "query": arguments.query,
             "top_k": arguments.top_k,
+            "context_order": self.context_order,
             "mode": arguments.mode,
             "filters": {
                 "subject": arguments.subject,
@@ -311,6 +343,7 @@ def format_search_result_for_model(
                 "chunk_id",
                 "page_id",
                 "rank",
+                "context_position",
                 "score",
                 "lexical_score",
                 "subject",
@@ -330,6 +363,7 @@ def format_search_result_for_model(
     compact_result = {
         "query": result.get("query"),
         "top_k": result.get("top_k"),
+        "context_order": result.get("context_order", "score"),
         "mode": result.get("mode"),
         "filters": result.get("filters"),
         "latency_ms": result.get("latency_ms"),

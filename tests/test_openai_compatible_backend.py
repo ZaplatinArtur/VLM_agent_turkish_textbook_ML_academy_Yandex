@@ -11,6 +11,7 @@ from vlm_judge.prompts import JudgeRequest
 
 class _MockHandler(BaseHTTPRequestHandler):
     payload = None
+    authorization = None
 
     def log_message(self, format, *args):
         return
@@ -18,6 +19,7 @@ class _MockHandler(BaseHTTPRequestHandler):
     def do_POST(self):  # noqa: N802
         length = int(self.headers["Content-Length"])
         type(self).payload = json.loads(self.rfile.read(length))
+        type(self).authorization = self.headers.get("Authorization")
         verdict = {
             "label": "fully_correct", "score": 4, "strict_correct": True,
             "final_answer_correct": True, "reasoning_correct": None,
@@ -88,6 +90,29 @@ class OpenAICompatibleBackendTests(unittest.TestCase):
             value = backend._image_reference("https://yadi.sk/i/example")
             self.assertTrue(value.startswith("data:image/png;base64,"))
             self.assertEqual(cache.url, "https://yadi.sk/i/example")
+
+    def test_openrouter_payload_uses_reasoning_and_bearer_key(self) -> None:
+        server = ThreadingHTTPServer(("127.0.0.1", 0), _MockHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            backend = OpenAICompatibleBackend(
+                f"http://127.0.0.1:{server.server_port}/v1",
+                "qwen/qwen3.5-9b",
+                api_key="test-key",
+                enable_thinking=False,
+                provider="openrouter",
+            )
+            backend.complete(JudgeRequest("system", "user", (), ()))
+
+            payload = _MockHandler.payload
+            self.assertEqual(payload["reasoning"], {"effort": "none"})
+            self.assertNotIn("chat_template_kwargs", payload)
+            self.assertEqual(_MockHandler.authorization, "Bearer test-key")
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
 
     def test_data_url_mode_reads_local_image_without_remote_cache(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

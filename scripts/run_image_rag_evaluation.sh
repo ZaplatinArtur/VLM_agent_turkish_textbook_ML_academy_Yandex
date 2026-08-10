@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Full photo-only B0 vs textbook-RAG evaluation. Both solving agents receive
+# Full photo-only B0 vs textbook-RAG evaluation through OpenRouter. Both agents receive
 # only the original question screenshot. Text/reference images are attached
 # later to the judge and are never exposed to the solving agents.
 python_bin="${PYTHON_BIN:-python}"
@@ -11,12 +11,15 @@ tasks="${TASKS:-${data_root}/validation_image_tasks.jsonl}"
 chunks_dir="${CHUNKS_DIR:-data/chunks/jsonl}"
 output_dir="${OUTPUT_DIR:-results/validation_images_full}"
 report_dir="${REPORT_DIR:-reports/validation_images_full}"
-base_url="${BASE_URL:-http://127.0.0.1:8000/v1}"
-model="${MODEL:-Qwen/Qwen3.5-9B}"
+base_url="${BASE_URL:-https://openrouter.ai/api/v1}"
+model="${MODEL:-qwen/qwen3.5-9b}"
 expected_tasks="${EXPECTED_TASKS:-198}"
 
-export MLA_VLLM_BASE_URL="${MLA_VLLM_BASE_URL:-${base_url}}"
-export MLA_MODEL_NAME="${MLA_MODEL_NAME:-${model}}"
+: "${OPENROUTER_API_KEY:?Set OPENROUTER_API_KEY before running the evaluation}"
+
+export MLA_LLM_PROVIDER=openrouter
+export MLA_OPENROUTER_BASE_URL="${MLA_OPENROUTER_BASE_URL:-${base_url}}"
+export MLA_OPENROUTER_MODEL_NAME="${MLA_OPENROUTER_MODEL_NAME:-${model}}"
 export MLA_DATA_ROOT="${MLA_DATA_ROOT:-${data_root}}"
 export MLA_TEXT_ONLY=false
 export MLA_INCLUDE_QUESTION_TEXT_WITH_IMAGES=false
@@ -28,7 +31,6 @@ export MLA_RETRIEVAL_MAX_CALLS="${MLA_RETRIEVAL_MAX_CALLS:-2}"
 
 mkdir -p "${output_dir}" "${report_dir}"
 
-curl --fail --silent "${base_url}/models" >/dev/null
 test -f "${manifest}"
 test -d "${data_root}/images"
 test -d "${chunks_dir}"
@@ -93,6 +95,8 @@ judge_cache="${output_dir}/judge_cache"
   --output "${b0_judge}" \
   --base-url "${base_url}" \
   --model "${model}" \
+  --api-key-env OPENROUTER_API_KEY \
+  --provider openrouter \
   --image-mode data_url \
   --disable-thinking \
   --cache-dir "${judge_cache}" \
@@ -103,6 +107,8 @@ judge_cache="${output_dir}/judge_cache"
   --output "${rag_judge}" \
   --base-url "${base_url}" \
   --model "${model}" \
+  --api-key-env OPENROUTER_API_KEY \
+  --provider openrouter \
   --image-mode data_url \
   --disable-thinking \
   --cache-dir "${judge_cache}" \

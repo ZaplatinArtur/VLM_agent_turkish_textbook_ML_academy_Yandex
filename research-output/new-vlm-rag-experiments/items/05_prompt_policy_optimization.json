@@ -1,0 +1,38 @@
+{
+  "id": "metric-driven-tool-policy-optimization",
+  "title": "Автоматическая оптимизация prompt/tool policy по downstream-метрике",
+  "mechanism": "Оптимизировать инструкции агента: критерий вызова tool, формирование запроса, принятие/отбрасывание evidence и финальный формат — непосредственно по strict accuracy на dev-наборе.",
+  "why_new_for_project": "Это не ручной prompt variant, Self-RAG, task router или memory ошибок: оптимизатор ищет совместную конфигурацию инструкций и demonstrations по измеримой downstream-метрике.",
+  "target_failure_mode": "Ручные правила каждого шага по отдельности локально разумны, но их сочетание не максимизирует итоговую точность.",
+  "minimal_ablation": {
+    "data_protocol": "один раз зафиксировать стратифицированные dev/holdout; holdout не использовать при поиске prompt",
+    "control": "текущий prompt/tool policy",
+    "arm": "10-20 ограниченных trials; менять только инструкции и demonstrations",
+    "final_check": "ровно один прогон победителя на holdout"
+  },
+  "metrics": [
+    "holdout paired strict accuracy",
+    "95% paired bootstrap CI",
+    "wrong-to-right и right-to-wrong",
+    "tool-call rate",
+    "input/output tokens, стоимость и latency"
+  ],
+  "paper_evidence": [
+    {
+      "title": "Optimizing Instructions and Demonstrations for Multi-Stage Language Model Programs",
+      "url": "https://arxiv.org/abs/2406.11695",
+      "claim": "MIPRO оптимизирует инструкции и few-shot demonstrations для multi-stage LM programs по downstream metric без module-level labels."
+    }
+  ],
+  "github_code": [
+    {
+      "repository": "stanfordnlp/dspy",
+      "url": "https://github.com/stanfordnlp/dspy/blob/c69136b29aca4c00ca6da7667f7b80783188980e/dspy/teleprompt/mipro_optimizer_v2.py",
+      "evidence": "Реальный MIPROv2 принимает student program, trainset/valset, metric и num_trials; доступен режим light, но дефолты всё равно рассчитаны на большее число примеров, чем комфортно для ваших 198 задач."
+    }
+  ],
+  "integration_point": "обёртка над существующим experiment runner и VLM Analytics metric; не требует переписывать solver в DSPy на первом пилоте",
+  "effort": "средний/высокий",
+  "risk": "Сильный риск переобучения на 198 примерах и большой расход OpenRouter; нужен frozen holdout и ограниченное пространство поиска.",
+  "confidence": "medium"
+}

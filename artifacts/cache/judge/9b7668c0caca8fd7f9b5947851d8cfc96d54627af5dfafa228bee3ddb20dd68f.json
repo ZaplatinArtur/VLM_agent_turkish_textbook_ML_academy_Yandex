@@ -1,0 +1,63 @@
+{
+  "request_id": "9759d32be002182b9577bf5975496047551dad860601764ee83fa4713ebf471a",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"partially_correct\",\n  \"score\": 2,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": true,\n  \"confidence\": 0.95,\n  \"error_types\": [\n    \"factual_error\"\n  ],\n  \"rationale\": \"The candidate correctly answers parts a, b, c, and ç. However, part d is incorrect: the reference answer is 'Sol' (left), meaning a number on the left is smaller, so the number on the right is larger. The candidate wrote 'Sağda' (on the right), which is semantically correct in English but contradicts the Turkish phrasing of the question ('... tarafında bulunan rasyonel sayıdan daima büyüktür' - 'is always greater than the rational number found on the ... side'). The reference explicitly requires 'Sol' to complete the sentence logically in Turkish. This is a material error in following the specific constraints of the question language.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785788947-py7rysCWp8ym0K3nbiCZ",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785788947,
+    "usage": {
+      "prompt_tokens": 1187,
+      "completion_tokens": 240,
+      "total_tokens": 1427,
+      "cost": 0.0001787,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0001787,
+        "upstream_inference_prompt_cost": 0.0001187,
+        "upstream_inference_completions_cost": 6e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "partially_correct",
+    "score": 2,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": true,
+    "confidence": 0.95,
+    "error_types": [
+      "factual_error"
+    ],
+    "rationale": "The candidate correctly answers parts a, b, c, and ç. However, part d is incorrect: the reference answer is 'Sol' (left), meaning a number on the left is smaller, so the number on the right is larger. The candidate wrote 'Sağda' (on the right), which is semantically correct in English but contradicts the Turkish phrasing of the question ('... tarafında bulunan rasyonel sayıdan daima büyüktür' - 'is always greater than the rational number found on the ... side'). The reference explicitly requires 'Sol' to complete the sentence logically in Turkish. This is a material error in following the specific constraints of the question language.",
+    "reference_quality_issue": false
+  }
+}

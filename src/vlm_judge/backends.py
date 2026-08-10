@@ -7,7 +7,7 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Literal, Protocol
 
 from .prompts import JudgeRequest
 
@@ -47,7 +47,7 @@ class ReplayBackend:
 
 
 class OpenAICompatibleBackend:
-    """Multimodal chat-completions adapter suitable for vLLM/Qwen servers."""
+    """Multimodal chat-completions adapter for OpenRouter or local vLLM."""
 
     name = "openai-compatible"
 
@@ -63,6 +63,7 @@ class OpenAICompatibleBackend:
         seed: int | None = 20260714,
         use_response_format: bool = True,
         enable_thinking: bool | None = None,
+        provider: Literal["vllm", "openrouter"] = "vllm",
         image_mode: str = "url",
         image_cache_dir: Path | None = None,
     ) -> None:
@@ -82,6 +83,7 @@ class OpenAICompatibleBackend:
         self.seed = seed
         self.use_response_format = use_response_format
         self.enable_thinking = enable_thinking
+        self.provider = provider
         self.image_mode = image_mode
         self.image_cache_dir = image_cache_dir or Path("artifacts/cache/judge_images")
         self._image_cache = None
@@ -149,7 +151,16 @@ class OpenAICompatibleBackend:
         if self.use_response_format:
             payload["response_format"] = {"type": "json_object"}
         if self.enable_thinking is not None:
-            payload["chat_template_kwargs"] = {"enable_thinking": self.enable_thinking}
+            if self.provider == "openrouter":
+                payload["reasoning"] = (
+                    {"enabled": True}
+                    if self.enable_thinking
+                    else {"effort": "none"}
+                )
+            else:
+                payload["chat_template_kwargs"] = {
+                    "enable_thinking": self.enable_thinking
+                }
         headers = {"Content-Type": "application/json", "User-Agent": "vlm-judge/0.1"}
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"

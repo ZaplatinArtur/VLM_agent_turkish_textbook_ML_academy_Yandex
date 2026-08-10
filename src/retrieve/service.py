@@ -13,7 +13,7 @@ from .index import Index
 from .knowledge import KnowledgeBaseBuilder
 from .pipeline import RetrievalPipeline
 
-_pipeline: RetrievalPipeline | None = None
+_pipelines: dict[tuple[object, ...], RetrievalPipeline] = {}
 _pipeline_lock = threading.Lock()
 
 
@@ -22,13 +22,23 @@ def build_pipeline(
         profile: str | None = None,
         *,
         bge_m3_config: BgeM3Config | None = None,
+        fetch_k: int | None = None,
+        mmr_lambda: float | None = None,
 ) -> RetrievalPipeline:
     """Build the advanced pipeline or an explicitly selected experiment profile.
 
     ``RETRIEVE_PROFILE`` and the ``profile`` argument keep the named dense,
     hybrid and reranker profiles available. Without either, the educational
     chunking / knowledge-graph / BGE-M3 pipeline remains the default.
+
+    Passing ``fetch_k`` or ``mmr_lambda`` explicitly selects the frozen dense
+    experiment path used by the MMR evaluations.
     """
+    if fetch_k is not None and fetch_k <= 0:
+        raise ValueError("fetch_k must be positive")
+    if mmr_lambda is not None and not 0.0 <= mmr_lambda <= 1.0:
+        raise ValueError("mmr_lambda must be between 0 and 1")
+
     selected_profile = profile or os.environ.get("RETRIEVE_PROFILE", "").strip()
     if selected_profile:
         from .parsing import get_retrieved_chunks
@@ -40,7 +50,34 @@ def build_pipeline(
             selected_profile,
             Index(corpus),
             index_root=INDEX_DIR,
+            fetch_k=fetch_k or 200,
         )
+
+    if fetch_k is not None or mmr_lambda is not None:
+        from .embedders import SentenceTransformerEmbedder
+        from .parsing import get_retrieved_chunks
+        from .rankers import DenseRanker, MaximalMarginalRelevanceRanker
+
+        raw_corpus = get_retrieved_chunks() if chunks is None else chunks
+        corpus = [chunk for chunk in raw_corpus if chunk.text.strip()]
+        index = Index(corpus)
+        embedder = SentenceTransformerEmbedder()
+        rankers = [
+            DenseRanker(
+                embedder=embedder,
+                index=index,
+                fetch_k=fetch_k or 200,
+                index_dir=INDEX_DIR,
+            )
+        ]
+        if mmr_lambda is not None:
+            rankers.append(
+                MaximalMarginalRelevanceRanker(
+                    embedder=embedder,
+                    lambda_mult=mmr_lambda,
+                )
+            )
+        return RetrievalPipeline(rankers=rankers)
 
     from .embedders import SentenceTransformerEmbedder
     from .rankers import (
@@ -220,13 +257,22 @@ def build_pipeline(
     )
 
 
-def get_pipeline() -> RetrievalPipeline:
-    global _pipeline
-    if _pipeline is None:
+def get_pipeline(
+        *,
+        profile: str | None = None,
+        fetch_k: int | None = None,
+        mmr_lambda: float | None = None,
+) -> RetrievalPipeline:
+    key = (profile, fetch_k, mmr_lambda)
+    if key not in _pipelines:
         with _pipeline_lock:
-            if _pipeline is None:
-                _pipeline = build_pipeline()
-    return _pipeline
+            if key not in _pipelines:
+                _pipelines[key] = build_pipeline(
+                    profile=profile,
+                    fetch_k=fetch_k,
+                    mmr_lambda=mmr_lambda,
+                )
+    return _pipelines[key]
 
 
 def textbook_retrieve(
@@ -234,8 +280,21 @@ def textbook_retrieve(
         k: int = 5,
         subject: str | None = None,
         grade: int | str | None = None,
+        *,
+        profile: str | None = None,
+        fetch_k: int | None = None,
+        mmr_lambda: float | None = None,
 ) -> list[RetrievedChunk]:
-    return get_pipeline().run(query, k=k, subject=subject, grade=grade)
+    return get_pipeline(
+        profile=profile,
+        fetch_k=fetch_k,
+        mmr_lambda=mmr_lambda,
+    ).run(
+        query,
+        k=k,
+        subject=subject,
+        grade=grade,
+    )
 
 
 def textbook_retrieve_checked(
@@ -243,7 +302,20 @@ def textbook_retrieve_checked(
         k: int = 5,
         subject: str | None = None,
         grade: int | str | None = None,
+        *,
+        profile: str | None = None,
+        fetch_k: int | None = None,
+        mmr_lambda: float | None = None,
 ) -> tuple[list[RetrievedChunk], RelevanceVerdict]:
     """Как textbook_retrieve, но с вердиктом детектора бесполезного поиска."""
-    results = get_pipeline().run(query, k=k, subject=subject, grade=grade)
+    results = get_pipeline(
+        profile=profile,
+        fetch_k=fetch_k,
+        mmr_lambda=mmr_lambda,
+    ).run(
+        query,
+        k=k,
+        subject=subject,
+        grade=grade,
+    )
     return results, assess_relevance(results)

@@ -50,6 +50,14 @@ CREATE TABLE IF NOT EXISTS task_results (
     reasoning TEXT,
     forced_answer INTEGER NOT NULL DEFAULT 0,
     raw_response TEXT,
+    exit_reason TEXT,
+    image_evidence_json TEXT NOT NULL DEFAULT '[]',
+    retrieval_relevance TEXT,
+    retrieval_conflict INTEGER,
+    answer_source TEXT,
+    experiment_id TEXT,
+    retrieval_route TEXT,
+    retrieval_route_reason TEXT,
     generation_json TEXT NOT NULL DEFAULT '{}',
     input_tokens INTEGER,
     output_tokens INTEGER,
@@ -92,6 +100,8 @@ CREATE TABLE IF NOT EXISTS tool_calls (
     returned_chunk_ids_json TEXT NOT NULL DEFAULT '[]',
     returned_count INTEGER NOT NULL DEFAULT 0,
     latency_ms REAL,
+    relevance_json TEXT NOT NULL DEFAULT '{}',
+    relevance_label TEXT,
     error TEXT
 );
 
@@ -241,8 +251,38 @@ class Database:
                     connection.execute(
                         f"ALTER TABLE manual_judge_labels ADD COLUMN {column} INTEGER"
                     )
+            existing_result_columns = {
+                str(row["name"])
+                for row in connection.execute("PRAGMA table_info(task_results)")
+            }
+            for column, definition in (
+                ("exit_reason", "TEXT"),
+                ("image_evidence_json", "TEXT NOT NULL DEFAULT '[]'"),
+                ("retrieval_relevance", "TEXT"),
+                ("retrieval_conflict", "INTEGER"),
+                ("answer_source", "TEXT"),
+                ("experiment_id", "TEXT"),
+                ("retrieval_route", "TEXT"),
+                ("retrieval_route_reason", "TEXT"),
+            ):
+                if column not in existing_result_columns:
+                    connection.execute(
+                        f"ALTER TABLE task_results ADD COLUMN {column} {definition}"
+                    )
+            existing_tool_columns = {
+                str(row["name"])
+                for row in connection.execute("PRAGMA table_info(tool_calls)")
+            }
+            for column, definition in (
+                ("relevance_json", "TEXT NOT NULL DEFAULT '{}'"),
+                ("relevance_label", "TEXT"),
+            ):
+                if column not in existing_tool_columns:
+                    connection.execute(
+                        f"ALTER TABLE tool_calls ADD COLUMN {column} {definition}"
+                    )
             connection.execute(
-                "INSERT OR REPLACE INTO schema_info(key, value) VALUES('version', '5')"
+                "INSERT OR REPLACE INTO schema_info(key, value) VALUES('version', '6')"
             )
             connection.execute(
                 """
@@ -326,9 +366,10 @@ class Database:
                 WHEN 'b0_no_tools' THEN 0
                 WHEN 'web_search' THEN 1
                 WHEN 'agent_rag' THEN 2
-                WHEN 'agent_rag_thinking' THEN 3
-                WHEN 'agent_rag_hybrid_chunks' THEN 4
-                WHEN 'agent_rag_hybrid_chunks_thinking' THEN 5
+                WHEN 'agent_rag_routed' THEN 3
+                WHEN 'agent_rag_thinking' THEN 4
+                WHEN 'agent_rag_hybrid_chunks' THEN 5
+                WHEN 'agent_rag_hybrid_chunks_thinking' THEN 6
                 ELSE 99 END
             """
         )

@@ -1,0 +1,61 @@
+{
+  "request_id": "c32d2700fccd33e812bd513f7a22575257165d3c3d735182d29b3e582b5d9f46",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"fully_correct\",\n  \"score\": 4,\n  \"strict_correct\": true,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 0.95,\n  \"error_types\": [],\n  \"rationale\": \"The candidate correctly identifies A as the answer. The reasoning accurately analyzes each option: A is correct because sentence I explicitly contrasts humans and fish regarding growth. B is also factually correct based on the text, but the candidate correctly prioritizes A as the main idea of the passage. Options C, D, and E are correctly identified as false based on the text. The final selection matches the reference answer.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785767455-M3rN6mIPMgsaqDWRVlsz",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785767455,
+    "usage": {
+      "prompt_tokens": 2275,
+      "completion_tokens": 168,
+      "total_tokens": 2443,
+      "cost": 0.0002527,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002527,
+        "upstream_inference_prompt_cost": 0.0002275,
+        "upstream_inference_completions_cost": 2.52e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "fully_correct",
+    "score": 4,
+    "strict_correct": true,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 0.95,
+    "error_types": [],
+    "rationale": "The candidate correctly identifies A as the answer. The reasoning accurately analyzes each option: A is correct because sentence I explicitly contrasts humans and fish regarding growth. B is also factually correct based on the text, but the candidate correctly prioritizes A as the main idea of the passage. Options C, D, and E are correctly identified as false based on the text. The final selection matches the reference answer.",
+    "reference_quality_issue": false
+  }
+}

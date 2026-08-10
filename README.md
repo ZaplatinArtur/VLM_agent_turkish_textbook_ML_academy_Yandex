@@ -156,46 +156,18 @@ cp .env.example .env             # и поправить под машину
 python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --dry-run
 ```
 
-## Локальная проверка на слабом железе (Ollama)
+## Запуск через OpenRouter без GPU-сервера
 
-На машине с ~8 ГБ VRAM полноценный vLLM не поднять — для смоук-теста подойдёт
-квантованная модель через Ollama (эндпоинт OpenAI-совместимый, код тот же):
+Модель по умолчанию — `qwen/qwen3.5-9b`. Локально остаются код агента,
+изображения, retrieval-индекс и результаты; только LLM inference отправляется в
+OpenRouter. Перед запуском задайте новый ключ в текущей сессии PowerShell:
 
-```bash
-ollama pull qwen3.5:9b-q4_K_M
-# .env: MLA_VLLM_BASE_URL=http://localhost:11434/v1
-#       MLA_MODEL_NAME=qwen3.5:9b-q4_K_M
-python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --condition b0_no_tools
+```powershell
+$env:OPENROUTER_API_KEY="<new-key>"
 ```
 
-Квант Q4 — только для проверки пайплайна; метрики для сравнения условий
-снимаем на полном чекпоинте через vLLM.
-
-## Запуск модели (GPU-машина)
-
-Профиль под A100 (полный bf16-чекпоинт, ~18 ГБ весов):
-
-```bash
-pip install vllm
-vllm serve Qwen/Qwen3.5-9B \
-  --max-model-len 16384 \
-  --gpu-memory-utilization 0.92 \
-  --max-num-seqs 32 \
-  --enable-auto-tool-choice --tool-call-parser qwen3_coder
-```
-
-- A100 40GB: хватает с запасом (весам + KV на ~десятки одновременных запросов);
-  при OOM снизить --max-num-seqs до 16.
-- A100 80GB: можно --max-num-seqs 64 и/или --max-model-len 32768; остатка VRAM
-  хватит и на модель-судью покрупнее на втором процессе.
-- В .env на прогонах ставить MLA_CONCURRENCY=16..32 — vLLM батчит их сам.
-
-`--enable-auto-tool-choice --tool-call-parser qwen3_coder` для B0 не нужны, но
-понадобятся для B1 (агент с тул-коллами) — поднимаем сразу с ними, чтобы
-эндпоинт был один на все условия. Картинки шлём base64 в самом запросе,
-поэтому `--allowed-local-media-path` не требуется.
-
-Проверить эндпоинт: `curl http://localhost:8000/v1/models`
+Ключ также можно положить в локальный `.env`, который исключён из Git. Сервер,
+CUDA, vLLM и SSH-туннель для этого сценария не нужны.
 
 ## Прогон
 
@@ -304,9 +276,9 @@ python -m mla_baseline.prepare_text_only \
 
 ```bash
 TASKS=data/validation.jsonl \
-BASE_URL=http://127.0.0.1:8000/v1 \
-MODEL=Qwen/Qwen3.5-9B \
-MLA_CONCURRENCY=4 \
+BASE_URL=https://openrouter.ai/api/v1 \
+MODEL=qwen/qwen3.5-9b \
+MLA_CONCURRENCY=1 \
 bash scripts/run_rag_evaluation.sh
 ```
 
@@ -327,42 +299,79 @@ bash scripts/run_image_rag_evaluation.sh
 Эталон никогда не передаётся решающему агенту. Итоговый отчёт находится в
 `reports/validation_images_full/summary.{json,md}`.
 
-## Перенос на мощное железо по SSH
+## Полный локальный прогон через OpenRouter
 
-Код не содержит локальных путей и ключей — вся конфигурация в `.env`.
+После подготовки retrieval-индекса агент с RAG запускается обычной командой:
 
-```bash
-# 1. Залить код (или git clone на той стороне)
-rsync -av --exclude .venv --exclude results --exclude .env . user@gpu-host:~/mla_baseline/
-
-# 2. На GPU-машине
-ssh user@gpu-host
-cd ~/mla_baseline
-python -m venv .venv && source .venv/bin/activate
-pip install -e .
-cp .env.example .env   # выставить MLA_MODEL_NAME и, если vLLM на другом хосте, MLA_VLLM_BASE_URL
-
-# 3. vLLM в tmux/screen (см. выше), затем прогон
-tmux new -s vllm       # внутри: vllm serve ...
-python -m mla_baseline.runner --tasks data/tasks.jsonl --condition b0_no_tools
-
-# 4. Забрать результаты
-rsync -av user@gpu-host:~/mla_baseline/results/ ./results/
+```powershell
+$env:OPENROUTER_API_KEY="<new-key>"
+python -m mla_baseline.runner `
+  --tasks data/tasks.jsonl `
+  --condition agent_rag `
+  --out results/agent_rag_openrouter.jsonl
 ```
 
-Альтернатива для локальной отладки против удалённого vLLM — ssh-туннель:
-`ssh -N -L 8000:localhost:8000 user@gpu-host`, тогда локальный `.env` не меняется.
+Скрипты `scripts/run_rag_evaluation.sh` и
+`scripts/run_image_rag_evaluation.sh` также используют OpenRouter и передают
+этот же ключ агенту и LLM judge. Они больше не запускают и не проверяют vLLM.
+
+### E0/E3/E4: routed image-first RAG
+
+PowerShell-скрипт последовательно прогоняет одинаковые задачи и judge:
+
+- `E0` — `b0_no_tools`;
+- `E3` — image-first checked `agent_rag`;
+- `E4` — `agent_rag_routed`: предметы из блок-листа решаются без retrieval,
+  остальные — через E3.
+
+Для чистой оценки роутера E4 не вызывает модель повторно: его строки точно
+составляются из уже полученных E0/E3 ответов. Это исключает случайность повторной
+генерации из fixed/regressed и позволяет повторно использовать judge-кеш.
+
+По умолчанию выполняется безопасный smoke на 10 задачах и отключается RAG для
+`Math`. Результаты автоматически импортируются в SQLite из смердженного
+VLM Analytics, после чего печатаются paired accuracy, fixed/regressed и net
+fixes относительно E0. Каждый запуск получает отдельный timestamp `RunId`,
+поэтому результаты разных конфигураций не смешиваются.
+Перед импортом скрипт также требует полный, безошибочный judge-результат: все
+`task_id` должны совпасть, дубли и невалидные verdict запрещены.
+
+```powershell
+$env:OPENROUTER_API_KEY="<new-key>"
+./scripts/run_openrouter_routed_experiment.ps1
+```
+
+Полный прогон по всем задачам:
+
+```powershell
+./scripts/run_openrouter_routed_experiment.ps1 `
+  -Limit 0 `
+  -RunId "full_math_router_v1" `
+  -NoRetrievalSubjects "Math"
+```
+
+Повтор той же команды с тем же `RunId` безопасно продолжает прерванный прогон.
+Если параметры отличаются от сохранённого `experiment_config.json`, скрипт
+останавливается до обращения к OpenRouter.
+
+Открыть импортированные результаты:
+
+```powershell
+./.venv/Scripts/python.exe apps/vlm-analytics/main.py
+```
 
 ## Настройки (.env)
 
 | Переменная | Что делает |
 |---|---|
-| `MLA_VLLM_BASE_URL` | OpenAI-совместимый эндпоинт vLLM |
-| `MLA_MODEL_NAME` | id модели: HF-id для vLLM (`Qwen/Qwen3.5-9B`) или тег Ollama (`qwen3.5:9b-q4_K_M`) |
-| `MLA_STRUCTURED_MODE` | `response_format` (новые vLLM) / `guided_json` (старые) / `none` |
+| `OPENROUTER_API_KEY` | секретный ключ OpenRouter; обязателен и не хранится в Git |
+| `MLA_LLM_PROVIDER` | backend агента; по умолчанию `openrouter` |
+| `MLA_OPENROUTER_BASE_URL` | OpenRouter API; по умолчанию `https://openrouter.ai/api/v1` |
+| `MLA_OPENROUTER_MODEL_NAME` | модель; по умолчанию `qwen/qwen3.5-9b` |
+| `MLA_STRUCTURED_MODE` | `response_format` (рекомендуется) / `none` |
 | `MLA_PROMPT_VERSION` | версия промпта; правка промпта = новая версия |
 | `MLA_INCLUDE_QUESTION_TEXT_WITH_IMAGES` | `true` — слать текст условия вместе с картинкой (по умолчанию нет: сценарий «ленивый школьник») |
-| `MLA_CONCURRENCY` | параллельные запросы к vLLM |
+| `MLA_CONCURRENCY` | число параллельных запросов; начните с `1–2`, чтобы контролировать расход |
 
 ## Структура
 

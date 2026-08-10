@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from mla_baseline.runner import load_done_ids
+from mla_baseline.runner import load_done_ids, main
 
 
 class MlaRunnerResumeTests(unittest.TestCase):
@@ -23,6 +23,32 @@ class MlaRunnerResumeTests(unittest.TestCase):
 
             self.assertEqual(done, {"ok"})
             self.assertEqual([record["task_id"] for record in remaining], ["ok"])
+
+
+def test_openrouter_dry_run_does_not_require_api_key(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.delenv("MLA_OPENROUTER_API_KEY", raising=False)
+    tasks = tmp_path / "tasks.jsonl"
+    tasks.write_text(
+        json.dumps(
+            {
+                "task_id": "q1",
+                "subject": "Math",
+                "grade": None,
+                "question": "2 + 2?",
+                "reference_answer": "4",
+                "answer_type": "numeric",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    assert main(["--tasks", str(tasks), "--dry-run"]) == 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,64 @@
+{
+  "request_id": "747f8bcfd778e266d059ac7fb92aa918f598c7198965f4644ad6e37a5f401acc",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"partially_correct\",\n  \"score\": 2,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": false,\n  \"confidence\": 0.9,\n  \"error_types\": [\n    \"incomplete_reasoning\",\n    \"incorrect_final_answer\"\n  ],\n  \"rationale\": \"The candidate correctly identifies the substitutes for both teams (Yellow: 3, 7, 10; Blue: 2, 13, 15). However, the reasoning is incomplete and the final answer is incorrect. The question asks for the sum of the numbers of the two substitutes entering the game. Since each team makes one substitution, the sum is the sum of one number from the yellow substitutes and one from the blue substitutes. The candidate fails to perform this calculation or select the correct pair, instead providing an incomplete thought process and selecting option A (25) instead of the correct option B (20).\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785855377-v8efkaKPlc8HopniL33R",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785855377,
+    "usage": {
+      "prompt_tokens": 1155,
+      "completion_tokens": 234,
+      "total_tokens": 1389,
+      "cost": 0.0001506,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0001506,
+        "upstream_inference_prompt_cost": 0.0001155,
+        "upstream_inference_completions_cost": 3.51e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "partially_correct",
+    "score": 2,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": false,
+    "confidence": 0.9,
+    "error_types": [
+      "incomplete_reasoning",
+      "incorrect_final_answer"
+    ],
+    "rationale": "The candidate correctly identifies the substitutes for both teams (Yellow: 3, 7, 10; Blue: 2, 13, 15). However, the reasoning is incomplete and the final answer is incorrect. The question asks for the sum of the numbers of the two substitutes entering the game. Since each team makes one substitution, the sum is the sum of one number from the yellow substitutes and one from the blue substitutes. The candidate fails to perform this calculation or select the correct pair, instead providing an incomplete thought process and selecting option A (25) instead of the correct option B (20).",
+    "reference_quality_issue": false
+  }
+}

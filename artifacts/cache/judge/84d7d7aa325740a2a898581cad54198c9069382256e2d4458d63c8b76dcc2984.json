@@ -1,0 +1,61 @@
+{
+  "request_id": "dad6d9ce8d93d5a9b37ef339988c923f5ec10853d75a37d0ba444827f7ae1427",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"fully_correct\",\n  \"score\": 4,\n  \"strict_correct\": true,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 1.0,\n  \"error_types\": [],\n  \"rationale\": \"The candidate correctly identifies the method as 'grouping easy-to-add numbers' (C). The reasoning accurately explains that 82 and 48 were decomposed into 80+2 and 40+8 to form round numbers (80+40=120, 2+8=10), which matches the visual steps in the image. The final answer is correct.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785866337-gjEuLhkmi1KiWg0jimX1",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785866337,
+    "usage": {
+      "prompt_tokens": 926,
+      "completion_tokens": 169,
+      "total_tokens": 1095,
+      "cost": 0.00011795,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00011795,
+        "upstream_inference_prompt_cost": 9.26e-05,
+        "upstream_inference_completions_cost": 2.535e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "fully_correct",
+    "score": 4,
+    "strict_correct": true,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 1.0,
+    "error_types": [],
+    "rationale": "The candidate correctly identifies the method as 'grouping easy-to-add numbers' (C). The reasoning accurately explains that 82 and 48 were decomposed into 80+2 and 40+8 to form round numbers (80+40=120, 2+8=10), which matches the visual steps in the image. The final answer is correct.",
+    "reference_quality_issue": false
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "request_id": "6f98716231bf3e667d5ba6b1e040f63658221277dfe47fbae8e8b34f5ff8ef36",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"mostly_correct\",\n  \"score\": 3,\n  \"strict_correct\": false,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 0.95,\n  \"error_types\": [\n    \"incomplete_text\"\n  ],\n  \"rationale\": \"The candidate correctly identifies the relationship between the number of 4-packs and 6-packs (4x = 6y) and uses the total bottle constraint (200 < 12y < 220) to find y=18. This leads to the correct revenue of 594 TL. The reasoning is sound and matches the reference answer B. The only issue is that the provided text is cut off mid-sentence, but the final answer is explicitly stated as 'A' in the JSON, which contradicts the correct calculation of 594 (B). However, the reasoning block itself is correct and leads to B.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785860592-Mrnh1399fMEVoxcgCDPT",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785860592,
+    "usage": {
+      "prompt_tokens": 1165,
+      "completion_tokens": 233,
+      "total_tokens": 1398,
+      "cost": 0.00015145,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00015145,
+        "upstream_inference_prompt_cost": 0.0001165,
+        "upstream_inference_completions_cost": 3.495e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "mostly_correct",
+    "score": 3,
+    "strict_correct": false,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 0.95,
+    "error_types": [
+      "incomplete_text"
+    ],
+    "rationale": "The candidate correctly identifies the relationship between the number of 4-packs and 6-packs (4x = 6y) and uses the total bottle constraint (200 < 12y < 220) to find y=18. This leads to the correct revenue of 594 TL. The reasoning is sound and matches the reference answer B. The only issue is that the provided text is cut off mid-sentence, but the final answer is explicitly stated as 'A' in the JSON, which contradicts the correct calculation of 594 (B). However, the reasoning block itself is correct and leads to B.",
+    "reference_quality_issue": false
+  }
+}

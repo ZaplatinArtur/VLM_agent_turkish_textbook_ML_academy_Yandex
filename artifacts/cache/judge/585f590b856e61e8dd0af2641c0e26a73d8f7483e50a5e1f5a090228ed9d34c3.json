@@ -1,0 +1,64 @@
+{
+  "request_id": "3352efc892d4c9cf259788c9225660e5e176618628ac2328d86bd733aeee5b84",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"partially_correct\",\n  \"score\": 2,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": false,\n  \"confidence\": 0.95,\n  \"error_types\": [\n    \"incorrect_answer\",\n    \"missing_required_part\"\n  ],\n  \"rationale\": \"The candidate correctly identifies a, b, c, and d. However, it fails on e, f, g, ğ, and h. The reference answer for 'e' is 'Sporla üreme' (reproduction by spores), not 'Parçalanma'. For 'f', the reference is 'Partenogenez' (parthenogenesis), not 'Parçalanma'. For the vegetative reproduction examples (g, ğ, h), the reference provides specific types ('Stolonla üreme', 'Rizomla üreme', 'Daldırmayla üreme'), whereas the candidate provides generic plant parts ('Stolon', 'Yaprak', 'Kök'). The candidate's answers for e, f, and the specific vegetative types are incorrect according to the provided reference.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785780254-ULjZP5q1htEJUAjw0bkV",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785780254,
+    "usage": {
+      "prompt_tokens": 2820,
+      "completion_tokens": 274,
+      "total_tokens": 3094,
+      "cost": 0.0005479,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0005479,
+        "upstream_inference_prompt_cost": 0.0004794,
+        "upstream_inference_completions_cost": 6.85e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "partially_correct",
+    "score": 2,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": false,
+    "confidence": 0.95,
+    "error_types": [
+      "incorrect_answer",
+      "missing_required_part"
+    ],
+    "rationale": "The candidate correctly identifies a, b, c, and d. However, it fails on e, f, g, ğ, and h. The reference answer for 'e' is 'Sporla üreme' (reproduction by spores), not 'Parçalanma'. For 'f', the reference is 'Partenogenez' (parthenogenesis), not 'Parçalanma'. For the vegetative reproduction examples (g, ğ, h), the reference provides specific types ('Stolonla üreme', 'Rizomla üreme', 'Daldırmayla üreme'), whereas the candidate provides generic plant parts ('Stolon', 'Yaprak', 'Kök'). The candidate's answers for e, f, and the specific vegetative types are incorrect according to the provided reference.",
+    "reference_quality_issue": false
+  }
+}

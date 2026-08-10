@@ -1,0 +1,61 @@
+{
+  "request_id": "b576ac16f779e3f1ecd9c8b69dfb41429d7f6e39c888ac36941a63036b29b6d4",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"fully_correct\",\n  \"score\": 4,\n  \"strict_correct\": true,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 0.99,\n  \"error_types\": [],\n  \"rationale\": \"The candidate correctly identifies 16 total cards and 2 fish cards. It correctly calculates the total number of ways to choose 2 cards as C(16,2)=120 and the number of favorable outcomes as C(2,2)=1. The final probability 1/120 matches the reference answer. The reasoning is sound and complete.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785866214-HWagurPY7M4PwuRzCRH4",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785866214,
+    "usage": {
+      "prompt_tokens": 1212,
+      "completion_tokens": 162,
+      "total_tokens": 1374,
+      "cost": 0.00024654,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00024654,
+        "upstream_inference_prompt_cost": 0.00020604,
+        "upstream_inference_completions_cost": 4.05e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "fully_correct",
+    "score": 4,
+    "strict_correct": true,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 0.99,
+    "error_types": [],
+    "rationale": "The candidate correctly identifies 16 total cards and 2 fish cards. It correctly calculates the total number of ways to choose 2 cards as C(16,2)=120 and the number of favorable outcomes as C(2,2)=1. The final probability 1/120 matches the reference answer. The reasoning is sound and complete.",
+    "reference_quality_issue": false
+  }
+}

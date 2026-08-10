@@ -1,0 +1,40 @@
+{
+  "id": "retrieval-context-positioning",
+  "title": "Позиционирование сильных чанков по краям контекста",
+  "mechanism": "Не менять найденный набор чанков, а сравнить несколько порядков их подачи модели: score-descending, лучший первым, лучший последним и interleaving, размещающий сильные чанки ближе к началу и концу.",
+  "why_new_for_project": "Текущий tool возвращает чанки в rank-порядке. Эксперимент меняет только сериализацию tool output, а не chunking, retrieval или preprocessing текста чанка.",
+  "target_failure_mode": "Модель хуже использует релевантное свидетельство, если оно теряется в середине длинного tool context.",
+  "minimal_ablation": {
+    "control": "те же top-5 в текущем порядке",
+    "arms": [
+      "best-first",
+      "best-last",
+      "edge-interleaving без дублирования"
+    ],
+    "fixed": ["точный набор chunk_id", "текст чанков", "token budget", "модель", "prompt", "judge"]
+  },
+  "metrics": [
+    "paired strict accuracy",
+    "accuracy только на задачах с confident retrieval",
+    "wrong-to-right и right-to-wrong",
+    "позиция использованного чанка, если evidence attribution доступна"
+  ],
+  "paper_evidence": [
+    {
+      "title": "Lost in the Middle: How Language Models Use Long Contexts",
+      "url": "https://arxiv.org/abs/2307.03172",
+      "claim": "В исследованных long-context задачах качество было выше при размещении релевантной информации в начале или конце и ухудшалось в середине."
+    }
+  ],
+  "github_code": [
+    {
+      "repository": "langchain-ai/langchain",
+      "url": "https://github.com/langchain-ai/langchain/blob/37205e51bc92999fee33d89580a43e6f1bee4cbb/libs/langchain/langchain_classic/document_transformers/long_context_reorder.py",
+      "evidence": "В LangChain сохранён публичный LongContextReorder adapter; для проекта достаточно собственной небольшой функции перестановки."
+    }
+  ],
+  "integration_point": "src/mla_baseline/tools/textbook_search.py непосредственно перед формированием hits",
+  "effort": "очень низкий",
+  "risk": "Эффект может быть мал при top_k=5 и коротких чанках; поэтому набор chunk_id и токены нужно зафиксировать.",
+  "confidence": "high"
+}

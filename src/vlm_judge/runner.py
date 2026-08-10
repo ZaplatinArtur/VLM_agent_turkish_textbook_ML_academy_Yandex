@@ -31,6 +31,7 @@ def _backend_cache_config(backend: JudgeBackend) -> dict[str, Any]:
         "use_response_format",
         "enable_thinking",
         "image_mode",
+        "provider",
     ):
         value = getattr(backend, field_name, None)
         if value is None or isinstance(value, (str, int, float, bool)):

@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Reproducible paired experiment on one fixed task file.  A Qwen/vLLM endpoint
-# must already be listening; this script intentionally does not manage the GPU
-# server process.
+# Reproducible paired experiment on one fixed task file through OpenRouter.
 python_bin="${PYTHON_BIN:-python}"
 tasks="${TASKS:-data/validation.jsonl}"
 chunks_dir="data/chunks/jsonl"
 output_dir="${OUTPUT_DIR:-results/rag_eval}"
 report_dir="${REPORT_DIR:-reports/rag_eval}"
-base_url="${BASE_URL:-http://127.0.0.1:8000/v1}"
-model="${MODEL:-Qwen/Qwen3.5-9B}"
+base_url="${BASE_URL:-https://openrouter.ai/api/v1}"
+model="${MODEL:-qwen/qwen3.5-9b}"
+
+: "${OPENROUTER_API_KEY:?Set OPENROUTER_API_KEY before running the evaluation}"
 
 export MLA_PROMPT_VERSION="${MLA_PROMPT_VERSION:-v2_cot}"
-export MLA_MODEL_NAME="${MLA_MODEL_NAME:-${model}}"
-export MLA_VLLM_BASE_URL="${MLA_VLLM_BASE_URL:-${base_url}}"
+export MLA_LLM_PROVIDER=openrouter
+export MLA_OPENROUTER_MODEL_NAME="${MLA_OPENROUTER_MODEL_NAME:-${model}}"
+export MLA_OPENROUTER_BASE_URL="${MLA_OPENROUTER_BASE_URL:-${base_url}}"
 export MLA_CONCURRENCY="${MLA_CONCURRENCY:-4}"
 export MLA_TEXT_ONLY="${MLA_TEXT_ONLY:-true}"
 
@@ -26,8 +27,6 @@ b0_input="${output_dir}/b0_judge_input.jsonl"
 rag_input="${output_dir}/agent_rag_judge_input.jsonl"
 b0_judge="${output_dir}/b0_judge.jsonl"
 rag_judge="${output_dir}/agent_rag_judge.jsonl"
-
-curl --fail --silent "${base_url}/models" >/dev/null
 
 "${python_bin}" -m mla_baseline.preflight \
   --tasks "${tasks}" \
@@ -65,6 +64,8 @@ curl --fail --silent "${base_url}/models" >/dev/null
   --output "${b0_judge}" \
   --base-url "${base_url}" \
   --model "${model}" \
+  --api-key-env OPENROUTER_API_KEY \
+  --provider openrouter \
   --retry-failures
 
 "${python_bin}" -m vlm_judge.cli run-text-judge \
@@ -72,6 +73,8 @@ curl --fail --silent "${base_url}/models" >/dev/null
   --output "${rag_judge}" \
   --base-url "${base_url}" \
   --model "${model}" \
+  --api-key-env OPENROUTER_API_KEY \
+  --provider openrouter \
   --retry-failures
 
 "${python_bin}" -m mla_baseline.paired_eval \

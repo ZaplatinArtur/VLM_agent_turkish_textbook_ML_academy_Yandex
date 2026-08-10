@@ -12,6 +12,7 @@ from .fusion import (
 )
 from .graph import GraphExpansionRanker
 from .lexical import BM25Ranker
+from .mmr import MaximalMarginalRelevanceRanker
 from .rerank import KnowledgeReranker
 
 __all__ = [
@@ -23,6 +24,7 @@ __all__ = [
     "DenseRanker",
     "GraphExpansionRanker",
     "KnowledgeReranker",
+    "MaximalMarginalRelevanceRanker",
     "PrimaryCandidateUnion",
     "Ranker",
     "ReciprocalRankFusion",

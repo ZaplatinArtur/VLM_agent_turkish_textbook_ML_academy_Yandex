@@ -10,6 +10,9 @@
 - статистика reasoning, tools, retrieval и ошибок;
 - реестр факапов с ответственным компонентом, статусом и повторяемостью;
 - ручной импорт JSONL и синхронизация результатов по SSH.
+- парное сравнение каждого режима с no-tools: fixed, regressed и net fixes;
+- нормализованный image-first RAG trace: relevance, conflict, answer source и
+  exit reason.
 
 ## Запуск из исходников
 
@@ -96,6 +99,21 @@ $env:VLM_ANALYTICS_REMOTE_ROOT = "/path/to/v2_274/app"
 
 ```powershell
 .\.venv\Scripts\python.exe main.py --sync-once
+```
+
+Локальные OpenRouter-прогоны сервера не требуют. Их можно импортировать из UI
+или командой:
+
+```powershell
+.\.venv\Scripts\python.exe main.py `
+  --import-run-key agent_rag_routed `
+  --display-name "E4 Routed image-first RAG" `
+  --raw ../../results/openrouter_routed_experiment/<run-id>/agent_rag_routed_raw.jsonl `
+  --judge ../../results/openrouter_routed_experiment/<run-id>/agent_rag_routed_judge.jsonl `
+  --manifest ../../outputs/validation_merged_20260723/validation_manifest.jsonl `
+  --dataset-version validation_images_198
+
+.\.venv\Scripts\python.exe main.py --paired-summary
 ```
 
 База `vlm_analytics.db` создается рядом с программой. При запуске собранного EXE

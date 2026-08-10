@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
-from vlm_analytics.config import application_dir, default_database_path
+from vlm_analytics.config import DATASET_VERSION, application_dir, default_database_path
 from vlm_analytics.database import Database
 
 
@@ -32,6 +33,17 @@ def parse_args() -> argparse.Namespace:
         default=0,
         help="Индекс вкладки для тестового скриншота",
     )
+    parser.add_argument("--import-run-key", help="Импортировать локальный прогон")
+    parser.add_argument("--display-name")
+    parser.add_argument("--raw", type=Path)
+    parser.add_argument("--judge", type=Path)
+    parser.add_argument("--manifest", type=Path)
+    parser.add_argument("--dataset-version")
+    parser.add_argument(
+        "--paired-summary",
+        action="store_true",
+        help="Вывести парные сравнения последних прогонов с b0_no_tools",
+    )
     return parser.parse_args()
 
 
@@ -39,6 +51,45 @@ def main() -> int:
     args = parse_args()
     database = Database(args.db.resolve())
     database.initialize()
+
+    if args.import_run_key:
+        missing = [
+            name
+            for name, value in (
+                ("--display-name", args.display_name),
+                ("--raw", args.raw),
+                ("--judge", args.judge),
+                ("--manifest", args.manifest),
+            )
+            if not value
+        ]
+        if missing:
+            raise SystemExit(f"Для импорта нужны: {', '.join(missing)}")
+        from vlm_analytics.importer import import_run
+
+        result = import_run(
+            database,
+            run_key=args.import_run_key,
+            display_name=args.display_name,
+            raw_path=args.raw,
+            judge_path=args.judge,
+            manifest_path=args.manifest,
+            dataset_version=args.dataset_version or DATASET_VERSION,
+        )
+        print(result.message)
+        return 0
+
+    if args.paired_summary:
+        from vlm_analytics.analytics import AnalyticsService
+
+        print(
+            json.dumps(
+                AnalyticsService(database).paired_comparisons(),
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 0
 
     if args.sync_once:
         from vlm_analytics.sync import SyncManager

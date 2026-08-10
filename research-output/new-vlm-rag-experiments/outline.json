@@ -1,0 +1,36 @@
+{
+  "research_question": "Какие еще не проверенные в проекте эксперименты могут повысить качество image-first VLM-агента с textbook RAG?",
+  "scope": "Методы, ортогональные уже проверенным стратегиям агента, chunking, hybrid retrieval, Self-RAG, routing, ensembles, calculator, transcription, canonicalization и error memory.",
+  "items": [
+    {"id": "mmr-diversification", "label": "Diversified retrieval / MMR"},
+    {"id": "evidence-positioning", "label": "Порядок и позиция доказательств в контексте"},
+    {"id": "synthetic-question-indexing", "label": "Синтетические вопросы на этапе индексации"},
+    {"id": "prompt-policy-optimization", "label": "Автоматическая оптимизация промпта и tool policy"},
+    {"id": "option-conditioned-retrieval", "label": "Option-conditioned retrieval для choice-задач"}
+  ],
+  "excluded_as_already_tested": [
+    "RAG as a tool",
+    "multilingual prompting",
+    "page-level retrieval",
+    "element chunking / ColPali",
+    "embedding model replacement",
+    "hybrid retrieval",
+    "task decomposition",
+    "parallel reasoning and judge",
+    "RAG answer grading",
+    "pipeline error analysis",
+    "image priority over RAG",
+    "Self-RAG",
+    "chunk preprocessing",
+    "knowledge graph",
+    "image crops for retrieval",
+    "Solver-Critic-Repair",
+    "parallel RAG and no-RAG",
+    "task/subject router",
+    "answer clustering",
+    "calculator/SymPy",
+    "structured transcription",
+    "answer canonicalization",
+    "error memory"
+  ]
+}

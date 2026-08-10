@@ -17,6 +17,10 @@ _LAZY_ATTRS = {
     "FaissVectorStore": (".vector_store", "FaissVectorStore"),
     "Index": (".index", "Index"),
     "PrimaryCandidateUnion": (".rankers", "PrimaryCandidateUnion"),
+    "MaximalMarginalRelevanceRanker": (
+        ".rankers",
+        "MaximalMarginalRelevanceRanker",
+    ),
     "Ranker": (".rankers", "Ranker"),
     "ReciprocalRankFusion": (".rankers", "ReciprocalRankFusion"),
     "build_profile": (".pipelines", "build_profile"),

@@ -377,6 +377,25 @@ class MainWindow(QMainWindow):
         splitter.addWidget(self.overview_chart)
         splitter.setSizes([780, 680])
         layout.addWidget(splitter, 1)
+        paired_title = QLabel("Парное сравнение с последним no-tools прогоном")
+        paired_title.setObjectName("SectionTitle")
+        layout.addWidget(paired_title)
+        self.paired_table = make_table(
+            [
+                "Кандидат",
+                "N",
+                "B0",
+                "Кандидат",
+                "Δ, п.п.",
+                "Исправил",
+                "Испортил",
+                "Net",
+                "Oracle",
+                "McNemar p",
+            ]
+        )
+        self.paired_table.setMaximumHeight(190)
+        layout.addWidget(self.paired_table)
         self.tabs.addTab(page, "Обзор")
 
     def _create_subjects_tab(self) -> None:
@@ -615,6 +634,10 @@ class MainWindow(QMainWindow):
                 "Уник. запросов",
                 "Ошибок",
                 "Без результатов",
+                "Confident",
+                "Weak/empty",
+                "Conflicts",
+                "Router skip",
                 "Chunks",
                 "Accuracy",
             ]
@@ -958,6 +981,22 @@ class MainWindow(QMainWindow):
             for item in summaries
         ]
         fill_table(self.overview_table, rows)
+        paired_rows = [
+            [
+                item["candidate_display_name"],
+                item["paired_tasks"],
+                f"{item['baseline_accuracy']:.1f}%",
+                f"{item['candidate_accuracy']:.1f}%",
+                f"{item['delta_pp']:+.1f}",
+                item["fixed"],
+                item["regressed"],
+                item["net_fixes"],
+                f"{item['oracle_accuracy']:.1f}%",
+                f"{item['mcnemar_exact_p']:.4f}",
+            ]
+            for item in self.analytics.paired_comparisons()
+        ]
+        fill_table(self.paired_table, paired_rows)
         axis = self.overview_chart.axis()
         if summaries:
             names = [item.display_name for item in summaries]
@@ -1140,7 +1179,8 @@ class MainWindow(QMainWindow):
             return
         tool_rows = self.database.rows(
             """
-            SELECT tool, query, returned_count, latency_ms, error, result_preview
+            SELECT tool, query, returned_count, latency_ms, relevance_label,
+                   error, result_preview
             FROM tool_calls
             WHERE task_result_id = ?
             ORDER BY call_index
@@ -1155,6 +1195,17 @@ class MainWindow(QMainWindow):
             f"FINAL ANSWER:\n{task['final_answer'] or '[пусто]'}",
             f"SOLUTION STEPS:\n{task['solution_steps'] or '[пусто]'}",
             f"REASONING:\n{task['reasoning'] or '[пусто]'}",
+            (
+                "AGENT TRACE:\n"
+                f"experiment={task['experiment_id'] or ''} "
+                f"route={task['retrieval_route'] or ''} "
+                f"route_reason={task['retrieval_route_reason'] or ''}\n"
+                f"exit={task['exit_reason'] or ''} "
+                f"source={task['answer_source'] or ''} "
+                f"relevance={task['retrieval_relevance'] or ''} "
+                f"conflict={task['retrieval_conflict']}\n"
+                f"image_evidence={task['image_evidence_json']}"
+            ),
             (
                 "JUDGE:\n"
                 f"strict={task['strict_correct']} "
@@ -1171,6 +1222,7 @@ class MainWindow(QMainWindow):
                 tool_text.append(
                     f"{index}. {call['tool']} query={call['query']}\n"
                     f"returned={call['returned_count']} latency={call['latency_ms']} "
+                    f"relevance={call['relevance_label'] or ''} "
                     f"error={call['error'] or ''}\n"
                     f"{call['result_preview'] or ''}"
                 )
@@ -1291,6 +1343,7 @@ class MainWindow(QMainWindow):
             "b0_no_tools": "Без тулов",
             "web_search": "Веб",
             "agent_rag": "RAG",
+            "agent_rag_routed": "Routed image-first RAG",
             "agent_rag_thinking": "RAG thinking",
         }
         mode_rows = [
@@ -1382,6 +1435,10 @@ class MainWindow(QMainWindow):
                 item["unique_queries"],
                 item["errors"],
                 item["no_result"],
+                item["confident_calls"],
+                item["weak_calls"],
+                item["conflicts"],
+                item["router_skips"],
                 item["returned_chunks"],
                 f"{item['accuracy']:.1f}%",
             ]
@@ -1749,6 +1806,7 @@ class MainWindow(QMainWindow):
             "Без тулов": "b0_no_tools",
             "Веб": "web_search",
             "RAG": "agent_rag",
+            "Routed image-first RAG": "agent_rag_routed",
             "RAG thinking": "agent_rag_thinking",
         }
         display_name, ok = QInputDialog.getItem(

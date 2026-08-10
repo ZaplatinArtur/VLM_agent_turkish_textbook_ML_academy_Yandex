@@ -1,0 +1,41 @@
+{
+  "id": "mmr-diversified-retrieval",
+  "title": "MMR-диверсификация результатов retrieval",
+  "mechanism": "Сначала получить расширенный пул dense-кандидатов, затем выбрать top-k по компромиссу между близостью к запросу и непохожестью на уже выбранные чанки.",
+  "why_new_for_project": "В текущем DenseRanker результаты идут только по FAISS score; MMR в src и tests не найден. Это не смена эмбеддера и не гибридный поиск.",
+  "target_failure_mode": "Несколько почти одинаковых чанков с одной страницы занимают весь контекст и не дают модели разных полезных свидетельств.",
+  "minimal_ablation": {
+    "control": "dense top-5, текущий порядок",
+    "arms": [
+      "fetch_k=20, MMR top-5, lambda=0.3",
+      "fetch_k=20, MMR top-5, lambda=0.5",
+      "fetch_k=20, MMR top-5, lambda=0.7"
+    ],
+    "fixed": ["модель", "промпт", "query", "индекс", "порог relevance", "датасет", "judge"]
+  },
+  "metrics": [
+    "paired strict accuracy",
+    "wrong-to-right и right-to-wrong относительно текущего RAG",
+    "число уникальных страниц и учебников в top-5",
+    "средняя попарная cosine similarity выбранных чанков",
+    "input tokens и latency"
+  ],
+  "paper_evidence": [
+    {
+      "title": "The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries",
+      "url": "https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf",
+      "claim": "MMR явно балансирует relevance и novelty при reranking."
+    }
+  ],
+  "github_code": [
+    {
+      "repository": "langchain-ai/langchain",
+      "url": "https://github.com/langchain-ai/langchain/blob/37205e51bc92999fee33d89580a43e6f1bee4cbb/libs/core/langchain_core/vectorstores/utils.py",
+      "evidence": "Есть компактная функция maximal_marginal_relevance с lambda_mult и k; алгоритм можно перенести без зависимости от LangChain."
+    }
+  ],
+  "integration_point": "src/retrieve/rankers/dense.py после FAISS search и до возврата RetrievedChunk",
+  "effort": "низкий",
+  "risk": "Слишком низкая lambda добавит разнообразные, но нерелевантные чанки.",
+  "confidence": "high"
+}

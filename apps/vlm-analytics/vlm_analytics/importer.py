@@ -303,6 +303,9 @@ def import_run(
             deterministic = (judge or {}).get("deterministic") or {}
             usage = raw.get("usage") or {}
             generation = raw.get("generation") or {}
+            image_evidence = raw.get("image_evidence")
+            if not isinstance(image_evidence, list):
+                image_evidence = []
             tool_calls = raw.get("tool_calls")
             if not isinstance(tool_calls, list):
                 tool_calls = []
@@ -313,7 +316,10 @@ def import_run(
                     run_id, task_id, subject, grade, answer_type, reference_kind,
                     question_image_url, reference_image_url, final_answer,
                     solution_steps, reasoning, forced_answer, raw_response,
-                    generation_json, input_tokens, output_tokens, latency_s,
+                    exit_reason, image_evidence_json, retrieval_relevance,
+                    retrieval_conflict, answer_source, experiment_id,
+                    retrieval_route, retrieval_route_reason, generation_json,
+                    input_tokens, output_tokens, latency_s,
                     agent_error, strict_correct, final_answer_correct,
                     reasoning_correct, complete, judge_label, judge_score,
                     judge_confidence, judge_rationale, judge_error,
@@ -323,7 +329,8 @@ def import_run(
                     normalized_candidate, raw_json, judge_json
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?, ?, ?, ?
                 )
                 """,
                 (
@@ -344,6 +351,14 @@ def import_run(
                     _text(raw.get("reasoning")),
                     int(bool(raw.get("forced_answer"))),
                     _text(raw.get("raw_response")),
+                    _text(raw.get("exit_reason")),
+                    Database.json_value(image_evidence),
+                    _text(raw.get("retrieval_relevance")),
+                    _bool(raw.get("retrieval_conflict")),
+                    _text(raw.get("answer_source")),
+                    _text(generation.get("experiment_id")),
+                    _text(generation.get("retrieval_route")),
+                    _text(generation.get("retrieval_route_reason")),
                     Database.json_value(generation),
                     usage.get("input_tokens"),
                     usage.get("output_tokens"),
@@ -375,13 +390,16 @@ def import_run(
                 chunk_ids = call.get("returned_chunk_ids")
                 if not isinstance(chunk_ids, list):
                     chunk_ids = []
+                relevance = call.get("relevance")
+                if not isinstance(relevance, dict):
+                    relevance = {}
                 connection.execute(
                     """
                     INSERT INTO tool_calls(
                         task_result_id, call_index, tool, query, args_json,
                         result_preview, returned_chunk_ids_json, returned_count,
-                        latency_ms, error
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        latency_ms, relevance_json, relevance_label, error
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         task_result_id,
@@ -393,6 +411,8 @@ def import_run(
                         Database.json_value(chunk_ids),
                         len(chunk_ids),
                         call.get("latency_ms"),
+                        Database.json_value(relevance),
+                        _text(relevance.get("label")),
                         _text(call.get("error")),
                     ),
                 )

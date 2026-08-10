@@ -1,25 +1,40 @@
-"""Настройки читаются из окружения / .env с префиксом MLA_.
-
-Один и тот же код работает локально (проверка) и на GPU-машине (прогоны) —
-меняется только .env.
-"""
+"""Настройки читаются из окружения / .env с префиксом MLA_."""
 
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AliasChoices, Field
+from pydantic import AliasChoices, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_prefix="MLA_", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_prefix="MLA_",
+        extra="ignore",
+        populate_by_name=True,
+    )
 
-    # vLLM OpenAI-совместимый эндпоинт
+    # OpenAI-compatible LLM backend. Inference is remote through OpenRouter.
+    llm_provider: Literal["vllm", "openrouter"] = "openrouter"
+
+    # Local vLLM endpoint.
     vllm_base_url: str = "http://localhost:8000/v1"
     vllm_api_key: str = "EMPTY"
     # Qwen/Qwen3.5-9B мультимодальна сама по себе (отдельного VL-варианта нет).
     # Локально через Ollama имя другое, напр. qwen3.5:9b-q4_K_M — задаётся в .env.
     model_name: str = "Qwen/Qwen3.5-9B"
+
+    # OpenRouter uses its own canonical model slug and a secret from the environment.
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
+    openrouter_model_name: str = "qwen/qwen3.5-9b"
+    openrouter_api_key: SecretStr | None = Field(
+        default=None,
+        validation_alias=AliasChoices(
+            "OPENROUTER_API_KEY",
+            "MLA_OPENROUTER_API_KEY",
+        ),
+    )
 
     max_tokens: int = 3072
     temperature: float = 0.0
@@ -48,14 +63,20 @@ class Settings(BaseSettings):
 
     data_root: Path = Path("data")
     results_dir: Path = Path("results")
-    concurrency: int = 4
+    concurrency: int = 1
 
     # Optional HTTP retrieval adapter. AgentRag uses direct local retrieval by default.
     retrieval_base_url: str = "http://127.0.0.1:8770"
     retrieval_timeout_s: float = 10.0
     retrieval_top_k: int = Field(default=5, ge=1, le=20)
+    retrieval_fetch_k: int = Field(default=200, ge=1, le=1_000)
+    retrieval_mmr_enabled: bool = False
+    retrieval_mmr_lambda: float = Field(default=0.5, ge=0.0, le=1.0)
+    retrieval_context_order: Literal["score", "edge"] = "score"
     retrieval_max_context_chars: int = 6_000
     retrieval_max_calls: int = Field(default=2, ge=1, le=2)
+    # E4: subjects routed directly to the no-tools solver.
+    rag_no_retrieval_subjects: str = "Math"
 
     # B1: веб-поиск через self-hosted SearXNG.
     searxng_url: str = "http://localhost:8080"
@@ -122,6 +143,28 @@ class Settings(BaseSettings):
         None,
         validation_alias=AliasChoices("LANGFUSE_HOST"),
     )
+
+    @property
+    def llm_base_url(self) -> str:
+        if self.llm_provider == "openrouter":
+            return self.openrouter_base_url
+        return self.vllm_base_url
+
+    @property
+    def llm_model_name(self) -> str:
+        if self.llm_provider == "openrouter":
+            return self.openrouter_model_name
+        return self.model_name
+
+    @property
+    def llm_api_key(self) -> str:
+        if self.llm_provider == "openrouter":
+            if self.openrouter_api_key is None:
+                raise ValueError(
+                    "OPENROUTER_API_KEY is required when MLA_LLM_PROVIDER=openrouter"
+                )
+            return self.openrouter_api_key.get_secret_value()
+        return self.vllm_api_key
 
 
 def get_settings() -> Settings:

@@ -42,7 +42,17 @@ class AgentRag(B0NoTools):
         search_client: TextbookSearchBackend | None = None,
     ) -> None:
         super().__init__(settings, llm=llm)
-        self.search_client = search_client or LocalTextbookSearchClient()
+        if settings.retrieval_fetch_k < settings.retrieval_top_k:
+            raise ValueError("retrieval_fetch_k must be at least retrieval_top_k")
+        self.search_client = search_client or LocalTextbookSearchClient(
+            retrieval_fetch_k=settings.retrieval_fetch_k,
+            mmr_lambda=(
+                settings.retrieval_mmr_lambda
+                if settings.retrieval_mmr_enabled
+                else None
+            ),
+            context_order=settings.retrieval_context_order,
+        )
         self.search_tool = create_search_textbooks_tool(
             self.search_client,
             top_k=settings.retrieval_top_k,
@@ -577,7 +587,7 @@ class AgentRag(B0NoTools):
         return SolveResult(
             task_id=task.task_id,
             condition=self.condition,
-            model=self.settings.model_name,
+            model=self.settings.llm_model_name,
             prompt_version=self.settings.prompt_version,
             final_answer=parsed.final_answer if parsed else None,
             solution_steps=parsed.solution_steps if parsed else None,
@@ -587,6 +597,9 @@ class AgentRag(B0NoTools):
             exit_reason=exit_reason,
             image_evidence=(
                 image_evidence.image_evidence if image_evidence is not None else []
+            ),
+            image_evidence_structured=(
+                image_evidence.model_dump() if image_evidence is not None else None
             ),
             retrieval_relevance=last_relevance,
             retrieval_conflict=(retrieval_conflict if executed_calls else None),
@@ -599,7 +612,19 @@ class AgentRag(B0NoTools):
                 "max_tokens": self.settings.max_tokens,
                 "structured_mode": self.settings.structured_mode,
                 "enable_thinking": self.settings.enable_thinking,
+                "llm_provider": self.settings.llm_provider,
+                "retrieval_strategy": (
+                    "mmr" if self.settings.retrieval_mmr_enabled else "dense"
+                ),
+                "retrieval_fetch_k": self.settings.retrieval_fetch_k,
+                "retrieval_mmr_lambda": (
+                    self.settings.retrieval_mmr_lambda
+                    if self.settings.retrieval_mmr_enabled
+                    else None
+                ),
+                "retrieval_context_order": self.settings.retrieval_context_order,
                 "agent_strategy": "image_first_checked_retrieval_v4",
+                "experiment_id": "e3_image_first_checked_rag_v1",
             },
             tool_calls=tool_logs,
             usage=usage,

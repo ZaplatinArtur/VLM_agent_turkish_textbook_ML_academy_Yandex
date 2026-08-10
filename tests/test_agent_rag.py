@@ -135,6 +135,31 @@ def test_agent_uses_local_retrieval_by_default() -> None:
     assert isinstance(solver.search_client, LocalTextbookSearchClient)
 
 
+def test_agent_forwards_mmr_experiment_settings_to_local_retrieval() -> None:
+    solver = AgentRag(
+        _settings(
+            retrieval_fetch_k=20,
+            retrieval_mmr_enabled=True,
+            retrieval_mmr_lambda=0.3,
+            retrieval_context_order="edge",
+        ),
+        llm=FakeLlm([_final_answer()]),
+    )
+
+    assert isinstance(solver.search_client, LocalTextbookSearchClient)
+    assert solver.search_client.retrieval_fetch_k == 20
+    assert solver.search_client.mmr_lambda == 0.3
+    assert solver.search_client.context_order == "edge"
+
+
+def test_agent_rejects_candidate_pool_smaller_than_top_k() -> None:
+    with pytest.raises(ValueError, match="at least retrieval_top_k"):
+        AgentRag(
+            _settings(retrieval_top_k=5, retrieval_fetch_k=4),
+            llm=FakeLlm([_final_answer()]),
+        )
+
+
 def test_retrieval_call_budget_cannot_exceed_two() -> None:
     assert _settings().retrieval_max_calls == 2
     with pytest.raises(ValidationError):
@@ -460,6 +485,16 @@ def test_image_first_pipeline_uses_evidence_query_and_verifies_final_answer() ->
         "kısa kenar 4 cm",
         "alanı bul",
     ]
+    assert result.image_evidence_structured == {
+        "image_evidence": [
+            "uzun kenar 6 cm",
+            "kısa kenar 4 cm",
+            "alanı bul",
+        ],
+        "question": "6 cm ve 4 cm kenarlı dikdörtgenin alanı nedir?",
+        "topic": "dikdörtgen",
+        "unknown_concepts": ["alan formülü"],
+    }
     assert result.retrieval_relevance == "confident"
     assert result.retrieval_conflict is False
     assert result.answer_source == "image_with_retrieval_support"

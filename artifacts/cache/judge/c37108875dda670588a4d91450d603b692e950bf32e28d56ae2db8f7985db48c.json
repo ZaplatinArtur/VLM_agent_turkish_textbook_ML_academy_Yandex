@@ -1,0 +1,65 @@
+{
+  "request_id": "a525b30656e1fc7d4cad2df0ce1d04621789a78ae4787e18141684e0db75ef0f",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"partially_correct\",\n  \"score\": 2,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": false,\n  \"confidence\": 0.9,\n  \"error_types\": [\n    \"incomplete_answer\",\n    \"incorrect_reasoning\",\n    \"factual_error\"\n  ],\n  \"rationale\": \"The candidate answer is incomplete, only providing three items instead of the required twenty. The reasoning for the third item is confused and contradictory. Furthermore, the third item is factually incorrect; the reference answer for question 3 is 'Malta', not 'Kuvâ-yi Milliye'. The candidate's reasoning for the first two items is also inaccurate regarding the historical context.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785862239-F4ghKmP0KzHBUZbYmoWT",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785862239,
+    "usage": {
+      "prompt_tokens": 2817,
+      "completion_tokens": 187,
+      "total_tokens": 3004,
+      "cost": 0.00052564,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00052564,
+        "upstream_inference_prompt_cost": 0.00047889,
+        "upstream_inference_completions_cost": 4.675e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "partially_correct",
+    "score": 2,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": false,
+    "confidence": 0.9,
+    "error_types": [
+      "incomplete_answer",
+      "incorrect_reasoning",
+      "factual_error"
+    ],
+    "rationale": "The candidate answer is incomplete, only providing three items instead of the required twenty. The reasoning for the third item is confused and contradictory. Furthermore, the third item is factually incorrect; the reference answer for question 3 is 'Malta', not 'Kuvâ-yi Milliye'. The candidate's reasoning for the first two items is also inaccurate regarding the historical context.",
+    "reference_quality_issue": false
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "request_id": "285deb899a36d2ba30e06652cb8c211a3362b9d78cb9b7835513332ac70be218",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"fully_correct\",\n  \"score\": 4,\n  \"strict_correct\": true,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 1.0,\n  \"error_types\": [],\n  \"rationale\": \"The candidate correctly identifies the heights of points A (65 m) and B (160 m). It correctly interprets the condition that the vertical distance from C to both A and B must be at least 35 m. This leads to the correct inequalities: x >= 65 + 35 = 100 and x <= 160 - 35 = 125. The final combined inequality 100 <= x <= 125 matches option A perfectly.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785788675-MGGiDUBqpJ4bwiekZ6Y1",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785788675,
+    "usage": {
+      "prompt_tokens": 1734,
+      "completion_tokens": 192,
+      "total_tokens": 1926,
+      "cost": 0.0002022,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002022,
+        "upstream_inference_prompt_cost": 0.0001734,
+        "upstream_inference_completions_cost": 2.88e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "fully_correct",
+    "score": 4,
+    "strict_correct": true,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 1.0,
+    "error_types": [],
+    "rationale": "The candidate correctly identifies the heights of points A (65 m) and B (160 m). It correctly interprets the condition that the vertical distance from C to both A and B must be at least 35 m. This leads to the correct inequalities: x >= 65 + 35 = 100 and x <= 160 - 35 = 125. The final combined inequality 100 <= x <= 125 matches option A perfectly.",
+    "reference_quality_issue": false
+  }
+}

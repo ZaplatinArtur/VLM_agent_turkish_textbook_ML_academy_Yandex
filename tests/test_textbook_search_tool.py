@@ -154,6 +154,43 @@ def test_local_search_hides_weak_chunks_from_model() -> None:
     assert "This text must not reach the model" not in json.dumps(formatted)
 
 
+def test_edge_context_order_keeps_retrieval_ranks_and_moves_best_to_edges() -> None:
+    chunks = [
+        RetrievedChunk(
+            chunk_id=f"c{rank}",
+            text=f"chunk {rank}",
+            score=1.0 - rank / 10,
+            metadata={"page": rank},
+        )
+        for rank in range(1, 6)
+    ]
+
+    def confident_retriever(*args: Any, **kwargs: Any):
+        return chunks, RelevanceVerdict(
+            relevance=Relevance.CONFIDENT,
+            top_score=0.9,
+            reason="test confident hit",
+        )
+
+    result = LocalTextbookSearchClient(
+        retriever=confident_retriever,
+        context_order="edge",
+    ).search("geometri", top_k=5)
+    formatted = json.loads(format_search_result_for_model(result))
+
+    assert [hit["chunk_id"] for hit in result["hits"]] == [
+        "c1",
+        "c3",
+        "c5",
+        "c4",
+        "c2",
+    ]
+    assert [hit["rank"] for hit in result["hits"]] == [1, 3, 5, 4, 2]
+    assert [hit["context_position"] for hit in result["hits"]] == [1, 2, 3, 4, 5]
+    assert formatted["context_order"] == "edge"
+    assert formatted["hits"][0]["context_position"] == 1
+
+
 def test_local_search_reports_retriever_failure() -> None:
     def broken_retriever(*args: Any, **kwargs: Any) -> list[Any]:
         raise RuntimeError("index is unavailable")

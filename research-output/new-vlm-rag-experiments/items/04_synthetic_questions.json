@@ -1,0 +1,43 @@
+{
+  "id": "synthetic-question-index",
+  "title": "Индекс синтетических вопросов к каждому чанку",
+  "mechanism": "Офлайн сгенерировать для чанков турецкие учебные вопросы, которые этот чанк может помочь решить, проиндексировать embeddings псевдовопросов и при совпадении возвращать исходный chunk_id. Онлайн-агент и число tool calls не меняются.",
+  "why_new_for_project": "Корпус сейчас индексирует текст чанков. Это расширение документов псевдовопросами, а не смена эмбеддера, обычный query rewrite или иной chunking.",
+  "target_failure_mode": "Язык задания и формулировки учебника семантически связаны, но лексически и структурно различаются.",
+  "minimal_ablation": {
+    "phase_1": "сгенерировать 3 вопроса на чанк для ограниченного covered-subject среза, вручную проверить 100 случайных генераций",
+    "control": "текущий индекс chunk text",
+    "arm": "единый поиск по chunk text + synthetic-question vectors с дедупликацией до chunk_id",
+    "fixed": ["embedding model", "agent prompt", "top_k", "dataset", "judge"]
+  },
+  "metrics": [
+    "retrieval Recall@k на небольшой вручную размеченной выборке",
+    "paired strict accuracy",
+    "wrong-to-right и right-to-wrong",
+    "размер индекса и latency",
+    "доля нерелевантных синтетических вопросов по ручной проверке"
+  ],
+  "paper_evidence": [
+    {
+      "title": "Promptagator: Few-shot Dense Retrieval From 8 Examples",
+      "url": "https://arxiv.org/abs/2209.11755",
+      "claim": "Работа использует LLM-generated task-specific queries как обучающий сигнал для retrieval."
+    },
+    {
+      "title": "Document Expansion by Query Prediction",
+      "url": "https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf",
+      "claim": "docTTTTTquery генерирует вероятные запросы к документам и переносит вычислительную стоимость на этап индексирования."
+    }
+  ],
+  "github_code": [
+    {
+      "repository": "castorini/docTTTTTquery",
+      "url": "https://github.com/castorini/docTTTTTquery/blob/master/README.md",
+      "evidence": "README содержит рабочий пример генерации нескольких query с T5 и последующего добавления их к документам перед индексированием."
+    }
+  ],
+  "integration_point": "отдельный offline build step и дополнительное отображение synthetic-vector -> исходный chunk_id",
+  "effort": "средний/высокий",
+  "risk": "Генератор может внести ложные факты; сначала нужен малый предметный пилот и retrieval-level разметка.",
+  "confidence": "medium-high"
+}

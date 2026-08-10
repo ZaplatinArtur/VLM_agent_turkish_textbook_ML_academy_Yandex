@@ -1,0 +1,61 @@
+{
+  "request_id": "231bc500aa440386dac0dafdcc116cc1a71a0e2521128863521dced3988a231f",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"fully_correct\",\n  \"score\": 4,\n  \"strict_correct\": true,\n  \"final_answer_correct\": true,\n  \"reasoning_correct\": true,\n  \"complete\": true,\n  \"confidence\": 1.0,\n  \"error_types\": [],\n  \"rationale\": \"The candidate correctly identifies that option A is the only fully accurate statement. It accurately notes that sentence I compares humans and fish regarding growth. It correctly dismisses B because sentence II discusses size, not lifespan. It correctly dismisses C, D, and E based on the text's content. The reasoning is sound and leads to the correct final answer.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785778839-XcWgxis42dVT7LIM34gA",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785778839,
+    "usage": {
+      "prompt_tokens": 1573,
+      "completion_tokens": 156,
+      "total_tokens": 1729,
+      "cost": 0.0001807,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0001807,
+        "upstream_inference_prompt_cost": 0.0001573,
+        "upstream_inference_completions_cost": 2.34e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "fully_correct",
+    "score": 4,
+    "strict_correct": true,
+    "final_answer_correct": true,
+    "reasoning_correct": true,
+    "complete": true,
+    "confidence": 1.0,
+    "error_types": [],
+    "rationale": "The candidate correctly identifies that option A is the only fully accurate statement. It accurately notes that sentence I compares humans and fish regarding growth. It correctly dismisses B because sentence II discusses size, not lifespan. It correctly dismisses C, D, and E based on the text's content. The reasoning is sound and leads to the correct final answer.",
+    "reference_quality_issue": false
+  }
+}

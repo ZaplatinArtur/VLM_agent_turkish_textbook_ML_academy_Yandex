@@ -1,0 +1,65 @@
+{
+  "request_id": "446355d9c8b317c974e032458b46c972bcc36d7ef4a848d64aec76c85289cfc7",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"partially_correct\",\n  \"score\": 2,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": false,\n  \"confidence\": 0.9,\n  \"error_types\": [\n    \"incomplete_answer\",\n    \"missing_required_elements\",\n    \"misinterpretation_of_task\"\n  ],\n  \"rationale\": \"The candidate correctly identifies the producer (grass) and decomposer (mushroom) and classifies consumers. However, the response is incomplete: it fails to draw arrows on the image as required by question 1, does not write the producer's name in the designated area (question 2), and does not write two food chains in the designated area (question 3). The final answer is cut off. While the biological reasoning is sound, the failure to follow the specific formatting and completion instructions of the worksheet makes the answer incomplete.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785789785-Oh5Gsi5R58jqfxp6WX6G",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785789785,
+    "usage": {
+      "prompt_tokens": 1853,
+      "completion_tokens": 221,
+      "total_tokens": 2074,
+      "cost": 0.00021845,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00021845,
+        "upstream_inference_prompt_cost": 0.0001853,
+        "upstream_inference_completions_cost": 3.315e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "partially_correct",
+    "score": 2,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": false,
+    "confidence": 0.9,
+    "error_types": [
+      "incomplete_answer",
+      "missing_required_elements",
+      "misinterpretation_of_task"
+    ],
+    "rationale": "The candidate correctly identifies the producer (grass) and decomposer (mushroom) and classifies consumers. However, the response is incomplete: it fails to draw arrows on the image as required by question 1, does not write the producer's name in the designated area (question 2), and does not write two food chains in the designated area (question 3). The final answer is cut off. While the biological reasoning is sound, the failure to follow the specific formatting and completion instructions of the worksheet makes the answer incomplete.",
+    "reference_quality_issue": false
+  }
+}

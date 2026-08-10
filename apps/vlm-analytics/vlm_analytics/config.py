@@ -68,15 +68,17 @@ MODE_ORDER = {
     "b0_no_tools": 0,
     "web_search": 1,
     "agent_rag": 2,
-    "agent_rag_thinking": 3,
-    "agent_rag_hybrid_chunks": 4,
-    "agent_rag_hybrid_chunks_thinking": 5,
+    "agent_rag_routed": 3,
+    "agent_rag_thinking": 4,
+    "agent_rag_hybrid_chunks": 5,
+    "agent_rag_hybrid_chunks_thinking": 6,
 }
 
 MODE_COLORS = {
     "b0_no_tools": "#8797a5",
     "web_search": "#3ddc97",
     "agent_rag": "#ffb454",
+    "agent_rag_routed": "#22c55e",
     "agent_rag_thinking": "#a78bfa",
     "agent_rag_hybrid_chunks": "#38bdf8",
     "agent_rag_hybrid_chunks_thinking": "#f472b6",

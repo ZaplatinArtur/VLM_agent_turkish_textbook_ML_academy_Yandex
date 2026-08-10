@@ -2,9 +2,8 @@
 
 Особенности:
 - resume: task_id, уже присутствующие в выходном файле, пропускаются;
-- конкурентность: vLLM батчует параллельные запросы, поэтому пул потоков
-  даёт почти линейное ускорение;
-- --dry-run: собирает сообщения без вызова модели (проверка входа без GPU).
+- конкурентность: ограниченный пул запросов к OpenAI-совместимому backend;
+- --dry-run: собирает сообщения без удалённого вызова модели.
 """
 
 import argparse
@@ -13,6 +12,8 @@ import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+
+from pydantic import SecretStr
 
 from .config import get_settings
 from .contracts import Task
@@ -91,6 +92,14 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     settings = get_settings()
+    if (
+        args.dry_run
+        and settings.llm_provider == "openrouter"
+        and settings.openrouter_api_key is None
+    ):
+        settings = settings.model_copy(
+            update={"openrouter_api_key": SecretStr("dry-run-not-sent")}
+        )
     solver = SOLVERS[args.condition](settings)
 
     tasks = load_tasks(args.tasks)
@@ -103,7 +112,7 @@ def main(argv: list[str] | None = None) -> int:
         for task in tasks:
             print(describe_messages(task, solver.build_messages(task)))
         print(f"[dry-run] OK: {len(tasks)} задач, condition={args.condition}, "
-              f"model={settings.model_name}, prompt={settings.prompt_version}")
+              f"model={settings.llm_model_name}, prompt={settings.prompt_version}")
         return 0
 
     out_path = args.out or (

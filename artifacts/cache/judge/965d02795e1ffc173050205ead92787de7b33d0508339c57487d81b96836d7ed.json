@@ -1,0 +1,64 @@
+{
+  "request_id": "714363829802f531cfec8c71e27083c2c74d15f9fea67ae258df28ed7d26bbc7",
+  "prompt_version": "judge-v2",
+  "backend": "openai-compatible",
+  "model": "qwen/qwen3.5-9b",
+  "backend_config": {
+    "backend": "openai-compatible",
+    "model": "qwen/qwen3.5-9b",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "use_response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "provider": "openrouter"
+  },
+  "backend_config_hash": "7b884eb497efaa912850273e6c7e382cf964615dd2f68a84ce8982933146f1f8",
+  "raw_response": "{\n  \"label\": \"incorrect\",\n  \"score\": 0,\n  \"strict_correct\": false,\n  \"final_answer_correct\": false,\n  \"reasoning_correct\": false,\n  \"complete\": false,\n  \"confidence\": 0.9,\n  \"error_types\": [\n    \"incorrect_reasoning\",\n    \"missing_sub_answer\"\n  ],\n  \"rationale\": \"The candidate selected option C (I and II), but the correct answer is B (only III). Statement I is incorrect because the text says farmers dry nuts in their yards or on roads, not that they choose days based on climate. Statement II is incorrect because farmers follow weather reports, not prepare them. Statement III is correct because drying conditions directly affect the yield and profit. The candidate's reasoning is flawed and the final answer is wrong.\",\n  \"reference_quality_issue\": false\n}",
+  "backend_metadata": {
+    "response_id": "gen-1785788710-vED7qlCIr3B2EajIJshi",
+    "served_model": "qwen/qwen3.5-9b",
+    "created": 1785788710,
+    "usage": {
+      "prompt_tokens": 1093,
+      "completion_tokens": 190,
+      "total_tokens": 1283,
+      "cost": 0.0001378,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0001378,
+        "upstream_inference_prompt_cost": 0.0001093,
+        "upstream_inference_completions_cost": 2.85e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "finish_reason": "stop"
+  },
+  "verdict": {
+    "label": "incorrect",
+    "score": 0,
+    "strict_correct": false,
+    "final_answer_correct": false,
+    "reasoning_correct": false,
+    "complete": false,
+    "confidence": 0.9,
+    "error_types": [
+      "incorrect_reasoning",
+      "missing_sub_answer"
+    ],
+    "rationale": "The candidate selected option C (I and II), but the correct answer is B (only III). Statement I is incorrect because the text says farmers dry nuts in their yards or on roads, not that they choose days based on climate. Statement II is incorrect because farmers follow weather reports, not prepare them. Statement III is correct because drying conditions directly affect the yield and profit. The candidate's reasoning is flawed and the final answer is wrong.",
+    "reference_quality_issue": false
+  }
+}

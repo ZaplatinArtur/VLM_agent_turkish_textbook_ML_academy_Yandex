@@ -78,7 +78,7 @@ class SolveResult(BaseModel):
     """Одна строка результирующего JSONL — вход для LLM-as-Judge."""
 
     task_id: str
-    condition: str               # b0_no_tools | b1_search | agent_rag
+    condition: str  # b0_no_tools | b1_search | agent_rag | agent_rag_routed
     model: str
     prompt_version: str
     final_answer: str | None = None
@@ -88,6 +88,7 @@ class SolveResult(BaseModel):
     raw_response: str | None = None
     exit_reason: str | None = None
     image_evidence: list[str] = Field(default_factory=list)
+    image_evidence_structured: dict | None = None
     retrieval_relevance: str | None = None
     retrieval_conflict: bool | None = None
     answer_source: str | None = None

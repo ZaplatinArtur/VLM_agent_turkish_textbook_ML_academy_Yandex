@@ -20,7 +20,7 @@ from .dryrun import run_synthetic_experiment
 from .gold import apply_verified_gold
 from .metrics import deterministic_match
 from .ingest import import_candidates, read_records
-from .judge_audit import audit_judge_run
+from .judge_audit import audit_judge_run, validate_judge_completion
 from .mla_adapter import (
     build_seed_text_tasks,
     prepare_image_judge_input,
@@ -463,6 +463,7 @@ def _run_judge(args: argparse.Namespace) -> int:
         image_mode=args.image_mode,
         image_cache_dir=Path(args.image_cache_dir),
         enable_thinking=False if args.disable_thinking else None,
+        provider=args.provider,
     )
     items = [EvaluationItem.from_dict(record) for record in read_records(Path(args.input))]
     if args.limit is not None:
@@ -484,15 +485,22 @@ def _run_judge(args: argparse.Namespace) -> int:
 
 
 def _run_text_judge(args: argparse.Namespace) -> int:
+    api_key = None
+    if args.api_key_env:
+        api_key = os.environ.get(args.api_key_env)
+        if not api_key:
+            raise ValueError(f"environment variable {args.api_key_env!r} is not set")
     backend = OpenAICompatibleBackend(
         args.base_url,
         args.model,
+        api_key=api_key,
         timeout=args.timeout,
         temperature=args.temperature,
         max_tokens=args.max_tokens,
         seed=args.seed,
         use_response_format=not args.no_response_format,
         enable_thinking=False,
+        provider=args.provider,
         image_mode="url",
     )
     records = read_records(Path(args.input))
@@ -577,6 +585,16 @@ def _audit_judge_run(args: argparse.Namespace) -> int:
         )
     )
     return 0
+
+
+def _verify_judge_output(args: argparse.Namespace) -> int:
+    report = validate_judge_completion(
+        read_records(Path(args.expected)),
+        read_records(Path(args.judge)),
+    )
+    _write_report(report, args.output)
+    print(json.dumps(report, ensure_ascii=False))
+    return 0 if report["valid"] else 2
 
 
 def _sample_calibration_responses(args: argparse.Namespace) -> int:
@@ -835,13 +853,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     judge = commands.add_parser(
         "run-judge",
-        help="run the blinded judge through an OpenAI-compatible Qwen/vLLM endpoint",
+        help="run the blinded judge through OpenRouter or another OpenAI-compatible endpoint",
     )
     judge.add_argument("--input", required=True)
     judge.add_argument("--output", required=True)
-    judge.add_argument("--base-url", required=True, help="for example http://host:8000/v1")
+    judge.add_argument("--base-url", required=True)
     judge.add_argument("--model", required=True)
     judge.add_argument("--api-key-env")
+    judge.add_argument("--provider", choices=["vllm", "openrouter"], default="vllm")
     judge.add_argument("--timeout", type=float, default=120.0)
     judge.add_argument("--temperature", type=float, default=0.0)
     judge.add_argument("--max-tokens", type=int, default=900)
@@ -870,6 +889,8 @@ def build_parser() -> argparse.ArgumentParser:
     text_judge.add_argument("--output", required=True)
     text_judge.add_argument("--base-url", required=True)
     text_judge.add_argument("--model", required=True)
+    text_judge.add_argument("--api-key-env")
+    text_judge.add_argument("--provider", choices=["vllm", "openrouter"], default="vllm")
     text_judge.add_argument("--timeout", type=float, default=120.0)
     text_judge.add_argument("--temperature", type=float, default=0.0)
     text_judge.add_argument("--max-tokens", type=int, default=256)
@@ -926,6 +947,15 @@ def build_parser() -> argparse.ArgumentParser:
     judge_audit.add_argument("--input", required=True)
     judge_audit.add_argument("--output", required=True)
     judge_audit.set_defaults(handler=_audit_judge_run)
+
+    judge_verify = commands.add_parser(
+        "verify-judge-output",
+        help="require exact task coverage and valid error-free verdicts before analytics import",
+    )
+    judge_verify.add_argument("--expected", required=True)
+    judge_verify.add_argument("--judge", required=True)
+    judge_verify.add_argument("--output", required=True)
+    judge_verify.set_defaults(handler=_verify_judge_output)
 
     response_sample = commands.add_parser(
         "sample-calibration-responses",
