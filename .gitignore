@@ -14,3 +14,4 @@ data/corpus_backup/*.gz
 *.xlsx
 msedge_*.png
 graphify-out/
+data/mlbench/*/images/

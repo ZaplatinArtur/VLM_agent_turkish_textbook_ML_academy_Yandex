@@ -40,9 +40,11 @@ REGISTRY = {
     "exams-v": {
         "hf": "Rocktim/EXAMS-V",
         "multimodal": True,
+        # фактический состав test-сплита (сверен по datasets-server 10.08):
+        # в данных на два языка больше, чем в статье
         "languages": ["Arabic", "Bulgarian", "Chinese", "Croatian", "English",
-                      "French", "German", "Hungarian", "Italian", "Serbian",
-                      "Spanish"],  # фактический список сверяется по данным
+                      "French", "German", "Hungarian", "Italian", "Polish",
+                      "Serbian", "Slovakian", "Spanish"],
         "note": "вопрос = скриншот экзаменационного задания (как наши задачи); "
                 "20 дисциплин, Apache 2.0",
     },
@@ -113,8 +115,11 @@ def fetch_tumlu(langs, limit):
 
 
 def fetch_exams_v(langs, limit):
+    """Тест-сплит EXAMS-V. Стриминг только при --limit (проба); полный набор
+    качается parquet'ом целиком — так на порядок быстрее."""
     from datasets import load_dataset
-    ds = load_dataset(REGISTRY["exams-v"]["hf"], split="test", streaming=True)
+    ds = load_dataset(REGISTRY["exams-v"]["hf"], split="test",
+                      streaming=bool(limit))
     want = {l.casefold() for l in langs} if langs else None
     buckets: dict[str, list] = {}
     counts: dict[str, int] = {}
@@ -123,9 +128,8 @@ def fetch_exams_v(langs, limit):
         if want and lang.casefold() not in want:
             continue
         if limit and counts.get(lang, 0) >= limit:
-            if want and all(counts.get(l, 0) >= limit for l in
-                            {x for x in counts} | want if True):
-                pass
+            if want and all(counts.get(l, 0) >= limit for l in want):
+                break
             continue
         i = counts.get(lang, 0)
         counts[lang] = i + 1
@@ -135,14 +139,12 @@ def fetch_exams_v(langs, limit):
             "task_id": tid,
             "subject": r.get("subject_grouped") or r.get("subject") or "unknown",
             "grade": int(r["grade"]) if str(r.get("grade") or "").isdigit() else None,
-            "question": "(soru görselde / question in the image)",
+            "question": "(question in the image)",
             "question_images": [img_ref],
             "reference_answer": str(r["answer_key"]).strip(),
             "answer_type": "choice",
             "reference_solution": None,
         })
-        if want and limit and all(counts.get(l, 0) >= limit for l in want):
-            break
     for lang, rows in buckets.items():
         path = write_rows(rows, "exams-v", lang)
         print(f"exams-v/{lang}: {len(rows)} задач -> {path.relative_to(ROOT)}")
