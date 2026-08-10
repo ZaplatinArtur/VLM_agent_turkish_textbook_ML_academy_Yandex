@@ -42,14 +42,16 @@ Launcher сначала выполняет `--validate-only` и открывае
 
 ## Что показать
 
-**0:00–0:40. 9B selector v1.2.** Откройте вкладку `9B · selector v1.2`. Сначала
-проведите слева направо по неизменной семёрке: Page-RAG `141` → No-tools `193` →
-Active Crop `194` → Source V1 `218` → Source V3 `227` → Source V6 `235` →
-Source V7 `238`. Затем покажите вынесенный вниз восьмой слой `238 → 240`: две
-deterministic-замены по единогласию трёх групп, `+2 fixes`, `0 regressions`,
-`272/274` byte-exact passthrough. Справа видны только проверяемые votes и row hashes,
-не скрытый chain-of-thought. Отдельно проговорите, что repair `val_0223` дал null
-`240 → 240`, а archived QA V7 `242/274` — другая линия и другая метрика.
+**0:00–0:45. Official source wave.** Откройте вкладку `9B · official source wave`.
+Главное число — `249/274 = 90.8759%`: Math `117/139`, English `9/9`, deterministic
+`158/177`, image `91/97`. Покажите честную линию `Source V7 238 → selector 240 →
+official16 249` и девять task IDs: `0048`, `0050`, `0051`, `0054`–`0058`, `0182`.
+Это `+9 fixes`, `0 regressions` после frozen simultaneous wave и независимого
+post-score audit.
+
+Сразу укажите на отдельный коричневый research-блок: `251/274` там не headline,
+потому что это `research_evaluation_only` с непроверенными лицензиями источников.
+Archived QA V7 `242/274` — тоже отдельная линия и другая метрика.
 
 **0:00–0:35. Holdout80.** По умолчанию открывается экран source evidence. Сначала
 покажите три числа рядом: raw `71/80`, erratum-inclusive `79/80` и valid `79/79`.

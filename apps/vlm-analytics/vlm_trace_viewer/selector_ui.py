@@ -287,10 +287,10 @@ class SelectorWavePage(QWidget):
 
         heading = QHBoxLayout()
         title_box = QVBoxLayout()
-        title = QLabel("All-9B · audited selector wave")
+        title = QLabel("All-9B · audited selector lineage")
         title.setObjectName("SectionTitle")
         subtitle = QLabel(
-            "история результатов и отдельный frozen development-слой выбора ответа · данные читаются только из проверенных артефактов"
+            "сохранённая точка до official source wave · selector остаётся полностью проверяемой lineage, но больше не active headline"
         )
         subtitle.setObjectName("Subtle")
         subtitle.setWordWrap(True)
@@ -314,7 +314,7 @@ class SelectorWavePage(QWidget):
             SelectorMetricCard(
                 "Selector v1.2",
                 f"{summary.accuracy:.4%}",
-                f"{summary.correct}/{summary.rows} · audited; 241 не заявлен",
+                f"{summary.correct}/{summary.rows} · audited prior point",
                 "#4be1c3",
             )
         )
@@ -452,7 +452,7 @@ class SelectorWavePage(QWidget):
         caveat_text = QLabel(
             "известный development benchmark · один frozen multi-arm запуск · не blind holdout · "
             "source 156 и image 97 сохранены побайтово · только Qwen3.5-9B · repair проверен отдельно и дал null · "
-            "единственный подтверждённый headline здесь: 240/274 = 0.875912"
+            "подтверждённая selector-точка: 240/274 = 0.875912; текущий active official16 = 249/274 и показан на отдельной вкладке"
         )
         caveat_text.setObjectName("Subtle")
         caveat_text.setWordWrap(True)

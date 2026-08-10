@@ -11,8 +11,10 @@ from vlm_trace_viewer import (
     NineBV7ArtifactAdapter,
     ReplayAggregateError,
     SelectorWaveAdapter,
+    SourceExpansionWaveAdapter,
     V7ArtifactAdapter,
     build_active_selector_dataset,
+    build_active_source_wave_dataset,
     empty_milestone_schema,
     intermediate_timeline_schema,
     load_frozen_9b_comparison,
@@ -81,7 +83,8 @@ def parse_args() -> argparse.Namespace:
         default=1,
         help=(
             "0 = trace explorer, 1 = Holdout80 source evidence, 2 = V7 metrics, "
-            "3 = honest 9B milestone schema, 4 = audited selector v1.2"
+            "3 = honest 9B milestone schema, 4 = official source wave, "
+            "5 = audited selector v1.2"
         ),
     )
     parser.add_argument(
@@ -124,6 +127,11 @@ def main() -> int:
             if nine_b_comparison
             else None
         )
+        source_wave_summary = (
+            SourceExpansionWaveAdapter(archived_adapter.root).load()
+            if selector_summary is not None
+            else None
+        )
         if args.validate_only:
             nine_b_trace = (
                 NineBV7ArtifactAdapter(
@@ -136,6 +144,17 @@ def main() -> int:
             active_selector_trace = (
                 build_active_selector_dataset(nine_b_trace, selector_summary)
                 if nine_b_trace is not None and selector_summary is not None
+                else None
+            )
+            active_source_wave_trace = (
+                build_active_source_wave_dataset(
+                    active_selector_trace,
+                    selector_summary,
+                    source_wave_summary,
+                )
+                if active_selector_trace is not None
+                and selector_summary is not None
+                and source_wave_summary is not None
                 else None
             )
             print(
@@ -174,31 +193,38 @@ def main() -> int:
                         "active_all_9b_analytics": (
                             {
                                 "status": "ok",
-                                "label": "Baseline Selector v1.2 · active audited development result",
-                                "correct": active_selector_trace.summary.correct,
-                                "rows": active_selector_trace.summary.rows,
-                                "accuracy": active_selector_trace.summary.accuracy,
+                                "label": "Official16 · active audited development result",
+                                "correct": active_source_wave_trace.summary.correct,
+                                "rows": active_source_wave_trace.summary.rows,
+                                "accuracy": active_source_wave_trace.summary.accuracy,
                                 "math": [
-                                    selector_summary.math_correct,
-                                    selector_summary.math_rows,
+                                    source_wave_summary.math_correct,
+                                    source_wave_summary.math_rows,
                                 ],
-                                "history": [
-                                    selector_summary.history_correct,
-                                    selector_summary.history_rows,
+                                "english": [
+                                    source_wave_summary.english_correct,
+                                    source_wave_summary.english_rows,
                                 ],
                                 "deterministic": [
-                                    selector_summary.deterministic_correct,
-                                    selector_summary.deterministic_rows,
+                                    source_wave_summary.deterministic_correct,
+                                    source_wave_summary.deterministic_rows,
                                 ],
                                 "image_judge": [
-                                    selector_summary.image_correct,
-                                    selector_summary.image_rows,
+                                    source_wave_summary.image_correct,
+                                    source_wave_summary.image_rows,
                                 ],
                                 "task_overlay_correct": sum(
-                                    task.correct for task in active_selector_trace.tasks
+                                    task.correct for task in active_source_wave_trace.tasks
                                 ),
                             }
-                            if active_selector_trace is not None
+                            if active_source_wave_trace is not None
+                            else unloaded_replay_report()
+                        ),
+                        "nine_b_source_wave": (
+                            SourceExpansionWaveAdapter(
+                                archived_adapter.root
+                            ).validation_report()
+                            if source_wave_summary
                             else unloaded_replay_report()
                         ),
                         "nine_b_selector_v1_2": (
@@ -250,12 +276,13 @@ def main() -> int:
         holdout80,
         nine_b_comparison,
         selector_summary,
+        source_wave_summary,
         active_dataset=active_dataset,
         qa_reference_summary=qa_reference_summary,
     )
     window.explorer.select_task_id(args.task)
     window.explorer.detail.tabs.setCurrentIndex(max(0, min(args.detail_tab, 4)))
-    window.tabs.setCurrentIndex(max(0, min(args.screenshot_tab, 4)))
+    window.tabs.setCurrentIndex(max(0, min(args.screenshot_tab, 5)))
     window.resize(1900, 1080)
     if args.screenshot:
         # Keep the requested logical geometry even on a smaller/high-DPI desktop.

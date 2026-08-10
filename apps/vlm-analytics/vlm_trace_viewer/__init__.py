@@ -25,6 +25,13 @@ from .selector_wave import (
     SelectorWaveSummary,
     build_active_selector_dataset,
 )
+from .source_wave import (
+    ResearchWaveResult,
+    SourceExpansionWaveAdapter,
+    SourceWaveSummary,
+    SourceWaveTask,
+    build_active_source_wave_dataset,
+)
 
 __all__ = [
     "ArtifactError",
@@ -39,11 +46,16 @@ __all__ = [
     "SelectorTaskProvenance",
     "SelectorWaveAdapter",
     "SelectorWaveSummary",
+    "SourceExpansionWaveAdapter",
+    "SourceWaveSummary",
+    "SourceWaveTask",
+    "ResearchWaveResult",
     "SourceEvidence",
     "TaskTrace",
     "TraceDataset",
     "V7ArtifactAdapter",
     "build_active_selector_dataset",
+    "build_active_source_wave_dataset",
     "discover_artifact_root",
     "empty_milestone_schema",
     "intermediate_timeline_schema",

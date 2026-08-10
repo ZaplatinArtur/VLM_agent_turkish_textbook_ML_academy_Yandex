@@ -51,6 +51,8 @@ from .replay_aggregate import (
 )
 from .selector_ui import SelectorWavePage
 from .selector_wave import SelectorWaveSummary, build_active_selector_dataset
+from .source_wave import SourceWaveSummary, build_active_source_wave_dataset
+from .source_wave_ui import SourceExpansionWavePage
 from .style import TRACE_STYLESHEET
 
 
@@ -1413,6 +1415,7 @@ class TraceExplorer(QWidget):
         self,
         dataset: TraceDataset,
         selector_summary: SelectorWaveSummary | None = None,
+        source_wave_summary: SourceWaveSummary | None = None,
     ):
         super().__init__()
         self.dataset = dataset
@@ -1422,7 +1425,40 @@ class TraceExplorer(QWidget):
         root.setSpacing(10)
 
         metrics = QHBoxLayout()
-        if selector_summary is not None:
+        if source_wave_summary is not None:
+            metrics.addWidget(
+                MetricCard(
+                    "Official16 · active",
+                    f"{source_wave_summary.accuracy:.4%}",
+                    f"{source_wave_summary.correct}/{source_wave_summary.rows} · audited dev",
+                    "#4be1c3",
+                )
+            )
+            metrics.addWidget(
+                MetricCard(
+                    "Math",
+                    f"{source_wave_summary.math_correct / source_wave_summary.math_rows:.2%}",
+                    f"{source_wave_summary.math_correct}/{source_wave_summary.math_rows}",
+                    "#71aef5",
+                )
+            )
+            metrics.addWidget(
+                MetricCard(
+                    "English",
+                    f"{source_wave_summary.english_correct}/{source_wave_summary.english_rows}",
+                    "100% · official source layer",
+                    "#b99cff",
+                )
+            )
+            metrics.addWidget(
+                MetricCard(
+                    "Evaluation split",
+                    f"{source_wave_summary.deterministic_correct}/{source_wave_summary.deterministic_rows}",
+                    f"image {source_wave_summary.image_correct}/{source_wave_summary.image_rows}",
+                    "#f0ad62",
+                )
+            )
+        elif selector_summary is not None:
             metrics.addWidget(
                 MetricCard(
                     "Selector v1.2 · active",
@@ -1490,7 +1526,17 @@ class TraceExplorer(QWidget):
             )
         root.addLayout(metrics)
 
-        if selector_summary is not None:
+        if source_wave_summary is not None:
+            scope = QLabel(
+                "ACTIVE VIEW · frozen official16 overlay: +9 fixes / 0 regressions "
+                "over audited selector 240. Exact fixes: "
+                + ", ".join(source_wave_summary.fix_task_ids)
+                + ". Research 251 is license-unverified and excluded."
+            )
+            scope.setObjectName("Subtle")
+            scope.setWordWrap(True)
+            root.addWidget(scope)
+        elif selector_summary is not None:
             scope = QLabel(
                 "ACTIVE VIEW · frozen selector overlay: +2 fixes / 0 regressions over "
                 "Source V7. Only val_0089 and val_0251 changed; their reasoning panel "
@@ -1522,6 +1568,7 @@ class TraceExplorer(QWidget):
                 "Любое действие",
                 "Source replacement",
                 "Selector replacement",
+                "Official source wave",
                 "Anchor kept",
             )
         )
@@ -1596,9 +1643,16 @@ class TraceExplorer(QWidget):
                 continue
             if action == 2 and task.decision_action != "selector_replace":
                 continue
-            if action == 3 and task.decision_action in {
+            if action == 3 and task.decision_action not in {
+                "source_wave_replace",
+                "source_wave_confirm",
+            }:
+                continue
+            if action == 4 and task.decision_action in {
                 "replace_anchor",
                 "selector_replace",
+                "source_wave_replace",
+                "source_wave_confirm",
             }:
                 continue
             filtered.append(task)
@@ -1610,7 +1664,9 @@ class TraceExplorer(QWidget):
         for row, task in enumerate(filtered):
             state = "✓" if task.correct else "×"
             cert = (
-                "SELECTOR"
+                "SOURCE WAVE"
+                if task.decision_action in {"source_wave_replace", "source_wave_confirm"}
+                else "SELECTOR"
                 if task.decision_action == "selector_replace"
                 else "CERT" if task.has_certificate else "ANCHOR"
             )
@@ -1654,11 +1710,13 @@ class MetricsPage(QWidget):
         self,
         dataset: TraceDataset,
         selector_summary: SelectorWaveSummary | None = None,
+        source_wave_summary: SourceWaveSummary | None = None,
     ):
         super().__init__()
         summary = dataset.summary
         is_nine_b = summary.pipeline_provenance.startswith("9B ")
         is_selector = is_nine_b and selector_summary is not None
+        is_source_wave = is_nine_b and source_wave_summary is not None
         root = QVBoxLayout(self)
         root.setContentsMargins(14, 14, 14, 14)
         root.setSpacing(12)
@@ -1666,7 +1724,9 @@ class MetricsPage(QWidget):
         title_box = QVBoxLayout()
         title = QLabel(
             (
-                "Baseline Selector v1.2 · active audited all-9B analytics"
+                "Official16 · active audited all-9B source analytics"
+                if is_source_wave
+                else "Baseline Selector v1.2 · active audited all-9B analytics"
                 if is_selector
                 else "9B Source V7 · canonical lineage replay"
             )
@@ -1677,6 +1737,12 @@ class MetricsPage(QWidget):
         subtitle = QLabel(
             (
                 (
+                    f"{source_wave_summary.correct}/{source_wave_summary.rows} — frozen official "
+                    "source expansion поверх audited selector 240/274: +9 исправлений, "
+                    "0 откатов. Research 251 отделён и не является headline."
+                )
+                if is_source_wave
+                else (
                     f"{selector_summary.correct}/{selector_summary.rows} — frozen one-shot "
                     "development selector поверх полностью завершённого Source V7 "
                     "238/274: +2 исправления, 0 откатов. Canonical lineage не переписана."
@@ -1703,7 +1769,9 @@ class MetricsPage(QWidget):
         heading.addWidget(
             _badge(
                 (
-                    "SELECTOR v1.2 · ACTIVE 240/274"
+                    "OFFICIAL16 · ACTIVE 249/274"
+                    if is_source_wave
+                    else "SELECTOR v1.2 · ACTIVE 240/274"
                     if is_selector
                     else "9B · PROFILE-BOUND REPLAY"
                 )
@@ -1715,7 +1783,48 @@ class MetricsPage(QWidget):
         root.addLayout(heading)
 
         cards = QHBoxLayout()
-        if is_selector:
+        if is_source_wave:
+            cards.addWidget(
+                MetricCard(
+                    "Overall · active",
+                    f"{source_wave_summary.accuracy:.4%}",
+                    f"{source_wave_summary.correct}/{source_wave_summary.rows}",
+                    "#4be1c3",
+                )
+            )
+            cards.addWidget(
+                MetricCard(
+                    "Math",
+                    f"{source_wave_summary.math_correct / source_wave_summary.math_rows:.2%}",
+                    f"{source_wave_summary.math_correct}/{source_wave_summary.math_rows}",
+                    "#71aef5",
+                )
+            )
+            cards.addWidget(
+                MetricCard(
+                    "English",
+                    "100.00%",
+                    f"{source_wave_summary.english_correct}/{source_wave_summary.english_rows}",
+                    "#b99cff",
+                )
+            )
+            cards.addWidget(
+                MetricCard(
+                    "Deterministic",
+                    f"{source_wave_summary.deterministic_correct}/{source_wave_summary.deterministic_rows}",
+                    f"{source_wave_summary.deterministic_correct / source_wave_summary.deterministic_rows:.2%}",
+                    "#f0ad62",
+                )
+            )
+            cards.addWidget(
+                MetricCard(
+                    "Image judge",
+                    f"{source_wave_summary.image_correct}/{source_wave_summary.image_rows}",
+                    f"{source_wave_summary.image_correct / source_wave_summary.image_rows:.2%}",
+                    "#e8899c",
+                )
+            )
+        elif is_selector:
             cards.addWidget(
                 MetricCard(
                     "Overall · active",
@@ -1823,7 +1932,9 @@ class MetricsPage(QWidget):
         info.setContentsMargins(14, 12, 14, 12)
         label = QLabel(
             (
-                "Что изменил selector и что он не доказывает"
+                "Что изменил official16 и что он не доказывает"
+                if is_source_wave
+                else "Что изменил selector и что он не доказывает"
                 if is_selector
                 else "Evaluator/origin split 9B V7"
             )
@@ -1834,6 +1945,19 @@ class MetricsPage(QWidget):
         text = QLabel(
             (
                 (
+                    "• active aggregate: 249/274 = 90.8759%; Math 117/139, "
+                    "English 9/9, deterministic 158/177, image 91/97.\n"
+                    "• относительно audited selector 240 исправлены ровно девять задач: "
+                    + ", ".join(source_wave_summary.fix_task_ids)
+                    + "; откатов нет.\n"
+                    "• Source V7 238 и selector 240 остаются видимыми lineage points.\n"
+                    "• research_all36=251/274 — research_evaluation_only, license-unverified "
+                    "и никогда не используется как active/headline.\n"
+                    "• это известный development benchmark и frozen simultaneous wave, "
+                    "а не blind holdout или production accuracy."
+                )
+                if is_source_wave
+                else (
                     "• active aggregate: 240/274 = 87.5912%; Math 109/139, "
                     "History 10/10, deterministic 158/177, image 82/97.\n"
                     "• selector заменил только val_0089 A→D и val_0251 A→B; "
@@ -1906,6 +2030,7 @@ class TraceViewerWindow(QMainWindow):
         holdout80: Holdout80Summary | None = None,
         nine_b_comparison: FrozenReplayComparison | None = None,
         selector_summary: SelectorWaveSummary | None = None,
+        source_wave_summary: SourceWaveSummary | None = None,
         *,
         active_dataset: str = "archived-27b-v7",
         qa_reference_summary: RunSummary | None = None,
@@ -1917,14 +2042,26 @@ class TraceViewerWindow(QMainWindow):
         )
         if self.active_selector:
             dataset = build_active_selector_dataset(dataset, selector_summary)
+        self.active_source_wave = (
+            self.active_selector and source_wave_summary is not None
+        )
+        if self.active_source_wave:
+            dataset = build_active_source_wave_dataset(
+                dataset,
+                selector_summary,
+                source_wave_summary,
+            )
         self.dataset = dataset
         self.holdout80 = holdout80 or load_holdout80_summary()
         self.nine_b_comparison = nine_b_comparison
         self.selector_summary = selector_summary
+        self.source_wave_summary = source_wave_summary
         self.active_dataset = active_dataset
         self.setWindowTitle(
             (
-                "VLM Trace · 9B Baseline Selector v1.2 Evidence OS"
+                "VLM Trace · 9B Official16 Source Wave Evidence OS"
+                if self.active_source_wave
+                else "VLM Trace · 9B Baseline Selector v1.2 Evidence OS"
                 if self.active_selector
                 else "VLM Trace · 9B V7 Evidence OS"
             )
@@ -1939,11 +2076,14 @@ class TraceViewerWindow(QMainWindow):
         self.explorer = TraceExplorer(
             dataset,
             selector_summary if self.active_selector else None,
+            source_wave_summary if self.active_source_wave else None,
         )
         self.tabs.addTab(
             self.explorer,
             (
-                "9B selector · tasks"
+                "9B official16 · tasks"
+                if self.active_source_wave
+                else "9B selector · tasks"
                 if self.active_selector
                 else "9B Source V7 · trace"
             )
@@ -1955,9 +2095,12 @@ class TraceViewerWindow(QMainWindow):
             MetricsPage(
                 dataset,
                 selector_summary if self.active_selector else None,
+                source_wave_summary if self.active_source_wave else None,
             ),
             (
-                "9B selector · analytics"
+                "9B official16 · analytics"
+                if self.active_source_wave
+                else "9B selector · analytics"
                 if self.active_selector
                 else "9B Source V7 · metrics"
             )
@@ -1968,6 +2111,11 @@ class TraceViewerWindow(QMainWindow):
             NineBMilestonesPage(nine_b_comparison),
             "9B · seven milestones",
         )
+        if source_wave_summary is not None:
+            self.tabs.addTab(
+                SourceExpansionWavePage(source_wave_summary),
+                "9B · official source wave",
+            )
         if selector_summary is not None:
             self.tabs.addTab(
                 SelectorWavePage(
@@ -1988,7 +2136,9 @@ class TraceViewerWindow(QMainWindow):
         self.setCentralWidget(self.tabs)
         status = QStatusBar()
         active_view = (
-            "nine-b-selector-v1.2"
+            "nine-b-official16-source-wave"
+            if self.active_source_wave
+            else "nine-b-selector-v1.2"
             if self.active_selector
             else (
                 "nine-b-source-v7-lineage"
@@ -2024,7 +2174,9 @@ class TraceViewerWindow(QMainWindow):
         toolbar.addWidget(
             _badge(
                 (
-                    "9B SELECTOR v1.2 · ACTIVE"
+                    "9B OFFICIAL16 · ACTIVE"
+                    if self.active_source_wave
+                    else "9B SELECTOR v1.2 · ACTIVE"
                     if self.active_selector
                     else "9B SOURCE V7 · LINEAGE"
                 )

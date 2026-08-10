@@ -57,28 +57,27 @@ raw `71/80`, отдельный official-key erratum `79/80` и `79/79` по в�
 ответа или reasoning. В приложение встроена только fail-closed публичная сводка с
 хешами, без приватных строк holdout.
 
-Отдельная вкладка `9B · selector v1.2` продолжает каноническую 9B-историю, не
-переписывая её: семь milestone остаются завершёнными на Source V7 `238/274`, а
-selector показан самостоятельным восьмым development-слоем `240/274 = 0.875912`.
-Loader сверяет completion manifest, score, composition, solver, все четыре arm и
-provenance двух замен (`val_0089`, `val_0251`) по SHA-256. На экране явно отмечены
-`+2 fixes`, `0 regressions`, `272/274` byte-exact passthrough, сохранение 156 source
-и 97 image строк. Post-score repair `val_0223` вынесен в отдельный null-result:
-content изменился, но score остался `240 → 240`; число 241 не заявляется.
+Отдельная вкладка `9B · official source wave` показывает новый активный all-9B
+development result: `249/274 = 90.8759%` (точное отношение `249/274`, опубликованное
+округление `0.908759`). Срезы: Math `117/139`, English `9/9`, deterministic
+`158/177`, image `91/97`. Loader fail-closed сверяет SHA freeze, независимого audit
+amendment, completion и official16 metrics, затем сам пересчитывает task-level
+разницу с audited selector `240/274`: ровно девять fixes и ноль regressions.
 
-Когда этот bundle прошёл проверку, основные вкладки задач и аналитики показывают
-selector как активный all-9B результат: `240/274 = 87.5912%`, Math `109/139`,
-History `10/10`, deterministic `158/177`, image `82/97`. Две замены проецируются
-на task-level view, поэтому фильтры и aggregate согласованы. Их reasoning при этом
-остаётся явно подписанным как записанный Source V7 trace; интерфейс не сочиняет
-для selector новый chain-of-thought. Лестница семи этапов по-прежнему честно
-заканчивается на `238/274`, а archived QA V7 `242/274` остаётся отдельным reference.
+Старые точки не переписаны: Source V7 `238/274` остаётся концом канонической
+семиступенчатой лестницы, а selector v1.2 `240/274` — отдельной проверенной lineage
+перед source wave. Research arm `research_all36 = 251/274` показывается только в
+отдельном предупреждающем блоке: `research_evaluation_only`, лицензии источников не
+проверены, production/headline запрещён. Archived QA V7 `242/274` также остаётся
+отдельным reference и не смешивается с all-9B результатом.
 
 ![VLM Trace — сохранённый V7 trace](docs/assets/trace-viewer-final.png)
 
 ![VLM Trace — Holdout80 source evidence](docs/assets/holdout80-source-evidence.png)
 
 ![VLM Trace — audited Baseline Selector v1.2](docs/assets/selector-wave-v1.2-audited.png)
+
+![VLM Trace — official16 source wave](docs/assets/source-wave-official16.png)
 
 ![VLM Trace — active selector task view](docs/assets/selector-active-tasks.png)
 

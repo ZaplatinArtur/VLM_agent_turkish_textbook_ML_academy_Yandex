@@ -46,8 +46,8 @@ cd C:\Users\kmaxc\PycharmProjects\VLM_Analytics_App
 По умолчанию приложение открывает новую вкладку `Holdout80 · source evidence`.
 Для снимка trace explorer используйте `--screenshot-tab 0`, для Holdout80 —
 `--screenshot-tab 1`, для прежней страницы V7 — `--screenshot-tab 2`, для
-канонической семёрки 9B — `--screenshot-tab 3`, для audited selector —
-`--screenshot-tab 4`.
+канонической семёрки 9B — `--screenshot-tab 3`, для active official source wave —
+`--screenshot-tab 4`, для исторической audited selector lineage — `--screenshot-tab 5`.
 Для снимка маршрута или сертификата используйте соответственно
 `--detail-tab 1` или `--detail-tab 2`.
 
@@ -64,23 +64,20 @@ cd C:\Users\kmaxc\PycharmProjects\VLM_Analytics_App
 полного валидного manifest завершается ошибкой. Формат и все fail-closed проверки
 описаны в [`../NINE_B_COMPARISON_CONTRACT_RU.md`](../NINE_B_COMPARISON_CONTRACT_RU.md).
 
-При наличии полного comparison loader также требует frozen selector-wave bundle.
-На пятой вкладке семь canonical milestone остаются неизменными и заканчиваются
-Source V7 `238/274`; Baseline Selector v1.2 показан отдельным восьмым слоем
-`240/274 = 0.875912`. Это Qwen3.5-9B-only development wave на известном наборе,
-не blind holdout. Две замены (`val_0089: A→D`, `val_0251: A→B`) разрешены только
-при согласии structural, native и parallel групп. Интерфейс показывает их
-decision/proposal/source row hashes, но не имитирует скрытый chain-of-thought.
-Post-score answer-contract repair изменил строку `val_0223`, однако повторный score
-остался `240/274`; он подписан как non-blind, non-preregistered null-result, а не
-как новый milestone или 241.
+При наличии полного comparison loader требует и selector-wave bundle, и frozen
+official source wave. Активная проекция на первых двух вкладках считает
+`249/274 = 0.908759`: Math `117/139`, English `9/9`, deterministic `158/177`,
+image `91/97`. Она строится только после проверки exact SHA freeze, независимого
+audit amendment, completion и official16 metrics. Разница с selector `240/274`
+пересчитывается по всем 274 task outcomes: fixes — `val_0048`, `val_0050`,
+`val_0051`, `val_0054`–`val_0058`, `val_0182`; regressions — 0.
 
-После успешной hash-проверки selector становится активной проекцией на первых двух
-вкладках: headline и task filters считают `240/274`, а `val_0089` и `val_0251`
-показывают выбранные selector-ответы. Исходный Source V7 trace не мутируется:
-записанное reasoning этих строк маркируется как lineage evidence, selector добавляет
-только проверяемую provenance выбора. Вкладка семи milestone продолжает заканчиваться
-на Source V7 `238/274`.
+Lineage не переписана: семь canonical milestone заканчиваются Source V7
+`238/274`, Baseline Selector v1.2 остаётся отдельной точкой `240/274`, а source
+wave добавляет новую active точку `249/274`. Research `251/274` находится только
+в отдельном блоке с маркировкой `research_evaluation_only`, `license-unverified`,
+`production=false`; он никогда не становится headline. Все числа относятся к
+известному development benchmark, а не blind holdout или production accuracy.
 
 Для image evaluator интерфейс показывает cumulative split: сколько финальных
 verdict уже source-adjudicated и сколько осталось byte-identical исходному

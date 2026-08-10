@@ -88,6 +88,9 @@ class TaskTrace:
         selector = self.raw.get("selector_v1_2")
         if not isinstance(selector, dict):
             selector = None
+        source_wave = self.raw.get("source_wave_v1_1")
+        if not isinstance(source_wave, dict):
+            source_wave = None
         source_state = "pass" if self.has_certificate else "skipped"
         source_v7_action = (
             str(selector.get("source_v7_decision_action") or "")
@@ -142,6 +145,22 @@ class TaskTrace:
                     "Baseline Selector v1.2",
                     "three frozen groups unanimous · answer replaced",
                     "active",
+                )
+            )
+        if source_wave:
+            targeted = bool(source_wave.get("targeted"))
+            changed = bool(source_wave.get("answer_changed_vs_240"))
+            stages.append(
+                PipelineStage(
+                    "Official16 source wave",
+                    (
+                        "official source answer replaced selector output"
+                        if changed
+                        else "official source target confirmed selector output"
+                        if targeted
+                        else "frozen official16 passthrough"
+                    ),
+                    "active" if targeted else "pass",
                 )
             )
         stages.append(

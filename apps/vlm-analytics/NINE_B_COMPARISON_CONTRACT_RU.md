@@ -4,6 +4,20 @@ UI не содержит чисел для 9B milestones в коде. Он пр�
 проверяет SHA-256 всех указанных файлов, task set, evaluator semantics и model
 closure, и только после этого показывает семь результатов.
 
+Активный result поверх этой lineage загружается отдельным fail-closed adapter.
+Он пинит exact SHA-256 четырёх артефактов source wave:
+
+- freeze `efcf854f…5c34a5c`;
+- independent audit amendment `4d072012…f6d6749`;
+- ten-arm completion `318be800…a36506e`;
+- official16 metrics `969cece7…e470d8e`.
+
+Adapter проверяет official16-only headline, all-9B closure, simultaneous completion,
+research separation и пересчитывает task outcomes относительно base240. Только после
+этого активируются `249/274`, Math `117/139`, English `9/9`, deterministic `158/177`,
+image `91/97`, `+9/0`. `research_all36=251/274` разрешён только как отдельный
+`research_evaluation_only`, `license-unverified` блок и запрещён для headline.
+
 ## Comparison manifest v2
 
 Допустимы абсолютные пути и пути относительно каталога manifest. Каждый descriptor
