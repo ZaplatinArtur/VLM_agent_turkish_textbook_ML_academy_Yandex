@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="560" viewBox="0 0 1600 560" role="img" aria-labelledby="title desc">
+  <title id="title">VLM agent pipeline</title>
+  <desc id="desc">A task enters the runner, is processed by a solver and optionally textbook retrieval, then evaluated by a judge and analytics.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#081522"/>
+      <stop offset="1" stop-color="#0d2130"/>
+    </linearGradient>
+    <linearGradient id="agent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#11384a"/>
+      <stop offset="1" stop-color="#123044"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000814" flood-opacity="0.42"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#66899f"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="560" rx="28" fill="url(#bg)"/>
+  <g font-family="Inter, Segoe UI, Arial, sans-serif">
+    <text x="70" y="72" fill="#f2f7fa" font-size="28" font-weight="800">One task · one trace · comparable evaluation</text>
+    <text x="70" y="103" fill="#829eaf" font-size="16">The original image stays the primary source of truth throughout the RAG path.</text>
+
+    <g fill="none" stroke="#66899f" stroke-width="4" marker-end="url(#arrow)">
+      <path d="M300 264 H414"/>
+      <path d="M674 264 H782"/>
+      <path d="M1042 264 H1150"/>
+      <path d="M1360 264 H1470"/>
+    </g>
+    <path d="M912 344 V425 H544 V349" fill="none" stroke="#55e6c1" stroke-width="4" stroke-dasharray="10 9" marker-end="url(#arrow)"/>
+
+    <g transform="translate(70 170)" filter="url(#shadow)">
+      <rect width="230" height="188" rx="24" fill="#0e2635" stroke="#2d4d61"/>
+      <rect x="30" y="28" width="64" height="78" rx="9" fill="#173a4c" stroke="#6fb5ff"/>
+      <path d="M42 49 H82 M42 63 H76 M42 77 H82 M42 91 H69" stroke="#8fc8ff" stroke-width="4" stroke-linecap="round"/>
+      <text x="30" y="142" fill="#f0f6f9" font-size="20" font-weight="750">TASK</text>
+      <text x="30" y="166" fill="#86a3b5" font-size="14">text · screenshot · metadata</text>
+    </g>
+
+    <g transform="translate(414 170)" filter="url(#shadow)">
+      <rect width="260" height="188" rx="24" fill="url(#agent)" stroke="#55e6c1" stroke-width="2"/>
+      <circle cx="46" cy="48" r="18" fill="#55e6c1" opacity="0.17"/>
+      <path d="M37 48 L44 55 L57 39" fill="none" stroke="#65edce" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="30" y="102" fill="#f0f6f9" font-size="20" font-weight="750">AGENT RUNNER</text>
+      <text x="30" y="130" fill="#9ff3df" font-size="14">B0 · Web · AgentRag</text>
+      <text x="30" y="158" fill="#86a3b5" font-size="13">resume · budgets · structured output</text>
+    </g>
+
+    <g transform="translate(782 170)" filter="url(#shadow)">
+      <rect width="260" height="188" rx="24" fill="#13273b" stroke="#6fb5ff" stroke-width="2"/>
+      <circle cx="46" cy="48" r="18" fill="#6fb5ff" opacity="0.17"/>
+      <path d="M37 42 H55 M37 49 H52 M37 56 H49" stroke="#8fc8ff" stroke-width="3" stroke-linecap="round"/>
+      <text x="30" y="102" fill="#f0f6f9" font-size="20" font-weight="750">QWEN 3.5 9B</text>
+      <text x="30" y="130" fill="#a8d4ff" font-size="14">LLM inference backend</text>
+      <text x="30" y="158" fill="#86a3b5" font-size="13">vision · tool calls · final answer</text>
+    </g>
+
+    <g transform="translate(1150 170)" filter="url(#shadow)">
+      <rect width="210" height="188" rx="24" fill="#231f3c" stroke="#b28cff" stroke-width="2"/>
+      <circle cx="45" cy="48" r="18" fill="#b28cff" opacity="0.18"/>
+      <path d="M35 49 L42 56 L56 39" fill="none" stroke="#c6adff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="30" y="102" fill="#f0f6f9" font-size="20" font-weight="750">LLM JUDGE</text>
+      <text x="30" y="130" fill="#cbb7ff" font-size="14">blind correctness</text>
+      <text x="30" y="158" fill="#8f86ad" font-size="13">audit · same denominator</text>
+    </g>
+
+    <g transform="translate(1470 170)" filter="url(#shadow)">
+      <rect width="80" height="188" rx="24" fill="#172a35" stroke="#ffbd73" stroke-width="2"/>
+      <path d="M24 86 V64 M40 86 V48 M56 86 V57" stroke="#ffbd73" stroke-width="6" stroke-linecap="round"/>
+      <text x="40" y="122" text-anchor="middle" fill="#ffd29f" font-size="13" font-weight="750">METRICS</text>
+      <text x="40" y="145" text-anchor="middle" fill="#a9947b" font-size="11">paired</text>
+    </g>
+
+    <g transform="translate(700 420)" filter="url(#shadow)">
+      <rect width="420" height="86" rx="22" fill="#0d2d32" stroke="#55e6c1" stroke-width="2" stroke-dasharray="8 6"/>
+      <text x="30" y="36" fill="#9ff3df" font-size="17" font-weight="750">TEXTBOOK RETRIEVAL</text>
+      <text x="30" y="62" fill="#7fa8a8" font-size="13">checked relevance · one rewrite · conflict filtering</text>
+    </g>
+  </g>
+</svg>

@@ -1,392 +1,168 @@
-# VLM Judge
+<p align="center">
+  <img src="docs/assets/project-hero-v2.svg" alt="Turkish Textbook VLM Agent" width="100%">
+</p>
 
-Reproducible evaluation for three homework-agent setups:
+<h1 align="center">Turkish Textbook VLM Agent</h1>
 
-1. `no_tools`;
-2. `web_search`;
-3. `textbook_retrieval`.
+<p align="center">
+  <a href="https://www.python.org/"><img alt="Python 3.11+" src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white"></a>
+  <a href="https://huggingface.co/Qwen/Qwen3.5-9B"><img alt="Qwen 3.5 9B" src="https://img.shields.io/badge/Model-Qwen%203.5%209B-6F7BF7?style=flat-square"></a>
+  <img alt="Textbook RAG" src="https://img.shields.io/badge/RAG-Textbook%20Retrieval-22B8A7?style=flat-square">
+  <img alt="Evaluation" src="https://img.shields.io/badge/Evaluation-LLM%20Judge-A978E8?style=flat-square">
+</p>
 
-The package combines deterministic exact metrics, a blinded multimodal LLM judge, human calibration, LMArena-style pairwise validation, and paired statistical reporting. It is usable without a GPU; the model backend is an adapter boundary that can be connected when the Qwen endpoint is known.
+<p align="center">
+  <strong>Image-first VLM agent · controlled retrieval · reproducible evaluation</strong>
+</p>
 
-## Current source inventory
+<p align="center">
+  <img src="docs/assets/young-yandex.png" alt="Young and Yandex" width="560">
+</p>
 
-- Main workbook: 823 usable task records with 20 raw subject labels.
-- Planning sheet and mentor target: 17 subject categories. The 20-to-17 correspondence is unconfirmed, so every raw label is preserved.
-- Math workbook: 200 question/reference-image pairs, grades 1–12; all 400 image links have been verified.
-- ÖdevJet corpus: 45,920 records from 215 books and 8 source subjects.
-- Corpus risks: 344 duplicate rows, 263 conflicting duplicate IDs, and 16,520 low-information pages.
-- Prepared retrieval layer: 45,576 canonical pages and 280,822 stable chunks (103,070 text and 177,752 image chunks); conflicting variants remain quarantined.
-- CPU lexical baseline: SQLite FTS5/BM25 over all 103,070 text chunks, with a local agent-tool API and provenance-rich hits.
+VLM-агент для решения школьных заданий на турецком языке с поиском по корпусу
+учебников. Репозиторий объединяет три сравниваемых режима агента, retrieval,
+LLM-as-a-Judge и приложение для анализа экспериментов.
 
-The math gold answers are often annotated images. Judge requests therefore support both a question image and a reference-answer image. Setup labels are removed from model prompts and hidden by default in the human interface.
+Исследовательский вопрос проекта: **повышает ли поиск по учебникам качество
+ответов по сравнению с той же моделью без инструментов и с веб-поиском?**
 
-## Desktop analytics application
+<table>
+  <tr>
+    <td width="25%"><strong>👁 Multimodal</strong><br><sub>Решает задачи по тексту и исходному screenshot.</sub></td>
+    <td width="25%"><strong>📚 Controlled RAG</strong><br><sub>Слабые и конфликтующие чанки не попадают в ответ.</sub></td>
+    <td width="25%"><strong>⚖ Fair evaluation</strong><br><sub>B0, Web и RAG сравниваются на одинаковых task IDs.</sub></td>
+    <td width="25%"><strong>📊 Trace analytics</strong><br><sub>Tool calls, ошибки, fixed/regressed и предметные срезы.</sub></td>
+  </tr>
+</table>
 
-The source code for the **VLM Analytics** desktop application is maintained in
-[`apps/vlm-analytics`](apps/vlm-analytics/README.md). It imports benchmark runs
-and judge outputs into a local SQLite database and provides dashboards for
-accuracy, subject slices, token usage, latency, audit results, and chunking
-experiments.
+## Что сравниваем
 
-Only source code, dependency files, build instructions, and tests are tracked.
-Generated `.exe` files, local databases, synchronization caches, and imported
-benchmark artifacts are intentionally excluded from Git.
+| Режим | Условие runner | Что получает модель |
+| --- | --- | --- |
+| 🧠 Без инструментов | `b0_no_tools` | исходный текст или изображение задачи |
+| 🌐 Веб-поиск | `b1_search` | задача и инструмент веб-поиска |
+| 📚 Textbook RAG | `agent_rag` | задача и ограниченный инструмент поиска по учебникам |
 
-## Install and test
+Все режимы возвращают единый `SolveResult`, поэтому их можно оценивать одним
+judge и сравнивать попарно на одинаковых `task_id`.
+
+## Быстрый старт
+
+Требуется Python 3.11 или новее. Inference backend настраивается через окружение;
+для локального dry-run GPU и запущенная модель не нужны.
 
 ```powershell
-python -m pip install -e ".[sources,dev]"
-python -m unittest discover -s tests -v
-```
-
-## Main commands
-
-```powershell
-# Normalize source workbooks and audit the corpus.
-vlm-judge prepare-sources --main-workbook sheet1.xlsx --math-workbook sheet2.xlsx --corpus odevjet.jsonl --output-dir artifacts
-
-# Canonical pages plus stable text/image chunks; conflicts are quarantined.
-vlm-judge prepare-corpus --input odevjet.jsonl --output-dir artifacts/corpus --max-chars 1600 --overlap-chars 200
-
-# Attach an agent run to the benchmark. Empty and failed responses are preserved.
-vlm-judge import-candidates --benchmark artifacts/math_benchmark.jsonl --responses run.csv --setup no_tools --output artifacts/runs/no_tools.jsonl
-
-# Exact metrics and blinded judge requests.
-vlm-judge score-deterministic --input artifacts/runs/no_tools.jsonl --output artifacts/runs/no_tools_exact.jsonl
-vlm-judge prepare-requests --input artifacts/runs/no_tools.jsonl --output artifacts/runs/no_tools_requests.jsonl
-
-# Build and serve the CPU BM25 textbook baseline.
-vlm-judge build-bm25 --chunks artifacts/corpus/chunks.jsonl --index artifacts/retrieval/bm25.sqlite
-vlm-judge serve-retrieval --index artifacts/retrieval/bm25.sqlite --port 8770
-vlm-judge prepare-retrieval-qrels --benchmark artifacts/math_benchmark.jsonl --output artifacts/retrieval/math_qrels_template.jsonl
-vlm-judge evaluate-retrieval --index artifacts/retrieval/bm25.sqlite --qrels artifacts/retrieval/math_qrels.jsonl --k 1 --k 5 --k 10 --output artifacts/reports/bm25_eval.json
-
-# Refuse to evaluate an incomplete or contract-drifting three-setup grid.
-vlm-judge validate-runs --benchmark artifacts/math_benchmark.jsonl `
-  --run no_tools=artifacts/runs/no_tools.jsonl `
-  --run web_search=artifacts/runs/web_search.jsonl `
-  --run textbook_retrieval=artifacts/runs/textbook_retrieval.jsonl `
-  --strict-metadata `
-  --output artifacts/reports/run_validation.json
-
-# Exercise the entire pipeline without a model. Outputs are synthetic mechanics tests only.
-vlm-judge synthetic-dry-run --benchmark artifacts/math_benchmark.jsonl --output-dir artifacts/dryrun
-
-# Randomized, optionally mirrored A/B records.
-vlm-judge prepare-pairs --input artifacts/runs/no_tools.jsonl --input artifacts/runs/textbook_retrieval.jsonl --setup-a no_tools --setup-b textbook_retrieval --mirrored --output artifacts/calibration/arena.jsonl
-
-# Human UI: adjacent gold/candidate, gold transcription, and optional adjudication queue.
-vlm-judge sample-calibration-responses --input artifacts/runs/no_tools.jsonl --input artifacts/runs/web_search.jsonl --input artifacts/runs/textbook_retrieval.jsonl --size 120 --output artifacts/calibration/response_sample.jsonl
-vlm-judge-ui --dataset artifacts/calibration/response_sample.jsonl `
-  --annotations artifacts/annotations/human.jsonl `
-  --gold artifacts/annotations/gold.jsonl `
-  --judge-results artifacts/runs/judge_results.jsonl `
-  --adjudications artifacts/annotations/adjudications.jsonl `
-  --open-browser
-
-# Binary 0/1 judge monitor. The UI detects text-binary-v* results and opens this mode automatically.
-vlm-judge-ui --dataset artifacts/runs/b0_judge_input.jsonl `
-  --judge-results artifacts/runs/b0_judged.jsonl `
-  --annotations artifacts/annotations/human.jsonl `
-  --gold artifacts/annotations/gold.jsonl `
-  --open-browser
-
-# Apply only verified task-scoped transcriptions before building judge requests.
-vlm-judge apply-gold --dataset artifacts/runs/no_tools.jsonl --gold artifacts/annotations/gold.jsonl --output artifacts/runs/no_tools_with_gold.jsonl
-
-# Calibration and position-bias reports.
-vlm-judge analyze-calibration --human artifacts/annotations/human.jsonl --judge artifacts/runs/judge_results.jsonl --output artifacts/reports/calibration.json
-vlm-judge audit-judge-run --input artifacts/runs/judge_results.jsonl --output artifacts/reports/judge_operational_audit.json
-vlm-judge analyze-arena --annotations artifacts/annotations/arena.jsonl --output artifacts/reports/arena_bias.json
-
-# Prioritize human/LLM disagreements, judge errors, low-confidence cases, reference issues,
-# plus a stable 10% control sample of agreements.
-vlm-judge prepare-adjudication --dataset artifacts/runs/no_tools.jsonl `
-  --judge artifacts/runs/judge_results.jsonl `
-  --human artifacts/annotations/human.jsonl `
-  --output artifacts/reports/adjudication_queue.jsonl `
-  --summary artifacts/reports/adjudication_summary.json
-
-# Final hybrid/exact/judge views, paired deltas, bootstrap intervals, and coverage audit.
-vlm-judge aggregate --input artifacts/runs/scored_records.jsonl --output artifacts/reports/summary.json
-
-# Multiple setups can be aggregated together. Corrected rerun rows override
-# matching task_id/setup units without counting them twice.
-vlm-judge aggregate `
-  --input reports/judge_out_b0.jsonl `
-  --input reports/judge_out_b1dr.jsonl `
-  --overlay reports/judge_out_b0_delta.jsonl `
-  --overlay reports/judge_out_b1dr_delta.jsonl `
-  --output reports/judge_agg_b0_vs_b1dr.json
-```
-
-## Prepared calibration assets
-
-`artifacts/calibration` contains 120 stratified real tasks, a UTF-8 human-labeling template, and 150 synthetic multiple-choice smoke cases. Synthetic records validate judge mechanics only; they are not evidence of model quality.
-
-## Integration contract
-
-Each setup must emit one record per `(task_id, setup, run_id)`. Candidate text is preserved verbatim, including failures and timeouts. The judge can already call an OpenAI-compatible Qwen/vLLM endpoint through `vlm-judge run-judge`; use `--limit 10` for the first endpoint/image/JSON smoke test, then remove the limit for the cached full run. Only deployment values remain external. The other missing inputs are real three-setup outputs, the mentor gold set, 771 unresolved main-workbook image assets, and the confirmed 17-subject mapping.
-
-See [evaluation protocol](docs/evaluation_protocol.md), [judge acceptance criteria](docs/judge_acceptance_criteria.md), [data contract](docs/data_contract.md), [interface design](docs/interface_design.md), [retrieval tool contract](docs/retrieval_tool_contract.md), and [data/retrieval strategy](docs/data_and_retrieval_strategy.md).
-
-## MLA agent baselines
-
-Бейзлайны для сравнения с агентом решения школьных задач (турецкий рынок,
-[Qwen/Qwen3.5-9B](https://huggingface.co/Qwen/Qwen3.5-9B) — модель мультимодальна
-сама по себе, отдельный VL-вариант не нужен). План проекта — в `BASELINE_PLAN.md`.
-
-Реализованы **B0** (без инструментов), **B1** (веб-поиск), routed/deep варианты
-B1 и **AgentRag** с прямым вызовом поиска по учебникам.
-
-## Установка
-
-```bash
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -e .
-cp .env.example .env             # и поправить под машину
+.\.venv\Scripts\python.exe -m pip install -e ".[sources,dev]"
 ```
 
-## Проверка без GPU (dry-run)
-
-Собирает сообщения для модели, не вызывая её, — проверка контрактов и картинок:
-
-```bash
-python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --dry-run
-```
-
-## Запуск через OpenRouter без GPU-сервера
-
-Модель по умолчанию — `qwen/qwen3.5-9b`. Локально остаются код агента,
-изображения, retrieval-индекс и результаты; только LLM inference отправляется в
-OpenRouter. Перед запуском задайте новый ключ в текущей сессии PowerShell:
+Без сетевого вызова и расходов проверьте сборку входа для модели:
 
 ```powershell
-$env:OPENROUTER_API_KEY="<new-key>"
+.\.venv\Scripts\python.exe -m mla_baseline.runner `
+  --tasks data/tasks.sample.jsonl `
+  --condition b0_no_tools `
+  --dry-run
 ```
 
-Ключ также можно положить в локальный `.env`, который исключён из Git. Сервер,
-CUDA, vLLM и SSH-туннель для этого сценария не нужны.
+Не добавляйте `.env`, API-ключи, корпуса, индексы и сырые результаты в Git.
+Подробные сценарии запуска собраны в
+[`docs/getting-started.md`](docs/getting-started.md).
 
-## Прогон
+## Как проходит одна задача
 
-```bash
-# smoke: 2 задачи из примера
-python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --condition b0_no_tools --limit 2
+<p align="center">
+  <img src="docs/assets/pipeline-overview-v2.svg" alt="Task to agent, retrieval, judge and analytics pipeline" width="100%">
+</p>
 
-# полный прогон
-python -m mla_baseline.runner --tasks data/tasks.jsonl --condition b0_no_tools
+В RAG-режиме изображение остаётся главным источником фактов. Агент получает не
+более двух попыток поиска, не передаёт слабые или конфликтующие чанки в финальный
+контекст и сохраняет `relevance`, `exit_reason`, `image_evidence` и
+`answer_source` в trace. По умолчанию retrieval вызывается напрямую в том же
+процессе; HTTP-адаптер оставлен только для раздельного развёртывания.
+
+## Структура репозитория
+
+```text
+src/
+  mla_baseline/   агент, solvers, tool adapters и batch runner
+  retrieve/       индекс, retrieval pipeline, reranking и retrieval-метрики
+  vlm_judge/      judge, агрегация, калибровка и интерфейс разметки
+  schemas/        общие схемы Task, ImageRef и RetrievedChunk
+apps/
+  vlm-analytics/  каноническое desktop-приложение аналитики
+tests/            основной набор автоматических тестов
+scripts/          воспроизводимые entrypoint-скрипты и исследовательские утилиты
+configs/          версионированные конфигурации экспериментов
+docs/             контракты, протоколы и карта проекта
+experiments/      замороженные самодостаточные экспериментальные пакеты
+reports/          публикуемые сводки и проверяемые результаты
+artifacts/        подготовленные или замороженные артефакты воспроизводимости
+data/             локальные задачи, учебники, чанки и индексы; почти всё ignored
+results/          локальные сырые прогоны; ignored
+outputs/          распакованные датасеты и промежуточные файлы; ignored
 ```
 
-Результат: `results/b0_no_tools_v1.jsonl` (по строке `SolveResult` на задачу —
-формат для LLM-as-Judge). Перезапуск продолжает с места остановки (resume по
-`task_id`); чтобы прогнать заново — удалить/переименовать выходной файл.
+Плотная карта компонентов, точек входа и таблица «что менять → чем проверять»:
+[`docs/project-map.md`](docs/project-map.md).
 
-## Пайплайн валидации (Google Sheets)
+## Интерфейс аналитики
 
-Выборка валидации — [таблица](https://docs.google.com/spreadsheets/d/15VJ_gVErnAy2fJLT-JBUO5WvSsBNthhRQyVHti-RVhc/edit?gid=0#gid=0):
-823 задачи-скриншота (Visual — URL картинки на s3.mds.yandex.net) с эталонными
-ответами. Пайплайн: таблица → Task JSONL → прогон → метрики.
+<p align="center">
+  <img src="apps/vlm-analytics/docs/assets/selector-active-analytics.png" alt="VLM Analytics experiment dashboard" width="100%">
+</p>
 
-```bash
-# 1. Таблица -> data/validation.jsonl + validation.meta.jsonl,
-#    картинки -> data/images/ (resume: уже скачанные пропускаются)
-python -m mla_baseline.sheet --sheet-id 15VJ_gVErnAy2fJLT-JBUO5WvSsBNthhRQyVHti-RVhc
-# либо из локального архива картинок (имена файлов = basename URL из таблицы):
-python -m mla_baseline.sheet --csv data/validation_sheet.csv --archive-dir <папка с картинками>
+<p align="center"><sub>
+Пример интерфейса на одном замороженном development replay. Числа на скриншоте
+описывают этот конкретный прогон и не являются общей метрикой textbook RAG.
+</sub></p>
 
-# 2. Прогон (CoT включается через MLA_PROMPT_VERSION=v2_cot в .env)
-python -m mla_baseline.runner --tasks data/validation.jsonl --condition b0_no_tools
+В приложении можно смотреть accuracy по предметам, paired fixed/regressed,
+latency, usage, tool traces и отдельные ответы. Запуск и импорт описаны в
+[`apps/vlm-analytics/README.md`](apps/vlm-analytics/README.md).
 
-# 3. Быстрые метрики (exact match до LLM-as-Judge)
-python -m mla_baseline.eval --results results/b0_no_tools_v2_cot.jsonl \
-    --tasks data/validation.jsonl --meta data/validation.meta.jsonl --by question_type
-
-# 4. HTML-отчёт с графиками (KPI, точность и состав по предметам, длина
-#    ответов, таблица промахов). Или сразу флагом: runner ... --report
-python -m mla_baseline.report --results results/b0_no_tools_v2_cot.jsonl \
-    --tasks data/validation.jsonl --meta data/validation.meta.jsonl
-```
-
-Отчёт — самодостаточный HTML (без внешних зависимостей), открывается локально,
-поддерживает светлую/тёмную тему. `--meta` можно не указывать, если рядом с
-tasks лежит одноимённый `*.meta.jsonl` — подхватится сам.
-
-`eval` считает точный матч с нормализацией (choice — буква шика, numeric —
-число, short_text — без регистра/пунктуации); free_form и ответы-URL уходят
-в «нужен судья». Срезы: `--by subject|grade|type|class|question_format|question_type`.
-Промахи для разбора: `--dump-misses misses.jsonl`.
-
-## Парная оценка B0 против textbook RAG
-
-Корпус должен лежать в `data/chunks/jsonl/*.jsonl`. Он не коммитится в Git.
-Сначала проверьте его состав и один раз постройте постоянный FAISS-индекс:
-
-```bash
-python -m retrieve.build_index --dry-run
-python -m retrieve.build_index \
-  --sample-query "dikdörtgen alan formülü" --k 3
-```
-
-Индекс сохраняется в `data/cache/index/` и при неизменном корпусе загружается
-повторно. Текущий парсер восстанавливает `grade` и `subject` из slug учебника,
-поэтому агентские фильтры на английском и турецком работают одинаково.
-
-Полный воспроизводимый прогон при уже запущенном vLLM:
-
-```bash
-bash scripts/run_rag_evaluation.sh
-```
-
-Перед дорогим прогоном скрипт проверяет, что локальные изображения существуют,
-эталоны заполнены, а вместо текста вопроса нет заглушки `(soru görselde)`.
-Последнее обязательно для text-only judge. Если используется старый
-`data/validation.jsonl` только с картинками, сначала нужен подготовленный
-набор с транскрипциями условий (с теми же `task_id`) либо обновлённый
-validation-архив от команды judge.
-
-По умолчанию `run_rag_evaluation.sh` работает в режиме
-`MLA_TEXT_ONLY=true`: ссылки `question_images` игнорируются, модель получает
-только поле `question`. Поэтому картинки можно не переносить на сервер, но
-каждое поле `question` должно содержать настоящее условие, а не заглушку.
-
-Из смешанного файла можно получить чистый text-only JSONL: ссылки на картинки
-будут удалены, а задания с заглушками или пропущенными рисунками исключены.
-
-```bash
-python -m mla_baseline.prepare_text_only \
-  --input data/tasks_with_transcriptions.jsonl \
-  --output data/tasks_text_only.jsonl
-```
-
-Скрипт на одном и том же `data/validation.jsonl`:
-
-1. запускает `b0_no_tools` и `agent_rag` с одинаковой моделью и промптом;
-2. готовит оба результата для строгого binary LLM judge;
-3. оценивает оба условия на общем знаменателе;
-4. пишет `reports/rag_eval/summary.{json,md}`.
-
-В отчёте отдельно показаны exact match, LLM-as-a-judge, частота вызова tool,
-ошибки retrieval, число исправленных/ухудшенных ответов, McNemar p-value,
-парный bootstrap CI и срез по покрытию корпуса. Пропущенный ответ или ошибка
-остаются в общем знаменателе и не засчитываются как правильные.
-
-Пути и endpoint можно переопределить без изменения скрипта:
-
-```bash
-TASKS=data/validation.jsonl \
-BASE_URL=https://openrouter.ai/api/v1 \
-MODEL=qwen/qwen3.5-9b \
-MLA_CONCURRENCY=1 \
-bash scripts/run_rag_evaluation.sh
-```
-
-### Photo-only validation
-
-Для объединённого validation-архива есть отдельный прогон по всем 198
-уникальным изображениям вопросов:
-
-```bash
-DATA_ROOT=outputs/validation_merged_20260723 \
-bash scripts/run_image_rag_evaluation.sh
-```
-
-`validation_image_tasks.jsonl` строится прямо из manifest без OCR. Решающий
-агент получает только оригинальный screenshot вопроса. После B0/RAG-прогонов
-мультимодальный judge получает тот же screenshot, ответ агента и доверенный
-эталон: текст для 118 задач или отдельное изображение ответа для 80 задач.
-Эталон никогда не передаётся решающему агенту. Итоговый отчёт находится в
-`reports/validation_images_full/summary.{json,md}`.
-
-## Полный локальный прогон через OpenRouter
-
-После подготовки retrieval-индекса агент с RAG запускается обычной командой:
+## Основные команды
 
 ```powershell
-$env:OPENROUTER_API_KEY="<new-key>"
-python -m mla_baseline.runner `
-  --tasks data/tasks.jsonl `
+# Проверить/построить локальный retrieval-индекс.
+.\.venv\Scripts\python.exe -m retrieve.build_index --dry-run
+
+# Проверить сборку агента с прямым textbook retrieval без вызова модели.
+.\.venv\Scripts\python.exe -m mla_baseline.runner `
+  --tasks data/tasks.sample.jsonl `
   --condition agent_rag `
-  --out results/agent_rag_openrouter.jsonl
+  --dry-run
+
+# Запустить основное desktop-приложение аналитики.
+.\.venv\Scripts\python.exe apps/vlm-analytics/main.py
+
+# Запустить основной набор тестов.
+.\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Скрипты `scripts/run_rag_evaluation.sh` и
-`scripts/run_image_rag_evaluation.sh` также используют OpenRouter и передают
-этот же ключ агенту и LLM judge. Они больше не запускают и не проверяют vLLM.
+Полные B0/RAG-прогоны используют локальный корпус в `data/chunks/jsonl/` и
+квоту настроенного LLM backend. Перед полным запуском используйте `--limit` и
+проверьте конфигурацию в `.env.example`.
 
-### E0/E3/E4: routed image-first RAG
+## Документация
 
-PowerShell-скрипт последовательно прогоняет одинаковые задачи и judge:
+- [`docs/README.md`](docs/README.md) — индекс актуальной документации;
+- [`docs/getting-started.md`](docs/getting-started.md) — установка и runbook;
+- [`docs/judge-and-data-runbook.md`](docs/judge-and-data-runbook.md) — judge и подготовка данных;
+- [`docs/retrieval_tool_contract.md`](docs/retrieval_tool_contract.md) — контракт и политика RAG tool;
+- [`docs/evaluation_protocol.md`](docs/evaluation_protocol.md) — честное сравнение и метрики;
+- [`docs/data_contract.md`](docs/data_contract.md) — форматы входных и выходных данных;
+- [`apps/vlm-analytics/README.md`](apps/vlm-analytics/README.md) — аналитика прогонов;
+- [`experiments/README.md`](experiments/README.md) — правила замороженных экспериментов.
 
-- `E0` — `b0_no_tools`;
-- `E3` — image-first checked `agent_rag`;
-- `E4` — `agent_rag_routed`: предметы из блок-листа решаются без retrieval,
-  остальные — через E3.
+## Важные ограничения
 
-Для чистой оценки роутера E4 не вызывает модель повторно: его строки точно
-составляются из уже полученных E0/E3 ответов. Это исключает случайность повторной
-генерации из fixed/regressed и позволяет повторно использовать judge-кеш.
-
-По умолчанию выполняется безопасный smoke на 10 задачах и отключается RAG для
-`Math`. Результаты автоматически импортируются в SQLite из смердженного
-VLM Analytics, после чего печатаются paired accuracy, fixed/regressed и net
-fixes относительно E0. Каждый запуск получает отдельный timestamp `RunId`,
-поэтому результаты разных конфигураций не смешиваются.
-Перед импортом скрипт также требует полный, безошибочный judge-результат: все
-`task_id` должны совпасть, дубли и невалидные verdict запрещены.
-
-```powershell
-$env:OPENROUTER_API_KEY="<new-key>"
-./scripts/run_openrouter_routed_experiment.ps1
-```
-
-Полный прогон по всем задачам:
-
-```powershell
-./scripts/run_openrouter_routed_experiment.ps1 `
-  -Limit 0 `
-  -RunId "full_math_router_v1" `
-  -NoRetrievalSubjects "Math"
-```
-
-Повтор той же команды с тем же `RunId` безопасно продолжает прерванный прогон.
-Если параметры отличаются от сохранённого `experiment_config.json`, скрипт
-останавливается до обращения к OpenRouter.
-
-Открыть импортированные результаты:
-
-```powershell
-./.venv/Scripts/python.exe apps/vlm-analytics/main.py
-```
-
-## Настройки (.env)
-
-| Переменная | Что делает |
-|---|---|
-| `OPENROUTER_API_KEY` | секретный ключ OpenRouter; обязателен и не хранится в Git |
-| `MLA_LLM_PROVIDER` | backend агента; по умолчанию `openrouter` |
-| `MLA_OPENROUTER_BASE_URL` | OpenRouter API; по умолчанию `https://openrouter.ai/api/v1` |
-| `MLA_OPENROUTER_MODEL_NAME` | модель; по умолчанию `qwen/qwen3.5-9b` |
-| `MLA_STRUCTURED_MODE` | `response_format` (рекомендуется) / `none` |
-| `MLA_PROMPT_VERSION` | версия промпта; правка промпта = новая версия |
-| `MLA_INCLUDE_QUESTION_TEXT_WITH_IMAGES` | `true` — слать текст условия вместе с картинкой (по умолчанию нет: сценарий «ленивый школьник») |
-| `MLA_CONCURRENCY` | число параллельных запросов; начните с `1–2`, чтобы контролировать расход |
-
-## Структура
-
-```
-src/mla_baseline/
-  contracts.py    # общекомандные контракты (Task, ImageRef, RetrievedChunk)
-  schemas.py      # SolveOutput (JSON от модели), SolveResult (строка для судьи)
-  config.py       # настройки из .env (префикс MLA_)
-  prompts.py      # версионируемые промпты (турецкий): v1, v2_cot (chain-of-thought)
-  images.py       # ImageRef -> OpenAI image block
-  parsing.py      # робастный разбор JSON из ответа 9B-модели
-  sheet.py        # выборка валидации: Google Sheets CSV -> Task JSONL + картинки
-  eval.py         # быстрые метрики (exact match) со срезами по subject/типу
-  solvers/
-    base.py       # интерфейс Solver (build_messages + solve)
-    b0_no_tools.py
-  runner.py       # батч-прогон с resume и dry-run
-```
+- Метрики из разных датасетов, моделей, judge-конфигураций и prompt versions
+  нельзя складывать в одну таблицу без явной маркировки.
+- `agent_rag` требует локального корпуса и индекса; внешний LLM backend выполняет
+  только inference.
+- `apps/vlm-analytics/` — каноническое приложение. `apps/vlm_analytics/`
+  сохранено как legacy snapshot и не должно получать новые функции.
+- Большая часть `reports/`, `artifacts/` и `experiments/` — замороженные
+  доказательства прежних запусков. Не переименовывайте их массово: пути входят в
+  manifests и проверки воспроизводимости.
