@@ -1,6 +1,8 @@
 .venv/
 build/
 dist/
+build-desktop/
+dist-desktop/
 *.spec
 *.db
 *.db-shm

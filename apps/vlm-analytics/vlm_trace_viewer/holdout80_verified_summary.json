@@ -1,0 +1,138 @@
+{
+  "schema_version": "holdout80-public-source-evidence-summary-v1",
+  "status": "independently_verified",
+  "verified_date": "2026-08-09",
+  "scope": {
+    "label": "same-book new-question source-evidence holdout",
+    "task_disjoint": true,
+    "book_disjoint": false,
+    "private_rows_embedded": false,
+    "metric_kind": "source lookup and source binding",
+    "not_measured": [
+      "QA answer quality",
+      "mathematical reasoning correctness",
+      "production accuracy"
+    ]
+  },
+  "scores": {
+    "raw_protocol": {
+      "correct": 71,
+      "total": 80,
+      "label": "immutable frozen-protocol view"
+    },
+    "erratum_inclusive": {
+      "correct": 79,
+      "total": 80,
+      "label": "official-key erratum, original denominator retained"
+    },
+    "valid_tasks": {
+      "correct": 79,
+      "total": 79,
+      "label": "one invalid open-response row excluded"
+    }
+  },
+  "subjects": [
+    {
+      "subject": "Math 12",
+      "raw_correct": 20,
+      "raw_total": 20,
+      "valid_correct": 20,
+      "valid_total": 20,
+      "measurement": "source-activity binding"
+    },
+    {
+      "subject": "Biology 9",
+      "raw_correct": 30,
+      "raw_total": 30,
+      "valid_correct": 30,
+      "valid_total": 30,
+      "measurement": "exact-choice official-source lookup"
+    },
+    {
+      "subject": "Physics 12",
+      "raw_correct": 21,
+      "raw_total": 30,
+      "valid_correct": 29,
+      "valid_total": 29,
+      "measurement": "exact-choice official-source lookup"
+    }
+  ],
+  "mcq": {
+    "raw_correct": 51,
+    "raw_total": 60,
+    "erratum_correct": 59,
+    "erratum_total": 60,
+    "valid_correct": 59,
+    "valid_total": 59
+  },
+  "errata": [
+    {
+      "kind": "swapped_gold_sections",
+      "affected_rows": 8,
+      "subject": "Physics 12",
+      "finding": "Unit 2 and Unit 3 answer-key sections were assigned to each other in sealed gold",
+      "treatment": "raw score preserved; separate official-key erratum view"
+    },
+    {
+      "kind": "invalid_task_type",
+      "affected_rows": 1,
+      "subject": "Physics 12",
+      "finding": "an open-response exercise was declared as an A-E multiple-choice item",
+      "treatment": "kept incorrect in inclusive 80; excluded only in valid-79 view"
+    }
+  ],
+  "integrity": {
+    "selection_manifest_sha256": "7a6ecbe1579790541bc0c0c36a9141941c2c0cf8f65dd3cd5b6a687bae8c5fa5",
+    "sealed_gold_sha256": "55e58007a1f30f4ee1c7f10c6f9c4bdd6b87be861046c13c7496a709a4fb7bcc",
+    "mcq_prediction_sha256": "c568be738844730674e3d9e20f40a53ae47372aeca289f16fdbc0fd1861d97a5",
+    "mcq_run_projection_sha256": "76359e69dc0dd01b8af56cc5f29af849b656838b6a47634e7b3b983017ba455f",
+    "math_output_seal_sha256": "b7419a76dbffbd1e45daffb6f4476bf13cb4e8c4099dcd1c4be74fcb1ccc60bc",
+    "math_clean_evaluation_projection_sha256": "b0be20620c21967db99e07249cc3e73175a541c2e3ad3d696b5395e739b06d8f",
+    "audit_status": "PASS",
+    "audit_scope": "aggregate arithmetic, official-PDF key alignment, errata classification"
+  },
+  "chronology": [
+    {
+      "step": 1,
+      "title": "Selection frozen",
+      "detail": "80 same-book new questions selected without benchmark outcomes or gold"
+    },
+    {
+      "step": 2,
+      "title": "Blind source resolution",
+      "detail": "local CPU only; no GPU, network, shared compute or private mapping"
+    },
+    {
+      "step": 3,
+      "title": "Outputs sealed",
+      "detail": "Math and MCQ source outputs were hashed before private map or gold read"
+    },
+    {
+      "step": 4,
+      "title": "Raw score retained",
+      "detail": "71/80 remains the immutable frozen-protocol source-evidence result"
+    },
+    {
+      "step": 5,
+      "title": "Independent source audit",
+      "detail": "official PDF pages exposed 8 swapped gold rows and 1 invalid task type"
+    },
+    {
+      "step": 6,
+      "title": "Erratum reported separately",
+      "detail": "79/80 inclusive and 79/79 valid never overwrite the raw score"
+    }
+  ],
+  "v7_reference": {
+    "correct": 242,
+    "total": 274,
+    "metric_kind": "QA development replay",
+    "separate_from_holdout80": true
+  },
+  "claim_limits": [
+    "Holdout80 values on this screen are source-evidence metrics, not QA or reasoning accuracy.",
+    "The split is task-disjoint inside already available books; it is not book-disjoint.",
+    "The corrected views are protocol errata backed by official PDF keys, not routing tuned on holdout labels.",
+    "The synthetic Math stress result is not included in this aggregate; its compatibility adapter was added after map read."
+  ]
+}
