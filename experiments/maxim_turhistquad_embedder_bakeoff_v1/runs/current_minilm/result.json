@@ -1,0 +1,656 @@
+{
+  "condition": {
+    "adapter": "sentence_transformers_mean_pooling",
+    "batch_size_cpu": 32,
+    "condition": "current_minilm",
+    "device": "cpu",
+    "dtype": "torch.float32",
+    "embedding_dimension": 384,
+    "license": "apache-2.0",
+    "max_length": 128,
+    "model_id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "query_instruction": null,
+    "remote_code_repo": null,
+    "remote_code_revision": null,
+    "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42"
+  },
+  "dataset": {
+    "corpus_rows": 1213,
+    "id": "mteb/TurHistQuadRetrieval",
+    "license": "mit",
+    "qrel_rows": 2048,
+    "query_rows": 1024,
+    "revision": "b6e74379b7486da28ce81c3d459cd7bbd87d4987"
+  },
+  "device": "cpu",
+  "embedding_artifacts": {
+    "corpus": {
+      "chunks": [
+        {
+          "end": 32,
+          "ids_sha256": "214b50fba72f9af1268fcc8097c69a3b0c1e431244ed46c5d51b24ee2b00fa03",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000000_000032.npy",
+          "sha256": "39955350c11a05650c63c118f45c15a0e2d70ed7ba949a9ab69c88033e10577a",
+          "start": 0
+        },
+        {
+          "end": 64,
+          "ids_sha256": "2a3acb0969b4ff3d126013e6c007407b23f7c73073d202431548d7236a84f244",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000032_000064.npy",
+          "sha256": "cb59106eb5a81d5afd2c8e72384e3aa83d39e841807641168090c499f7ee36ce",
+          "start": 32
+        },
+        {
+          "end": 96,
+          "ids_sha256": "c213d726183d278fb0ae82e1d0c3c54b5862da2fc744232bbb5d683572623f51",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000064_000096.npy",
+          "sha256": "37e8b12e0cf225c034fa7bc26c59cfffc1cef83489829c7e943a5332f1d82837",
+          "start": 64
+        },
+        {
+          "end": 128,
+          "ids_sha256": "49b7c0fa482061e8bcc85c5bb4cfa6c4c725f363c0925c24dc3bafad3223787e",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000096_000128.npy",
+          "sha256": "debcfcdc3094499c19b28aac0e4976606ac0fb79f753279ed48689c13f92f5f2",
+          "start": 96
+        },
+        {
+          "end": 160,
+          "ids_sha256": "add9aef7265d132a05e06c2afeb06e6546ea21081bce2a9da36223a65ceeac38",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000128_000160.npy",
+          "sha256": "6c5fcff9b41bc74f2f1c0d0f99a271a507d11a139148700356fdfdec14c10f4c",
+          "start": 128
+        },
+        {
+          "end": 192,
+          "ids_sha256": "ea63b38516ad326f1b75fc426b6e46e65ed9385676ead1d311649543b08ec4e3",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000160_000192.npy",
+          "sha256": "ccdae32958d802728fdb9530ea92ed34dc21ba0171a9358a98c5fc405674f8a6",
+          "start": 160
+        },
+        {
+          "end": 224,
+          "ids_sha256": "4dd0877bc8aa0a47714fc209b8b91a845ff13c9c11409136108f6ec148b71ee7",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000192_000224.npy",
+          "sha256": "2d4fb33ce57a1d72fc4fea3713919964fa8101167a5e63e3fbfb22a70cdc1451",
+          "start": 192
+        },
+        {
+          "end": 256,
+          "ids_sha256": "1d0157a745d343846312b7359c1441c408126b96c594363bfd49724e829d3ba0",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000224_000256.npy",
+          "sha256": "7d26aa0bb27c279b0af7ecf7aec4863f8fc9c967a27250326795de8b4cfd23f7",
+          "start": 224
+        },
+        {
+          "end": 288,
+          "ids_sha256": "eda7f3172f2801d5e55efaace184161a397529ba3eefedaec01c6fb8f28d8046",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000256_000288.npy",
+          "sha256": "0fbac55dad1e7a9fef51c8d87d299ba4a04883799ed82384897176335bf56c1c",
+          "start": 256
+        },
+        {
+          "end": 320,
+          "ids_sha256": "8ac854c934210d7f8c1c1398a90f413e16138ec7cf9e12cf19db0b81fb0c346b",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000288_000320.npy",
+          "sha256": "ce74077423e29edb09d1bf8f374feb12d2c2d07c6e78f747dacc5c2fc7b73c47",
+          "start": 288
+        },
+        {
+          "end": 352,
+          "ids_sha256": "3e84bcc5d51d7eb9c96b226b0b16082fdb042e9d2ef8b0d510b23c5d98696aca",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000320_000352.npy",
+          "sha256": "e85d6b460af3a02d4ece0d7857f71ac2b89c2d925b10bc43a84e408d61fed52d",
+          "start": 320
+        },
+        {
+          "end": 384,
+          "ids_sha256": "0d3826885ba5c31a5cc7680dd23000d73cbbab73fcf775b4a716d3457f35aabb",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000352_000384.npy",
+          "sha256": "a0db87cc4acf32f05052ab75090c826e3ffc855f93bc3226e6e595269336a055",
+          "start": 352
+        },
+        {
+          "end": 416,
+          "ids_sha256": "f026765d69a7f46e052c868affd392daa252d8cb28023115b866a6bab108c7ba",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000384_000416.npy",
+          "sha256": "dc0a4713738d027551266b9ce23ef23e7f36b1082458bfbac2823ac73d124df4",
+          "start": 384
+        },
+        {
+          "end": 448,
+          "ids_sha256": "ff984bbc00794fe849aba07fbe6f1179ae05f6120ab90788250b84e2679e4988",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000416_000448.npy",
+          "sha256": "bdfd277613d8ae2a514643390f1b3fdef358cfccc0e161d34f2a7a20f726dfdb",
+          "start": 416
+        },
+        {
+          "end": 480,
+          "ids_sha256": "8b56d59c1193d780d0fb244bc0363375317675f4457e5b5dce866129cdda97f9",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000448_000480.npy",
+          "sha256": "4edddca9eabfa472c9ad677cf359472f6727281a1ee0af181ce2bf3dcf683bce",
+          "start": 448
+        },
+        {
+          "end": 512,
+          "ids_sha256": "ff03c3d479edb93c034a293b3540f8b701d5333654cc564f310e009e8b7240d1",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000480_000512.npy",
+          "sha256": "d4bd9991787dd2577a056e8480b89afcab70874d245fc038006a4ebce76fe468",
+          "start": 480
+        },
+        {
+          "end": 544,
+          "ids_sha256": "2f64aba5dc0ffe9e1bb3be890e78b8916e5c2486330becbecd1cd55b49aac42f",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000512_000544.npy",
+          "sha256": "3bd696d3f007047fdd0ee3563f3fbaeda151755a220de219c226216bbd462c36",
+          "start": 512
+        },
+        {
+          "end": 576,
+          "ids_sha256": "a2e9c482a3515e27e0456438fde03c72b0ea30d2d94467f92a6ddc7e1a61ee18",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000544_000576.npy",
+          "sha256": "d75c1f0189a137bc5c4cc6eaed3051e9cb799c3da588e9f1c780f8ec4c933138",
+          "start": 544
+        },
+        {
+          "end": 608,
+          "ids_sha256": "05b09b272a7da7404986fe052074068ed685c002899099d057d20f88fa71eedd",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000576_000608.npy",
+          "sha256": "686d0df44381643596bcc94b62b930700557ce37e9bd4756becb7131571f806e",
+          "start": 576
+        },
+        {
+          "end": 640,
+          "ids_sha256": "773fb881555946bbd9ccc993a431d9b5a7777ff3cc9d7e641c89b47101023789",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000608_000640.npy",
+          "sha256": "03071a57fb06f06a110257746f48e9c20604ceff51f38885e4019f66ce0f7f36",
+          "start": 608
+        },
+        {
+          "end": 672,
+          "ids_sha256": "5eee59a7784678442954e34fde4cdc3f670db4e30c5a498b6bcddb1db2047c3b",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000640_000672.npy",
+          "sha256": "5ad3ffe419f2165231ef36666ce0c5008159fb30ea78c419f3a56b824196c031",
+          "start": 640
+        },
+        {
+          "end": 704,
+          "ids_sha256": "715b95d75de9e949aeb735a617d05a59b400f01c3e20c78a0d147c383abb6349",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000672_000704.npy",
+          "sha256": "d4b51daf7aa10275ac544bb14feb7c0af968ecaa9ae53267f8aeae92dbbd46cb",
+          "start": 672
+        },
+        {
+          "end": 736,
+          "ids_sha256": "d7bb1b0a49ff3aa41e3e4e73312c972d3eeb45b9f0db6a9702e4e3c2d4ba8368",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000704_000736.npy",
+          "sha256": "b3b1f494f9a9261b79f8e659f659a55f773579923da27723352bbdb5ffe379ef",
+          "start": 704
+        },
+        {
+          "end": 768,
+          "ids_sha256": "8d7602ca2838699065b84cdcf34e46a7d603ac703383482c2234e86442a9f5f7",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000736_000768.npy",
+          "sha256": "6c0c30b6614d905dd21f9d5f60d0308b3e3e3e006a0415db6a290416aa9ee4df",
+          "start": 736
+        },
+        {
+          "end": 800,
+          "ids_sha256": "6b75cc8736512d02d7f6e6eb9030e5a72766011489fc74893f74ad04cfc9df77",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000768_000800.npy",
+          "sha256": "a2da4be999f5b076a48e9cf7fb49d17b7ed3be23d7de33a2e61fb3f42fd22fe4",
+          "start": 768
+        },
+        {
+          "end": 832,
+          "ids_sha256": "9cd1b3088bb60ac1f9415e37ee68c86e4a90efd4d8503daaa98ebcc1e52f549f",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000800_000832.npy",
+          "sha256": "1a441f4aa20437b1f0a4d784fa4d36a8be4f5ccfcc6151a051f0a8afc4fdbd29",
+          "start": 800
+        },
+        {
+          "end": 864,
+          "ids_sha256": "5e4bf0d9ea66f7606744bf91ea34d41e6e3a2005e73de0aa4dde66c7d05dcfa3",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000832_000864.npy",
+          "sha256": "ffedfd762dd1f16346aaec8fe11f13245d91615a10d83db69a94961013e9898e",
+          "start": 832
+        },
+        {
+          "end": 896,
+          "ids_sha256": "3fb49de0e5d0936a4780f023a8895eff8b632e79025a22c7d9fe22aa74362fc5",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000864_000896.npy",
+          "sha256": "3b140757f14d7e4db02e9937291333b32ba71e0b8b1901e2681d3c6b1a6fb48c",
+          "start": 864
+        },
+        {
+          "end": 928,
+          "ids_sha256": "9b97cd20d7305d8cc7ceca717f7ad0e3a8e516691daf4a26514c14c150294152",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000896_000928.npy",
+          "sha256": "e1236b2bd83fb83d609c5b2d072188325d4ac719af13eff27cbf266b90e39b7e",
+          "start": 896
+        },
+        {
+          "end": 960,
+          "ids_sha256": "26fe9452f22c3edc6e4c59921652efbbf7e2f2073bf93a87463add19b7c8e643",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000928_000960.npy",
+          "sha256": "3ec10502b38715cec9304a0a6400c30644ca31c27fc2b22f7038c88cef800933",
+          "start": 928
+        },
+        {
+          "end": 992,
+          "ids_sha256": "c02950421f455c7b1428bf9eeeacacb5ab288932f34057074c8faf2b5c28bd50",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000960_000992.npy",
+          "sha256": "aa8542ab27e2b6a2e101c5741a7eb76e25abf432dcba6d577c6ed1bfa1cacf3b",
+          "start": 960
+        },
+        {
+          "end": 1024,
+          "ids_sha256": "a1be27b08d705a10d237b3fc9d6868b3cdc6eaa2bb1aa72c8f640134b3bfc56c",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\000992_001024.npy",
+          "sha256": "d39e2c04f77c8efb580683a8a9d7929819da21fba8977acc5ef630e096abed86",
+          "start": 992
+        },
+        {
+          "end": 1056,
+          "ids_sha256": "255bff315a591d76c14726eee7349e5cdcea259352722f323dc25848ccdbcc95",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\001024_001056.npy",
+          "sha256": "037322ffa5572e75be10dc33f0352a864d8c7435255fbb6a16277ed0cb15753d",
+          "start": 1024
+        },
+        {
+          "end": 1088,
+          "ids_sha256": "56f45b983672860280647ca0085e374af4fb7bb5f87efd5d9ffbd2f745d04c4f",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\001056_001088.npy",
+          "sha256": "72c997759a2f9af573448d548b4df6dca5189d31feab2d92aed6a297cf1200ec",
+          "start": 1056
+        },
+        {
+          "end": 1120,
+          "ids_sha256": "da92b6afd5b9b42661e42b1f187e00c89a142dd0116444b47db1f370c05ca33f",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\001088_001120.npy",
+          "sha256": "1641788165fdace2a5422a6f17948bf61e8048e115a1f795087ac61dda622a32",
+          "start": 1088
+        },
+        {
+          "end": 1152,
+          "ids_sha256": "396b9816335e46736f46897ad673c10d633193c37756ce9e4c68796c53e652db",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\001120_001152.npy",
+          "sha256": "ced6dca62d093fc85389778a8d9f19f8fc93e5d6b683d5e957682d2cf9571fb8",
+          "start": 1120
+        },
+        {
+          "end": 1184,
+          "ids_sha256": "3a88acde83385983f5d6010064c9e89b3e9ef848b4372e999bcbba6eece9ad95",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\001152_001184.npy",
+          "sha256": "c7f53cd649dc56b3bddf4e469c98b6f1abfe9c4c33545e75e50ab2eac7325ada",
+          "start": 1152
+        },
+        {
+          "end": 1213,
+          "ids_sha256": "4df4b5492032987fd3890f691797a19fa90a0c2d0848a4d725e544cf39e23540",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\corpus\\001184_001213.npy",
+          "sha256": "ebb6369ab1bec0f59aaaab042534fbbf760b9352968ff888b2d715d7116660ff",
+          "start": 1184
+        }
+      ],
+      "rows": 1213
+    },
+    "query": {
+      "chunks": [
+        {
+          "end": 32,
+          "ids_sha256": "637648d029ead10218b174ff40a6a303774f9c9a38053646cd830f83bc8b2d6f",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000000_000032.npy",
+          "sha256": "adb5b90c91679fdae31b69a53900a6ef26ef01022afffbc51e6e465a79e4402d",
+          "start": 0
+        },
+        {
+          "end": 64,
+          "ids_sha256": "ecdaa5ba26307e479e73f3d35d585c1c82fa928cc1b9600c5cebeac833dfa754",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000032_000064.npy",
+          "sha256": "b1bdbc6e7a18cfcd9cde97259cfd89570ed55c400291e70ce6d0130556dc6723",
+          "start": 32
+        },
+        {
+          "end": 96,
+          "ids_sha256": "ea2e64170368141064b5088ae1eeddaf324b659ca3572008502a1a4ce78248fb",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000064_000096.npy",
+          "sha256": "c1e169fc56006e5db486bf09b148059f5c33fda33659ae5c3fe6fb752dd7d1bd",
+          "start": 64
+        },
+        {
+          "end": 128,
+          "ids_sha256": "f8af663812ba2a8520e6a784dd0a208110c968f8f6ff106c222fe8e0c004cf68",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000096_000128.npy",
+          "sha256": "f1a58b9774cf1f16b19b2a1c87348663f7e810c9be0ccf636ee9f841ccde0690",
+          "start": 96
+        },
+        {
+          "end": 160,
+          "ids_sha256": "6de67940e4d338aa6493d3a69ccfb0965da456d1333e5bef921eb63cd32c41db",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000128_000160.npy",
+          "sha256": "8549fe80ae5da8a305440df7113e243575ccdd0f44415bb4af241ada5adf04ca",
+          "start": 128
+        },
+        {
+          "end": 192,
+          "ids_sha256": "494a84b670aed39c83c81a949fc6783b40c883270feabed37776f53934417191",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000160_000192.npy",
+          "sha256": "357cb8a20fff1b74462d0e25fe21f93c63535448ed53ff713a49c64b695c22f0",
+          "start": 160
+        },
+        {
+          "end": 224,
+          "ids_sha256": "8af8d2224d4101160a31c1d8698c7aa278d6fc72459f28214fd1189811a3485c",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000192_000224.npy",
+          "sha256": "b99f090cb0cef910c83f1895a84877bacd8d166acb82403563a2a0129c63c9a5",
+          "start": 192
+        },
+        {
+          "end": 256,
+          "ids_sha256": "8783575eb1469f09e6d45a4459a5f89889fcba10d61eb49b91eee91cf60b054f",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000224_000256.npy",
+          "sha256": "7847ef99c8367e36fe5b6b45503a3b6f376d29de7b4f502bb51e5fb3106874ed",
+          "start": 224
+        },
+        {
+          "end": 288,
+          "ids_sha256": "2a7b77200e1988ce06fa84f1262b8d66037ce6b473eb3779667f11713017ac30",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000256_000288.npy",
+          "sha256": "98d605bdb4b11f84dc1b14fbc4dfdef898f4e5f547ba4d36cca1d2ba9ef3c9a4",
+          "start": 256
+        },
+        {
+          "end": 320,
+          "ids_sha256": "c215ba3068762a8ce9947ee456721bb363953a8ebe6a9a5517854e21b3268e29",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000288_000320.npy",
+          "sha256": "a26dcc888450f38a8e41db7d75e14b25f948d285b0a89313afc05a5ba1ad272b",
+          "start": 288
+        },
+        {
+          "end": 352,
+          "ids_sha256": "15d3b63020f702166d800b5c1210a3755024e9108cddbc9ba5eab9f3cb6c3274",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000320_000352.npy",
+          "sha256": "c059cc258a19294b1b05abab6f4f3c4082856df6bb42feae249bd58376b60ba6",
+          "start": 320
+        },
+        {
+          "end": 384,
+          "ids_sha256": "3d5f9876855a962111cbfaa63f8a1e20358ce009533e52195226cf9a54ed8f54",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000352_000384.npy",
+          "sha256": "3dd79f91c657cc62c0312430254fb57cd66458686aad273669bd3537905fdac2",
+          "start": 352
+        },
+        {
+          "end": 416,
+          "ids_sha256": "73c24617ed4352c961addbf0e451bb6ccc2f532573c57bfdfeaa65cd55e4b39b",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000384_000416.npy",
+          "sha256": "feeb58afb6847c9764a44a8ea4785c71cca42c0915ce50b085e7da712452e52d",
+          "start": 384
+        },
+        {
+          "end": 448,
+          "ids_sha256": "297516ade94836ef0ed0700d639f41109452c18ca7a29e31abb50ac53f0beb76",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000416_000448.npy",
+          "sha256": "0a8041b3e1d49e63e94663791a9bec0d7229bd22f3639b8c6c3733902a5ab778",
+          "start": 416
+        },
+        {
+          "end": 480,
+          "ids_sha256": "ae1f0fe5f86fd7d25de647de356fc28ca18f1145e0c4fc37a2ab4297cec8d36d",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000448_000480.npy",
+          "sha256": "b7c298a2afa20eeaa085a79487e512a6e3eb6d3a5c8bdc99824ee6dc4d4f26c5",
+          "start": 448
+        },
+        {
+          "end": 512,
+          "ids_sha256": "61ddd05d4fece64348c112a465b33bc6ce69d3e24ff2fe675dfd968a9d648dc4",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000480_000512.npy",
+          "sha256": "3be8107e7775bc9e503338bae90a5472c3b4c4ff1ae4cb4e980d22661561a395",
+          "start": 480
+        },
+        {
+          "end": 544,
+          "ids_sha256": "7908095c98d4cbf4677e99ce99bd39e925b2a198c495338daf2bc0f4225bcf84",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000512_000544.npy",
+          "sha256": "2649df09b98e8e5a24b1d8b9b8468eccb48a302268c6553666f08bafb58fe2ee",
+          "start": 512
+        },
+        {
+          "end": 576,
+          "ids_sha256": "cece8bc180a05a9fb32e6e76ac214607176d4513612f55873635880c98562479",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000544_000576.npy",
+          "sha256": "801396dfdb880b1031e33754c5d148b40a6d0aafd0bc82b333f2a69d77318262",
+          "start": 544
+        },
+        {
+          "end": 608,
+          "ids_sha256": "d9dc98bde2c36668fa9bb7a1c69bbc0b885ddfc0dbad23abd023f8bf79207b42",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000576_000608.npy",
+          "sha256": "f1a595d5f425341204e293f0ebbbd87e4a8d2cc961e3eb65fe6d13c42cb36a7b",
+          "start": 576
+        },
+        {
+          "end": 640,
+          "ids_sha256": "3fa5b3fd795b9e809c9aad2df78702cc449a3f548914d78388900911b8356806",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000608_000640.npy",
+          "sha256": "a796e30af35fd83f39df3259bb2d6328645c1b73e047412a6fd9b00a8b3191cf",
+          "start": 608
+        },
+        {
+          "end": 672,
+          "ids_sha256": "015aed71b86d66a5fae9ae9063ea4005680a05c14584b8b6bbeaa266b83bac6c",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000640_000672.npy",
+          "sha256": "f95bb1245b18eb399d15c01d56d07e577e069adeadd811202682de40a4f027d0",
+          "start": 640
+        },
+        {
+          "end": 704,
+          "ids_sha256": "d1633e37feec8a39d0137230589ec309f0d80a1197e9356f67e1e6512201ff6c",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000672_000704.npy",
+          "sha256": "062ead387153f5c2361c4841e334dcf2a35e602a049d8e3b61df7f96e2919568",
+          "start": 672
+        },
+        {
+          "end": 736,
+          "ids_sha256": "12531d974c9a7d0a13deac1d9680a2390019042c0047a2d1367406bbc02c9adc",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000704_000736.npy",
+          "sha256": "6ec6d9d4caa68794c6996bb61e56e66292766e406d0f855b27abfd79a97c10a7",
+          "start": 704
+        },
+        {
+          "end": 768,
+          "ids_sha256": "5cec4fb6de9e756593f5294293f158a5426ed37904971100c44709395130a030",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000736_000768.npy",
+          "sha256": "26b1e929ed2dc846df5863c9539dddae69bc76427dd084f72e5d538ac35eda45",
+          "start": 736
+        },
+        {
+          "end": 800,
+          "ids_sha256": "adec66fd53cb3496cacf1a5e08a11fdf9ef9085df6983535897d4df5ab72e3bf",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000768_000800.npy",
+          "sha256": "b1ee40c81d31077932b5d9ee924aeeff2302c48c73d0ef5214bf9fdf0c1f1d2b",
+          "start": 768
+        },
+        {
+          "end": 832,
+          "ids_sha256": "ad431aebdabde8050dbc7e550aa35b2a92703a165800c5910cebb64debba99ec",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000800_000832.npy",
+          "sha256": "5956dc71f0bd08644dd4c36ab99c0a6c0b1b3c563cdab024c72704fb94f64944",
+          "start": 800
+        },
+        {
+          "end": 864,
+          "ids_sha256": "3389712d7151e6f675e016bbe33e952618254ae3d18f3c080f53afd087ef1c3c",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000832_000864.npy",
+          "sha256": "1ca3186af18732cc40b63824ab77f93439ff900a2de6a67cc824d78a3efe45e3",
+          "start": 832
+        },
+        {
+          "end": 896,
+          "ids_sha256": "266a79ac2014b676ad92459c936639d63c70c449ddb0cea9fb87faa6e9f4e40b",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000864_000896.npy",
+          "sha256": "1b21a3529dbb37840bcf7dc311fc4e1ce2bd1f1d38986971447f0243b679b61b",
+          "start": 864
+        },
+        {
+          "end": 928,
+          "ids_sha256": "6ca083aa7d4efe0d0e4f6082c0fe147cefdf2207306bfac098eeb4500153fabe",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000896_000928.npy",
+          "sha256": "2d1e213e1b22b0b725a7be2690ed03bba4bf95c6065e1a210ffbeb4cc0891dae",
+          "start": 896
+        },
+        {
+          "end": 960,
+          "ids_sha256": "a49bbd98929d4a75bdec39707f4494348eef64e101289d5aa4e9ba3acc2a2c28",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000928_000960.npy",
+          "sha256": "2f6600d55021a18441f45fbf8fe1bfcaad5ddbf8fcddfcaa0d04fb54e63821cd",
+          "start": 928
+        },
+        {
+          "end": 992,
+          "ids_sha256": "7df2c1eb03ffc0411d56be87980f6dd561411511cf2ec65eefb04a9bd8d3b8dc",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000960_000992.npy",
+          "sha256": "7b3d2cac8b35f664a1a0d4b488660d389002fe7839da9f0d2fb62657b3ccc29c",
+          "start": 960
+        },
+        {
+          "end": 1024,
+          "ids_sha256": "edb3fde1ff72b2244f743133918e44f9795d039a2c1cf0b42ef89d16217e4573",
+          "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\embedding_chunks\\query\\000992_001024.npy",
+          "sha256": "4cde35976493ab793d9386e2e41de8b414479103fe7fb523c9aff3e74dffe992",
+          "start": 992
+        }
+      ],
+      "rows": 1024
+    }
+  },
+  "inputs": {
+    "corpus": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\corpus.jsonl",
+      "sha256": "42f9df25773649a5ad3328bd111d1cb6f7333b2637ddcd8c11309648a93605a7"
+    },
+    "dataset_manifest": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\dataset_manifest.json",
+      "sha256": "0d3237d7ff247e16fa4201f0723c2efd4457f0e3a0efae6b804af406c421957a"
+    },
+    "preregistration": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\PREREGISTRATION.json",
+      "sha256": "4a9e7047282b9002b99d4f7f754bbc9b2bc201f287381dda0b287f9292f45fe7"
+    },
+    "qrels": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\qrels.jsonl",
+      "sha256": "5042dda8dd6f2de81ca552bc7ed7c6949ecd82e114109fd35b88f0225a4e1ebc"
+    },
+    "queries": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\queries.jsonl",
+      "sha256": "dd044c02a4c5c723f15aa169ac895c9ed6fa9a8f1df7225480c51cbe443b38b3"
+    }
+  },
+  "interpretation_guard": "External Turkish semantic retrieval only; not end-to-end VLM accuracy.",
+  "latency_seconds": {
+    "corpus_encode_this_invocation": 0.0,
+    "model_load": 13.442214500013506,
+    "query_encode_this_invocation": 0.0,
+    "search": 0.32481879999977536,
+    "wall_this_invocation": 14.764441899984377
+  },
+  "metrics": {
+    "Hit@1": 0.2041015625,
+    "Hit@5": 0.4619140625,
+    "MRR": 0.3192536587199147,
+    "Recall@1": 0.10205078125,
+    "Recall@5": 0.2490234375
+  },
+  "model_artifact": {
+    "allow_download": false,
+    "identity": {
+      "adapter": "sentence_transformers_mean_pooling",
+      "batch_size_cpu": 32,
+      "condition": "current_minilm",
+      "device": "cpu",
+      "dtype": "torch.float32",
+      "embedding_dimension": 384,
+      "license": "apache-2.0",
+      "max_length": 128,
+      "model_id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "query_instruction": null,
+      "remote_code_repo": null,
+      "remote_code_revision": null,
+      "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42"
+    },
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\model_artifact_manifest.json",
+    "remote_code": null,
+    "runtime_validation": null,
+    "schema_version": "maxim-turhistquad-model-artifact-v1",
+    "sha256": "7e9ef84aa09d5e8963b6b4e4e10546173d7b6e5839d8fe4991090dc32472367b",
+    "snapshot_files": {
+      ".gitattributes": {
+        "bytes": 1022,
+        "sha256": "fd3e5d862331ec272410eb6312742550c3149899ee61827169b78fd0d5889f2e"
+      },
+      "1_Pooling/config.json": {
+        "bytes": 190,
+        "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23"
+      },
+      "README.md": {
+        "bytes": 3888,
+        "sha256": "1e98ea05b0de579fcaad3d625b62ea55647142ed674d5f5ebf1440e4bbbb6f23"
+      },
+      "config.json": {
+        "bytes": 645,
+        "sha256": "6300193cb75e01cf80c96decef7187dfb33094d97cc1490b7ead6ff134476e4e"
+      },
+      "config_sentence_transformers.json": {
+        "bytes": 122,
+        "sha256": "b8c64b5cece00d8424b4896ea75b512b6008576088497609dfeb6bd63e6d36b8"
+      },
+      "model.safetensors": {
+        "bytes": 470641600,
+        "sha256": "eaa086f0ffee582aeb45b36e34cdd1fe2d6de2bef61f8a559a1bbc9bd955917b"
+      },
+      "modules.json": {
+        "bytes": 229,
+        "sha256": "8f4b264b80206c830bebbdcae377e137925650a433b689343a63bdc9b3145460"
+      },
+      "sentence_bert_config.json": {
+        "bytes": 53,
+        "sha256": "70f4448f31320443fe3557cacea5abf2dcc4915dda8c80646bec9f3bb0aa5a1f"
+      },
+      "sentencepiece.bpe.model": {
+        "bytes": 5069051,
+        "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+      },
+      "special_tokens_map.json": {
+        "bytes": 239,
+        "sha256": "378eb3bf733eb16e65792d7e3fda5b8a4631387ca04d2015199c4d4f22ae554d"
+      },
+      "tokenizer.json": {
+        "bytes": 9081518,
+        "sha256": "2c3387be76557bd40970cec13153b3bbf80407865484b209e655e5e4729076b8"
+      },
+      "tokenizer_config.json": {
+        "bytes": 526,
+        "sha256": "5036ea374ffedd706e3bef33e2e0d6953cb868ef8a490e76e32ba0faa37a6b9b"
+      }
+    },
+    "snapshot_path": "C:\\Users\\kmaxc\\.cache\\huggingface\\hub\\models--sentence-transformers--paraphrase-multilingual-MiniLM-L12-v2\\snapshots\\e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+    "snapshot_projection_sha256": "61caa6b95ec163e4b27420aed7bfb1e985137d0799b3aae62d9313cd64ade3d8"
+  },
+  "per_query": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\per_query.jsonl",
+    "rows": 1024,
+    "sha256": "e0bff38175295f471d6e94d80120140177ac9316e3b96ef26c861b07ee8e64ee"
+  },
+  "project_benchmark_access": false,
+  "project_benchmark_score_computed": false,
+  "run_freeze": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\runs\\current_minilm\\run_freeze.json",
+    "sha256": "7a81b091278cda509848ead2ba0505030bf605bb0114c15d5afca6f606981768"
+  },
+  "runtime": {
+    "python": "3.12.13"
+  },
+  "schema_version": "maxim-turhistquad-embedder-result-v2",
+  "shared_gpu": false
+}

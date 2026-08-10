@@ -1,0 +1,50 @@
+{
+  "abstentions": 249,
+  "accepted_certificates": 25,
+  "artifacts": {
+    "audit": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_9b_source_replay_v1_20260809\\direct\\direct_pdf_resolver\\audit.jsonl",
+      "sha256": "cf244eab75df9a34b84cb8f3cec2e6e60ba989426ab695b1243245d54766fe29"
+    },
+    "candidate": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_9b_source_replay_v1_20260809\\direct\\direct_pdf_resolver\\candidate.jsonl",
+      "sha256": "fedefa02a718ce2481692f2b56cab8c2bc1b38cfceccda121430952edead0261"
+    },
+    "certificates": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_9b_source_replay_v1_20260809\\direct\\direct_pdf_resolver\\certificates.jsonl",
+      "sha256": "3a110a8c0d0ba60db06f0af6450b656aa9544b41c337d6cfc30ee33ff04c978c"
+    }
+  },
+  "benchmark_candidate_or_outcome_access": false,
+  "created_at_utc": "2026-08-09T08:39:05.650800+00:00",
+  "eligible_rows": 25,
+  "gold_access": false,
+  "inputs": {
+    "documents": {
+      "meb-odsgm-2025-sayisal-a": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\pdfs\\portfolio_official_sources\\eba_2025sayisal.pdf",
+        "sha256": "6a66a8d5668451ee6958fbd1e39537b4c8c16c21fd48be9c29af04c2f63a9f14"
+      },
+      "samsung-il-mem-lgs-deneme-1": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\pdfs\\portfolio_official_sources\\samsung_lgs1.pdf",
+        "sha256": "f88c9f40e3c6f3a2494090ee7635d1f7254b736da561b0f0b98125cb25ad5997"
+      }
+    },
+    "parser_observations": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_document_parser_v1_20260803\\parser_augmented_solver_v1\\parser_artifacts\\parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038"
+    },
+    "source_locators": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a"
+    }
+  },
+  "profile": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\configs\\maxim_9b_source_replay_v1_20260809\\direct_pdf_profile.json",
+    "sha256": "16afd7659080afdabee7f480a6f210429a95551588e87df0bdf74d2c1cecf4f0"
+  },
+  "rows": 274,
+  "schema_version": "maxim-official-direct-pdf-run-v2",
+  "source_url_used_only_as_evidence_locator": true,
+  "task_id_used_for_alignment_only": true
+}

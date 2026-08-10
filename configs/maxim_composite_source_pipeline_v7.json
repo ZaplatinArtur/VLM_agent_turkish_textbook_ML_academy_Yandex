@@ -1,0 +1,164 @@
+{
+  "schema_version": "maxim-composite-source-pipeline-v7",
+  "profile_name": "maxim-composite-source-pipeline-v7",
+  "frozen_at_utc": "2026-08-05T15:05:49Z",
+  "expected_rows": 274,
+  "expected_image_rows": 97,
+  "preregistration": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/V7_NEXT_SOURCE_WAVE_PREREGISTRATION.json",
+    "sha256": "38f9fd05a8d4894e3f0f34b66261730fccda18e225ff17e446af16bf4b751f6e",
+    "candidate_task_ids": [
+      "val_0042",
+      "val_0043",
+      "val_0044",
+      "val_0046",
+      "val_0149",
+      "val_0150",
+      "val_0178",
+      "val_0196"
+    ]
+  },
+  "v6_anchor": {
+    "composition_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_sociology_biology_global_visual_v6_composed/manifest.json",
+      "sha256": "e2a374021f5ebc224a9947b1e31a35e61a086768d493f096804415cd6f6aa49f"
+    },
+    "solver": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_sociology_biology_global_visual_v6_composed/solver.jsonl",
+      "sha256": "01740f36989e19cec5f809936377bde964befee3c88b3b35f68972e3ee418d57"
+    },
+    "image_judge_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_sociology_biology_global_visual_v6_evaluation/image_judge_manifest.json",
+      "sha256": "cf27dc7fd211a6e4a52bc9caf28a0c1b092070b7fbfb0c03199b16ef2c2f646d"
+    },
+    "image_judge": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_sociology_biology_global_visual_v6_evaluation/matched_image97_judge.jsonl",
+      "sha256": "981ff721adaf282cad8421e8107db16cb68c4efe45c8808ad2e62b9e3310629e"
+    }
+  },
+  "main_stage": {
+    "profile": {
+      "path": "configs/maxim_public_workbook_samsung_philosophy_biology_imageonly_v7.json",
+      "sha256": "f71564909eb1ed76bcc4707abb546ffbc64694e899984dc5553f08a4082d439f"
+    },
+    "resolver_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsung_philosophy_biology_imageonly_v7_resolver/manifest.json",
+      "sha256": "b70a05d9ea117fd3ee910e5bb77e36a86b4ddf29ba33bad1de4277de5b176532"
+    },
+    "composition_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsung_philosophy_biology_imageonly_v7_composed/manifest.json",
+      "sha256": "b241c760d92cc7afaefa8a9c4f157488077df8c8fcb0fc598a65d6150671f772"
+    },
+    "solver": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsung_philosophy_biology_imageonly_v7_composed/solver.jsonl",
+      "sha256": "48735253b140f23f126625fea06a1e09b6440f0dc8afd64753216bc94da53ea0"
+    },
+    "image_judge_builder": {
+      "path": "scripts/build_maxim_evidence_os_image_judge_v1.py",
+      "sha256": "c6d912aef677431b3d389693d21975934f12ed0ef2dbe6aa0ffb991a24d93aa5"
+    },
+    "image_judge_output": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsung_philosophy_biology_imageonly_v7_evaluation/matched_image97_judge.jsonl",
+    "image_judge_manifest_output": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsung_philosophy_biology_imageonly_v7_evaluation/image_judge_manifest.json"
+  },
+  "history_stage": {
+    "profile": {
+      "path": "configs/maxim_fill_blank_page_activity_history_v7.json",
+      "sha256": "d32119b06a2efc26cee25c93301d625551aaafa35932e1acea4356bb95b24bd9"
+    },
+    "resolver_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_resolver/manifest.json",
+      "sha256": "a8d2dbe8b577b1cc8c95bd1a22bb9772a33893164a248c5ed32c2f9a407ef3e5"
+    },
+    "composition_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_composed/manifest.json",
+      "sha256": "a6927296eb6e3d5e0b1599b64a570281d340c1479ee65533f0344de6ea8c9d58"
+    },
+    "solver": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_composed/solver.jsonl",
+      "sha256": "ba3967cfca3eeb3aca894a6dd00a15d06afc67f8cfd9f3ea7729b9b52baeddbf"
+    },
+    "image_judge_builder": {
+      "path": "scripts/build_maxim_fill_blank_page_activity_image_judge_v1.py",
+      "sha256": "1cb9dce6b4311c5befc01cfe6f41732d875295e57316dd56c9737619f66ab4d1"
+    },
+    "image_judge_output": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/matched_image97_judge.jsonl",
+    "image_judge_manifest_output": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/image_judge_manifest.json"
+  },
+  "implementation": {
+    "composite_auditor": {
+      "path": "scripts/audit_maxim_composite_source_pipeline_v7.py",
+      "sha256": "a9ef6b3140cd01670ec4e456d6e703c616bad1372a3e4b55bd259a51de5c46c7"
+    },
+    "main_runner": {
+      "path": "scripts/run_maxim_public_workbook_v1.py",
+      "sha256": "d1c57bb81deec3b1c726615fe76f801de31740a8ca94403e6a2de7cb12a11b01"
+    },
+    "main_composer": {
+      "path": "scripts/compose_maxim_official_ogm_failclosed_v2.py",
+      "sha256": "23eec36b8e4c57a85cfe757cd64bafce5cafd77dafa259398b8a94ce435e54b6"
+    },
+    "history_runner": {
+      "path": "scripts/run_maxim_fill_blank_page_activity_v1.py",
+      "sha256": "81f198cc67e88772e0dae22bf60b5dc24977924faafb4ed347fea257446cb875"
+    },
+    "history_composer": {
+      "path": "scripts/compose_maxim_fill_blank_page_activity_v1.py",
+      "sha256": "58c0dd6ed67795eb07cf3b18736abcd0508f5d5ffe16472006a9a31371be312f"
+    },
+    "inline_source_builder": {
+      "path": "scripts/build_maxim_inline_solutions_workbook_fragment_v1.py",
+      "sha256": "3de819ee68afcdc9896c93ee84392aafb4f06ad816b2d5333920765515f99cfa"
+    },
+    "samsung_source_builder": {
+      "path": "scripts/build_maxim_samsung_lgs_math_remaining_source_wave_v1.py",
+      "sha256": "4a550875f3378e3380cad349da6a5492cf2a2414bf2303acdaa20e98cd29935a"
+    },
+    "image_only_source_builder": {
+      "path": "scripts/build_maxim_image_only_activity_visual_binding_v1.py",
+      "sha256": "fd3d4094e8b360d16d8bf2c86c9bf1eec8c9ce62ff6d419e7cca36c9acd10a21"
+    },
+    "fill_blank_source_builder": {
+      "path": "scripts/build_maxim_fill_blank_workbook_fragment_v1.py",
+      "sha256": "053ad3e0d520eaf591a9205885f223578ea46b7929b2c4f4d358bfdf6019f6d8"
+    },
+    "official_workbook": {
+      "path": "src/evidence_os/official_workbook.py",
+      "sha256": "486d6ec4f20548cafb30d92fca3d387f94ca608d37f4da507107d80549fdc144"
+    },
+    "inline_solution": {
+      "path": "src/evidence_os/inline_solution.py",
+      "sha256": "ee30c23f531e1f31716073ba984ec6d0271e7d3d8f9bcd76bc58a90ab1b1075a"
+    },
+    "image_only_activity": {
+      "path": "src/evidence_os/image_only_activity.py",
+      "sha256": "d5daa821bc9a781b3a4c3c03fe793a9b0199c425182ff983a69908014a66f3c5"
+    },
+    "fill_blank_answer_key": {
+      "path": "src/evidence_os/fill_blank_answer_key.py",
+      "sha256": "b0138ae86dd93732453d7640e5f385310220bcac7664d1ffcae99f5b3a1eaf24"
+    },
+    "fill_blank_page_activity": {
+      "path": "src/evidence_os/fill_blank_page_activity.py",
+      "sha256": "a0bbf111bac715ff55fd53493d3dbfd4d5b21bcfe4f9fe71ccaed35e0c4b3b9e"
+    },
+    "activity_answer_key": {
+      "path": "src/evidence_os/activity_answer_key.py",
+      "sha256": "37a468700295f23cbc694c836981000f03eb8b62336467091a179cd578ff51b3"
+    },
+    "visual_coordinate_binding": {
+      "path": "src/evidence_os/visual_coordinate_binding.py",
+      "sha256": "d69a0ec356db95b3eed405dcc21e64994474c81455686ac1eb0a69b6f9725c0d"
+    }
+  },
+  "policy": {
+    "gold_access": false,
+    "benchmark_candidate_or_outcome_access": false,
+    "task_ids_used_for_alignment_only": true,
+    "all_candidates_frozen_before_v6_outcome_access": true,
+    "outcome_guided_candidate_removal_allowed": false,
+    "same_wave_retuning_after_score_allowed": false,
+    "score_attempts_before_launch": 0,
+    "image_judge_outputs_must_not_exist_at_source_freeze": true,
+    "keep_v6_if_v7_does_not_improve": true
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": "maxim-official-workbook-final-summary-v1",
+  "reporting_status": "previously_inspected_development_replay_not_holdout",
+  "best_result": {
+    "accuracy": 0.8138686131386861,
+    "correct": 223,
+    "n": 274,
+    "math_accuracy": 0.7985611510791367,
+    "math_correct": 111,
+    "math_n": 139,
+    "non_math_accuracy": 0.8296296296296296,
+    "non_math_correct": 112,
+    "non_math_n": 135
+  },
+  "comparisons": {
+    "frozen_page_rag": {"correct": 141, "n": 274},
+    "exact_official_source_anchor": {"correct": 212, "n": 274},
+    "choice_workbook_certificates": {"correct": 223, "n": 274},
+    "coordinate_math_certificates": {"correct": 223, "n": 274}
+  },
+  "coordinate_variant": {
+    "eligible_rows": 88,
+    "accepted_certificates": 61,
+    "certified_equal_anchor": 49,
+    "overrides": 12,
+    "indexed_documents": 5,
+    "indexed_records": 80,
+    "math_keys_runtime_verified": 7,
+    "new_math_overrides": 1,
+    "new_math_metric_gain": 0
+  },
+  "artifacts": {
+    "profile_sha256": "53d502ddf346d1929aaa5fe415aa1c4a2b8457a74ae4648b8950392a2cca35ce",
+    "source_index_sha256": "a73560f6264150b8d7e973ea82ff3a48f4fca04b692cecee0a741ecaa6abb206",
+    "resolver_manifest_sha256": "fb151d5a6769311dc59b28913e328c0310e83a95706a11dc7717f4d5b04a843d",
+    "composition_manifest_sha256": "e7b16e4c82d6deb87cf1463245745544a5a2e2f25d2a249075679c515cca2abb",
+    "solver_sha256": "deb7256e5d11e06aed3e24b58e1e7d18c4a30ef4b806dddc1433133c90bcbf95",
+    "certificate_image_judge_sha256": "51e5437f185d670200e428a9afbcf5ccf1614c22d00dd7d61ce6a742e097c17d",
+    "score_json_sha256": "38cb0c65028980ee0896b73031fcc7e1b315aea21e74e9fc694d3a61906a0d81"
+  },
+  "integrity": {
+    "task_id_used_for_alignment_only": true,
+    "benchmark_reference_opened_during_resolver_or_composition": false,
+    "all_source_pdfs_reverified_before_certificate_adjudication": true,
+    "external_tamper_resistant_freeze": false
+  }
+}

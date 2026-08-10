@@ -1,0 +1,9 @@
+# Строки для общей таблицы
+
+Первая строка — основной результат. Диагностическую строку нельзя переносить в колонку benchmark Accuracy как 0.996350.
+
+| Автор | Часть пайплайна | Идея | Accuracy | Статус |
+|---|---|---|---|---|
+| Максим | Агент/RAG/Тулы | Fail-closed gold-blind роутинг + exact public-source lookup + исполняемые проверки + отдельная image-adjudication | 0.959854 (263/274) | Стандартная метрика на frozen common bench; targeted post-hoc exploratory, не untouched holdout |
+| Максим | Контроль/Агент | Strict gold-blind ensemble under the same frozen scorer | 0.748175 (205/274) | Строгий контрольный результат; хранить отдельно от exploratory |
+| Максим | Аудит данных | Проверка оставшихся расхождений по независимым публичным свидетельствам | не benchmark score | Диагностика post-hoc: 273/274=0.996350; не смешивать с 0.959854 |

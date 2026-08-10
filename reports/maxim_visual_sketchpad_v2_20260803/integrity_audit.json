@@ -1,0 +1,64 @@
+{
+  "schema_version": "maxim-visual-sketchpad-v2-integrity-audit-v1",
+  "status": "PASS",
+  "gold_or_score_access": false,
+  "rows": 274,
+  "task_order": "PASS",
+  "unique_task_ids": 274,
+  "bindings": {
+    "preregistered_profile": {
+      "path": "reports\\maxim_visual_sketchpad_v2_20260803\\preregistered_protocol.json",
+      "sha256": "231885ec0968e6f8338bb287980f1c46942aacb69d07840db75a50badce22ca8"
+    },
+    "queue": {
+      "path": "reports\\maxim_visual_sketchpad_v2_20260803\\public_parse_queue.jsonl",
+      "sha256": "172183440d95f863f8c7d895d4dbe2ec9b5161cdff19827252d5c7562868993d"
+    },
+    "fallback": {
+      "path": "reports\\maxim_query_active_crop_v2_20260803\\solver.jsonl",
+      "sha256": "6697c043f3142a736b817ead5da494eea334f5349e0db833bd72f23fe35cb17c"
+    },
+    "solver": {
+      "path": "reports\\maxim_visual_sketchpad_v2_20260803\\solver.jsonl",
+      "sha256": "72d3ac4978f16b082282438a502c4427ccdfc28f26543d8dfe7a2ead8b1d20fe"
+    },
+    "runner": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\scripts\\run_maxim_visual_sketchpad_v2.py",
+      "sha256": "8fa649cebaf20650b8f205759ce2bbb620832070959615e274caa08f704dadaf"
+    }
+  },
+  "policy_reconstruction": "PASS_274_OF_274",
+  "route_counts": {
+    "frozen_active_crop_v2": 273,
+    "visual_sketchpad_candidate": 1
+  },
+  "changed_task_ids": [
+    "val_0049"
+  ],
+  "sketch_kind_counts": {
+    "auxiliary_lines": 24,
+    "coordinate_grid": 8,
+    "crop_box": 117,
+    "missing": 1,
+    "none": 7,
+    "table_guides": 117
+  },
+  "gate_failure_counts": {
+    "candidate_error": 6,
+    "choice_candidate_not_strict_A_to_E": 1,
+    "fewer_than_3_visual_facts": 9,
+    "ineligible_sketch_kind": 124,
+    "original_sketch_inconsistent": 32,
+    "same_answer_as_frozen_fallback": 53,
+    "sketch_not_helpful": 139
+  },
+  "candidate_error_type_counts": {
+    "CallFailure": 6
+  },
+  "saved_successful_call_traces": {
+    "planner": 273,
+    "solver": 144
+  },
+  "model": "Qwen/Qwen3.5-9B",
+  "endpoint": "http://127.0.0.1:18021/v1"
+}

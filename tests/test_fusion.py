@@ -1,6 +1,11 @@
 import pytest
 
-from retrieve.rankers.fusion import DEFAULT_RRF_K, ReciprocalRankFusion
+from retrieve.rankers.fusion import (
+    DEFAULT_RRF_K,
+    PrimaryCandidateUnion,
+    ReciprocalRankFusion,
+)
+from retrieve.rankers.rerank import KnowledgeReranker
 from schemas.retrieve import RetrievedChunk
 
 
@@ -16,10 +21,20 @@ class StubRanker:
         self.received: list[RetrievedChunk] | None = None
         self.received_subject: str | None = None
 
-    def rank(self, query, chunks=None, subject=None):
+    def rank(self, query, chunks=None, subject=None, grade=None):
         self.received = None if chunks is None else list(chunks)
         self.received_subject = subject
         return [make_chunk(chunk_id) for chunk_id in self.order]
+
+
+class ScoredStubRanker:
+    def __init__(self, values: list[tuple[str, float]]) -> None:
+        self.values = values
+        self.calls = 0
+
+    def rank(self, query, chunks=None, subject=None, grade=None):
+        self.calls += 1
+        return [make_chunk(chunk_id, score) for chunk_id, score in self.values]
 
 
 def rrf(*positions: int) -> float:
@@ -79,3 +94,98 @@ def test_invalid_configuration_is_rejected():
         ReciprocalRankFusion([StubRanker(["a"])], rrf_k=0)
     with pytest.raises(ValueError):
         ReciprocalRankFusion([StubRanker(["a"])], weights=[1.0, 2.0])
+
+
+def test_primary_candidate_union_preserves_lexical_head_and_stable_semantic_ties():
+    primary = ScoredStubRanker([("p2", 9.0), ("p1", 8.0), ("p3", 7.0)])
+    semantic = ScoredStubRanker(
+        [("p3", 99.0), ("s-b", 0.5), ("s-a", 0.5), ("s-c", 0.2)]
+    )
+
+    results = PrimaryCandidateUnion(
+        primary,
+        semantic,
+        primary_k=2,
+        semantic_k=2,
+    ).rank("q")
+
+    assert [chunk.chunk_id for chunk in results] == [
+        "p2",
+        "p1",
+        "s-a",
+        "s-b",
+        "p3",
+    ]
+    assert len({chunk.chunk_id for chunk in results}) == len(results)
+
+
+def test_primary_candidate_fallback_does_not_invoke_semantic_when_primary_is_sufficient():
+    primary = ScoredStubRanker([("p1", 2.0), ("p2", 1.0)])
+    semantic = ScoredStubRanker([("s1", 1.0)])
+    union = PrimaryCandidateUnion(
+        primary,
+        semantic,
+        mode="fallback",
+        fallback_min_candidates=2,
+    )
+
+    assert [chunk.chunk_id for chunk in union.rank("q")] == ["p1", "p2"]
+    assert semantic.calls == 0
+
+
+def test_primary_candidate_union_rejects_invalid_mode_and_nonfinite_scores():
+    with pytest.raises(ValueError, match="mode"):
+        PrimaryCandidateUnion(
+            ScoredStubRanker([]),
+            ScoredStubRanker([]),
+            mode="replace",
+        )
+
+    union = PrimaryCandidateUnion(
+        ScoredStubRanker([]),
+        ScoredStubRanker([("bad", float("nan"))]),
+    )
+    with pytest.raises(ValueError, match="non-finite"):
+        union.rank("q")
+
+
+def test_candidate_union_calibrates_raw_bm25_and_cosine_without_losing_priority():
+    union = PrimaryCandidateUnion(
+        ScoredStubRanker([("lexical", 100.0)]),
+        ScoredStubRanker([("semantic", 0.9)]),
+        primary_k=1,
+        semantic_k=1,
+    )
+
+    candidates = union.rank("semantic")
+    scores = {chunk.chunk_id: chunk.score for chunk in candidates}
+    assert [chunk.chunk_id for chunk in candidates] == ["lexical", "semantic"]
+    assert scores["lexical"] > scores["semantic"]
+    assert scores["lexical"] / scores["semantic"] < 2.0
+    assert [
+        chunk.chunk_id
+        for chunk in KnowledgeReranker().rank("semantic", candidates)
+    ][0] == "semantic"
+
+    with pytest.raises(ValueError, match="lexical-first"):
+        PrimaryCandidateUnion(
+            ScoredStubRanker([]),
+            ScoredStubRanker([]),
+            primary_weight=0.5,
+            semantic_weight=1.0,
+        )
+
+
+def test_candidate_union_preserves_original_semantic_rank_after_overlap_dedup():
+    overlapping = [(f"shared-{position}", 100.0 - position) for position in range(31)]
+    union = PrimaryCandidateUnion(
+        ScoredStubRanker(overlapping),
+        ScoredStubRanker(overlapping + [("semantic-tail", 0.9)]),
+        primary_k=31,
+        semantic_k=1,
+    )
+
+    candidates = union.rank("q")
+
+    assert candidates[-1].chunk_id == "semantic-tail"
+    assert candidates[-1].score == pytest.approx(0.85 / (DEFAULT_RRF_K + 32))

@@ -1,0 +1,63 @@
+{
+  "schema_version": "maxim-fill-blank-page-activity-profile-v1",
+  "profile_name": "maxim-fill-blank-page-activity-history-v7",
+  "expected_rows": 274,
+  "anchor": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsung_philosophy_biology_imageonly_v7_composed/solver.jsonl",
+    "sha256": "48735253b140f23f126625fea06a1e09b6440f0dc8afd64753216bc94da53ea0",
+    "role": "opaque_fail_closed_v7_main_anchor_only"
+  },
+  "inputs": {
+    "parser_observations": {
+      "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/parser_artifacts/parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038",
+      "allowed_role": "observable_ocr_only"
+    },
+    "source_locators": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a",
+      "allowed_role": "public_source_identity_only"
+    },
+    "source_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_fragment_meb_ck_history_fill_blank_candidate_v1.json",
+      "sha256": "e8a672678294258d39499086a260c7cd5bd22a48d86617989f2091b61ea886ae",
+      "allowed_role": "task_id_free_fill_blank_source_only"
+    }
+  },
+  "documents": [
+    {
+      "document_id": "meb_ck_12_inkilap_tarihi_f7c805d55591",
+      "pdf_sha256": "f7c805d5559135809870f7db6cad47f8094303bde88b10a7be252c81424ea2e1",
+      "page_count": 20
+    }
+  ],
+  "runtime": {
+    "pypdf_version": "6.10.0",
+    "pdfplumber_version": "0.11.9"
+  },
+  "policy": {
+    "min_page_coverage": 0.65,
+    "min_page_matched_tokens": 20,
+    "min_page_margin": 0.12,
+    "min_activity_coverage": 0.85,
+    "min_activity_matched_tokens": 40,
+    "require_no_single_source_marker": true,
+    "require_complete_item_inventory": true,
+    "require_pdf_activity_title_once": true,
+    "require_pdf_activity_instruction_once": true,
+    "require_pdf_complete_item_inventory": true,
+    "require_pdf_word_bank_multiset": true,
+    "require_pdf_answer_key_components": true,
+    "allow_generic_numberless_binding": false,
+    "ambiguous_or_malformed_action": "abstain_keep_anchor",
+    "task_id_is_policy_feature": false,
+    "benchmark_candidate_or_outcome_access": false,
+    "yandex_public_identity_projection": "url_name_plus_optional_numeric_nosw_v2"
+  },
+  "evaluation": {
+    "profile_frozen_before_scoring": true,
+    "threshold_basis": "source-only exact full-page title, instruction, item inventory, word bank, unique PDF page and replayed answer-key projections",
+    "target_split_status": "development replay; no outcome access while building this source wave",
+    "new_source_wave": "numberless MEB history fill-blank page applied after the frozen V7 main source stage; task IDs are alignment only"
+  }
+}

@@ -1,0 +1,380 @@
+{
+  "schema_version": "maxim-v2-paired-diagnostics-v1",
+  "artifact": "maxim_decompose_reasoning_first_v2",
+  "candidate_label": "decompose_reasoning_first_v2",
+  "benchmark": {
+    "n": 274,
+    "deterministic_n": 177,
+    "image_judge_n": 97,
+    "benchmark_sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "fixed_denominator": true,
+    "task_id_sets_matched": true
+  },
+  "headline": {
+    "correct": 150,
+    "accuracy": 0.547445,
+    "matched_direct_correct": 137,
+    "frozen_page_rag_correct": 141,
+    "frozen_no_tools_correct": 191,
+    "solver_rows": 274,
+    "solver_errors": 0,
+    "missing_final_answers": 0,
+    "forced_answers": 0
+  },
+  "statistical_method": {
+    "test": "two-sided exact McNemar test",
+    "null": "the two paired systems have equal marginal probability of correctness",
+    "calculation": "2 * BinomialCDF(min(fixed, regressed); fixed + regressed, 0.5), capped at 1",
+    "fixed_definition": "candidate correct and comparator incorrect",
+    "regressed_definition": "candidate incorrect and comparator correct",
+    "multiplicity_adjustment": "none",
+    "warning": "Subject slices are exploratory, many are very small, and their p-values are not multiplicity-adjusted."
+  },
+  "pairwise_comparisons": {
+    "vs_matched_direct_v2": {
+      "comparator_label": "direct_reasoning_first_v2",
+      "overall": {
+        "n": 274,
+        "candidate_correct": 150,
+        "comparator_correct": 137,
+        "candidate_accuracy": 0.547445,
+        "comparator_accuracy": 0.5,
+        "delta_correct": 13,
+        "delta_pp": 4.745,
+        "both_correct": 117,
+        "both_wrong": 104,
+        "fixed": 33,
+        "regressed": 20,
+        "discordant": 53,
+        "mcnemar_exact_two_sided_p": 0.098370648
+      },
+      "math": {
+        "n": 139,
+        "candidate_correct": 75,
+        "comparator_correct": 65,
+        "candidate_accuracy": 0.539568,
+        "comparator_accuracy": 0.467626,
+        "delta_correct": 10,
+        "delta_pp": 7.194,
+        "both_correct": 57,
+        "both_wrong": 56,
+        "fixed": 18,
+        "regressed": 8,
+        "discordant": 26,
+        "mcnemar_exact_two_sided_p": 0.075518698
+      },
+      "by_source": {
+        "deterministic": {
+          "n": 177,
+          "candidate_correct": 100,
+          "comparator_correct": 91,
+          "delta_pp": 5.085,
+          "fixed": 22,
+          "regressed": 13,
+          "mcnemar_exact_two_sided_p": 0.17546525
+        },
+        "image_judge": {
+          "n": 97,
+          "candidate_correct": 50,
+          "comparator_correct": 46,
+          "delta_pp": 4.124,
+          "fixed": 11,
+          "regressed": 7,
+          "mcnemar_exact_two_sided_p": 0.48068237
+        }
+      },
+      "by_subject": {
+        "ATATÜRKÇÜLÜK": {"n": 1, "candidate_correct": 0, "comparator_correct": 1, "delta_pp": -100.0, "fixed": 0, "regressed": 1, "mcnemar_exact_two_sided_p": 1.0},
+        "Biology": {"n": 19, "candidate_correct": 8, "comparator_correct": 7, "delta_pp": 5.263, "fixed": 3, "regressed": 2, "mcnemar_exact_two_sided_p": 1.0},
+        "Chemistry": {"n": 32, "candidate_correct": 19, "comparator_correct": 19, "delta_pp": 0.0, "fixed": 2, "regressed": 2, "mcnemar_exact_two_sided_p": 1.0},
+        "English": {"n": 9, "candidate_correct": 7, "comparator_correct": 6, "delta_pp": 11.111, "fixed": 1, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Geography": {"n": 14, "candidate_correct": 8, "comparator_correct": 6, "delta_pp": 14.286, "fixed": 4, "regressed": 2, "mcnemar_exact_two_sided_p": 0.6875},
+        "History": {"n": 10, "candidate_correct": 4, "comparator_correct": 5, "delta_pp": -10.0, "fixed": 0, "regressed": 1, "mcnemar_exact_two_sided_p": 1.0},
+        "Math": {"n": 139, "candidate_correct": 75, "comparator_correct": 65, "delta_pp": 7.194, "fixed": 18, "regressed": 8, "mcnemar_exact_two_sided_p": 0.075518698},
+        "Philosophy": {"n": 2, "candidate_correct": 2, "comparator_correct": 2, "delta_pp": 0.0, "fixed": 0, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Physics": {"n": 19, "candidate_correct": 13, "comparator_correct": 12, "delta_pp": 5.263, "fixed": 2, "regressed": 1, "mcnemar_exact_two_sided_p": 1.0},
+        "Science": {"n": 5, "candidate_correct": 1, "comparator_correct": 1, "delta_pp": 0.0, "fixed": 0, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Sociology": {"n": 3, "candidate_correct": 2, "comparator_correct": 2, "delta_pp": 0.0, "fixed": 0, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Turkish language and literature": {"n": 21, "candidate_correct": 11, "comparator_correct": 11, "delta_pp": 0.0, "fixed": 3, "regressed": 3, "mcnemar_exact_two_sided_p": 1.0}
+      }
+    },
+    "vs_frozen_page_rag": {
+      "comparator_label": "basic_page_rag_v1_frozen_output_control",
+      "overall": {
+        "n": 274,
+        "candidate_correct": 150,
+        "comparator_correct": 141,
+        "candidate_accuracy": 0.547445,
+        "comparator_accuracy": 0.514599,
+        "delta_correct": 9,
+        "delta_pp": 3.285,
+        "both_correct": 110,
+        "both_wrong": 93,
+        "fixed": 40,
+        "regressed": 31,
+        "discordant": 71,
+        "mcnemar_exact_two_sided_p": 0.342471
+      },
+      "math": {
+        "n": 139,
+        "candidate_correct": 75,
+        "comparator_correct": 62,
+        "candidate_accuracy": 0.539568,
+        "comparator_accuracy": 0.446043,
+        "delta_correct": 13,
+        "delta_pp": 9.353,
+        "both_correct": 48,
+        "both_wrong": 50,
+        "fixed": 27,
+        "regressed": 14,
+        "discordant": 41,
+        "mcnemar_exact_two_sided_p": 0.059583888
+      },
+      "by_source": {
+        "deterministic": {
+          "n": 177,
+          "candidate_correct": 100,
+          "comparator_correct": 96,
+          "delta_pp": 2.26,
+          "fixed": 22,
+          "regressed": 18,
+          "mcnemar_exact_two_sided_p": 0.635828
+        },
+        "image_judge": {
+          "n": 97,
+          "candidate_correct": 50,
+          "comparator_correct": 45,
+          "delta_pp": 5.155,
+          "fixed": 18,
+          "regressed": 13,
+          "mcnemar_exact_two_sided_p": 0.47312966
+        }
+      },
+      "by_subject": {
+        "ATATÜRKÇÜLÜK": {"n": 1, "candidate_correct": 0, "comparator_correct": 1, "delta_pp": -100.0, "fixed": 0, "regressed": 1, "mcnemar_exact_two_sided_p": 1.0},
+        "Biology": {"n": 19, "candidate_correct": 8, "comparator_correct": 8, "delta_pp": 0.0, "fixed": 1, "regressed": 1, "mcnemar_exact_two_sided_p": 1.0},
+        "Chemistry": {"n": 32, "candidate_correct": 19, "comparator_correct": 19, "delta_pp": 0.0, "fixed": 4, "regressed": 4, "mcnemar_exact_two_sided_p": 1.0},
+        "English": {"n": 9, "candidate_correct": 7, "comparator_correct": 7, "delta_pp": 0.0, "fixed": 0, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Geography": {"n": 14, "candidate_correct": 8, "comparator_correct": 11, "delta_pp": -21.429, "fixed": 1, "regressed": 4, "mcnemar_exact_two_sided_p": 0.375},
+        "History": {"n": 10, "candidate_correct": 4, "comparator_correct": 6, "delta_pp": -20.0, "fixed": 0, "regressed": 2, "mcnemar_exact_two_sided_p": 0.5},
+        "Math": {"n": 139, "candidate_correct": 75, "comparator_correct": 62, "delta_pp": 9.353, "fixed": 27, "regressed": 14, "mcnemar_exact_two_sided_p": 0.059583888},
+        "Philosophy": {"n": 2, "candidate_correct": 2, "comparator_correct": 2, "delta_pp": 0.0, "fixed": 0, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Physics": {"n": 19, "candidate_correct": 13, "comparator_correct": 12, "delta_pp": 5.263, "fixed": 4, "regressed": 3, "mcnemar_exact_two_sided_p": 1.0},
+        "Science": {"n": 5, "candidate_correct": 1, "comparator_correct": 2, "delta_pp": -20.0, "fixed": 0, "regressed": 1, "mcnemar_exact_two_sided_p": 1.0},
+        "Sociology": {"n": 3, "candidate_correct": 2, "comparator_correct": 2, "delta_pp": 0.0, "fixed": 0, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Turkish language and literature": {"n": 21, "candidate_correct": 11, "comparator_correct": 9, "delta_pp": 9.524, "fixed": 3, "regressed": 1, "mcnemar_exact_two_sided_p": 0.625}
+      }
+    },
+    "vs_frozen_no_tools": {
+      "comparator_label": "b0_no_tools_frozen",
+      "protocol_caveat": "The frozen no-tools artifact used presentation-hybrid-v1 for its 97 judged rows, whereas the v2 candidate used judge-v2. Deterministic rows are directly comparable; image-judge and aggregate comparisons to 191/274 are historical-reference comparisons, not fully judge-matched controls.",
+      "overall": {
+        "n": 274,
+        "candidate_correct": 150,
+        "comparator_correct": 191,
+        "candidate_accuracy": 0.547445,
+        "comparator_accuracy": 0.69708,
+        "delta_correct": -41,
+        "delta_pp": -14.964,
+        "both_correct": 122,
+        "both_wrong": 55,
+        "fixed": 28,
+        "regressed": 69,
+        "discordant": 97,
+        "mcnemar_exact_two_sided_p": 0.000038037948
+      },
+      "math": {
+        "n": 139,
+        "candidate_correct": 75,
+        "comparator_correct": 105,
+        "candidate_accuracy": 0.539568,
+        "comparator_accuracy": 0.755396,
+        "delta_correct": -30,
+        "delta_pp": -21.583,
+        "both_correct": 63,
+        "both_wrong": 22,
+        "fixed": 12,
+        "regressed": 42,
+        "discordant": 54,
+        "mcnemar_exact_two_sided_p": 0.000052094472
+      },
+      "by_source": {
+        "deterministic": {
+          "n": 177,
+          "candidate_correct": 100,
+          "comparator_correct": 132,
+          "delta_pp": -18.079,
+          "fixed": 12,
+          "regressed": 44,
+          "mcnemar_exact_two_sided_p": 0.000020876568
+        },
+        "image_judge": {
+          "n": 97,
+          "candidate_correct": 50,
+          "comparator_correct": 59,
+          "delta_pp": -9.278,
+          "fixed": 16,
+          "regressed": 25,
+          "mcnemar_exact_two_sided_p": 0.2110236,
+          "judge_protocol_matched": false
+        }
+      },
+      "by_subject": {
+        "ATATÜRKÇÜLÜK": {"n": 1, "candidate_correct": 0, "comparator_correct": 0, "delta_pp": 0.0, "fixed": 0, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Biology": {"n": 19, "candidate_correct": 8, "comparator_correct": 11, "delta_pp": -15.789, "fixed": 0, "regressed": 3, "mcnemar_exact_two_sided_p": 0.25},
+        "Chemistry": {"n": 32, "candidate_correct": 19, "comparator_correct": 20, "delta_pp": -3.125, "fixed": 4, "regressed": 5, "mcnemar_exact_two_sided_p": 1.0},
+        "English": {"n": 9, "candidate_correct": 7, "comparator_correct": 5, "delta_pp": 22.222, "fixed": 3, "regressed": 1, "mcnemar_exact_two_sided_p": 0.625},
+        "Geography": {"n": 14, "candidate_correct": 8, "comparator_correct": 12, "delta_pp": -28.571, "fixed": 1, "regressed": 5, "mcnemar_exact_two_sided_p": 0.21875},
+        "History": {"n": 10, "candidate_correct": 4, "comparator_correct": 5, "delta_pp": -10.0, "fixed": 1, "regressed": 2, "mcnemar_exact_two_sided_p": 1.0},
+        "Math": {"n": 139, "candidate_correct": 75, "comparator_correct": 105, "delta_pp": -21.583, "fixed": 12, "regressed": 42, "mcnemar_exact_two_sided_p": 0.000052094472},
+        "Philosophy": {"n": 2, "candidate_correct": 2, "comparator_correct": 1, "delta_pp": 50.0, "fixed": 1, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Physics": {"n": 19, "candidate_correct": 13, "comparator_correct": 14, "delta_pp": -5.263, "fixed": 3, "regressed": 4, "mcnemar_exact_two_sided_p": 1.0},
+        "Science": {"n": 5, "candidate_correct": 1, "comparator_correct": 3, "delta_pp": -40.0, "fixed": 0, "regressed": 2, "mcnemar_exact_two_sided_p": 0.5},
+        "Sociology": {"n": 3, "candidate_correct": 2, "comparator_correct": 2, "delta_pp": 0.0, "fixed": 0, "regressed": 0, "mcnemar_exact_two_sided_p": 1.0},
+        "Turkish language and literature": {"n": 21, "candidate_correct": 11, "comparator_correct": 13, "delta_pp": -9.524, "fixed": 3, "regressed": 5, "mcnemar_exact_two_sided_p": 0.7265625}
+      }
+    }
+  },
+  "operational": {
+    "candidate": {
+      "model_calls_total": 548,
+      "model_calls_mean_per_task": 2.0,
+      "input_tokens_total": 471210,
+      "output_tokens_total": 176623,
+      "combined_tokens_total": 647833,
+      "latency_s_total": 3407.637,
+      "latency_s_mean": 12.437,
+      "latency_s_median": 11.124,
+      "latency_s_p95_nearest_rank": 23.402,
+      "latency_s_max": 66.943
+    },
+    "matched_direct": {
+      "model_calls_total": 274,
+      "model_calls_mean_per_task": 1.0,
+      "input_tokens_total": 200597,
+      "output_tokens_total": 97364,
+      "combined_tokens_total": 297961,
+      "latency_s_total": 2069.206,
+      "latency_s_mean": 7.552,
+      "latency_s_median": 5.765,
+      "latency_s_p95_nearest_rank": 16.95,
+      "latency_s_max": 48.47
+    },
+    "candidate_over_direct_ratio": {
+      "model_calls_total": 2.0,
+      "input_tokens_total": 2.349,
+      "output_tokens_total": 1.814,
+      "combined_tokens_total": 2.1742,
+      "latency_s_total": 1.6468,
+      "latency_s_mean": 1.6468,
+      "latency_s_median": 1.9296,
+      "latency_s_p95_nearest_rank": 1.3806
+    },
+    "interpretation": "The direct control is matched on benchmark, model, vision input, zero temperature, answer schema and reasoning-first contract, but not on compute. The observed quality delta therefore estimates the whole two-call decomposition treatment, not a compute-neutral decomposition effect."
+  },
+  "fail_closed_retry_audit": {
+    "initial_run_rows": 274,
+    "initial_failures": 3,
+    "failure_class": "invalid structured response with finish_reason=length after two endpoint attempts",
+    "operational_task_ids": [
+      "val_0059",
+      "val_0072",
+      "val_0212"
+    ],
+    "failure_stages": {
+      "val_0059": "solution",
+      "val_0072": "plan",
+      "val_0212": "solution"
+    },
+    "constrained_numeric_replacements": {
+      "count": 2,
+      "operational_task_ids": [
+        "val_0059",
+        "val_0212"
+      ],
+      "replacement_artifact_sha256": "57f8f1c13f1761737d3d81bef5dcc692cbc517ab2630f37f581ad65ef2d9d8b6",
+      "retry_runner_sha256": "a4bcb2e700c51f9e20e1527a12cd0f2473a9935366f81d16eadc6bdbb82a83ab",
+      "replacement_utility_sha256": "8e6e78cbe05e1a9c7c4578cc7d779ad63f6e69ea1acc9c770a306da75122e5b3",
+      "semantic_rows_match_final_solver": true,
+      "schema_controls": [
+        "compact plan arrays and bounded strings",
+        "bounded compact reasoning",
+        "numeric-only final-answer pattern",
+        "atomic task-ID-preserving replacement",
+        "forbidden gold/reference fields rejected"
+      ]
+    },
+    "standard_schema_recovery": {
+      "count": 1,
+      "operational_task_ids": [
+        "val_0072"
+      ],
+      "final_row_present_and_healthy": true,
+      "provenance_limitation": "No standalone retry JSONL or retry command log for this one row is archived locally. Its initial failure is documented in generation.log and its successful standard-v2 row is present in the final solver artifact, but the intermediate retry lineage cannot be independently replayed from this directory alone."
+    },
+    "final_solver": {
+      "rows": 274,
+      "unique_task_ids": 274,
+      "errors": 0,
+      "missing_final_answers": 0,
+      "forced_answers": 0,
+      "forbidden_gold_fields": 0,
+      "generation_gold_access_nonfalse": 0,
+      "nonempty_tool_calls": 0
+    }
+  },
+  "judge": {
+    "deterministic_rows": 177,
+    "image_judge_rows": 97,
+    "image_judge_input_shape": "image_only",
+    "prompt_version": "judge-v2",
+    "setup": "maxim_decompose_reasoning_first_v2",
+    "model": "Qwen/Qwen3.5-9B",
+    "temperature": 0,
+    "max_tokens": 900,
+    "seed": 20260714,
+    "response_format": true,
+    "enable_thinking": false,
+    "image_mode": "data_url",
+    "backend_config_hash": "1caba4158b78bb4c9c2d6750c8d663d4e75195fdf23aafcbca71ff6605bb91d0",
+    "judge_errors": 0,
+    "strict_projection_errors": 0,
+    "matched_to_direct_v2": true,
+    "page_rag_semantic_config_match": true,
+    "page_rag_endpoint_only_hashes": [
+      "82263bfba022c9f662c47c93da3c5f56b2206ede6d5ab620c8e145e861ea34f7",
+      "d8e22e242b1ac01c54abf993b8b8ca71e78e492d78aa93d5332ff199da3c93fd"
+    ],
+    "no_tools_prompt_match": false,
+    "no_tools_prompt_version": "presentation-hybrid-v1"
+  },
+  "guardrails": {
+    "gold_isolated_from_generation": true,
+    "forbidden_gold_fields_in_solver": 0,
+    "benchmark_references_read_only_by_post_generation_scorer": true,
+    "solver_failures_counted_in_fixed_denominator": true,
+    "duplicate_task_ids": 0
+  },
+  "provenance": {
+    "runner_sha256": "68eeaa8b7bdd2e85936048ffc7c7afe4a76fd2c3f2ab682cc543a36ec9cb11e7",
+    "solver_sha256": "0e469a5bebc1412cf672e0ae6b708b6eb0c16eb23fd4f2516edfa6c982bce92b",
+    "score_sha256": "47e87b0fa364c753c35e91feb7ed9eeca6fa22622da21343b5818833fc4fbd6e",
+    "image97_input_sha256": "c1bcdba9355332542640230f8a1a8e5a6cac1c3c23b2e876313e898ae7ec21ab",
+    "image97_judge_sha256": "3f2f20b4b7dc7161a8831a85a8e3b6d9aa40924e2426dff94046d6827649c947",
+    "image97_strict_sha256": "72e38d0745e5bce8a6486f9dd27307f3fe33a05ed4f012c0fe69239d69c9039b",
+    "scorer_sha256": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf",
+    "frozen_page_rag_judge_sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4",
+    "frozen_no_tools_score_sha256": "e7852752d9fb141978f017d060ad6d7c4e8e10ec9a0999e85814f11ca3bb4b4d"
+  },
+  "privacy": {
+    "contains_reference_answers": false,
+    "contains_model_answers": false,
+    "contains_rationales": false,
+    "task_ids_limited_to_operational_retry_audit": true
+  },
+  "conclusion": {
+    "decision": "promising_but_not_promoted",
+    "summary": "Decomposition improves the matched direct v2 run by 13/274 and Math by 10/139, but neither paired result crosses 0.05. It also costs 2.17x combined tokens. It beats frozen page RAG by 9/274 without statistical confirmation and remains far below the frozen no-tools reference, including a significant deficit on deterministic rows where judge mismatch is irrelevant.",
+    "recommended_next_test": "Run a pre-registered compute-matched repeat with the same judge-v2 protocol and multiple seeds; separately reproduce the no-tools control under judge-v2 before treating 191/274 as a strict paired control."
+  }
+}

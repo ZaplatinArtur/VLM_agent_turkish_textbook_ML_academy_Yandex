@@ -1,0 +1,85 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-profile-v1.2",
+  "selector_id": "maxim_9b_baseline_selector_v1_2",
+  "status": "preregistered_after_historical_outcomes_known_before_v1_2_evaluation",
+  "model_closure": [
+    "Qwen/Qwen3.5-9B"
+  ],
+  "chronology": {
+    "historical_benchmark_aggregate_score_and_prior_task_outcomes_were_known_before_freeze": true,
+    "rules_and_profile_frozen_before_generation_and_any_gold_score_correctness_or_judge_evaluation_of_v1_2_arm_outputs": true,
+    "selector_runtime_inputs_and_algorithm_do_not_read_gold_reference_correctness_outcomes_or_judge_verdicts": true
+  },
+  "group_provenance": {
+    "structural_group": "separate_structural_strict_9b_generation_family_with_declared_source_access",
+    "native_group": "two_correlated_native_thinking_ablations_group_vote_exists_only_on_v4_v5_agreement",
+    "parallel_group": "two_separately_executed_batches_group_vote_exists_only_on_final_answer_agreement",
+    "independence_scope": "three_distinct_preregistered_evidence_groups_not_an_iid_or_statistical_independence_claim"
+  },
+  "benchmark": {
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "ordered_rows": 274
+  },
+  "upstream_artifact_sha256": {
+    "active_crop_v2": "6697c043f3142a736b817ead5da494eea334f5349e0db833bd72f23fe35cb17c",
+    "native_thinking_math_router_v4": "0fd0e6fef6b220749faa015e7a163cdf596e070afaaad407e4d36bc9b1337307",
+    "native_thinking_math_router_v5": "45dc8c16f834d27e5d114f9162b7984c8baec4037fef011730e91ba13f192845",
+    "parallel8_v1": "b1b7a1b785a9a3fc076c04c37fa72f4a82169f137651ff57b40e984901b0d645",
+    "parallel8_reasoning_first_v2": "6115effd03d7eac3e11e9726ecd9822802a04f235a0b361e1863b9bc7e221023",
+    "structural_strict_9b": "4c73b6eb326e5790b19e14c01a79df853be23bb5f55b498ce4c58b78ebc3dff5"
+  },
+  "protected_scope": {
+    "aggregate_file_sha256": "3de5129dee80d2f2fda544bdf7eecfa7d0f467d56bb7e43afc8eac89a6a5dacd",
+    "source_union_projection_sha256": "7e5e0c972e82d87d164cb3ef03b13fbb4c8084bf07c2512129958882871508cd",
+    "source_union_size": 156,
+    "runtime_membership_schema": "maxim-9b-baseline-selector-source-union-membership-v1.1",
+    "semantics": "safety_veto_only_not_a_quality_group"
+  },
+  "algorithm": {
+    "anchor": "active_crop_v2",
+    "shared_safety_gates": [
+      "authoritative_route_is_deterministic",
+      "authoritative_task_id_is_outside_pinned_source_union",
+      "anchor_and_structural_answers_are_valid_A_to_E",
+      "structural_challenger_differs_from_anchor",
+      "all_candidate_projections_match_pinned_per_upstream_row_bindings"
+    ],
+    "primary_arm": {
+      "name": "three_group_unanimity",
+      "role": "primary_conservative",
+      "groups": [
+        "structural_strict_9b_single_member_group",
+        "native_group_only_when_v4_equals_v5",
+        "parallel_group_only_when_parallel8_v1_final_equals_parallel8_reasoning_first_v2_final"
+      ],
+      "rule": "all_three_group_answers_equal_the_same_structural_challenger_not_equal_to_anchor"
+    },
+    "exploratory_arm": {
+      "name": "structural_parallel_plus_one_native",
+      "role": "preregistered_exploratory",
+      "rule": "structural_equals_parallel_group_and_at_least_one_of_v4_or_v5_equals_same_challenger_not_equal_to_anchor"
+    },
+    "parallel_raw_votes_used": false,
+    "fallback": "preserve_active_crop_v2_anchor",
+    "source_union_policy": "always_preserve_anchor",
+    "image_judge_policy": "always_preserve_anchor",
+    "no_post_evaluation_rule_change": true
+  },
+  "runtime_input_contract": {
+    "pool_contains_no_task_id_or_evaluation_route": true,
+    "identity_comes_only_from_pinned_benchmark_order": true,
+    "route_comes_only_from_pinned_outcome_free_route_map": true,
+    "all_six_role_projections_match_pinned_row_bindings": true,
+    "runtime_excludes_gold_reference_correctness_outcomes_and_judge_verdicts": true,
+    "structural_source_access_is_explicit_per_row_and_not_an_outcome_signal": true
+  },
+  "authority_pins": {
+    "status": "locked_before_v1_2_evaluation",
+    "input_package_manifest_sha256": "12d73ab5cd5955dffee921c97b84fb8bc6c99e3b0152c295e74aa287ad3666e8",
+    "benchmark_order_sha256": "7140c7c01b48053f6a15a3b0113f68cad37bbb887744828b570a6eaa0447d62b",
+    "route_map_sha256": "f89ef00f95b9d83610b66948fcb11667dc927f2452b000ef62e031a1a0de26f6",
+    "source_union_membership_sha256": "93a1018a63e2b9dfeef841541df3b566d6bd6275471accb9f167c7c60c44416a",
+    "candidate_pool_sha256": "bfc4c2000cefb6ddbe2efb03364d1f2702a3d8075f089689bd3731dbb46c853d",
+    "row_bindings_sha256": "f006067f61f7f9b3c632e8763ce6d324809a3b4ca8e2d53b37800c597ceef993"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "schema_version": "maxim-evidence-os-frozen-profile-v1",
+  "profile_name": "maxim-evidence-os-v1",
+  "expected_rows": 274,
+  "anchor": {
+    "path": "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/run/solver.jsonl",
+    "sha256": "aa76740913819b81e23f926e89be68e30501e6f6e14f36867afb3a9f122cc678",
+    "public_projection_sha256": "304bab7c010a55d9ff2c2d08d37a80e4de830aff864ca444463d28bd084368bb",
+    "role": "fail_closed_default"
+  },
+  "public_tasks": {
+    "path": "reports/maxim_final_meta_verifier_v3_20260803/run/public_queue.jsonl",
+    "sha256": "641334d304482aa1e6235ced739647d4e99759f6394766d884696f22038f202e"
+  },
+  "policy": {
+    "min_claim_coverage": 1.0,
+    "min_deterministic_checks": 1,
+    "min_independent_verifiers": 1,
+    "conflict_action": "keep_anchor",
+    "missing_or_malformed_certificate_action": "keep_anchor",
+    "agreement_is_certificate": false,
+    "self_confidence_is_certificate": false,
+    "task_id_source_url_sha_or_order_features_allowed": false,
+    "external_certificates_require_profile_binding": true,
+    "certificate_trace_content_required": true
+  },
+  "allowed_strong_certificate_kinds": [
+    "executable_check",
+    "formal_equivalence",
+    "constraint_satisfaction",
+    "source_entailment",
+    "visual_grounding"
+  ],
+  "certificate_inputs": {},
+  "legacy_modules": {
+    "active_crop": {
+      "path": "reports/maxim_query_active_crop_v2_20260803/solver.jsonl",
+      "sha256": "6697c043f3142a736b817ead5da494eea334f5349e0db833bd72f23fe35cb17c",
+      "public_projection_sha256": "34d5eb8411bedffffcff88e06a39bf90466e9ae80dad06209c9889a78fa30dcc",
+      "mode": "shadow",
+      "reason": "model-authored visual observations are not independently pixel-verified"
+    },
+    "structural_rag": {
+      "path": "reports/maxim_structural_evidence_rag_v1_20260803/solver.jsonl",
+      "sha256": "4c73b6eb326e5790b19e14c01a79df853be23bb5f55b498ce4c58b78ebc3dff5",
+      "public_projection_sha256": "e90c8432024af7126f06ec72ec96c02343cee11eeba35dbe89f0e34b3dcaa9b8",
+      "mode": "shadow",
+      "reason": "one legacy citation exists but is not claim-complete or round-trip verified"
+    },
+    "calculator": {
+      "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/calculator_sympy/solver.jsonl",
+      "sha256": "73e4eea6aca39e3cf9ddef0379cfbd5c38e3cf97e7b6d7768ae3be061d26127a",
+      "public_projection_sha256": "f5438412274c273d6d722dfe81062fb7d3239610dd90a6054dc269beede940d9",
+      "mode": "shadow",
+      "reason": "program literals and result are not bound to observed inputs and exact answer"
+    },
+    "visual_sketchpad": {
+      "path": "reports/maxim_visual_sketchpad_v2_20260803/solver.jsonl",
+      "sha256": "72d3ac4978f16b082282438a502c4427ccdfc28f26543d8dfe7a2ead8b1d20fe",
+      "public_projection_sha256": "2338ddd6e515be79aaa1c66e6f8d8ddeda3693d2be55693cbb68aedb13dd9c98",
+      "mode": "shadow",
+      "reason": "no independently verified rendered sketch certificate"
+    },
+    "parser": {
+      "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/solver.jsonl",
+      "sha256": "3a2d61bb60be67a9bea1d076b66a67e315a49fdadf6d067c6c52db780cea09d6",
+      "public_projection_sha256": "5d6f9645b3229eecfb4f4f98322725e453129bc09da3a6cd9aab809e015fd40a",
+      "mode": "perception_only",
+      "reason": "OCR/layout has no calibrated recognition confidence and cannot prove an answer"
+    }
+  },
+  "evaluation": {
+    "source_family_metadata": {
+      "path": "data/validation.meta.jsonl",
+      "sha256": "480239348cce16dd32cefa7bed6dcff7b587e174013a3701b976e2732571d1b9"
+    },
+    "grouped_router_score_artifacts": {
+      "anchor": {
+        "path": "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/evaluation_cached_reuse_v1/score.json",
+        "sha256": "0550b1b59b6f9680ad8e7462c1b30fc6c97960bd16fa82576a3f917192fbb24a"
+      },
+      "active_crop": {
+        "path": "reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/score.json",
+        "sha256": "fe7af97028dc51d2ce23ce0b2779d6ff5661af032929223b8e6067a8ded6b374"
+      },
+      "structural_rag": {
+        "path": "reports/maxim_structural_evidence_rag_v1_20260803/evaluation/score.json",
+        "sha256": "29763fffcb3bf361b8560c2c68eb6249716150ea61efc8c424035b78805badec"
+      },
+      "calculator": {
+        "path": "reports/maxim8_variants_full274_20260802/online_v1_evaluation/calculator_sympy/score.json",
+        "sha256": "04a30f628930b935387330a00ef57f8fde71047ec38b8a53730bc3111cd46bc6"
+      },
+      "parser": {
+        "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/evaluation/score.json",
+        "sha256": "ee722d46be78e33aac005a0078963d1a9cde400e87452f0013e22f3bebc04ef0"
+      },
+      "visual_sketchpad": {
+        "path": "reports/maxim_visual_sketchpad_v2_20260803/evaluation_cached_union_v1/score.json",
+        "sha256": "214d47c86c7f35fb2732a99c781820225fcc53ce2e5668fb54555a3829fccb53"
+      }
+    },
+    "source_family_folds": 5,
+    "source_family_is_policy_feature": false,
+    "reporting_label": "development_replay_not_untouched_book_holdout"
+  }
+}

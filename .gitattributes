@@ -1,1 +1,36 @@
+.gitattributes text eol=lf
 *.sh text eol=lf
+*.py text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+*.md text eol=lf
+*.sha256 text eol=lf
+
+# Byte-pinned Qwen3.5-9B replay bundle.  These files are verified by SHA-256,
+# so Git must store and restore their exact bytes instead of normalizing EOLs.
+configs/maxim_9b_source_replay_v1_20260809/** binary
+reports/maxim_9b_source_replay_v1_20260809/** binary
+artifacts/baselines/basic_page_rag_v1/** binary
+artifacts/baselines/no_tools_v1/b0_no_tools_raw.jsonl binary
+reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation_orchestrated/matched_image97_judge_manifest.json binary
+reports/maxim_query_active_crop_v2_20260803/composition_manifest.json binary
+reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/score.json binary
+reports/maxim_query_active_crop_v2_20260803/preregistered_profile.json binary
+reports/maxim_query_active_crop_v2_20260803/solver.jsonl binary
+
+# These two checksum manifests are themselves compared byte-for-byte.  They use
+# LF and must not be converted by core.autocrlf on Windows checkouts.
+experiments/maxim_9b_baseline_selector_v1/input/frozen/SHA256SUMS.txt binary
+experiments/maxim_9b_baseline_selector_v1/input/v1_2/frozen/SHA256SUMS.txt binary
+
+# Audited 2026-08-10 source-expansion release. These files are referenced by
+# exact SHA-256 from the release report and must survive Windows checkouts
+# without Git EOL normalization.
+experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/** binary
+reports/maxim_9b_source_expansion_wave_v1_1_20260810/** binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/PREREGISTRATION.json binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/frozen/dataset_manifest.json binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/current_minilm/result.json binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/gte_multilingual_base_t439/result.json binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/bge_m3_dense/result.json binary

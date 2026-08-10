@@ -1,0 +1,66 @@
+{
+  "abstentions": 200,
+  "accepted_certificates": 74,
+  "artifacts": {
+    "audit": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_primary_layout_hardened_resolver\\audit.jsonl",
+      "sha256": "f48fa056797debaeb852af9461421f893127190512c7c2d5be8ceecad27bdf63"
+    },
+    "candidate": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_primary_layout_hardened_resolver\\candidate.jsonl",
+      "sha256": "9865bb27cc26f3cf23d2dfee2173a482270f9fbad6be49ac2c6a539506368143"
+    },
+    "certificates": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_primary_layout_hardened_resolver\\certificates.jsonl",
+      "sha256": "5c30049affe459c982e8df0e82250370d4f65f7d3f50a58c2c2b0833d0f0a41d"
+    }
+  },
+  "benchmark_candidate_or_outcome_access": false,
+  "created_at_utc": "2026-08-05T02:47:40.192766+00:00",
+  "eligible_rows": 88,
+  "gold_access": false,
+  "inputs": {
+    "documents": {
+      "meb_dd_tyt_cografya_57424d9b0f99": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\MEB-DD-TYT-cografya.pdf",
+        "sha256": "57424d9b0f99229d42789871af2753181e5b79f2e3d9a540f916703cd49a5dd8"
+      },
+      "meb_dd_tyt_fizik_7254325f6a47": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\MEB-DD-TYT-fizik.pdf",
+        "sha256": "7254325f6a477b745782566d3281af03d3f153af2e2c4f2cf3ae8f83f4388480"
+      },
+      "meb_dd_tyt_kimya_b3b89a296d91": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\MEB-DD-TYT-kimya.pdf",
+        "sha256": "b3b89a296d91ec0c3c7d6862d3113e0b7dcf34469c993808715203bbf0df1e7f"
+      },
+      "meb_def_10biyoloji_640bb362f2d5": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\MEB-DEF-10biyoloji.pdf",
+        "sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b"
+      },
+      "yandex_7_matematik_meb_dee64189589b": {
+        "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\tmp\\remaining_official_source_audit\\pdfs\\7 - Matematik - MEB.pdf",
+        "sha256": "dee64189589ba60431680f552edcb9613e620bdf8138c234daf16c7b02450219"
+      }
+    },
+    "parser_observations": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_document_parser_v1_20260803\\parser_augmented_solver_v1\\parser_artifacts\\parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038"
+    },
+    "source_index": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_coordinate_candidate_v1.json",
+      "sha256": "a73560f6264150b8d7e973ea82ff3a48f4fca04b692cecee0a741ecaa6abb206"
+    },
+    "source_locators": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a"
+    }
+  },
+  "profile": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\configs\\maxim_public_workbook_primary_layout_v2.json",
+    "sha256": "8b51e39d072c2146b07595e0f0418a2fd208720f879200d1b0c0e2fd152869f0"
+  },
+  "rows": 274,
+  "schema_version": "maxim-public-workbook-run-v1",
+  "task_id_used_for_alignment_only": true,
+  "viewer_nosw_used_as_policy_feature": false
+}

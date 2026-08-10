@@ -1,0 +1,67 @@
+{
+  "schema_version": "maxim-web-tools-cycle-consolidated-v1",
+  "reporting_status": "exploratory_posthoc_not_independent_holdout",
+  "strict_frozen": {
+    "correct": 205,
+    "denominator": 274,
+    "accuracy": 0.748175,
+    "math_correct": 108,
+    "math_denominator": 139,
+    "math_accuracy": 0.776978
+  },
+  "official_image_certificate_snapshot": {
+    "correct": 226,
+    "denominator": 274,
+    "accuracy": 0.824818,
+    "math_correct": 118,
+    "math_denominator": 139,
+    "math_accuracy": 0.848921,
+    "score_path": "exploratory_plus_tools_official_image_cert_v2/evaluation/score.json"
+  },
+  "exploratory_maximum": {
+    "correct": 228,
+    "denominator": 274,
+    "accuracy": 0.832117,
+    "math_correct": 120,
+    "math_denominator": 139,
+    "math_accuracy": 0.863309,
+    "solver": {
+      "path": "exploratory_all_certificates_v3/run/solver.jsonl",
+      "sha256": "64843ab15d2283cd43857d2b49cd33cbd21f8bfaa9482733a0749595bc511b9a"
+    },
+    "image_judge": {
+      "path": "exploratory_all_certificates_v3/evaluation/derived_certificate_image97_judge.jsonl",
+      "sha256": "f237fb28f9b453964c75a29a17f6ffee0213178874ba3ccb06c21c38092ab3b8"
+    },
+    "score": {
+      "path": "exploratory_all_certificates_v3/evaluation/score.json",
+      "sha256": "25e488d358d7370f48e888f4047f9aaf89d43d704c61e5cf0a513820477bcd35"
+    }
+  },
+  "web_router": {
+    "script": "scripts/run_maxim_exact_official_web_router_v1.py",
+    "script_sha256": "e0e841a91116386343eea404c313462ffe196327bfa4e8e4a1688e4a5a190676",
+    "config": "configs/maxim_exact_official_web_router_v1.json",
+    "config_sha256": "18c2804bb569e1923005d39989ba2395f02b2c7f1fbf0524f3ab09b98915f8f7",
+    "live_backend_run": false,
+    "dry_run_rows": 274,
+    "query_eligible": 212,
+    "fail_closed": 62
+  },
+  "resource_policy": {
+    "shared_gpu_used": false,
+    "remote_inference_used": false,
+    "external_compute_used": false,
+    "local_cpu_only_for_composition_and_scoring": true
+  },
+  "verification": {
+    "targeted_tests_passed": 19,
+    "solver_errors": 0,
+    "missing_answers": 0
+  },
+  "limitations": [
+    "All results above 205/274 are exploratory and post-hoc.",
+    "An untouched holdout and independent image adjudication are required.",
+    "The final two derived image rows have a primary publisher source but no official answer key."
+  ]
+}

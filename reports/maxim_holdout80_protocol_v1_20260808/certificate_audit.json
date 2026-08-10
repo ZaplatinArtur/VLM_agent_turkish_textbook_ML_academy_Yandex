@@ -1,0 +1,17 @@
+{
+  "schema_version": "holdout80-certificate-audit-v1",
+  "manifest_hash_ok": true,
+  "gold_hash_ok": true,
+  "manifest_count": 80,
+  "sealed_gold_count": 80,
+  "task_id_bijection": true,
+  "question_assets_verified": 80,
+  "question_asset_errors": [],
+  "official_key_records_verified": 80,
+  "official_key_asset_errors": [],
+  "automatic_mcq_gold_count": 60,
+  "manual_math_gold_count": 20,
+  "math_full_key_page_fallback_count": 1,
+  "overall_integrity_pass": true,
+  "not_a_model_quality_metric": true
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": "maxim-holdout80-final-source-evidence-public-v1",
+  "created_date": "2026-08-09",
+  "split": {
+    "kind": "same_book_task_disjoint",
+    "book_disjoint": false,
+    "total": 80,
+    "math12": 20,
+    "biology9": 30,
+    "physics12": 30
+  },
+  "scope": "source evidence and exact official-source lookup; not end-to-end QA accuracy",
+  "results": {
+    "raw_frozen": {
+      "composite": {"correct": 71, "total": 80, "accuracy": 0.8875},
+      "mcq": {"correct": 51, "total": 60, "accuracy": 0.85, "accepted": 59, "abstained": 1, "coverage": 0.9833333333333333},
+      "biology9": {"correct": 30, "total": 30, "accuracy": 1.0, "coverage": 1.0},
+      "physics12": {"correct": 21, "total": 30, "accuracy": 0.7, "accepted": 29, "coverage": 0.9666666666666667},
+      "math12_source_binding": {"correct": 20, "total": 20, "accuracy": 1.0, "coverage": 1.0}
+    },
+    "accepted_erratum": {
+      "protocol_inclusive": {"correct": 79, "total": 80, "accuracy": 0.9875},
+      "valid_only": {"correct": 79, "total": 79, "accuracy": 1.0},
+      "valid_mcq": {"correct": 59, "total": 59, "accuracy": 1.0},
+      "math12_source_binding": {"correct": 20, "total": 20, "accuracy": 1.0}
+    },
+    "separate_comparator": {
+      "v7_qa": {"correct": 242, "total": 274, "accuracy": 0.8832116788321168, "same_metric": false}
+    }
+  },
+  "errata": [
+    {"task": "physics_u2_q31", "sealed_gold": "C", "official_same_unit": "D", "sealed_matches_unit": 3},
+    {"task": "physics_u2_q32", "sealed_gold": "B", "official_same_unit": "C", "sealed_matches_unit": 3},
+    {"task": "physics_u2_q34", "sealed_gold": "E", "official_same_unit": "C", "sealed_matches_unit": 3},
+    {"task": "physics_u2_q38", "sealed_gold": "C", "official_same_unit": "A", "sealed_matches_unit": 3},
+    {"task": "physics_u3_q28", "sealed_gold": "D", "official_same_unit": "A", "sealed_matches_unit": 2},
+    {"task": "physics_u3_q30", "sealed_gold": "B", "official_same_unit": "A", "sealed_matches_unit": 2},
+    {"task": "physics_u3_q31", "sealed_gold": "D", "official_same_unit": "C", "sealed_matches_unit": 2},
+    {"task": "physics_u3_q37", "sealed_gold": "A", "official_same_unit": "B", "sealed_matches_unit": 2}
+  ],
+  "invalid_protocol_rows": [
+    {"task": "physics_u2_q24", "frozen_type": "exact_choice", "official_type": "open_response", "resolver_outcome": "abstain"}
+  ],
+  "hashes": {
+    "selection_manifest_sha256": "7a6ecbe1579790541bc0c0c36a9141941c2c0cf8f65dd3cd5b6a687bae8c5fa5",
+    "sealed_gold_sha256": "55e58007a1f30f4ee1c7f10c6f9c4bdd6b87be861046c13c7496a709a4fb7bcc",
+    "math_pre_map_output_seal_sha256": "b7419a76dbffbd1e45daffb6f4476bf13cb4e8c4099dcd1c4be74fcb1ccc60bc",
+    "mcq_launch_commit": "99963dc0225e2f5ff855d404004cceafadc3ddd5",
+    "mcq_freeze_manifest_sha256": "ceab4465cd2aeb36603471a5c053e43d42a633f8ddb9d8a6864f36eec1229f16",
+    "mcq_code_projection_sha256": "f9f63eb50a2087b95385bd4c9644e547e9ae1698cc6811712b692aae26779828",
+    "mcq_input_jsonl_sha256": "b719426c45896d6fe90b22a75940b305b9ba840c1de66a666af7bfda3387b053",
+    "mcq_source_results_sha256": "2b03610c385b2def0612d075145c366860e0aa909714e71c93ac7b2a81862d9e",
+    "mcq_predictions_sha256": "c568be738844730674e3d9e20f40a53ae47372aeca289f16fdbc0fd1861d97a5",
+    "mcq_pre_map_output_seal_sha256": "4441255a7aac6bdcf83e3f4af3f348eb9ad7e78afb199bf1c4f4a321ddb5fe9b"
+  },
+  "audit": {
+    "all_accepted_mcq_match_official_pdf_key": true,
+    "accepted_mcq_checked": 59,
+    "independently_confirmed_swapped_gold_rows": 8,
+    "independently_confirmed_invalid_open_response_rows": 1,
+    "raw_score_overwritten": false,
+    "post_map_subject_prefix_wrapper": true,
+    "formula_or_predictions_changed_by_wrapper": false,
+    "complete_os_file_access_log_available": false
+  },
+  "privacy": {
+    "contains_private_assets": false,
+    "contains_alignment_map": false,
+    "contains_sealed_gold_payload": false,
+    "contains_predictions": false,
+    "contains_per_input_evaluation": false
+  }
+}

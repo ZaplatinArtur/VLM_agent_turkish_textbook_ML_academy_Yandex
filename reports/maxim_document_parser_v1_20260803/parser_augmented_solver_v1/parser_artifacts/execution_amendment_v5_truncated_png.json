@@ -1,0 +1,33 @@
+{
+  "schema_version": "maxim-paddleocr-vl16-execution-amendment-v5",
+  "created_at_utc": "2026-08-03T21:05:18.798847+00:00",
+  "status": "FROZEN_BEFORE_SUCCESSFUL_RETRY",
+  "score_access": false,
+  "reason": "Full parse and one identical-path retry both failed before model inference with libpng incomplete-buffer on val_0197. Read-only preflight proved Pillow can deterministically decode the original truncated PNG when LOAD_TRUNCATED_IMAGES is enabled.",
+  "scope": "Only path-reader failures containing literal 'Image read Error:'; all other images keep exact path input.",
+  "fallback": "Pillow LOAD_TRUNCATED_IMAGES=True, convert RGB, contiguous uint8 numpy array, then identical frozen Paddle layout + vLLM recognition pipeline.",
+  "original": {
+    "task_id": "val_0197",
+    "path": "/home/m.kulyamin/maxim_all_approaches_20260803_server2/data/images/val_0197.png",
+    "sha256": "3bba77ef829a14b82b8df38112f42e5286a02362390be3217691cbeed32aca84",
+    "bytes": 86016,
+    "header": "PNG RGBA 530x768"
+  },
+  "decoded_rgb": {
+    "shape": [
+      768,
+      530,
+      3
+    ],
+    "dtype": "uint8",
+    "rgb_bytes_sha256": "9bbfe2932ad0af70f8ec7e1433e25ccf5b2e554adcfd8ca2d8137e834323960f"
+  },
+  "old_runner_sha256": "36d26fdeae0d57f98cb85f03a924f0341dcf5a20402d6efd564af5b501d0ff54",
+  "new_runner_sha256": "34e88b66a7eac591d3eba616363cc1fac13867e64ddf8eaa46dfd7e87fe8e968",
+  "fixed_generation": {
+    "backend": "vllm-server",
+    "model": "PaddlePaddle/PaddleOCR-VL-1.6",
+    "max_new_tokens": 1024
+  },
+  "retry": "world_size=4 rank=2 --retry-errors, identical cache and queue"
+}

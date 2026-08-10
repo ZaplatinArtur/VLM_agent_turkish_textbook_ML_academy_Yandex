@@ -1,0 +1,405 @@
+{
+  "schema_version": "maxim-parallel8-reasoning-first-v2-diagnostics-v1",
+  "artifact": "maxim_parallel8_judge_reasoning_first_v2",
+  "scope": "Aggregate paired diagnostics only; no candidate/reference answers, judge rationales, or task-level answer content.",
+  "benchmark": {
+    "n": 274,
+    "math_n": 139,
+    "non_math_n": 135,
+    "deterministic_n": 177,
+    "image_judge_n": 97,
+    "fixed_denominator": true,
+    "task_id_sets_matched_across_all_comparators": true,
+    "benchmark_sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+  },
+  "headline": {
+    "correct": 151,
+    "accuracy": 0.551095,
+    "math_correct": 79,
+    "math_accuracy": 0.568345,
+    "non_math_correct": 72,
+    "non_math_accuracy": 0.533333,
+    "deterministic_correct": 102,
+    "image_judge_correct": 49,
+    "comparator_correct": {
+      "direct_reasoning_first_v2": 137,
+      "decompose_reasoning_first_v2": 150,
+      "frozen_page_rag": 141,
+      "frozen_no_tools": 191,
+      "parallel8_answer_first_v1": 129
+    }
+  },
+  "statistical_method": {
+    "test": "two-sided exact McNemar test",
+    "null": "the paired systems have equal marginal probability of correctness",
+    "calculation": "2 * BinomialCDF(min(fixed, regressed); fixed + regressed, 0.5), capped at 1",
+    "fixed_definition": "parallel8 reasoning-first v2 correct and comparator incorrect",
+    "regressed_definition": "parallel8 reasoning-first v2 incorrect and comparator correct",
+    "multiplicity_adjustment": "none",
+    "warning": "Source and subject slices are exploratory; all p-values are unadjusted for multiple comparisons."
+  },
+  "comparison_record_fields": [
+    "n",
+    "candidate_correct",
+    "comparator_correct",
+    "delta_correct",
+    "delta_pp",
+    "fixed",
+    "regressed",
+    "mcnemar_exact_two_sided_p"
+  ],
+  "protocol_caveats": {
+    "direct_v2": "Matched on benchmark, model, reasoning-first contract, image input, temperature, and judge-v2; not compute-matched.",
+    "decompose_v2": "Matched reasoning-first v2 family and judge-v2; treatment structures and compute differ.",
+    "page_rag": "Frozen historical output control; judge semantics match, but generation/retrieval provenance and compute differ.",
+    "no_tools": "Frozen historical reference; its 97 judged rows use presentation-hybrid-v1 rather than judge-v2. Deterministic rows are directly paired; image and aggregate comparisons are not judge-matched.",
+    "parallel8_v1": "Same eight-route/selector family but answer-first schema order. Difference is an ablation/run comparison, not an isolated causal estimate of schema order."
+  },
+  "pairwise_comparisons": {
+    "direct_v2": {
+      "overall": [274, 151, 137, 14, 5.109489, 32, 18, 0.06490864707227217],
+      "math": [139, 79, 65, 14, 10.071942, 19, 5, 0.006610751152038574],
+      "non_math": [135, 72, 72, 0, 0.0, 13, 13, 1.0],
+      "by_source": {
+        "deterministic": [177, 102, 91, 11, 6.214689, 19, 8, 0.052238985896110535],
+        "image_judge": [97, 49, 46, 3, 3.092784, 13, 10, 0.6776394844055176]
+      },
+      "by_subject": {
+        "ATATÜRKÇÜLÜK": [1, 0, 1, -1, -100.0, 0, 1, 1.0],
+        "Biology": [19, 6, 7, -1, -5.263158, 1, 2, 1.0],
+        "Chemistry": [32, 17, 19, -2, -6.25, 0, 2, 0.5],
+        "English": [9, 4, 6, -2, -22.222222, 0, 2, 0.5],
+        "Geography": [14, 10, 6, 4, 28.571429, 4, 0, 0.125],
+        "History": [10, 6, 5, 1, 10.0, 1, 0, 1.0],
+        "Math": [139, 79, 65, 14, 10.071942, 19, 5, 0.006610751152038574],
+        "Philosophy": [2, 1, 2, -1, -50.0, 0, 1, 1.0],
+        "Physics": [19, 14, 12, 2, 10.526316, 3, 1, 0.625],
+        "Science": [5, 1, 1, 0, 0.0, 0, 0, 1.0],
+        "Sociology": [3, 2, 2, 0, 0.0, 0, 0, 1.0],
+        "Turkish language and literature": [21, 11, 11, 0, 0.0, 4, 4, 1.0]
+      }
+    },
+    "decompose_v2": {
+      "overall": [274, 151, 150, 1, 0.364964, 26, 25, 1.0],
+      "math": [139, 79, 75, 4, 2.877698, 16, 12, 0.5715881884098053],
+      "non_math": [135, 72, 75, -3, -2.222222, 10, 13, 0.6776394844055176],
+      "by_source": {
+        "deterministic": [177, 102, 100, 2, 1.129944, 17, 15, 0.860050065908581],
+        "image_judge": [97, 49, 50, -1, -1.030928, 9, 10, 1.0]
+      },
+      "by_subject": {
+        "ATATÜRKÇÜLÜK": [1, 0, 0, 0, 0.0, 0, 0, 1.0],
+        "Biology": [19, 6, 8, -2, -10.526316, 0, 2, 0.5],
+        "Chemistry": [32, 17, 19, -2, -6.25, 0, 2, 0.5],
+        "English": [9, 4, 7, -3, -33.333333, 0, 3, 0.25],
+        "Geography": [14, 10, 8, 2, 14.285714, 4, 2, 0.6875],
+        "History": [10, 6, 4, 2, 20.0, 2, 0, 0.5],
+        "Math": [139, 79, 75, 4, 2.877698, 16, 12, 0.5715881884098053],
+        "Philosophy": [2, 1, 2, -1, -50.0, 0, 1, 1.0],
+        "Physics": [19, 14, 13, 1, 5.263158, 2, 1, 1.0],
+        "Science": [5, 1, 1, 0, 0.0, 0, 0, 1.0],
+        "Sociology": [3, 2, 2, 0, 0.0, 0, 0, 1.0],
+        "Turkish language and literature": [21, 11, 11, 0, 0.0, 2, 2, 1.0]
+      }
+    },
+    "page_rag": {
+      "overall": [274, 151, 141, 10, 3.649635, 40, 30, 0.2819789217936561],
+      "math": [139, 79, 62, 17, 12.230216, 29, 12, 0.011507789735333063],
+      "non_math": [135, 72, 79, -7, -5.185185, 11, 18, 0.26493089646101],
+      "by_source": {
+        "deterministic": [177, 102, 96, 6, 3.389831, 21, 15, 0.40503224614076316],
+        "image_judge": [97, 49, 45, 4, 4.123711, 19, 15, 0.6075913612730801]
+      },
+      "by_subject": {
+        "ATATÜRKÇÜLÜK": [1, 0, 1, -1, -100.0, 0, 1, 1.0],
+        "Biology": [19, 6, 8, -2, -10.526316, 1, 3, 0.625],
+        "Chemistry": [32, 17, 19, -2, -6.25, 2, 4, 0.6875],
+        "English": [9, 4, 7, -3, -33.333333, 0, 3, 0.25],
+        "Geography": [14, 10, 11, -1, -7.142857, 1, 2, 1.0],
+        "History": [10, 6, 6, 0, 0.0, 1, 1, 1.0],
+        "Math": [139, 79, 62, 17, 12.230216, 29, 12, 0.011507789735333063],
+        "Philosophy": [2, 1, 2, -1, -50.0, 0, 1, 1.0],
+        "Physics": [19, 14, 12, 2, 10.526316, 3, 1, 0.625],
+        "Science": [5, 1, 2, -1, -20.0, 0, 1, 1.0],
+        "Sociology": [3, 2, 2, 0, 0.0, 0, 0, 1.0],
+        "Turkish language and literature": [21, 11, 9, 2, 9.52381, 3, 1, 0.625]
+      }
+    },
+    "no_tools": {
+      "overall": [274, 151, 191, -40, -14.59854, 16, 56, 0.000002397319809534421],
+      "math": [139, 79, 105, -26, -18.705036, 9, 35, 0.00010604466626773501],
+      "non_math": [135, 72, 86, -14, -10.37037, 7, 21, 0.012540951371192932],
+      "by_source": {
+        "deterministic": [177, 102, 132, -30, -16.949153, 7, 37, 0.000005299581744111492],
+        "image_judge": [97, 49, 59, -10, -10.309278, 9, 19, 0.08715855330228806]
+      },
+      "by_subject": {
+        "ATATÜRKÇÜLÜK": [1, 0, 0, 0, 0.0, 0, 0, 1.0],
+        "Biology": [19, 6, 11, -5, -26.315789, 0, 5, 0.0625],
+        "Chemistry": [32, 17, 20, -3, -9.375, 2, 5, 0.453125],
+        "English": [9, 4, 5, -1, -11.111111, 0, 1, 1.0],
+        "Geography": [14, 10, 12, -2, -14.285714, 1, 3, 0.625],
+        "History": [10, 6, 5, 1, 10.0, 1, 0, 1.0],
+        "Math": [139, 79, 105, -26, -18.705036, 9, 35, 0.00010604466626773501],
+        "Philosophy": [2, 1, 1, 0, 0.0, 0, 0, 1.0],
+        "Physics": [19, 14, 14, 0, 0.0, 2, 2, 1.0],
+        "Science": [5, 1, 3, -2, -40.0, 0, 2, 0.5],
+        "Sociology": [3, 2, 2, 0, 0.0, 0, 0, 1.0],
+        "Turkish language and literature": [21, 11, 13, -2, -9.52381, 1, 3, 0.625]
+      }
+    },
+    "parallel8_v1": {
+      "overall": [274, 151, 129, 22, 8.029197, 40, 18, 0.005354859650800292],
+      "math": [139, 79, 67, 12, 8.633094, 21, 9, 0.04277394525706768],
+      "non_math": [135, 72, 62, 10, 7.407407, 19, 9, 0.08715855330228806],
+      "by_source": {
+        "deterministic": [177, 102, 95, 7, 3.954802, 20, 13, 0.296206368599087],
+        "image_judge": [97, 49, 34, 15, 15.463918, 20, 5, 0.004077315330505371]
+      },
+      "by_subject": {
+        "ATATÜRKÇÜLÜK": [1, 0, 0, 0, 0.0, 0, 0, 1.0],
+        "Biology": [19, 6, 5, 1, 5.263158, 2, 1, 1.0],
+        "Chemistry": [32, 17, 16, 1, 3.125, 3, 2, 1.0],
+        "English": [9, 4, 4, 0, 0.0, 0, 0, 1.0],
+        "Geography": [14, 10, 6, 4, 28.571429, 4, 0, 0.125],
+        "History": [10, 6, 5, 1, 10.0, 1, 0, 1.0],
+        "Math": [139, 79, 67, 12, 8.633094, 21, 9, 0.04277394525706768],
+        "Philosophy": [2, 1, 1, 0, 0.0, 0, 0, 1.0],
+        "Physics": [19, 14, 11, 3, 15.789474, 6, 3, 0.5078125],
+        "Science": [5, 1, 2, -1, -20.0, 0, 1, 1.0],
+        "Sociology": [3, 2, 2, 0, 0.0, 0, 0, 1.0],
+        "Turkish language and literature": [21, 11, 10, 1, 4.761905, 3, 2, 1.0]
+      }
+    }
+  },
+  "candidate_agreement": {
+    "task_count": 274,
+    "candidates_per_task": 8,
+    "candidate_calls": 2192,
+    "selector_calls": 274,
+    "empty_candidate_answers": 2,
+    "normalization": "NFKC + casefold + whitespace collapse + edge quote stripping; lexical, not semantic equality.",
+    "unique_answer_count_distribution": {"1": 73, "2": 62, "3": 62, "4": 34, "5": 19, "6": 10, "7": 4, "8": 10},
+    "mean_unique_normalized_answers": 2.854014598540146,
+    "unanimous_tasks": 73,
+    "strict_majority_tasks": 166,
+    "plurality_tie_tasks": 35,
+    "plurality_size_distribution": {"1": 10, "2": 10, "3": 41, "4": 47, "5": 38, "6": 34, "7": 21, "8": 73},
+    "pairwise_agree_pairs": 4076,
+    "pairwise_total_pairs": 7672,
+    "pairwise_exact_agreement": 0.5312825860271115,
+    "selected_index_distribution": {"1": 92, "2": 33, "3": 31, "4": 18, "5": 17, "6": 19, "7": 31, "8": 33},
+    "selected_route_distribution": {"literal_direct": 92, "formal_structure": 33, "option_elimination": 31, "visual_evidence": 18, "domain_expert": 17, "counterexample_check": 19, "independent_rederive": 31, "concise_verifier": 33},
+    "valid_selected_index_tasks": 274,
+    "selector_final_matches_selected_candidate": 265,
+    "selector_final_matches_selected_candidate_rate": 0.9671532846715328,
+    "selector_final_matches_any_candidate": 269,
+    "selector_final_matches_any_candidate_rate": 0.9817518248175182,
+    "selected_index_points_to_plurality_answer": 212,
+    "selector_final_is_plurality_answer": 211,
+    "answer_type_record_fields": ["n", "unanimous", "strict_majority", "mean_unique", "pairwise_exact_agreement", "selector_matches_selected", "selector_matches_any"],
+    "by_answer_type": {
+      "choice": [212, 70, 146, 2.2735849056603774, 0.6081536388140162, 211, 212],
+      "numeric": [13, 2, 5, 3.923076923076923, 0.37637362637362637, 12, 12],
+      "short_text": [46, 1, 15, 4.913043478260869, 0.2546583850931677, 40, 43],
+      "free_form": [3, 0, 0, 7.666666666666667, 0.011904761904761904, 2, 2]
+    },
+    "accuracy_by_unique_answer_count": {
+      "1": {"correct": 64, "n": 73, "accuracy": 0.8767123287671232},
+      "2": {"correct": 35, "n": 62, "accuracy": 0.5645161290322581},
+      "3": {"correct": 30, "n": 62, "accuracy": 0.4838709677419355},
+      "4": {"correct": 8, "n": 34, "accuracy": 0.23529411764705882},
+      "5": {"correct": 9, "n": 19, "accuracy": 0.47368421052631576},
+      "6": {"correct": 4, "n": 10, "accuracy": 0.4},
+      "7": {"correct": 0, "n": 4, "accuracy": 0.0},
+      "8": {"correct": 1, "n": 10, "accuracy": 0.1}
+    },
+    "final_accuracy_by_selected_index": {
+      "1": {"correct": 63, "n": 92, "accuracy": 0.6847826086956522},
+      "2": {"correct": 21, "n": 33, "accuracy": 0.6363636363636364},
+      "3": {"correct": 15, "n": 31, "accuracy": 0.4838709677419355},
+      "4": {"correct": 5, "n": 18, "accuracy": 0.2777777777777778},
+      "5": {"correct": 8, "n": 17, "accuracy": 0.47058823529411764},
+      "6": {"correct": 5, "n": 19, "accuracy": 0.2631578947368421},
+      "7": {"correct": 16, "n": 31, "accuracy": 0.5161290322580645},
+      "8": {"correct": 18, "n": 33, "accuracy": 0.5454545454545454}
+    }
+  },
+  "resources": {
+    "recorded_successful_solver_usage": {
+      "logical_model_calls": 2466,
+      "logical_model_calls_per_task": 9.0,
+      "input_tokens": 2267179,
+      "output_tokens": 576244,
+      "combined_tokens": 2843423,
+      "combined_tokens_mean_per_task": 10377.456204379561
+    },
+    "candidate_stage": {
+      "calls": 2192,
+      "input_tokens": 1566172,
+      "output_tokens": 471740,
+      "combined_tokens": 2037912,
+      "latency_s_mean_per_call": 4.009234032846716,
+      "latency_s_median_per_call": 3.74,
+      "latency_s_p95_nearest_rank": 7.036,
+      "latency_s_max": 11.238,
+      "finish_reason": {"stop": 2192},
+      "recovered_partial_calls": 0,
+      "parse_error_calls": 0,
+      "attempt_distribution": {"1": 2153, "2": 39},
+      "recorded_http_attempts": 2231
+    },
+    "selector_stage": {
+      "calls": 274,
+      "input_tokens": 701007,
+      "output_tokens": 104504,
+      "combined_tokens": 805511,
+      "latency_s_mean_per_call": 5.418,
+      "latency_s_median_per_call": 4.4025,
+      "latency_s_p95_nearest_rank": 12.334,
+      "latency_s_max": 15.846,
+      "finish_reason": {"stop": 274},
+      "recovered_partial_calls": 0,
+      "parse_error_calls": 0,
+      "attempt_distribution": {"1": 273, "2": 1},
+      "recorded_http_attempts": 275
+    },
+    "trace_usage_matches_recorded_successful_solver_usage": true,
+    "recorded_successful_trace_http_attempts": 2506,
+    "parallel_candidate_stage_max_latency_s": {"mean": 5.000992700729927, "median": 4.938, "p95_nearest_rank": 8.13, "max": 11.238},
+    "task_latency_s": {"sum": 3635.223, "mean": 13.267237226277372, "median": 10.165, "p95_nearest_rank": 34.515, "max": 57.556},
+    "comparator_record_fields": ["correct", "logical_calls", "combined_tokens", "candidate_token_ratio", "mean_latency_s", "median_latency_s", "p95_latency_s"],
+    "comparator_summary": {
+      "candidate": [151, 2466, 2843423, 1.0, 13.267, 10.165, 34.515],
+      "direct_v2": [137, 274, 297961, 9.542936827302903, 7.552, 5.765, 16.95],
+      "decompose_v2": [150, 548, 647833, 4.389129605932393, 12.437, 11.124, 23.402],
+      "parallel8_v1": [129, 2466, 3120633, 0.9111686635371734, 20.01, 14.397, 47.406],
+      "page_rag_historical": [141, null, 4662595, 0.6098370113638435, 22.232, 15.963, 61.609],
+      "no_tools_historical": [191, null, 1496110, 1.9005440776413498, 247.269, 94.74, 1045.547]
+    },
+    "cost_note": "No monetary price/rate is recorded. Tokens and logical calls are compute proxies. Historical-control latency and token accounting are not matched runtime comparisons."
+  },
+  "retry_audit": {
+    "operational_task_ids": ["val_0069"],
+    "initial_logged_failure_count": 1,
+    "initial_failure_present_in_generation_log": true,
+    "initial_failure_class": "invalid structured response with finish_reason=length after endpoint attempts",
+    "retry_profile": "compact bounded reasoning-first candidate/selector schemas; max_tokens capped at 900",
+    "final_row_present": true,
+    "final_row_error": null,
+    "final_row_missing_answer": false,
+    "final_row_forced_answer": false,
+    "final_row_candidate_count": 8,
+    "final_row_logical_calls": 9,
+    "billing_limitation": "The final solver records the successful replacement row only. Usage for the failed initial task attempt is not archived, so exact total HTTP attempts/tokens including retry overhead cannot be reconstructed."
+  },
+  "judge": {
+    "rows": 97,
+    "strict_correct": 49,
+    "strict_incorrect": 48,
+    "label_distribution": {"fully_correct": 49, "mostly_correct": 4, "partially_correct": 22, "incorrect": 22},
+    "final_answer_correct": 54,
+    "reasoning_correct": 51,
+    "complete": 55,
+    "reference_quality_issue": 3,
+    "backend_errors": 0,
+    "attempts_total": 98,
+    "recorded_successful_response_tokens": {"prompt_tokens": 155672, "completion_tokens": 18178, "combined_tokens": 173850},
+    "finish_reason": {"stop": 97},
+    "distinct_raw_error_tags_on_strict_incorrect": 36,
+    "error_tag_mentions_on_strict_incorrect": 115,
+    "strict_incorrect_error_tag_count_distribution": {"1": 3, "2": 23, "3": 22},
+    "error_types_on_strict_incorrect": {
+      "incorrect_reasoning": 21,
+      "incorrect_final_answer": 14,
+      "incomplete_answer": 10,
+      "incomplete_reasoning": 9,
+      "missing_sub_answer": 7,
+      "missing_required_part": 6,
+      "misinterpretation_of_question": 5,
+      "calculation_error": 4,
+      "wrong_final_answer": 4,
+      "wrong_answer": 4,
+      "missing_reasoning": 3,
+      "misinterpretation": 2,
+      "factual_error": 2,
+      "reasoning_error": 2,
+      "mismatched_reference": 1,
+      "incorrect_answer": 1,
+      "incomplete_response": 1,
+      "incorrect_model": 1,
+      "misinterpretation_of_map": 1,
+      "incorrect_option_selection": 1,
+      "misinterpretation_of_task": 1,
+      "failure_to_use_reference": 1,
+      "missing_required_answer": 1,
+      "logical_inconsistency": 1,
+      "missing_required_element": 1,
+      "wrong_reasoning": 1,
+      "incorrect_sub_answer": 1,
+      "missing_content": 1,
+      "incorrect_order": 1,
+      "misinterpretation_of_concept": 1,
+      "missing_answer": 1,
+      "missing_steps": 1,
+      "incomplete_expansion": 1,
+      "incorrect_geometry": 1,
+      "incorrect_coordinate_assignment": 1,
+      "incorrect_distance_calculation": 1
+    },
+    "prompt_version": "judge-v2",
+    "setup": "maxim_parallel8_judge_reasoning_first_v2",
+    "model": "Qwen/Qwen3.5-9B",
+    "backend_config": {
+      "backend": "openai-compatible",
+      "model": "Qwen/Qwen3.5-9B",
+      "endpoint": "http://127.0.0.1:18100/v1/chat/completions",
+      "temperature": 0.0,
+      "max_tokens": 900,
+      "seed": 20260714,
+      "use_response_format": true,
+      "enable_thinking": false,
+      "image_mode": "data_url"
+    },
+    "backend_config_hash": "1caba4158b78bb4c9c2d6750c8d663d4e75195fdf23aafcbca71ff6605bb91d0",
+    "uniform_backend_config": true,
+    "uniform_backend_config_hash": true,
+    "note": "Judge tags are overlapping free-form multi-label outputs, not a normalized error ontology; no answers or rationales are reproduced."
+  },
+  "integrity": {
+    "solver_rows": 274,
+    "unique_task_ids": 274,
+    "solver_errors": 0,
+    "missing_final_answers": 0,
+    "forced_answers": 0,
+    "nonempty_tool_calls": 0,
+    "gold_access_violations": 0,
+    "forbidden_gold_fields": 0
+  },
+  "sha256": {
+    "runner.py": "68eeaa8b7bdd2e85936048ffc7c7afe4a76fd2c3f2ab682cc543a36ec9cb11e7",
+    "retry_runner.py": "30587e6ee1cdadf525695a24e1bc2a26a13a10c31f03f76770ac384514e1f3fc",
+    "solver.jsonl": "6115effd03d7eac3e11e9726ecd9822802a04f235a0b361e1863b9bc7e221023",
+    "image97_input.jsonl": "41f35172092f67bc14368d7312cb91ad50256166dc42d0f630ed5e7a9965aa46",
+    "image97_judge.jsonl": "324de2af3b16ee5ac25bcfce9412667e8c44a8c6f200156643f3ebe1b99ea1f0",
+    "image97_strict.jsonl": "449f92c9d7b42591da0014d570eb86467e2b0dd1dc0e8261a716a51fda37acaf",
+    "score.json": "36326b28195cf8333c2934702c20970149dcb58767b58183cab2390b921ba07f",
+    "direct_v2_score.json": "aff8d98e64eca3d584eea9e8e82f612fff28ed02bd77a55e4f4b25bf66d0ec2d",
+    "decompose_v2_score.json": "47e87b0fa364c753c35e91feb7ed9eeca6fa22622da21343b5818833fc4fbd6e",
+    "page_rag_score.json": "8252121d4037e2a7f01c4b743af4d113b69e83875195fb9a8f43a24988846335",
+    "no_tools_score.json": "e7852752d9fb141978f017d060ad6d7c4e8e10ec9a0999e85814f11ca3bb4b4d",
+    "parallel8_v1_score.json": "2e1d1508b47d7d2cc501bab7232161046851309346ed3ed18582cf2abbf2f47e"
+  },
+  "privacy": {
+    "contains_reference_answers": false,
+    "contains_model_answers": false,
+    "contains_rationales": false,
+    "task_ids_limited_to_operational_retry_audit": true
+  },
+  "conclusion": {
+    "decision": "not_promoted_as_general_baseline; math_route_candidate_only",
+    "point_estimate": "151/274 is +10 over frozen page-RAG and +14 over matched direct v2.",
+    "significance": "The overall gains are not significant at 0.05. Math gains versus direct and page-RAG are significant before multiplicity correction; Non-Math ties direct and trails page-RAG.",
+    "cost": "The treatment uses 9 logical calls/task and 9.54x the direct-v2 token budget; it is statistically indistinguishable from decompose v2 while using 4.39x its tokens."
+  }
+}

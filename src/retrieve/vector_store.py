@@ -1,4 +1,7 @@
 import json
+import hashlib
+import os
+from collections import OrderedDict
 from collections.abc import Iterable
 from enum import Enum
 from pathlib import Path
@@ -21,6 +24,7 @@ HNSW_EF_SEARCH = 128
 # поэтому подмножества такого размера обсчитываем точным перебором.
 EXACT_SUBSET_MAX = 50_000
 OVERFETCH_FACTOR = 4
+SUBSET_CACHE_MAX_VECTORS = 100_000
 
 
 class IndexKind(str, Enum):
@@ -28,6 +32,12 @@ class IndexKind(str, Enum):
     FLAT = "flat"
     HNSW = "hnsw"
     AUTO = "auto"
+
+
+def resolve_index_kind(kind: IndexKind, size_hint: int) -> IndexKind:
+    if kind is IndexKind.AUTO:
+        return IndexKind.FLAT if size_hint <= FLAT_MAX_VECTORS else IndexKind.HNSW
+    return kind
 
 
 def _to_matrix(vectors: list[list[float]]) -> np.ndarray:
@@ -45,8 +55,7 @@ def _normalize(matrix: np.ndarray) -> np.ndarray:
 
 def make_index(dim: int, kind: IndexKind = IndexKind.AUTO, size_hint: int = 0):
     """Создаёт пустой FAISS-индекс заданного типа."""
-    if kind is IndexKind.AUTO:
-        kind = IndexKind.FLAT if size_hint <= FLAT_MAX_VECTORS else IndexKind.HNSW
+    kind = resolve_index_kind(kind, size_hint)
     if kind is IndexKind.FLAT:
         return faiss.IndexFlatIP(dim)
     if kind is IndexKind.HNSW:
@@ -76,6 +85,10 @@ class FaissVectorStore:
         self.chunk_ids = list(chunk_ids)
         self._positions = {chunk_id: i for i, chunk_id in enumerate(self.chunk_ids)}
         self._index = index
+        self._subset_cache: OrderedDict[bytes, tuple[np.ndarray, np.ndarray]] = (
+            OrderedDict()
+        )
+        self._subset_cache_vectors = 0
 
     @classmethod
     def from_vectors(
@@ -84,6 +97,9 @@ class FaissVectorStore:
             vectors: list[list[float]],
             kind: IndexKind = IndexKind.AUTO,
     ) -> "FaissVectorStore":
+        configured_kind = os.environ.get("MLA_FAISS_INDEX_KIND", "").strip()
+        if kind is IndexKind.AUTO and configured_kind:
+            kind = IndexKind(configured_kind.casefold())
         matrix = _normalize(_to_matrix(vectors))
         index = make_index(matrix.shape[1], kind, matrix.shape[0])
         index.add(matrix)
@@ -101,6 +117,18 @@ class FaissVectorStore:
     @property
     def size(self) -> int:
         return self._index.ntotal
+
+    @property
+    def dimension(self) -> int:
+        return int(self._index.d)
+
+    @property
+    def index_kind(self) -> IndexKind:
+        if isinstance(self._index, faiss.IndexFlat):
+            return IndexKind.FLAT
+        if getattr(self._index, "hnsw", None) is not None:
+            return IndexKind.HNSW
+        raise ValueError(f"unsupported persisted FAISS type: {self.index_type}")
 
     def save(self, directory: Path | str) -> None:
         """Сохраняет снимок индекса на диск: сам индекс FAISS + порядок chunk_id.
@@ -156,6 +184,7 @@ class FaissVectorStore:
             (self._positions[cid] for cid in allowed if cid in self._positions),
             dtype="int64",
         )
+        positions.sort()
         if positions.size == 0:
             return []
         if self.is_exact:
@@ -197,7 +226,22 @@ class FaissVectorStore:
             k: int,
             positions: np.ndarray,
     ) -> list[tuple[str, float]]:
-        vectors = self._index.reconstruct_batch(positions)
+        cache_key = hashlib.sha1(positions.tobytes()).digest()
+        cached = self._subset_cache.get(cache_key)
+        if cached is None or not np.array_equal(cached[0], positions):
+            vectors = self._index.reconstruct_batch(positions)
+            cached = (positions.copy(), vectors)
+            self._subset_cache[cache_key] = cached
+            self._subset_cache_vectors += positions.size
+            while (
+                self._subset_cache_vectors > SUBSET_CACHE_MAX_VECTORS
+                and len(self._subset_cache) > 1
+            ):
+                _, (removed_positions, _) = self._subset_cache.popitem(last=False)
+                self._subset_cache_vectors -= removed_positions.size
+        else:
+            self._subset_cache.move_to_end(cache_key)
+            vectors = cached[1]
         scores = vectors @ query[0]
         k = min(k, scores.size)
         top = np.argpartition(-scores, k - 1)[:k]

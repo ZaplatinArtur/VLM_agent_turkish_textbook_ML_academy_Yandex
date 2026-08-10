@@ -1,0 +1,37 @@
+{
+  "books": 200,
+  "source_chunks": 151576,
+  "knowledge_cards": 76463,
+  "reduction_ratio": 0.5045,
+  "source_unit_kinds": {
+    "theory": 72880,
+    "exercise": 59875,
+    "other": 10981,
+    "worked_example": 4498,
+    "solution": 3052,
+    "instruction": 147,
+    "answer_key": 143
+  },
+  "knowledge_kinds": {
+    "exercise": 43510,
+    "theory": 30011,
+    "worked_example": 2942
+  },
+  "relations": {
+    "has_theory": 45809,
+    "has_example": 7687,
+    "has_solution": 1691
+  },
+  "retrieval_text_chars": {
+    "median": 294,
+    "under_100": 4384,
+    "under_100_rate": 0.0573
+  },
+  "card_chars": {
+    "median": 969,
+    "p90": 1760
+  },
+  "input_dir": "/home/m.kulyamin/hybrid_chunking_pilot/artifacts/hybrid_chunks_v3",
+  "output_dir": "artifacts/knowledge_cards_v2",
+  "runtime_seconds": 43.831
+}

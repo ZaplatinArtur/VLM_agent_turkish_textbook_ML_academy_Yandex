@@ -1,0 +1,698 @@
+{
+  "schema_version": "holdout80-retrieval-roundtrip-v1",
+  "index": "artifacts/retrieval/turkish_textbooks_bm25.sqlite",
+  "index_sha256": "12603497a89d0837479e97c0874135778e3c276da9b7dba4fa4352f5ca6f7e6c",
+  "query_source": "gold-blind official PDF text segment for the selected question",
+  "important_caveat": "This measures source-page round-trip with clean PDF text. It is not screenshot OCR retrieval, certificate precision, answer accuracy, or end-to-end pipeline quality.",
+  "queried_indexed_family_tasks": 60,
+  "unindexed_math12_beceri_tasks": 20,
+  "hit_at_1": 1.0,
+  "hit_at_5": 1.0,
+  "hit_at_10": 1.0,
+  "misses_at_10": 0,
+  "rank_histogram": {
+    "1": 60
+  },
+  "details": [
+    {
+      "task_id": "h80-bio9-u1-q01",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 63,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 484,
+      "latency_ms": 89.113
+    },
+    {
+      "task_id": "h80-bio9-u1-q02",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 63,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 474,
+      "latency_ms": 85.929
+    },
+    {
+      "task_id": "h80-bio9-u1-q03",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 63,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1674,
+      "latency_ms": 88.312
+    },
+    {
+      "task_id": "h80-bio9-u1-q04",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 63,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 546,
+      "latency_ms": 88.286
+    },
+    {
+      "task_id": "h80-bio9-u1-q05",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 64,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 550,
+      "latency_ms": 101.561
+    },
+    {
+      "task_id": "h80-bio9-u1-q06",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 64,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 586,
+      "latency_ms": 81.0
+    },
+    {
+      "task_id": "h80-bio9-u1-q07",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 64,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 597,
+      "latency_ms": 87.449
+    },
+    {
+      "task_id": "h80-bio9-u1-q08",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 64,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 716,
+      "latency_ms": 97.758
+    },
+    {
+      "task_id": "h80-bio9-u1-q09",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 65,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1824,
+      "latency_ms": 94.167
+    },
+    {
+      "task_id": "h80-bio9-u1-q10",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 65,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1762,
+      "latency_ms": 89.618
+    },
+    {
+      "task_id": "h80-bio9-u1-q11",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 65,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1963,
+      "latency_ms": 94.264
+    },
+    {
+      "task_id": "h80-bio9-u1-q12",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 65,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1312,
+      "latency_ms": 87.656
+    },
+    {
+      "task_id": "h80-bio9-u2-q01",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 108,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 318,
+      "latency_ms": 47.378
+    },
+    {
+      "task_id": "h80-bio9-u2-q02",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 108,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 889,
+      "latency_ms": 87.447
+    },
+    {
+      "task_id": "h80-bio9-u2-q03",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 108,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 3312,
+      "latency_ms": 101.022
+    },
+    {
+      "task_id": "h80-bio9-u2-q04",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 109,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 4383,
+      "latency_ms": 83.658
+    },
+    {
+      "task_id": "h80-bio9-u2-q05",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 109,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 271,
+      "latency_ms": 43.804
+    },
+    {
+      "task_id": "h80-bio9-u2-q06",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 109,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 476,
+      "latency_ms": 82.629
+    },
+    {
+      "task_id": "h80-bio9-u2-q07",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 109,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1329,
+      "latency_ms": 90.686
+    },
+    {
+      "task_id": "h80-bio9-u2-q08",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 110,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 607,
+      "latency_ms": 92.387
+    },
+    {
+      "task_id": "h80-bio9-u2-q09",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 110,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 599,
+      "latency_ms": 91.489
+    },
+    {
+      "task_id": "h80-bio9-u2-q10",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 110,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 310,
+      "latency_ms": 80.521
+    },
+    {
+      "task_id": "h80-bio9-u2-q11",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 110,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 383,
+      "latency_ms": 81.889
+    },
+    {
+      "task_id": "h80-bio9-u2-q12",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 110,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 297,
+      "latency_ms": 79.96
+    },
+    {
+      "task_id": "h80-bio9-u3-q01",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 154,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 580,
+      "latency_ms": 86.094
+    },
+    {
+      "task_id": "h80-bio9-u3-q02",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 154,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1376,
+      "latency_ms": 83.008
+    },
+    {
+      "task_id": "h80-bio9-u3-q03",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 154,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 288,
+      "latency_ms": 78.043
+    },
+    {
+      "task_id": "h80-bio9-u3-q04",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 154,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 799,
+      "latency_ms": 78.646
+    },
+    {
+      "task_id": "h80-bio9-u3-q05",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 154,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 902,
+      "latency_ms": 89.379
+    },
+    {
+      "task_id": "h80-bio9-u3-q06",
+      "status": "queried",
+      "expected_book_id": "tr-lise-biyoloji-9",
+      "expected_page": 154,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 4000,
+      "latency_ms": 99.426
+    },
+    {
+      "task_id": "h80-math12-a012",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a014",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a015",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a018",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a023",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a026",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a030",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a032",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a036",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a037",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a039",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a053",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a057",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a062",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a073",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a077",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a087",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a090",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a091",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-math12-a093",
+      "status": "source_family_absent_from_current_bm25_index"
+    },
+    {
+      "task_id": "h80-phys12-u1-q47",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 76,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1326,
+      "latency_ms": 95.985
+    },
+    {
+      "task_id": "h80-phys12-u1-q49",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 76,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1644,
+      "latency_ms": 89.551
+    },
+    {
+      "task_id": "h80-phys12-u1-q55",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 78,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2527,
+      "latency_ms": 99.129
+    },
+    {
+      "task_id": "h80-phys12-u1-q57",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 78,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 3677,
+      "latency_ms": 98.023
+    },
+    {
+      "task_id": "h80-phys12-u1-q58",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 78,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2830,
+      "latency_ms": 99.804
+    },
+    {
+      "task_id": "h80-phys12-u2-q24",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 100,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1418,
+      "latency_ms": 100.969
+    },
+    {
+      "task_id": "h80-phys12-u2-q31",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 101,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2010,
+      "latency_ms": 104.522
+    },
+    {
+      "task_id": "h80-phys12-u2-q32",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 101,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2700,
+      "latency_ms": 104.102
+    },
+    {
+      "task_id": "h80-phys12-u2-q34",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 101,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1732,
+      "latency_ms": 105.445
+    },
+    {
+      "task_id": "h80-phys12-u2-q38",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 102,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 3325,
+      "latency_ms": 98.533
+    },
+    {
+      "task_id": "h80-phys12-u3-q28",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 138,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2343,
+      "latency_ms": 90.989
+    },
+    {
+      "task_id": "h80-phys12-u3-q29",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 138,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 4341,
+      "latency_ms": 102.627
+    },
+    {
+      "task_id": "h80-phys12-u3-q30",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 138,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 3389,
+      "latency_ms": 102.618
+    },
+    {
+      "task_id": "h80-phys12-u3-q31",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 139,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2312,
+      "latency_ms": 95.197
+    },
+    {
+      "task_id": "h80-phys12-u3-q37",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 139,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1945,
+      "latency_ms": 93.976
+    },
+    {
+      "task_id": "h80-phys12-u4-q31",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 180,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 4200,
+      "latency_ms": 98.334
+    },
+    {
+      "task_id": "h80-phys12-u4-q42",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 182,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 888,
+      "latency_ms": 89.371
+    },
+    {
+      "task_id": "h80-phys12-u4-q48",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 183,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 6974,
+      "latency_ms": 94.926
+    },
+    {
+      "task_id": "h80-phys12-u4-q50",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 183,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 3524,
+      "latency_ms": 89.28
+    },
+    {
+      "task_id": "h80-phys12-u4-q55",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 184,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 4135,
+      "latency_ms": 103.151
+    },
+    {
+      "task_id": "h80-phys12-u5-q23",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 224,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1700,
+      "latency_ms": 102.051
+    },
+    {
+      "task_id": "h80-phys12-u5-q32",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 225,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2960,
+      "latency_ms": 109.244
+    },
+    {
+      "task_id": "h80-phys12-u5-q33",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 225,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1972,
+      "latency_ms": 123.196
+    },
+    {
+      "task_id": "h80-phys12-u5-q34",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 226,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 3009,
+      "latency_ms": 117.632
+    },
+    {
+      "task_id": "h80-phys12-u5-q35",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 226,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2757,
+      "latency_ms": 109.082
+    },
+    {
+      "task_id": "h80-phys12-u6-q31",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 253,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 2795,
+      "latency_ms": 85.057
+    },
+    {
+      "task_id": "h80-phys12-u6-q33",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 253,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 3589,
+      "latency_ms": 89.234
+    },
+    {
+      "task_id": "h80-phys12-u6-q35",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 254,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1019,
+      "latency_ms": 90.162
+    },
+    {
+      "task_id": "h80-phys12-u6-q38",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 254,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 1390,
+      "latency_ms": 91.94
+    },
+    {
+      "task_id": "h80-phys12-u6-q43",
+      "status": "queried",
+      "expected_book_id": "tr-lise-fizik-12",
+      "expected_page": 254,
+      "rank": 1,
+      "returned": 10,
+      "query_character_count": 994,
+      "latency_ms": 84.846
+    }
+  ]
+}

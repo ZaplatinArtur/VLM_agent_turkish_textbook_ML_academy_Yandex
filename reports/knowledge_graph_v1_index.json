@@ -1,0 +1,9 @@
+{
+  "n_vectors": 137253,
+  "n_chunks": 137253,
+  "n_books": 200,
+  "index_type": "IndexFlatIP",
+  "embedder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "corpus_hash": "84fc126f6b58882ff477fdc19d54b925d27bae8ffef9366211ee21f770f1ad87",
+  "created_at": "2026-07-27T14:18:35"
+}

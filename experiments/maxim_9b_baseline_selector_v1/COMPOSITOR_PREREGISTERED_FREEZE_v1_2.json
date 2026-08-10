@@ -1,0 +1,33 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-compositor-preregistered-freeze-v1.2",
+  "compositor_id": "maxim_9b_baseline_selector_compositor_v1_2",
+  "status": "preregistered_not_composed_not_evaluated",
+  "historical_outcomes_known_before_freeze": true,
+  "frozen_before_composition": true,
+  "frozen_before_any_evaluation_of_v1_2_composited_outputs": true,
+  "runtime_outcome_access": false,
+  "selector_freeze_sha256": "55dd839d9c29201b2a66e63662491d85c74ee5cfc202f0b972e100dbe76331d9",
+  "selector_output_manifest_sha256": "2c3fa0cf20d3984aab062bf9db4e6c461218775b86e78026b552873fdc8845d2",
+  "artifacts": {
+    "profile": {
+      "path": "compositor_profile_v1_2.json",
+      "sha256": "3dd8b23ab868fa49dfb0992a433423412bd6cdaabe8c2c166e9fe5dc8b045bbb"
+    },
+    "code": {
+      "path": "compositor_v1_2.py",
+      "sha256": "8b220fb289b370844b7c944b19d9abd3369782fd260298c0bd45e758b970ea51"
+    },
+    "tests": {
+      "path": "test_compositor_v1_2.py",
+      "sha256": "0c7543b08bb4d70ba52b94c42e1e96aa98d604995156c2c0f584429e8cfa5141"
+    },
+    "selector_dependency": {
+      "path": "selector_v1_2.py",
+      "sha256": "7feb48bec3987696c2cc10d0b108d5a0826795ba885aee56de65a81e226361bd"
+    },
+    "legacy_helper_dependency": {
+      "path": "compositor_v1_1.py",
+      "sha256": "696b1c43300c28ff59ba55e65c84daedc0f6d9c878c77d819bb6d67e8f8fef9c"
+    }
+  }
+}

@@ -9,4 +9,5 @@ class Ranker(Protocol):
             query: str,
             chunks: list[RetrievedChunk] | None = None,
             subject: str | None = None,
+            grade: int | str | None = None,
     ) -> list[RetrievedChunk]: ...

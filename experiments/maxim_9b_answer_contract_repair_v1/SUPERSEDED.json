@@ -1,0 +1,35 @@
+{
+  "schema_version": "maxim-9b-answer-contract-repair-superseded-record-v1",
+  "experiment_id": "maxim_9b_answer_contract_repair_v1",
+  "status": "superseded_before_evaluation_due_to_independent_parser_contract_audit_failure",
+  "evaluated": false,
+  "scored": false,
+  "reason": "exploratory global structural unescape followed by regex could expose an answer-like key inside a JSON string value such as reasoning; therefore outer-object-level provenance was not guaranteed",
+  "preserved_artifacts": {
+    "rule_freeze": {
+      "path": "DEVELOPMENT_RULE_FREEZE.json",
+      "sha256": "19b894fcaf9df6db561836b5c63e621fc127b553cf5cc40714f1be202e92f02e"
+    },
+    "output_freeze": {
+      "path": "candidate_output/CANDIDATE_OUTPUT_FREEZE.json",
+      "sha256": "fd7a8f25aecb878b85be4feb19744a97d6873ad87308ce67fef534a6c2dac90c"
+    },
+    "candidate_manifest": {
+      "path": "candidate_output/candidate_manifest.json",
+      "sha256": "50e20355582b93dd593846419dcb7090179af013f4922f2a7ef848d00245575d"
+    },
+    "strict_candidate_solver": {
+      "path": "candidate_output/strict_candidate_solver.jsonl",
+      "sha256": "9d26067064ee07fe480391759782c86d66adbb76dbc0da0d86ccc1b3f035211e"
+    },
+    "exploratory_candidate_solver": {
+      "path": "candidate_output/exploratory_explicit_key_scalar_candidate_solver.jsonl",
+      "sha256": "de3cc25fad93063fb6fe2727404e5a449155e020c2b15fc9404c752cdd6b0e2a"
+    }
+  },
+  "successor": {
+    "experiment_id": "maxim_9b_answer_contract_repair_v1_1",
+    "path": "../maxim_9b_answer_contract_repair_v1_1",
+    "require_context_aware_outer_object_parser": true
+  }
+}

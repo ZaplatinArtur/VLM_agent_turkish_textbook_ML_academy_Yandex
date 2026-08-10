@@ -1,0 +1,37 @@
+{
+  "anchor": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\direct_pdf_composed\\solver.jsonl",
+    "sha256": "b0b366c80de4cf45dec48f4cb77367cb632d31f824c08eb9d3474c0e860248ea"
+  },
+  "certificates_seen": 117,
+  "certified_equal_anchor": 93,
+  "created_at_utc": "2026-08-05T07:05:11.072935+00:00",
+  "decision_reasons": {
+    "equivalent_to_anchor": 93,
+    "no_challengers": 157,
+    "strongly_verified_challenger": 24
+  },
+  "gold_access": false,
+  "output": {
+    "decisions": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_primary_layout_mebdef10_v5_sealed_composed\\decisions.jsonl",
+      "sha256": "a6c7e019cdad13b53e9324f622c20a244c81bb97cb27dd74cc6b1c4274ec5896"
+    },
+    "solver": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_primary_layout_mebdef10_v5_sealed_composed\\solver.jsonl",
+      "sha256": "f5fce9433d60732b615fb827f80c8af2d1760bfb58e1da5d599dce7da43a93a4"
+    }
+  },
+  "overrides": 24,
+  "profile": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\configs\\maxim_public_workbook_primary_layout_mebdef10_v5.json",
+    "sha256": "1cc345bff3e709a941431fe560dfa6325b1a7f8eac7390583b8c2cb01c2da10d"
+  },
+  "resolver_manifest": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\public_workbook_primary_layout_mebdef10_v5_sealed_resolver\\manifest.json",
+    "sha256": "49aaded6c44f2b595d8bb7402f638ccd826053241f4d163dd0743d637cc19e12"
+  },
+  "rows": 274,
+  "schema_version": "maxim-official-source-failclosed-composition-v2",
+  "score_or_outcome_access": false
+}

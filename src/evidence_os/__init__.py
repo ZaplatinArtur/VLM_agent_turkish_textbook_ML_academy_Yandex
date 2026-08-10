@@ -1,0 +1,68 @@
+"""Evidence OS v1: conservative, ID-free answer-selection primitives."""
+
+from .certificates import (
+    answer_fingerprint,
+    canonicalize_text,
+    certificate_fingerprint,
+    certificate_matches,
+    input_fingerprint,
+    issue_certificate,
+    trace_fingerprint,
+)
+from .contracts import (
+    CandidateAnswer,
+    CandidateEnvelope,
+    Certificate,
+    CertificateKind,
+    CertificateStrength,
+    CertificateVerdict,
+    Decision,
+    DecisionAction,
+    DecisionReason,
+    DecisionRequest,
+    FrozenProfile,
+    InferenceBundle,
+    PolicyDecision,
+    ProblemInput,
+    VerificationCertificate,
+)
+from .policy import DEFAULT_STRONG_KINDS, EvidencePolicy, EvidencePolicyConfig, decide
+from .source_first import (
+    SourceFirstAction,
+    SourceFirstDecision,
+    SourceFirstReason,
+    decide_source_first,
+)
+
+__all__ = [
+    "CandidateAnswer",
+    "CandidateEnvelope",
+    "Certificate",
+    "CertificateKind",
+    "CertificateStrength",
+    "CertificateVerdict",
+    "DEFAULT_STRONG_KINDS",
+    "Decision",
+    "DecisionAction",
+    "DecisionReason",
+    "DecisionRequest",
+    "EvidencePolicy",
+    "EvidencePolicyConfig",
+    "FrozenProfile",
+    "InferenceBundle",
+    "PolicyDecision",
+    "ProblemInput",
+    "SourceFirstAction",
+    "SourceFirstDecision",
+    "SourceFirstReason",
+    "VerificationCertificate",
+    "answer_fingerprint",
+    "canonicalize_text",
+    "certificate_fingerprint",
+    "certificate_matches",
+    "decide",
+    "decide_source_first",
+    "input_fingerprint",
+    "issue_certificate",
+    "trace_fingerprint",
+]

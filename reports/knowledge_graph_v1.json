@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "nodes": 151576,
+  "searchable_nodes": 137253,
+  "edges": 114594,
+  "node_kinds": {
+    "theory": 72880,
+    "exercise": 59875,
+    "other": 10981,
+    "worked_example": 4498,
+    "solution": 3052,
+    "instruction": 147,
+    "answer_key": 143
+  },
+  "relation_counts": {
+    "theory_for": 102149,
+    "worked_example_for": 9729,
+    "solution_of": 2716
+  },
+  "files": {
+    "nodes": "nodes.jsonl",
+    "edges": "edges.jsonl"
+  },
+  "books": 200,
+  "source_units": 151576,
+  "input_dir": "/source/artifacts/hybrid_chunks_v3",
+  "output_dir": "/work/artifacts/knowledge_graph_v1",
+  "runtime_seconds": 175.946
+}

@@ -1,0 +1,188 @@
+{
+  "artifacts": {
+    "contexts": {
+      "bytes": 4870185,
+      "name": "frozen274_structural_contexts_v1.jsonl",
+      "rows": 274,
+      "sha256": "293f15f9acb847436f1810ef95d8e54d429f9db57d267e60f2ed4ccfb8e18da7"
+    },
+    "queue": {
+      "bytes": 2901470,
+      "name": "frozen274_structural_generation_queue_v1.jsonl",
+      "rows": 274,
+      "sha256": "b8cdf2c4104a0593dc98e6122237ecc73c5668976d22843c22b906ca49d8a786"
+    }
+  },
+  "code": {
+    "preparer": {
+      "bytes": 45865,
+      "logical_path": "scripts/prepare_maxim_structural_evidence_rag_v1.py",
+      "sha256": "5617f51df09fe5ddf10c089b9ae28c2c7218c4fe84f5d2cfe026c6bf2eae5d1e"
+    },
+    "runner": {
+      "bytes": 20620,
+      "logical_path": "scripts/run_maxim_structural_evidence_rag_v1.py",
+      "sha256": "c322aa7f2f823e97494b9657daefb259803664aa0a5ba3f8797fe428f4e32997"
+    }
+  },
+  "condition": "maxim_structural_evidence_rag_v1",
+  "expected_rows": 274,
+  "model": "Qwen/Qwen3.5-9B",
+  "revocation": {
+    "execute_revoked_queue": false,
+    "reason": "pre-freeze context rows included nondeterministic retrieval latency/timing diagnostics; those queues are non-reproducible and must never be executed",
+    "replacement_queue_sha256": "b8cdf2c4104a0593dc98e6122237ecc73c5668976d22843c22b906ca49d8a786",
+    "revoked_queue_sha256": [
+      "34dc97f9bda35ab0413106d1f92397e8a834921dccae9e7a9db7f102b75b505a",
+      "7f378d35780d134824ca021a06ea4945155a57c626359a10f28a4df194808644"
+    ]
+  },
+  "runtime": {
+    "base_url": "http://127.0.0.1:18020/v1",
+    "gpu_started_by_preparation": false,
+    "server_command": "docker run --rm --gpus device=GPU_INDEX --network host --mount type=bind,src=/home/m.kulyamin/validation_join/images,dst=/images,readonly --mount type=bind,src=/home/m.kulyamin/.cache/huggingface,dst=/root/.cache/huggingface -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 vllm/vllm-openai:v0.25.1 Qwen/Qwen3.5-9B --served-model-name Qwen/Qwen3.5-9B --host 0.0.0.0 --port 18020 --tensor-parallel-size 1 --dtype half --max-model-len 16384 --max-num-seqs 1 --gpu-memory-utilization 0.90 --reasoning-parser qwen3 --skip-mm-profiling --enforce-eager --allowed-local-media-path /images",
+    "server_port": 18020
+  },
+  "schema_version": "maxim-structural-evidence-preparation-v1",
+  "sources": {
+    "benchmark": {
+      "bytes": 88999,
+      "logical_path": "artifacts/baselines/basic_page_rag_v1/validation_274.jsonl",
+      "rows": 274,
+      "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+    },
+    "frozen_page_rag": {
+      "bytes": 2130420,
+      "logical_path": "artifacts/baselines/basic_page_rag_v1/agent_rag_274.jsonl",
+      "rows": 274,
+      "sha256": "62bc952c3802308bc0fbf8d8dc1f82ec523a3ab1e3264bae87a5f8828021d75d"
+    },
+    "frozen_subject_router": {
+      "bytes": 1894725,
+      "logical_path": "reports/maxim8_variants_full274_20260802/offline_v1_frozen/subject_router/solver.jsonl",
+      "rows": 274,
+      "sha256": "34da8ef69619a8ba1f184cdfd1e6dcaf0fbdbdd1bfc50c711244a68f7d26a574"
+    },
+    "retrieval_config": {
+      "bytes": 1217,
+      "logical_path": "VLM/configs/retrieval.page_element_structural_v1.json",
+      "sha256": "bf2ff8a080b9fbd5e492ac75b8b5a20672b64338934376aff97a151d45f4d800"
+    },
+    "retrieval_index": {
+      "bytes": 170483712,
+      "logical_path": "VLM/artifacts/retrieval/experiments/page_element_structural_v1/clean/page_element_structural/hybrid.sqlite",
+      "sha256": "c6fbc306d1b86b48b92a279b346bf0522920b2b8073587b8d12b0c98026cd15f"
+    },
+    "retrieval_index_manifest": {
+      "bytes": 1315,
+      "logical_path": "VLM/artifacts/retrieval/experiments/page_element_structural_v1/clean/page_element_structural/index-manifest.json",
+      "sha256": "d074daa4af720223b491730bc31bc680ade96e2c7f28d2b9e0b6f025001c28a3"
+    },
+    "retrieval_schema": {
+      "bytes": 9772,
+      "logical_path": "VLM/src/vlm_judge/retrieval_schema.py",
+      "sha256": "aecd9b3a5438d9b513b4a8f869c1e832738d888dc45fde7df402846119532544"
+    },
+    "retrieval_source_manifest": {
+      "bytes": 16182,
+      "logical_path": "VLM/artifacts/retrieval/experiments/page_element_structural_v1/source-manifest.final.json",
+      "sha256": "b47ff1919d379e054f581e3a8161d0ac5d5e1f346b38eea75f170335cf7d038c"
+    },
+    "retriever_code": {
+      "bytes": 72004,
+      "logical_path": "VLM/src/vlm_judge/hybrid_retrieval.py",
+      "sha256": "f9c284d9427e9b181f81238bf7a0df79e2bce4c0440192ef1ec4e4549158cb59"
+    },
+    "tag_registry": {
+      "bytes": 6688,
+      "logical_path": "VLM/configs/retrieval_tags.json",
+      "sha256": "47fb161e9cf3a90448ebf108696533595b8e6c78c99c081b50ec05523f14f7a9"
+    }
+  },
+  "stats": {
+    "context_coverage": 0.71167883,
+    "fallback_reasons": {
+      "fewer_than_two_query_tokens_recovered": 31,
+      "no_informative_query_tokens": 1,
+      "unsupported_clean_index_subject": 47
+    },
+    "gold_blind_contract": {
+      "benchmark_fields_used": [
+        "task_id",
+        "subject",
+        "grade",
+        "question",
+        "question_images",
+        "answer_type"
+      ],
+      "labels_used_for_generation_or_routing": false,
+      "page_rag_fields_used": [
+        "task_id",
+        "tool_calls[].tool",
+        "tool_calls[].args.query"
+      ],
+      "qrels_opened": false,
+      "router_fields_used_only_for_fallback_output": [
+        "task_id",
+        "condition",
+        "model",
+        "prompt_version",
+        "final_answer",
+        "reasoning",
+        "solution_steps",
+        "forced_answer",
+        "generation.gold_access",
+        "offline_provenance"
+      ]
+    },
+    "route_counts": {
+      "router_page_rag_fallback": 79,
+      "structural_evidence": 195
+    },
+    "rows": 274,
+    "subjects": {
+      "ATATÜRKÇÜLÜK": {
+        "router_page_rag_fallback": 1
+      },
+      "Biology": {
+        "router_page_rag_fallback": 4,
+        "structural_evidence": 15
+      },
+      "Chemistry": {
+        "router_page_rag_fallback": 32
+      },
+      "English": {
+        "router_page_rag_fallback": 9
+      },
+      "Geography": {
+        "router_page_rag_fallback": 1,
+        "structural_evidence": 13
+      },
+      "History": {
+        "router_page_rag_fallback": 2,
+        "structural_evidence": 8
+      },
+      "Math": {
+        "router_page_rag_fallback": 21,
+        "structural_evidence": 118
+      },
+      "Philosophy": {
+        "structural_evidence": 2
+      },
+      "Physics": {
+        "router_page_rag_fallback": 1,
+        "structural_evidence": 18
+      },
+      "Science": {
+        "router_page_rag_fallback": 5
+      },
+      "Sociology": {
+        "structural_evidence": 3
+      },
+      "Turkish language and literature": {
+        "router_page_rag_fallback": 3,
+        "structural_evidence": 18
+      }
+    }
+  }
+}

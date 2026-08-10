@@ -1,0 +1,112 @@
+{
+  "schema_version": "maxim-v7-one-shot-evaluation-freeze-v1",
+  "frozen_at_utc": "2026-08-05T15:34:48Z",
+  "git": {
+    "branch": "feature/maxim-benchmark-results",
+    "source_freeze_commit": "e0d8c8c484e9822359be632a02738ddc72f22b13",
+    "local_remote_head_equality_required": true
+  },
+  "launch_guard": {
+    "path": "scripts/launch_maxim_v7_one_shot_score.py",
+    "sha256": "9ef5ef96691534b5f5d240e5b1ccdd290c46d68d2dfa03805c5e9be3f3b293ab"
+  },
+  "scorer": {
+    "path": "scripts/score_maxim_full274.py",
+    "sha256": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf"
+  },
+  "benchmark": {
+    "path": "artifacts/baselines/basic_page_rag_v1/validation_274.jsonl",
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "rows": 274
+  },
+  "baseline_judge": {
+    "path": "artifacts/baselines/basic_page_rag_v1/agent_rag_judge.jsonl",
+    "sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4",
+    "rows": 274
+  },
+  "final_solver": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_composed/solver.jsonl",
+    "sha256": "ba3967cfca3eeb3aca894a6dd00a15d06afc67f8cfd9f3ea7729b9b52baeddbf",
+    "rows": 274
+  },
+  "main_image_judge": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsung_philosophy_biology_imageonly_v7_evaluation/matched_image97_judge.jsonl",
+    "sha256": "4651e0812d741fde4a6136f6fe5045a77ff9be717f7c156656eafb98a9a00923",
+    "rows": 97
+  },
+  "main_image_judge_manifest": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_samsung_philosophy_biology_imageonly_v7_evaluation/image_judge_manifest.json",
+    "sha256": "b36c55aa4e7b06ec3c74f72eee7a050d6943a2e0e1ee707e4fdb7f368f82340e"
+  },
+  "final_image_judge": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/matched_image97_judge.jsonl",
+    "sha256": "84c70716f29cbbc48ce04d4044f60379d56c8846a6a76538ed578b2cbe256ca6",
+    "rows": 97
+  },
+  "final_image_judge_manifest": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/image_judge_manifest.json",
+    "sha256": "3160c90ea00a5a282391deff028eacabb5bd49d5a10ef8ac4b9f99638f460a07"
+  },
+  "history_profile": {
+    "path": "configs/maxim_fill_blank_page_activity_history_v7.json",
+    "sha256": "d32119b06a2efc26cee25c93301d625551aaafa35932e1acea4356bb95b24bd9"
+  },
+  "history_resolver_manifest": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_resolver/manifest.json",
+    "sha256": "a8d2dbe8b577b1cc8c95bd1a22bb9772a33893164a248c5ed32c2f9a407ef3e5"
+  },
+  "history_composition_manifest": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_composed/manifest.json",
+    "sha256": "a6927296eb6e3d5e0b1599b64a570281d340c1479ee65533f0344de6ea8c9d58"
+  },
+  "composite_source_audit": {
+    "path": "reports/maxim_official_exact_source_v2_20260805/V7_COMPOSITE_SOURCE_FREEZE_AUDIT.json",
+    "sha256": "9ce540597be4ff40c0f3b994c90f3a65b8ec389aefd118e38660b0b150629348"
+  },
+  "launch": {
+    "label": "maxim_public_workbook_samsung_philosophy_biology_imageonly_history_v7",
+    "arguments": [
+      "--benchmark",
+      "artifacts/baselines/basic_page_rag_v1/validation_274.jsonl",
+      "--solver-results",
+      "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_composed/solver.jsonl",
+      "--image-judge",
+      "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/matched_image97_judge.jsonl",
+      "--baseline-judge",
+      "artifacts/baselines/basic_page_rag_v1/agent_rag_judge.jsonl",
+      "--out-json",
+      "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score.json",
+      "--out-md",
+      "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score.md",
+      "--out-sha256",
+      "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score.sha256",
+      "--label",
+      "maxim_public_workbook_samsung_philosophy_biology_imageonly_history_v7",
+      "--expected-rows",
+      "274",
+      "--expected-deterministic",
+      "177",
+      "--expected-image-judge",
+      "97",
+      "--expected-benchmark-sha256",
+      "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+      "--expected-baseline-judge-sha256",
+      "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4"
+    ],
+    "outputs": {
+      "json": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score.json",
+      "markdown": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score.md",
+      "sha256": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score.sha256",
+      "attempt_marker": "reports/maxim_official_exact_source_v2_20260805/fill_blank_page_activity_history_v7_evaluation/score_attempt.json"
+    }
+  },
+  "policy": {
+    "gold_access": false,
+    "score_attempts": 0,
+    "must_not_exist_before_launch": true,
+    "same_wave_retuning_allowed": false,
+    "failed_launch_consumes_attempt": true,
+    "retain_v6_if_v7_does_not_improve": true,
+    "target_split_status": "previously inspected development replay, not a holdout"
+  }
+}

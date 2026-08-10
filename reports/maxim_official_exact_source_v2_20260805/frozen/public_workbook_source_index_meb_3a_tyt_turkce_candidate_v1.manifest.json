@@ -1,0 +1,22 @@
+{
+  "benchmark_outcome_access": false,
+  "created_at_utc": "2026-08-05T04:46:03.811907+00:00",
+  "documents": 8,
+  "inputs": [
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_fragment_meb_3a_tyt_turkce_candidate_v1.json",
+      "sha256": "527255be05de7f4b2235436abacb308b0609896375fb8cec0254a3a61fd6dc8e"
+    },
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb_dd_turkce_tarih_candidate_v1.json",
+      "sha256": "d9fa48f57961bbef05359e0e03e89146272d306429e807dbd1331387ce66fa52"
+    }
+  ],
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb_3a_tyt_turkce_candidate_v1.json",
+    "sha256": "43df280a10eec1d504fc1c99598eb8b4429fcca230308bb5c2fd0465b864182b"
+  },
+  "records": 102,
+  "schema_version": "maxim-public-workbook-index-merge-v1",
+  "task_id_present": false
+}

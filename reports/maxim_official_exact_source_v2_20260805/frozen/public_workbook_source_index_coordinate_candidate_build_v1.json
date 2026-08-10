@@ -1,0 +1,22 @@
+{
+  "benchmark_outcome_access": false,
+  "created_at_utc": "2026-08-05T01:25:58.268551+00:00",
+  "documents": 5,
+  "inputs": [
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_meb7_coordinate_fragment_v1.json",
+      "sha256": "0e9b0d3c67af31c81996b57945f94f8bb9610ba7439f767fd1b9cf957e815590"
+    },
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_v1.json",
+      "sha256": "d45206b4b0b723e64ab5e4c99574bd9b5a4810ba3f8b581e35c108b2e6066458"
+    }
+  ],
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_coordinate_candidate_v1.json",
+    "sha256": "a73560f6264150b8d7e973ea82ff3a48f4fca04b692cecee0a741ecaa6abb206"
+  },
+  "records": 80,
+  "schema_version": "maxim-public-workbook-index-merge-v1",
+  "task_id_present": false
+}

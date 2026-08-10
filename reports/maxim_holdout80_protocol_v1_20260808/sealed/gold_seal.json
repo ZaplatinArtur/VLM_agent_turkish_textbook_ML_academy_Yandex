@@ -1,0 +1,10 @@
+{
+  "schema_version": "holdout80-gold-seal-v1",
+  "frozen_manifest_sha256": "7a6ecbe1579790541bc0c0c36a9141941c2c0cf8f65dd3cd5b6a687bae8c5fa5",
+  "sealed_gold": "reports/holdout80_20260808/sealed/sealed_gold.jsonl",
+  "sealed_gold_sha256": "55e58007a1f30f4ee1c7f10c6f9c4bdd6b87be861046c13c7496a709a4fb7bcc",
+  "count": 80,
+  "automatic_exact_choice_count": 60,
+  "manual_math_activity_count": 20,
+  "warning": "Math activity solutions require blinded manual scoring; do not report strict overall accuracy from MCQ only."
+}

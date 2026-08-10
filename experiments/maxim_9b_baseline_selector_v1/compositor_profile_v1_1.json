@@ -1,0 +1,54 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-compositor-profile-v1.1",
+  "compositor_id": "maxim_9b_baseline_selector_compositor_v1_1",
+  "status": "preregistered_before_any_gold_score_correctness_or_judge_evaluation_of_composited_outputs",
+  "chronology": {
+    "historical_benchmark_aggregate_score_and_prior_task_outcomes_were_known": true,
+    "selector_output_was_frozen_unscored_before_composition": true,
+    "compositor_rules_frozen_before_composition": true,
+    "compositor_runtime_does_not_read_gold_reference_correctness_outcomes_or_judge_verdicts": true
+  },
+  "model_closure": [
+    "Qwen/Qwen3.5-9B"
+  ],
+  "inputs": {
+    "selector_freeze_sha256": "858ef54c3bb558bdd31f8d0ead605bf3a3bcdb8816f97c0d0d93f86b1eaf4193",
+    "selector_output_manifest_sha256": "c978351b5d482b6af87c8731e7f3f1cb3b0f208397bca0d8ed3ae2043f7b77ae",
+    "selector_proposals_sha256": "ce73875f63496553bdbd2a8ed69bba63a15f1822cf2c438239236b8b350a8ec7",
+    "selector_input_package_sha256": "f2e7bdf8ea0cd8d44d073c3cc3f7a6933a98de2b032d44e1e5625e98eb869f0e",
+    "base_source_solver_repository_relative_path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/fill_composed/solver.jsonl",
+    "base_source_solver_sha256": "9d26067064ee07fe480391759782c86d66adbb76dbc0da0d86ccc1b3f035211e",
+    "native_v4_full_rows_relative_path": "input/frozen/upstream/native_thinking_math_router_v4.jsonl",
+    "native_v4_full_rows_sha256": "0fd0e6fef6b220749faa015e7a163cdf596e070afaaad407e4d36bc9b1337307",
+    "benchmark_sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "rows": 274
+  },
+  "rules": {
+    "arms": [
+      "primary",
+      "secondary"
+    ],
+    "base": "frozen_final_activecrop9b_source_solver",
+    "replacement_source": "bound_native_thinking_math_router_v4_full_row",
+    "replace_only_when_selector_action": "propose_challenger",
+    "replacement_gates": [
+      "authoritative_route_is_deterministic",
+      "task_is_outside_pinned_source_union",
+      "proposal_selected_answer_equals_router_challenger",
+      "proposal_selected_answer_equals_normalized_v4_answer",
+      "proposal_selected_answer_equals_full_v4_row_final_answer",
+      "base_v4_proposal_and_authoritative_task_identity_match",
+      "v4_full_row_is_pure_qwen35_9b_and_has_coherent_answer_payload"
+    ],
+    "source_union_policy": "preserve_all_156_base_rows_as_exact_original_line_bytes",
+    "image_judge_policy": "preserve_all_97_base_rows_as_exact_original_line_bytes",
+    "other_passthrough_policy": "preserve_every_nonproposed_base_row_as_exact_original_line_bytes",
+    "changed_row_policy": "copy_coherent_full_v4_row_and_add_explicit_selector_composition_provenance",
+    "no_fallback_repair": true,
+    "fail_closed": true
+  },
+  "expected_selector_actions": {
+    "primary_proposals": 3,
+    "secondary_proposals": 5
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": "maxim-structural-evidence-determinism-v1",
+  "preparation_runs": 2,
+  "byte_identical": true,
+  "artifacts": {
+    "frozen274_structural_contexts_v1.jsonl": "293f15f9acb847436f1810ef95d8e54d429f9db57d267e60f2ed4ccfb8e18da7",
+    "frozen274_structural_generation_queue_v1.jsonl": "b8cdf2c4104a0593dc98e6122237ecc73c5668976d22843c22b906ca49d8a786",
+    "preparation_manifest_v1.json": "dfb5b48c18dcf527ca78a524ca4c51d414ffd978dc35a2d846c355351c277b82",
+    "README.md": "e13779b66b8c86d7399d382200204d3a220e3c7aedcd77e6b3c3d7d664105acf",
+    "REVOCATION.md": "1d551de7f7b66f90205e416d3161c7988812ce64088cdc31c9db69c541f721e0",
+    "SHA256SUMS.txt": "fb7ae07d1c3dd6e188758a5f1b9b5bd6f2151e9901398b0f1a34f59fc460a4b4"
+  },
+  "revoked_queue_sha256": [
+    "34dc97f9bda35ab0413106d1f92397e8a834921dccae9e7a9db7f102b75b505a",
+    "7f378d35780d134824ca021a06ea4945155a57c626359a10f28a4df194808644"
+  ],
+  "replacement_queue_sha256": "b8cdf2c4104a0593dc98e6122237ecc73c5668976d22843c22b906ca49d8a786",
+  "network_calls": 0,
+  "gpu_started": false
+}

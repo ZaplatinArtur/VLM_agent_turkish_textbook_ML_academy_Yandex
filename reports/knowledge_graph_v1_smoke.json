@@ -1,0 +1,96 @@
+{
+  "query": "dikdortgen",
+  "subject": "math",
+  "grade": "7",
+  "startup_seconds": 34.469,
+  "query_seconds": [
+    25.253,
+    3.425
+  ],
+  "warm_query_seconds": 3.425,
+  "hits": [
+    {
+      "chunk_id": "graph_573537aaf3dae629845e1ec9",
+      "score": 0.005223880597014925,
+      "anchor_id": "edu_fc17f492fe6c3b4e8e53f19f",
+      "anchor_kind": "exercise",
+      "subject": "math",
+      "grade": 7,
+      "has_theory": false,
+      "has_example": false,
+      "has_solution": false,
+      "graph_paths": [],
+      "text_preview": "[SIMILAR EXERCISE]\nYanda verilen ABCE bir dikdörtgen olduğuna göre\nx'in ölçüsü kaç derecedir?"
+    },
+    {
+      "chunk_id": "graph_3b343b2c0098191ce4d397f9",
+      "score": 0.005147058823529412,
+      "anchor_id": "edu_d3ff622a1cb30ead1cd08763",
+      "anchor_kind": "exercise",
+      "subject": "math",
+      "grade": 7,
+      "has_theory": true,
+      "has_example": true,
+      "has_solution": false,
+      "graph_paths": [
+        {
+          "edge_id": "edge_a854863f0da4cc07ff3163fa",
+          "relation": "theory_for",
+          "target_id": "edu_256fa8897a317cc78160d7ee",
+          "confidence": 0.86,
+          "method": "same_section"
+        },
+        {
+          "edge_id": "edge_ef5f5c8645bb0619471c1817",
+          "relation": "theory_for",
+          "target_id": "edu_7cae284310803823d6cdd8b4",
+          "confidence": 0.68,
+          "method": "nearby_theory"
+        },
+        {
+          "edge_id": "edge_e137c3472ac871a73e29835c",
+          "relation": "worked_example_for",
+          "target_id": "edu_f069a29057858b52f97caf8b",
+          "confidence": 0.72,
+          "method": "nearby_worked_example"
+        }
+      ],
+      "text_preview": "[THEORY]\n1800\nWe85\nn-22105 n-12\nİç açılarının ölçüleri toplamı 1800* olan çokgenin 12 kenarı vardır.\n\n[THEORY]\nK LA\nn kenarlı bir düzgün çokgenin bir diş açısının ölçüsü aşağıdaki bağıntı ile bulunabilir.\nBir dış açının ölçüsü: *ö\"\n\n[WORKED EXAMPLE]\nÖrnek\n\n[SIMILAR EXERCISE]\n1. Noktalı kâğıda bir dikdörtgen çiziniz. Dikdörtgenin düzgün çokgen olup olmadığını belirleyiniz."
+    },
+    {
+      "chunk_id": "graph_fff6791c52eb43b23fe09ad4",
+      "score": 0.004929577464788732,
+      "anchor_id": "edu_69b81db349d694bbe756c98e",
+      "anchor_kind": "exercise",
+      "subject": "math",
+      "grade": 7,
+      "has_theory": true,
+      "has_example": false,
+      "has_solution": true,
+      "graph_paths": [
+        {
+          "edge_id": "edge_abc0eba0c7967cf11c644b9b",
+          "relation": "theory_for",
+          "target_id": "edu_03dc2055507e431debb98403",
+          "confidence": 0.68,
+          "method": "nearby_theory"
+        },
+        {
+          "edge_id": "edge_ffa64967c1f43ae48f835554",
+          "relation": "theory_for",
+          "target_id": "edu_fc97aabbae010da51c688f88",
+          "confidence": 0.68,
+          "method": "nearby_theory"
+        },
+        {
+          "edge_id": "edge_c5b8f15d9fed2a60c69072a5",
+          "relation": "solution_of",
+          "target_id": "edu_e35ee22fad0b959171d4242d",
+          "confidence": 1.0,
+          "method": "explicit_exercise_id"
+        }
+      ],
+      "text_preview": "[THEORY]\nProblemi Anlayalım\nProblemde dikdörtgen şeklindeki bölgenin kenar uzunlukları, bölgede bulunan eşkenar dörtgen şek-\nlindeki bahçenin çevre uzunluğu, bahçedeki yürüyüş yolunun uzunluğu ve yürüyüş yolunun bahçenin\nkenarına dik olduğu bilgisi verilmiştir. Bizden, bölgedeki bahçe dışında kalan alanı bulmamız istenmek-\ntedir.\n\n[THEORY]\nPlan Yapalım\nBölgeyi, bölgede bulunan bahçeyi ve bahçedeki yürüyüş yolunu modellemeliyiz. Önce dikdörtgen\nşeklindeki bölgenin alanını bulmalıyız. Sonra bölgenin alanından bahçenin alanını çıkararak bölgedeki\nbahçe dışında kalan alanı hesaplamalıyız.\nProblemi Çözelim\nDikdörtgen şeklindeki bölge, bölgede bulunan bahçe ve bahçedeki yürüyüş yolu aşağıdaki gibi mo-\ndellenebilir.\n100m\nDikdörtgen şeklindeki bölgenin alanını bulalım.\nAlan — 40-100\n- 4000 m?\nEşkenar dörtgen şeklindeki bahçenin çevre uzunluğu 48 m ise bir kenarının uzunluğu 48 : 4 — 12 m'dir.\nEşkenar dörtgenin yüksekliği olan yürüyüş yolunun uzunluğu 10 m olduğuna göre bahçenin alanını\nbulalım.\n\n[SIMILAR EXERCISE]\nAlan — 12-10\n- 120m?\nDikdörtgen şeklindeki bölgede bulunan bahçe dışında kalan alan 4000 - 120 — 3880 m?dir.\n\n[SOLUTION]\nÇözümü Kontrol Edelim\nDikdörtgen şeklindeki bölgenin alanından bölgedeki bahçe dışında kalan alanı çıkaralım. Farkı 10'a\nbölerek eşkenar dörtgen şeklindeki bahçenin bir kenar uzunluğunu bulalım. Kenar uzunluğunu 4 ile\nçarparak bahçenin çevre uzunluğunu hesaplayalım. Çevre uzunluğu 48 m olmalıdır."
+    }
+  ]
+}

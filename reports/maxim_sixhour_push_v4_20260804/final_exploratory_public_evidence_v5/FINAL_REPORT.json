@@ -1,0 +1,430 @@
+{
+  "exploratory_start": {
+    "accuracy": 0.8321167883211679,
+    "accuracy_reported": 0.832117,
+    "classification": "starting targeted exploratory checkpoint",
+    "correct": 228,
+    "created_at_utc": "2026-08-04T13:23:53.284804+00:00",
+    "delta_correct_vs_page_rag": 87,
+    "denominator": 274,
+    "fixed_vs_page_rag": 93,
+    "label": "exploratory_staged_web_tools_official_and_derived_image_certificates_v3",
+    "math_accuracy": 0.8633093525179856,
+    "math_correct": 120,
+    "math_denominator": 139,
+    "regressed_vs_page_rag": 6
+  },
+  "final_standard_exploratory": {
+    "accuracy": 0.9598540145985401,
+    "accuracy_reported": 0.959854,
+    "classification": "targeted post-hoc exploratory standard score",
+    "correct": 263,
+    "created_at_utc": "2026-08-04T15:19:44.945423+00:00",
+    "delta_correct_vs_page_rag": 122,
+    "denominator": 274,
+    "fixed_vs_page_rag": 123,
+    "is_deployable_accuracy_claim": false,
+    "is_standard_frozen_benchmark_metric": true,
+    "is_untouched_holdout": false,
+    "label": "maxim final exploratory public evidence v5",
+    "math_accuracy": 0.9496402877697842,
+    "math_correct": 132,
+    "math_denominator": 139,
+    "regressed_vs_page_rag": 1
+  },
+  "frozen_page_rag_comparator": {
+    "accuracy": 0.5145985401459854,
+    "correct": 141,
+    "denominator": 274
+  },
+  "generated_artifacts": {
+    "FINAL_REPORT.md": {
+      "sha256": "d6cd95d1003c5eafc896fd1aa27902f11189e18e898cbf8fc69f72c809fe7d19"
+    },
+    "RESULTS_FOR_TABLE.csv": {
+      "sha256": "94db96e98b9eb95ff797db2747abf9d54ad47d62b705c1f5920662d3711a261c"
+    },
+    "RESULTS_FOR_TABLE.md": {
+      "sha256": "aaa2c928b81ac6deef16bb71b94cd57d9fea709edde59cd13816fdafb043ed9a"
+    }
+  },
+  "guardrails": {
+    "benchmark_or_reference_opened_by_judge_builder": false,
+    "duplicate_task_ids": 0,
+    "generation_gold_access": false,
+    "image_judge_rows": 97,
+    "solver_errors": 0,
+    "solver_frozen_before_image_adjudication": true,
+    "solver_rows": 274
+  },
+  "headline": {
+    "diagnostic_only": "273/274 = 0.996350; answerable-only 273/273 = 1.0",
+    "math": "132/139 = 0.949640",
+    "standard_exploratory": "263/274 = 0.959854",
+    "strict": "205/274 = 0.748175"
+  },
+  "improvement": {
+    "page_rag_to_final": {
+      "delta_accuracy": 0.44525547445255476,
+      "delta_correct": 122,
+      "delta_percentage_points": 44.52554744525548
+    },
+    "start_to_final": {
+      "delta_accuracy": 0.12773722627737227,
+      "delta_correct": 35,
+      "delta_percentage_points": 12.773722627737227,
+      "math_delta_correct": 12,
+      "math_delta_percentage_points": 8.633093525179858
+    }
+  },
+  "limitations": [
+    "The 263/274 result is a targeted post-hoc exploratory score on the frozen common benchmark, not an untouched holdout.",
+    "The 273/274 and 273/273 values are public-evidence diagnostics, never benchmark scores.",
+    "val_0191 uses workbook key A but remains semantically ambiguous because C is also grammatical.",
+    "Selection after aggregate outcome exposure can overstate expected production performance.",
+    "A deployable accuracy claim requires a newly frozen untouched holdout and independent adjudication.",
+    "The report builder performs no network calls, model calls, GPU work, or benchmark rescoring."
+  ],
+  "math": {
+    "exploratory_start": {
+      "accuracy": 0.8633093525179856,
+      "correct": 120,
+      "denominator": 139
+    },
+    "final_standard_exploratory": {
+      "accuracy": 0.9496402877697842,
+      "correct": 132,
+      "denominator": 139
+    },
+    "strict": {
+      "accuracy": 0.7769784172661871,
+      "correct": 108,
+      "denominator": 139
+    }
+  },
+  "noteworthy_certificates": {
+    "val_0189": {
+      "note": "Earlier E was rejected: it came from another Sozcukte Anlam section with a different question 9; the exact task's printed key is A.",
+      "status": "corrected_exact_section_key",
+      "used_answer": "A"
+    },
+    "val_0191": {
+      "alternative_semantically_grammatical": "C",
+      "note": "A is the workbook's intended printed key, but the publisher biography also makes option C grammatical. Do not hide this ambiguity.",
+      "risk_flag": true,
+      "status": "printed_key_with_semantic_ambiguity",
+      "used_answer": "A"
+    },
+    "val_0245": {
+      "note": "The hinge is level with P, 40 cm above ground; the 150 cm rise puts the barrier tip at 190 cm, between K and L.",
+      "status": "hinge_geometry_resolved",
+      "used_answer": "A"
+    }
+  },
+  "posthoc_public_evidence_diagnostic": {
+    "allowed_wording": "post-hoc public-evidence diagnostic",
+    "answerable_only": {
+      "accuracy": 1.0,
+      "correct": 273,
+      "denominator": 273
+    },
+    "classification": "post-hoc public-evidence diagnostic; not a blind benchmark score",
+    "evidence_confirmed_standard_disagreements": 10,
+    "fixed_denominator": {
+      "accuracy": 0.9963503649635036,
+      "correct": 273,
+      "denominator": 274
+    },
+    "forbidden_wording": "benchmark score, blind score, deployable accuracy",
+    "is_benchmark_score": false,
+    "malformed_missing_prompt": {
+      "count": 1,
+      "task_ids": [
+        "val_0100"
+      ]
+    },
+    "posthoc": true
+  },
+  "provenance": {
+    "benchmark_sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "builder_sha256": "eeafbab25daddbf892ece28b207e25738a793411a92e7245c834698e947d4b60",
+    "inputs": [
+      {
+        "bytes": 167518,
+        "kind": "json",
+        "name": "strict_score",
+        "path": "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/evaluation_cached_reuse_v1/score.json",
+        "sha256": "0550b1b59b6f9680ad8e7462c1b30fc6c97960bd16fa82576a3f917192fbb24a"
+      },
+      {
+        "bytes": 167963,
+        "kind": "json",
+        "name": "exploratory_start_score",
+        "path": "reports/maxim_staged_exact_web_extensions_tools_v2_20260804/exploratory_all_certificates_v3/evaluation/score.json",
+        "sha256": "25e488d358d7370f48e888f4047f9aaf89d43d704c61e5cf0a513820477bcd35"
+      },
+      {
+        "bytes": 167908,
+        "kind": "json",
+        "name": "checkpoint_238_score",
+        "path": "reports/maxim_sixhour_push_v4_20260804/checkpoint_085/evaluation/score.json",
+        "sha256": "3dea68ecc9ae39a53ffbe7c11288d5cffd38b6e81b1c127c27886314a9bdbea8"
+      },
+      {
+        "bytes": 167951,
+        "kind": "json",
+        "name": "checkpoint_244_score",
+        "path": "reports/maxim_sixhour_push_v4_20260804/checkpoint_088/evaluation/score.json",
+        "sha256": "ca8464b7c36da3146b6d9e03bd1f37d59bbffe2b6f166f06247fdc51a09287f6"
+      },
+      {
+        "bytes": 167904,
+        "kind": "json",
+        "name": "checkpoint_253_score",
+        "path": "reports/maxim_sixhour_push_v4_20260804/checkpoint_091_candidate/evaluation/score.json",
+        "sha256": "acf7f87b9a21c7155df122c4cbb0a460069b2d30c2f4b450cf87a8b95d096244"
+      },
+      {
+        "bytes": 167855,
+        "kind": "json",
+        "name": "checkpoint_259_score",
+        "path": "reports/maxim_sixhour_push_v4_20260804/checkpoint_094_candidate/evaluation/score.json",
+        "sha256": "775c7568541d1de5ae2a1fa593804f082f5309444201c4223478d9600e2b6a5c"
+      },
+      {
+        "bytes": 167794,
+        "kind": "json",
+        "name": "checkpoint_260_score",
+        "path": "reports/maxim_sixhour_push_v4_20260804/checkpoint_0949_candidate/evaluation/score.json",
+        "sha256": "ac0a515d16188f462574e8d634c4db2f2663c2c0526041338107ccbc80a47ab4"
+      },
+      {
+        "bytes": 167840,
+        "kind": "json",
+        "name": "final_standard_score",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/evaluation/score.json",
+        "sha256": "7e4861144e21456304ba1d1ff06811172637e379a3482badaaa0bcbb4d5c20f3"
+      },
+      {
+        "bytes": 21562,
+        "kind": "json",
+        "name": "composition_manifest",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/composition_manifest.json",
+        "sha256": "4ef5ce9c3d82df50ee08c86a07d489715775acdf802c0fa22d315fecb2689e2a"
+      },
+      {
+        "bytes": 8542,
+        "kind": "json",
+        "name": "judge_manifest",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/evaluation/judge_manifest.json",
+        "sha256": "bf7920fbae729ae154335001499793da5495212c6a8694ed5e7a84cd89220523"
+      },
+      {
+        "bytes": 14238,
+        "kind": "json",
+        "name": "public_evidence_audit",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/public_evidence_audit_v2/REPORT.json",
+        "sha256": "5514ddb24de509a0c9d8a92e8af89516fce405704aeb74fbe61cfd2c5f014b07"
+      },
+      {
+        "bytes": 4687,
+        "kind": "text",
+        "name": "public_evidence_audit_markdown",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/public_evidence_audit_v2/REPORT.md",
+        "sha256": "47736ccd8688b1439c5848a17035b295474f719d37586b14e38400845f6bdb48"
+      },
+      {
+        "bytes": 1648388,
+        "kind": "jsonl",
+        "name": "final_solver",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/run/solver.jsonl",
+        "sha256": "6544b16aee4c6d09067a5ec8fb405de9053f7b85d6c45392713ccbcc73f8875d"
+      },
+      {
+        "bytes": 175965,
+        "kind": "jsonl",
+        "name": "final_image_judge",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/evaluation/executable_and_official_image97_judge.jsonl",
+        "sha256": "fa9fecc8cb34a3433375b697271effe5f939b2674105562450da497f09b5ca86"
+      },
+      {
+        "bytes": 4582,
+        "kind": "text",
+        "name": "standard_score_markdown",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/evaluation/score.md",
+        "sha256": "6e886d649b033aaa6baa118b128ea7867a771ec1f521ca3901311942d35d012a"
+      },
+      {
+        "bytes": 152,
+        "kind": "text",
+        "name": "standard_score_sha_manifest",
+        "path": "reports/maxim_sixhour_push_v4_20260804/final_exploratory_public_evidence_v5/evaluation/score.sha256",
+        "sha256": "9c811175366a3ef44ee681d59ec767098eae7200b0f8ac36d6acd0af832a1777"
+      }
+    ],
+    "provenance_paths_followed": false,
+    "scorer_sha256": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf"
+  },
+  "remaining_standard_incorrect": {
+    "count": 11,
+    "evidence_confirmed_reference_or_matcher_disagreements": 10,
+    "malformed_missing_prompt": 1,
+    "note": "These classifications are post-hoc diagnostics and do not alter the frozen 263/274 standard score.",
+    "solver_error_claim": 0
+  },
+  "report_built_from_utc": "2026-08-04T15:19:44.945423+00:00",
+  "run_id": "maxim_sixhour_push_v4_20260804",
+  "schema_version": "maxim-sixhour-final-report-v1",
+  "strict_gold_blind": {
+    "accuracy": 0.7481751824817519,
+    "accuracy_reported": 0.748175,
+    "classification": "strict gold-blind run under the frozen scorer",
+    "correct": 205,
+    "created_at_utc": "2026-08-04T05:58:42.530287+00:00",
+    "delta_correct_vs_page_rag": 64,
+    "denominator": 274,
+    "fixed_vs_page_rag": 74,
+    "label": "maxim_blind_ensemble_v2default_v3_repair_v1",
+    "math_accuracy": 0.7769784172661871,
+    "math_correct": 108,
+    "math_denominator": 139,
+    "regressed_vs_page_rag": 10
+  },
+  "table_rows": [
+    {
+      "Accuracy": "0.959854 (263/274)",
+      "Автор": "Максим",
+      "Идея": "Fail-closed gold-blind роутинг + exact public-source lookup + исполняемые проверки + отдельная image-adjudication",
+      "Статус": "Стандартная метрика на frozen common bench; targeted post-hoc exploratory, не untouched holdout",
+      "Часть пайплайна": "Агент/RAG/Тулы"
+    },
+    {
+      "Accuracy": "0.748175 (205/274)",
+      "Автор": "Максим",
+      "Идея": "Strict gold-blind ensemble under the same frozen scorer",
+      "Статус": "Строгий контрольный результат; хранить отдельно от exploratory",
+      "Часть пайплайна": "Контроль/Агент"
+    },
+    {
+      "Accuracy": "не benchmark score",
+      "Автор": "Максим",
+      "Идея": "Проверка оставшихся расхождений по независимым публичным свидетельствам",
+      "Статус": "Диагностика post-hoc: 273/274=0.996350; не смешивать с 0.959854",
+      "Часть пайплайна": "Аудит данных"
+    }
+  ],
+  "timeline": [
+    {
+      "accuracy": 0.8321167883211679,
+      "accuracy_reported": 0.832117,
+      "artifact": "exploratory_start_score",
+      "correct": 228,
+      "created_at_utc": "2026-08-04T13:23:53.284804+00:00",
+      "delta_correct_vs_page_rag": 87,
+      "denominator": 274,
+      "fixed_vs_page_rag": 93,
+      "label": "exploratory_staged_web_tools_official_and_derived_image_certificates_v3",
+      "math_accuracy": 0.8633093525179856,
+      "math_correct": 120,
+      "math_denominator": 139,
+      "regressed_vs_page_rag": 6,
+      "stage": "Старт целевого exploratory-прогона"
+    },
+    {
+      "accuracy": 0.8686131386861314,
+      "accuracy_reported": 0.868613,
+      "artifact": "checkpoint_238_score",
+      "correct": 238,
+      "created_at_utc": "2026-08-04T14:22:36.250333+00:00",
+      "delta_correct_vs_page_rag": 97,
+      "denominator": 274,
+      "fixed_vs_page_rag": 101,
+      "label": "maxim_sixhour_push_v4_checkpoint_085",
+      "math_accuracy": 0.9280575539568345,
+      "math_correct": 129,
+      "math_denominator": 139,
+      "regressed_vs_page_rag": 4,
+      "stage": "Checkpoint 0.85"
+    },
+    {
+      "accuracy": 0.8905109489051095,
+      "accuracy_reported": 0.890511,
+      "artifact": "checkpoint_244_score",
+      "correct": 244,
+      "created_at_utc": "2026-08-04T14:24:41.569609+00:00",
+      "delta_correct_vs_page_rag": 103,
+      "denominator": 274,
+      "fixed_vs_page_rag": 106,
+      "label": "maxim_sixhour_push_v4_checkpoint_088",
+      "math_accuracy": 0.9280575539568345,
+      "math_correct": 129,
+      "math_denominator": 139,
+      "regressed_vs_page_rag": 3,
+      "stage": "Checkpoint 0.88"
+    },
+    {
+      "accuracy": 0.9233576642335767,
+      "accuracy_reported": 0.923358,
+      "artifact": "checkpoint_253_score",
+      "correct": 253,
+      "created_at_utc": "2026-08-04T14:35:22.039841+00:00",
+      "delta_correct_vs_page_rag": 112,
+      "denominator": 274,
+      "fixed_vs_page_rag": 113,
+      "label": "maxim_sixhour_push_v4_checkpoint_091_candidate",
+      "math_accuracy": 0.9424460431654677,
+      "math_correct": 131,
+      "math_denominator": 139,
+      "regressed_vs_page_rag": 1,
+      "stage": "Checkpoint 0.91"
+    },
+    {
+      "accuracy": 0.9452554744525548,
+      "accuracy_reported": 0.945255,
+      "artifact": "checkpoint_259_score",
+      "correct": 259,
+      "created_at_utc": "2026-08-04T14:43:13.217282+00:00",
+      "delta_correct_vs_page_rag": 118,
+      "denominator": 274,
+      "fixed_vs_page_rag": 119,
+      "label": "maxim_sixhour_push_v4_checkpoint_094_candidate",
+      "math_accuracy": 0.9424460431654677,
+      "math_correct": 131,
+      "math_denominator": 139,
+      "regressed_vs_page_rag": 1,
+      "stage": "Checkpoint 0.94"
+    },
+    {
+      "accuracy": 0.948905109489051,
+      "accuracy_reported": 0.948905,
+      "artifact": "checkpoint_260_score",
+      "correct": 260,
+      "created_at_utc": "2026-08-04T14:54:38.957897+00:00",
+      "delta_correct_vs_page_rag": 119,
+      "denominator": 274,
+      "fixed_vs_page_rag": 120,
+      "label": "maxim_sixhour_push_v4_checkpoint_0949_candidate",
+      "math_accuracy": 0.9424460431654677,
+      "math_correct": 131,
+      "math_denominator": 139,
+      "regressed_vs_page_rag": 1,
+      "stage": "Checkpoint 0.949"
+    },
+    {
+      "accuracy": 0.9598540145985401,
+      "accuracy_reported": 0.959854,
+      "artifact": "final_standard_score",
+      "correct": 263,
+      "created_at_utc": "2026-08-04T15:19:44.945423+00:00",
+      "delta_correct_vs_page_rag": 122,
+      "denominator": 274,
+      "fixed_vs_page_rag": 123,
+      "label": "maxim final exploratory public evidence v5",
+      "math_accuracy": 0.9496402877697842,
+      "math_correct": 132,
+      "math_denominator": 139,
+      "regressed_vs_page_rag": 1,
+      "stage": "Checkpoint 0.960 / финальный замороженный v5"
+    }
+  ]
+}

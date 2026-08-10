@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-28",
+  "source": {
+    "path": "artifacts/corpus/pages.jsonl",
+    "sha256": "38844732c6f284df6316be74ff20dd0ad8959bbd72d11d0ddc05beed84bf11fb",
+    "representation": "canonical_deduplicated_pages"
+  },
+  "totals": {
+    "books": 215,
+    "pages": 45576,
+    "low_information_pages": 16390
+  },
+  "books_by_grade": {
+    "1": 18,
+    "2": 24,
+    "3": 27,
+    "4": 30,
+    "5": 30,
+    "6": 31,
+    "7": 27,
+    "8": 28,
+    "9": 0,
+    "10": 0,
+    "11": 0,
+    "12": 0
+  },
+  "pages_by_grade": {
+    "1": 2989,
+    "2": 5175,
+    "3": 6291,
+    "4": 6476,
+    "5": 5419,
+    "6": 6643,
+    "7": 5880,
+    "8": 6703,
+    "9": 0,
+    "10": 0,
+    "11": 0,
+    "12": 0
+  },
+  "low_information_pages_by_grade": {
+    "1": 858,
+    "2": 1666,
+    "3": 2773,
+    "4": 2346,
+    "5": 1645,
+    "6": 2326,
+    "7": 2248,
+    "8": 2528
+  },
+  "books_by_subject": {
+    "matematik": 42,
+    "turkce": 39,
+    "ingilizce": 41,
+    "fen bilimleri": 30,
+    "hayat bilgisi": 21,
+    "din kulturu": 21,
+    "sosyal bilgiler": 16,
+    "inkilap tarihi": 5
+  },
+  "important_distinction": {
+    "canonical_pages": 45576,
+    "raw_source_rows": 45920,
+    "duplicate_rows_removed": 344,
+    "note": "Grade page counts in artifacts/source_inventory.json describe raw source rows. This report counts canonical deduplicated pages and must be used for corpus coverage."
+  },
+  "coverage_conclusion": "The canonical textbook corpus contains grades 1-8 only. Grades 9-12 are entirely absent from this snapshot."
+}

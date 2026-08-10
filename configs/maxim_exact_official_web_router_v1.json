@@ -1,0 +1,67 @@
+{
+  "schema_version": "maxim-exact-official-web-router-profile-v1",
+  "status": "FROZEN_BEFORE_NETWORK_OR_EVALUATION_ACCESS",
+  "condition": "maxim_exact_official_web_router_v1",
+  "expected_rows": 274,
+  "eligible_answer_types": [
+    "choice"
+  ],
+  "query": {
+    "min_queries": 2,
+    "max_queries": 4,
+    "phrase_min_tokens": 8,
+    "phrase_max_tokens": 18,
+    "max_query_chars": 240,
+    "key_query_terms": [
+      "cevap anahtarı",
+      "çözümleri"
+    ],
+    "policy": "quoted_distinctive_ocr_phrases_only"
+  },
+  "network": {
+    "explicit_opt_in_required": true,
+    "search_language": "tr",
+    "search_results_per_query": 8,
+    "max_fetches_per_task": 8,
+    "timeout_s": 30.0,
+    "max_document_bytes": 12000000,
+    "user_agent": "maxim-exact-official-web-router/1.0"
+  },
+  "authority": {
+    "strict_official_only": true,
+    "allow_third_party_mirrors": false,
+    "allowed_schemes": [
+      "https"
+    ],
+    "official_host_suffixes": [
+      "osym.gov.tr",
+      "meb.gov.tr",
+      "eba.gov.tr"
+    ],
+    "redirect_policy": "every_redirect_and_final_url_must_remain_on_allowlist"
+  },
+  "certificate": {
+    "min_phrase_matches": 2,
+    "min_fingerprint_token_coverage": 0.88,
+    "min_full_token_coverage": 0.45,
+    "require_unique_answer_within_document_family": true,
+    "require_explicit_answer_marker_or_numbered_key": true,
+    "conflict_policy": "fail_closed",
+    "adjacent_column_policy": "multiple_distinct_markers_fail_closed"
+  },
+  "isolation": {
+    "public_queue_and_ocr_only": true,
+    "default_solver_mounted": false,
+    "generation_gold_access": false,
+    "generation_reference_access": false,
+    "generation_judge_access": false,
+    "generation_score_access": false,
+    "composition_is_a_separate_process": true
+  },
+  "output_contract": {
+    "kind": "selective_decisions_and_certificates_only",
+    "rejected_rows_have_no_answer": true,
+    "accepted_rows_require_certificate_sha256": true,
+    "raw_document_bytes_are_hash_bound_in_cache": true
+  }
+}

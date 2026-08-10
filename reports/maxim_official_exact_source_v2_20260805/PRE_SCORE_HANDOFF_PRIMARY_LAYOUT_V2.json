@@ -1,0 +1,86 @@
+{
+  "schema_version": "maxim-pre-score-handoff-v2",
+  "profile_name": "maxim-public-workbook-primary-layout-v2",
+  "frozen_at_utc": "2026-08-05T02:36:21.3460919Z",
+  "git_parent_commit": "4385859df4cd19726a56ba935b1c695377e5a57a",
+  "evaluation_status": "previously_inspected_development_replay_not_holdout",
+  "score_artifacts_created_before_handoff": false,
+  "gold_access": false,
+  "benchmark_candidate_or_outcome_access": false,
+  "profile": {
+    "path": "configs/maxim_public_workbook_primary_layout_v2.json",
+    "sha256": "8b51e39d072c2146b07595e0f0418a2fd208720f879200d1b0c0e2fd152869f0"
+  },
+  "protocol": {
+    "path": "docs/MAXIM_PRIMARY_LAYOUT_V2_PROTOCOL.md",
+    "sha256": "d8a083dbf7ce75b764f7a63fae03d8fc8e2f7be0148c8b778569d0fb4c2f36ba"
+  },
+  "implementation": {
+    "src/evidence_os/official_ogm.py": "9ed24bd106cd2319d1cee246b52650ca2c056497d5ee9a221d06eb6665bff78e",
+    "src/evidence_os/official_workbook.py": "eb55e93d4aa7983cbc06cd4f6759f32eb1b4993944ce6168f39697251d4a81d8",
+    "src/evidence_os/official_pdf.py": "ad7d50a786ef62fd9547f8a8564993a0d21710be0bf6d350453feb58af1a0b6b",
+    "scripts/run_maxim_public_workbook_v1.py": "8e1e8e179f63d0a6f995c18168a2133c1d120397692df973b5b945a41fe8b62d",
+    "scripts/compose_maxim_official_ogm_failclosed_v2.py": "60039eb248e4da1b38d5cb8d0ebcbad9bb21690e6c10d8c9f706aa9398c2ccb0",
+    "scripts/build_maxim_evidence_os_image_judge_v1.py": "56f07794b373db0cac50eb0c8308e95c3737ed8442f3a5cf7f46c53cdf2fddec",
+    "scripts/audit_maxim_primary_layout_projection_v2.py": "55b50551521f0e591a869c5fcaeb2879571dcaa2cfa74fb320eaaac00cf87c2e"
+  },
+  "tests": {
+    "command": "python -m pytest tests/test_official_ogm_exact_source_v2.py tests/test_official_workbook_v1.py tests/test_build_maxim_evidence_os_image_judge_v1.py -q",
+    "result": "70 passed",
+    "files": {
+      "tests/test_official_ogm_exact_source_v2.py": "1c255a0d2e568a62bb6540d330e6b992a331d15e2d3b45275dc14b726a281bd8",
+      "tests/test_official_workbook_v1.py": "449606a1fd338d5ab07e636aa5e7dd0ca3c6b325f90614b394887335d3c61533",
+      "tests/test_build_maxim_evidence_os_image_judge_v1.py": "4355539e66a3e079e0f28ee6dcf1967f51353bd42e49c106f489f3a9ecae47a0"
+    }
+  },
+  "projection_audit": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_projection_audit/manifest.json",
+      "sha256": "96ad2e94f86275eace6c9b3ac3f7f50bbb03295c9c61e4b0fd44a5ee5c32776c"
+    },
+    "decisions": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_projection_audit/projection_decisions.jsonl",
+      "sha256": "c81308b6d108a15d2de780314ae17533205480832e6019d8c38479680e4e1cc6"
+    },
+    "rows": 274,
+    "primary_layout_recoveries": 17
+  },
+  "resolver": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_resolver/manifest.json",
+      "sha256": "8ed1ff76c97a168eb27abac32ff3f31a1a8c2bfe77c07dca6906219be97a123c"
+    },
+    "candidate": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_resolver/candidate.jsonl",
+      "sha256": "9865bb27cc26f3cf23d2dfee2173a482270f9fbad6be49ac2c6a539506368143"
+    },
+    "certificates": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_resolver/certificates.jsonl",
+      "sha256": "5c30049affe459c982e8df0e82250370d4f65f7d3f50a58c2c2b0833d0f0a41d"
+    },
+    "audit": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_resolver/audit.jsonl",
+      "sha256": "f48fa056797debaeb852af9461421f893127190512c7c2d5be8ceecad27bdf63"
+    },
+    "rows": 274,
+    "accepted_certificates": 74,
+    "abstentions": 200
+  },
+  "composition": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_composed/manifest.json",
+      "sha256": "0b6dc22b90ae175a0dc129a693960be6e52cb9322eeef858d4a93b6df96c9ad2"
+    },
+    "solver": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_composed/solver.jsonl",
+      "sha256": "8773e59ff43b4e4ecd87eff88479f440a7d3e5908fdb4349c7b3a48fe870f13f"
+    },
+    "decisions": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_hardened_composed/decisions.jsonl",
+      "sha256": "d8f4ae139972acac5a99e667260be325da192893a08bbcbb8f5ec719be436416"
+    },
+    "rows": 274,
+    "overrides": 14,
+    "certified_equal_anchor": 60
+  }
+}

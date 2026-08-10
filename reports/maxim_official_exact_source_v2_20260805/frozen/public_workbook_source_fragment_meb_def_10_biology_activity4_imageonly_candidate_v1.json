@@ -1,0 +1,157 @@
+{
+  "schema_version": "public-workbook-biology-activity-source-fragment-v1",
+  "source_only": true,
+  "projection_hash_recipe": {
+    "canonical_json": {
+      "encoding": "utf-8",
+      "ensure_ascii": false,
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "digest": "sha256"
+    },
+    "pdf_extraction": {
+      "engine": "pdfplumber",
+      "version": "0.11.9",
+      "page_numbering": "one_based_physical_page; pdf.pages[physical_page-1]",
+      "extract_words_arguments": {
+        "x_tolerance": 2,
+        "y_tolerance": 2,
+        "keep_blank_chars": false,
+        "use_text_flow": false
+      },
+      "bbox_membership": "inclusive word-center: bbox.x0 <= (word.x0+word.x1)/2 <= bbox.x1 and bbox.top <= (word.top+word.bottom)/2 <= bbox.bottom",
+      "word_sort_key": ["round(word.top,1)", "float(word.x0)", "str(word.text)"],
+      "positioned_word": {
+        "fields": ["text", "x0", "top", "x1", "bottom"],
+        "text_transform": "str(value).strip()",
+        "coordinate_round_digits": 3
+      },
+      "crop_text_transform": "' '.join((page.crop(tuple(bbox)).extract_text() or '').split())",
+      "token_hash_payload": {
+        "tokens": "list(evidence_os.official_ogm.normalize_tokens(crop_text))"
+      },
+      "bbox_union": "[round(min(x0),3),round(min(top),3),round(max(x1),3),round(max(bottom),3)]"
+    },
+    "content_projection": {
+      "projection_schema": "pdf-activity-content-projection-v1",
+      "canonical_payload_fields": [
+        "projection_schema",
+        "pdf_sha256",
+        "physical_page",
+        "printed_page_number",
+        "page_size",
+        "unit_number",
+        "activity_number",
+        "marker_text",
+        "marker_bbox",
+        "content_bbox",
+        "marker",
+        "content_tokens_sha256",
+        "words"
+      ],
+      "marker": "the unique positioned word whose stripped text equals marker_text",
+      "words": "positioned_word objects selected from content_bbox and sorted by word_sort_key"
+    },
+    "key_projection": {
+      "projection_schema": "pdf-activity-key-projection-v1",
+      "canonical_payload_fields": [
+        "projection_schema",
+        "pdf_sha256",
+        "physical_page",
+        "page_size",
+        "unit_number",
+        "activity_number",
+        "printed_source_page_number",
+        "key_header_text",
+        "key_header_bbox",
+        "key_bbox",
+        "answer_format",
+        "canonical_answer",
+        "key_tokens_sha256",
+        "words"
+      ],
+      "key_header_words": "the first four words after selecting key_bbox words and sorting by word_sort_key",
+      "key_header_expected_words": ["Etkinlik", "{activity_number}", "({printed_source_page_number}.", "Sayfa)"],
+      "canonical_answer_transform": "unicodedata.normalize('NFKC', source_answer_literal)",
+      "words": "positioned_word objects selected from key_bbox and sorted by word_sort_key"
+    }
+  },
+  "answer_canonicalization": {
+    "unicode_form": "NFKC",
+    "preserve_source_component_order": true,
+    "component_separator": "; ",
+    "label_value_separator": "=",
+    "synonym_expansion": false,
+    "source_literal_is_authoritative": true
+  },
+  "documents": [
+    {
+      "document_id": "meb_def_10biyoloji_640bb362f2d5",
+      "source_file_name": "MEB-DEF-10biyoloji.pdf",
+      "public_locator": "ya-disk-public://enaTIeEJ6EkmV8iZcuGkjsW2AQGG8Zk91MZ+kXV1fTsdFdYvBGAaTVhk/JNzKRWhq/J6bpmRyOJonT3VoXnDag==:/MEB-DEF-10biyoloji.pdf",
+      "official_book_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/defterim/10/biyoloji/index.html",
+      "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+      "page_count": 183,
+      "page_size": [623.622, 822.047],
+      "isbn": "978-975-11-7294-5",
+      "units": [
+        {
+          "unit_number": 2,
+          "unit_title": "KALITIMIN GENEL İLKELERİ",
+          "physical_content_page_range": [61, 110],
+          "key_physical_page": 180,
+          "key_unit_heading_text": "2. ÜNİTE: KALITIMIN GENEL İLKELERİ",
+          "key_unit_heading_bbox": [82.544, 49.056, 266.75, 60.056]
+        }
+      ],
+      "activities": [
+        {
+          "record_id": "meb_def_10biyoloji_640bb362f2d5:u2:p75:activity4",
+          "source_address": {
+            "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+            "unit_number": 2,
+            "printed_page_number": 75,
+            "activity_number": 4
+          },
+          "unit_title": "KALITIMIN GENEL İLKELERİ",
+          "content_physical_page": 75,
+          "printed_page_number": 75,
+          "activity_number": 4,
+          "marker_kind": "activity_label",
+          "marker_text": "ETKİNLİK-4",
+          "marker_bbox": [284.384, 54.266, 341.254, 65.266],
+          "content_bbox": [42.0, 50.0, 582.0, 780.0],
+          "content_word_count": 81,
+          "content_tokens_sha256": "d6ef0cc21773e5bca61d23bb6bf89aefb7bd08f55e9d2084cf9682270c74195a",
+          "content_projection_schema": "pdf-activity-content-projection-v1",
+          "content_projection_sha256": "c9adf8f44e401f901c0451323b51ed060c5312eff327e5ba62612c1d3d5e329c",
+          "key_binding_kind": "activity_answer_key",
+          "key_physical_page": 180,
+          "key_header_text": "Etkinlik 4 (75. Sayfa)",
+          "key_header_bbox": [125.762, 508.902, 223.542, 518.902],
+          "key_bbox": [41.0, 506.0, 296.0, 570.0],
+          "key_word_count": 29,
+          "key_tokens_sha256": "f9a6ddc5624c4e27cb1c1452eca047621bb0359ac4220af3950ebc8b34ff135f",
+          "key_projection_schema": "pdf-activity-key-projection-v1",
+          "key_projection_sha256": "b9c3d1198dde8d61083470a4f206f2c7843ee7823f0531fb1672f5f981daadda",
+          "answer_format": "labelled_short_text",
+          "answer_components": [
+            {"label": "a", "value": "Genetik"},
+            {"label": "b", "value": "Genotip"},
+            {"label": "c", "value": "Eşey kromozomları (gonozom)"},
+            {"label": "ç", "value": "Modifikasyon"},
+            {"label": "d", "value": "Mutasyon"},
+            {"label": "e", "value": "Hemofili"},
+            {"label": "f", "value": "Baskın"},
+            {"label": "g", "value": "Heterozigot"},
+            {"label": "ğ", "value": "Çok alellilik"},
+            {"label": "h", "value": "MN kan grubu"}
+          ],
+          "canonical_answer": "a=Genetik; b=Genotip; c=Eşey kromozomları (gonozom); ç=Modifikasyon; d=Mutasyon; e=Hemofili; f=Baskın; g=Heterozigot; ğ=Çok alellilik; h=MN kan grubu",
+          "text_visible_activity_marker": true,
+          "visually_checked": true
+        }
+      ]
+    }
+  ]
+}

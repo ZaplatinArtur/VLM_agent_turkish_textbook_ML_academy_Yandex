@@ -1,0 +1,128 @@
+{
+  "schema_version": "maxim-pre-score-handoff-v5",
+  "profile_name": "maxim-public-workbook-primary-layout-mebdef10-v5",
+  "frozen_at_utc": "2026-08-05T07:22:28Z",
+  "git_parent_commit": "2a0deaee08e46f4046ccc95aca4858fbcffc861b",
+  "evaluation_status": "previously_inspected_development_replay_not_holdout",
+  "aggregate_benchmark_score_created_before_handoff": false,
+  "gold_access": false,
+  "frozen_bundle_benchmark_candidate_or_outcome_access": false,
+  "source_decision_benchmark_candidate_or_outcome_access": false,
+  "pre_freeze_reference_derived_image_judge_probe_excluded": true,
+  "decision_rule": "after remote pre_score commit matches local commit, rebuild image input and score once; retain_v4 unless v5 is strictly better",
+  "red_team_review": {
+    "status": "pass_after_fail_closed_repairs",
+    "independent_reviewers": 3,
+    "full_string_answer_grammar": true,
+    "conflicting_markers_abstain": true,
+    "shared_policy_validator": true,
+    "composer_exact_source_cross_check": true,
+    "source_pdf_reverification_records": 128,
+    "source_pdf_reverification_failures": 0
+  },
+  "profile": {
+    "path": "configs/maxim_public_workbook_primary_layout_mebdef10_v5.json",
+    "sha256": "1cc345bff3e709a941431fe560dfa6325b1a7f8eac7390583b8c2cb01c2da10d"
+  },
+  "protocol": {
+    "path": "docs/MAXIM_PRIMARY_LAYOUT_MEBDEF10_V5_PROTOCOL.md",
+    "sha256": "3ce921d30a6cda1636c1ec91114c3faa4536695dc35441f00d5cd12422549fa5"
+  },
+  "implementation": {
+    "src/evidence_os/coordinate_table_answer_key.py": "b78fed3303b1597c04d18fca4e33b9acc0e916f26a5ed824cf2bb7f1dc49e4a3",
+    "src/evidence_os/official_ogm.py": "83e145c5f2d4976d6240e6660494a30d0152fbebd3c5ddc0a145810bdb765f99",
+    "src/evidence_os/official_workbook.py": "2e227ceb98f8af29ec9fc07954468d70b42a1d7e5a5395442304d2159229a2c6",
+    "scripts/attest_maxim_meb_def_coordinate_table_v1.py": "b6bdafd10615e73978e31d9d18cf8dd26ce2d100efc8a002b94a35d341b91f5e",
+    "scripts/audit_maxim_primary_layout_projection_v2.py": "bf1a1d1d743af678e6103785cf8d4ccda93cce708dee2f0727f2df42ee61b193",
+    "scripts/build_maxim_evidence_os_image_judge_v1.py": "3587defaa7d6aa4c4b3aec419ec4a12ab75b096574d9c786547e13b2b50b9e8f",
+    "scripts/compose_maxim_official_ogm_failclosed_v2.py": "9b712110f47967602e37de3a6e35469124705a9f9c49bb37d8083bc524849c00",
+    "scripts/run_maxim_public_workbook_v1.py": "0bd6f7b7665145b12b6ebef137a7dca6c2784fba429b3cfcc22f123c8a94d472"
+  },
+  "tests": {
+    "command": "python -m pytest tests/test_coordinate_table_answer_key.py tests/test_official_workbook_v1.py tests/test_official_ogm_exact_source_v2.py tests/test_build_maxim_evidence_os_image_judge_v1.py tests/test_official_direct_pdf_v2.py -q",
+    "result": "121 passed",
+    "files": {
+      "tests/test_coordinate_table_answer_key.py": "21825b1716e1505c1f1ccd66282edfe310f9759f42de382cf0c642cfe8aed511",
+      "tests/test_official_workbook_v1.py": "5fd2670b50abdb33ec533bc5d0765d576b2b5bfa9700f732f423e646fc701794",
+      "tests/test_official_ogm_exact_source_v2.py": "172714fe0ddf5e16d54a6254c51ab728e40a907d07d2cc2f247f78dfd39c0169",
+      "tests/test_build_maxim_evidence_os_image_judge_v1.py": "206a9776a96d4923ceec464c641c65d72652fa75544d2e9b9ab7386d6a290e66",
+      "tests/test_official_direct_pdf_v2.py": "9f3d783b5dcf6c347664ea74b88f2769632ad413541a7d6f72347258d39fab56"
+    }
+  },
+  "source_wave": {
+    "report": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/MEB_DEF_10_MATH_SOURCE_WAVE_HARDENED_V2.md",
+      "sha256": "4d402ee40543ff6de345de7abff289b33e4a90b902a70c1ed7e6b0c63532b200"
+    },
+    "fragment": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_fragment_meb_def_10_math_table_candidate_v1.json",
+      "sha256": "9f68d9becfe9ebd65a02f80dbe9e06b2e50825cee16d591e1e8dd92c113344d7"
+    },
+    "hardened_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb_def_10_math_table_hardened_v2.json",
+      "sha256": "36a1b11412be85e55fc2acc5980a5ca47919a8ec500f9b98b7b685192c63597c",
+      "manifest_sha256": "b37eedae18ff7170deed1eefb16560f118d33639e5ead9ec50233e990e733124",
+      "reviewed_records": 8,
+      "source_attestations": 8,
+      "unchanged_gate_admissions": 6
+    },
+    "merged_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb3a_samsungis_mebdef10_candidate_v5.json",
+      "sha256": "731a7271daad531b9537c833232dc2b31e8d55514e81981d447056e27454e736",
+      "manifest_sha256": "8a2e32d31f07134086cf4ec59c52b022050aa709b600b24ba9525ae5f419f270",
+      "documents": 10,
+      "records": 128
+    }
+  },
+  "projection_audit": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_mebdef10_v5_sealed_projection_audit/manifest.json",
+      "sha256": "f702b6d82dae56948335c2e84e8f86be3c93ce57e26e424cbdb4d6355b73dd4b"
+    },
+    "decisions_sha256": "73e6ff51c81e51747821f771c72fb2b567586a99d78fd278bf137ba78695480c",
+    "rows": 274,
+    "primary_example_label_observations": 9
+  },
+  "resolver": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_mebdef10_v5_sealed_resolver/manifest.json",
+      "sha256": "49aaded6c44f2b595d8bb7402f638ccd826053241f4d163dd0743d637cc19e12"
+    },
+    "audit_sha256": "5bc0637034a6777f2b54c46100515472f5ae8fb175c50241f6462eecba6ff520",
+    "candidate_sha256": "6454d53f8063f766bd36112263f249571677dff499e68f1a2883ffeda9be2a2b",
+    "certificates_sha256": "bd76620f9c9c18399e69be1a8d8204a7c4f3b4fe28ee22421a103ba9b356d2f5",
+    "rows": 274,
+    "accepted_certificates": 117,
+    "abstentions": 157,
+    "v4_common_certificates": 111,
+    "v4_common_functional_mismatches": 0,
+    "new_certificates": 6
+  },
+  "composition": {
+    "manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_mebdef10_v5_sealed_composed/manifest.json",
+      "sha256": "a0c8ed2f256b479b3102204d7d6d8f3b573a2700e09f66a375d91592749d622d"
+    },
+    "decisions_sha256": "a6c7e019cdad13b53e9324f622c20a244c81bb97cb27dd74cc6b1c4274ec5896",
+    "solver_sha256": "f5fce9433d60732b615fb827f80c8af2d1760bfb58e1da5d599dce7da43a93a4",
+    "rows": 274,
+    "overrides": 24,
+    "certified_equal_anchor": 93,
+    "final_answer_changes_vs_v4": 2
+  },
+  "post_freeze_image_judge_plan": {
+    "status": "not_materialized_in_frozen_bundle",
+    "early_local_probe": "invalidated_and_excluded_because_unchanged_rows_are_reference_derived",
+    "builder": "scripts/build_maxim_evidence_os_image_judge_v1.py",
+    "base_solver_sha256": "aa76740913819b81e23f926e89be68e30501e6f6e14f36867afb3a9f122cc678",
+    "base_image_judge_sha256": "d197ac207479001f36bee2f87c31f5476f674cb8cd1a316aeac3c36494d22c9e",
+    "changed_rows_must_ignore_base_outcomes": true,
+    "materialize_only_after_remote_commit_verification": true,
+    "aggregate_score_runs_once_after_materialization": true
+  },
+  "backward_compatibility": {
+    "v4_composer_replay_passed": true,
+    "v4_solver_sha256": "cb4b05feac1a306925e41c444f26fe47bb17badd02d17fcf49dd5a7f59d79472",
+    "legacy_defaults_allowed_only_for_non_coordinate_table_numbered_records": true
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-final-result-v1",
+  "status": "audited_four_arm_wave_complete_posthoc_report",
+  "model_closure": [
+    "Qwen/Qwen3.5-9B"
+  ],
+  "benchmark": {
+    "rows": 274,
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+  },
+  "protocol": {
+    "deterministic_rows": 177,
+    "image_judge_rows": 97
+  },
+  "known_development_caveat": {
+    "four_arm_wave_frozen_before_any_of_its_outputs": true,
+    "same_wave_retuning_performed": false,
+    "historical_project_outcomes_known_before_arm_design": true,
+    "independent_heldout_claim": false,
+    "interpretation": "honest completed development-wave result; external generalization requires a new closed held-out benchmark"
+  },
+  "artifacts": {
+    "report_ru": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/REPORT_RU.md",
+      "sha256": "f80b689f5d846b5436822d7c2e86decf0867bdabbc99473a29764140534444bb"
+    },
+    "verifier": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/verify_result.py",
+      "sha256": "73fbd39136ff44740b0f7481a539d79a4234fdfe5e4600e400a73dcd711023d0"
+    },
+    "tests": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/test_result.py",
+      "sha256": "c22ef5a27a90791b175978f7b2e6208e6c7c914d6acb06559442255939388bf6"
+    },
+    "wave_attempt": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/evaluation_wave_v1/ATTEMPT_STARTED.json",
+      "sha256": "147ff289014d56e3304f556b22dbce4e9bbde528d12034a20dd5a15d4db799ef"
+    },
+    "wave_completion": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/evaluation_wave_v1/WAVE_COMPLETION_MANIFEST.json",
+      "sha256": "ea32a839ccf8dc256e69f3b994332ce32bae552c120d6a9d98bd7691cd950973"
+    },
+    "evaluation_freeze": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/MULTI_ARM_EVALUATION_FREEZE_v1.json",
+      "sha256": "e9fe41db583a02044d9f693c013cc19a6c9b40c96eca03bb559b356f731db7f1"
+    },
+    "execution_freeze": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/MULTI_ARM_EVALUATION_EXECUTION_FREEZE_v1.json",
+      "sha256": "1985968da69df2168a20dfcc0b7431b4f3eb2de052ae8bd26a05ddb9b0e0dd99"
+    },
+    "v1_2_composition_manifest": {
+      "path": "experiments/maxim_9b_baseline_selector_v1/compositor_output_v1_2/composition_manifest_v1_2.json",
+      "sha256": "0756f55b9ca2847fbee378070dca09909374851a7320d8c7125375483c157750"
+    },
+    "final_source_score": {
+      "path": "reports/maxim_9b_source_replay_v1_20260809/active_crop/final_evaluation/score.json",
+      "sha256": "945c76f3f162c77d52595b4768c60cc48724dae728c0343851afa127733bc039"
+    },
+    "source_calibrated_freeze": {
+      "path": "experiments/maxim_9b_source_calibrated_selector_v1/FREEZE.json",
+      "sha256": "11e0c79b62aadb91bfc53b96e87abc44791211fa1abbf9c66d31fc7dd230b5ee"
+    },
+    "source_calibrated_candidate_manifest": {
+      "path": "experiments/maxim_9b_source_calibrated_selector_v1/candidate_manifest.json",
+      "sha256": "d909601ea8ee39915166dc930c3bdad318e85e2eb5a5d8750283f8cbd3520242"
+    },
+    "canonicalization_rule_freeze": {
+      "path": "experiments/maxim_9b_answer_canonicalization_v1/DEVELOPMENT_RULE_FREEZE.json",
+      "sha256": "c101cb98326f67df48dbbb0c801ff7a235991b5d025b673605b69c66502df3e4"
+    },
+    "canonicalization_output_freeze": {
+      "path": "experiments/maxim_9b_answer_canonicalization_v1/candidate_output/CANDIDATE_OUTPUT_FREEZE.json",
+      "sha256": "bef7405c7d0110707e09733964831a5f320bdaa6715757f65d1b3e11ffa37005"
+    },
+    "canonicalization_candidate_manifest": {
+      "path": "experiments/maxim_9b_answer_canonicalization_v1/candidate_output/candidate_manifest.json",
+      "sha256": "8781b5d7aea624276499d55247c2cf08450be7db3132cb8b8e3305b2a29d3729"
+    },
+    "repair_rule_freeze": {
+      "path": "experiments/maxim_9b_answer_contract_repair_v1_1/DEVELOPMENT_RULE_FREEZE.json",
+      "sha256": "8fc5607795cde3d4f97e174cdcebcdd8959a1f8420c9bcafb657460b3953628d"
+    },
+    "repair_output_freeze": {
+      "path": "experiments/maxim_9b_answer_contract_repair_v1_1/candidate_output/CANDIDATE_OUTPUT_FREEZE.json",
+      "sha256": "4bf354ad7ab2deb35ed89f136a2eeb9c69b5c3c95971b950a1ecadd1a0987067"
+    },
+    "repair_candidate_manifest": {
+      "path": "experiments/maxim_9b_answer_contract_repair_v1_1/candidate_output/candidate_manifest.json",
+      "sha256": "4b519585f042907440b143a5aeeac27335c5fd6c66671f25e083f570f4a0ac5d"
+    },
+    "repair_score": {
+      "path": "experiments/maxim_9b_answer_contract_repair_v1_1/evaluation_on_v1_2_primary_240/score.json",
+      "sha256": "453970038673fb29b97d754b4ef980e19850a930499e89ccccfb9f9b8e6c9dc8"
+    }
+  },
+  "wave": {
+    "completion_manifest_sha256": "ea32a839ccf8dc256e69f3b994332ce32bae552c120d6a9d98bd7691cd950973",
+    "arms": {
+      "v1_1_primary": {
+        "solver": {
+          "path": "experiments/maxim_9b_baseline_selector_v1/compositor_output_v1_1/primary_solver.jsonl",
+          "sha256": "93905be2f9e5c63bf2eec1c6c22e0037de617b48288e3fa5adca2d680ef1a704"
+        },
+        "score": {
+          "path": "experiments/maxim_9b_baseline_selector_v1/evaluation_wave_v1/results/v1_1_primary_score.json",
+          "sha256": "b6ad0c826d4916a9cd61d9e97887676e4ae66279dcd4a5ac7d602bcef104c310"
+        },
+        "correct": 239,
+        "n": 274,
+        "accuracy": 0.872263
+      },
+      "v1_1_secondary": {
+        "solver": {
+          "path": "experiments/maxim_9b_baseline_selector_v1/compositor_output_v1_1/secondary_solver.jsonl",
+          "sha256": "9fc8298f0a81d269f26bba65f11bf5afa5581ea8c76295a501b8605552a5cc73"
+        },
+        "score": {
+          "path": "experiments/maxim_9b_baseline_selector_v1/evaluation_wave_v1/results/v1_1_secondary_score.json",
+          "sha256": "1d34d94c0aeb1ec1406fadc21be62b966c14e72536cd0b05455c83c691f90a24"
+        },
+        "correct": 237,
+        "n": 274,
+        "accuracy": 0.864964
+      },
+      "v1_2_exploratory": {
+        "solver": {
+          "path": "experiments/maxim_9b_baseline_selector_v1/compositor_output_v1_2/exploratory_solver.jsonl",
+          "sha256": "cf18e0836b9af729fcfee337599e724de368a4fb78f4d62442d0dea71057da80"
+        },
+        "score": {
+          "path": "experiments/maxim_9b_baseline_selector_v1/evaluation_wave_v1/results/v1_2_exploratory_score.json",
+          "sha256": "140125cdc572bffbd9c806dfe1dfcd2502ecba8527f88f110cc18094ff30ba3c"
+        },
+        "correct": 239,
+        "n": 274,
+        "accuracy": 0.872263
+      },
+      "v1_2_primary": {
+        "solver": {
+          "path": "experiments/maxim_9b_baseline_selector_v1/compositor_output_v1_2/primary_solver.jsonl",
+          "sha256": "09aa8d69e7de3a02bbc9b28b2b269b845a0dee1a40ef2d6aa55f7e966a779bef"
+        },
+        "score": {
+          "path": "experiments/maxim_9b_baseline_selector_v1/evaluation_wave_v1/results/v1_2_primary_score.json",
+          "sha256": "ccf225c2d10f1719be2802585d063ea3aa106b7d0be7240abb5c6f93c03a0fc6"
+        },
+        "correct": 240,
+        "n": 274,
+        "accuracy": 0.875912
+      }
+    }
+  },
+  "best": {
+    "arm": "v1_2_primary",
+    "correct": 240,
+    "n": 274,
+    "accuracy": 0.875912,
+    "slices": {
+      "math": {
+        "correct": 109,
+        "n": 139,
+        "accuracy": 0.784173
+      },
+      "deterministic": {
+        "correct": 158,
+        "n": 177,
+        "accuracy": 0.892655
+      },
+      "image_judge": {
+        "correct": 82,
+        "n": 97,
+        "accuracy": 0.845361
+      }
+    },
+    "preservation": {
+      "source_union_rows": 156,
+      "source_union_changes": 0,
+      "image_judge_rows": 97,
+      "image_judge_changes": 0
+    },
+    "comparison_vs_final_source": {
+      "source_correct": 238,
+      "source_n": 274,
+      "source_accuracy": 0.868613,
+      "fixed": 2,
+      "fixed_task_ids": [
+        "val_0089",
+        "val_0251"
+      ],
+      "fixed_tasks": [
+        {
+          "task_id": "val_0089",
+          "subject": "History"
+        },
+        {
+          "task_id": "val_0251",
+          "subject": "Math"
+        }
+      ],
+      "regressed": 0,
+      "regressed_task_ids": [],
+      "net_correct_change": 2,
+      "delta_percentage_points": 0.73
+    }
+  },
+  "separate_null_controls": {
+    "source_calibrated_selector": {
+      "status": "selection_null_unscored_separate_artifact",
+      "uncovered_replacements": 0,
+      "rolled_into_best_240": false
+    },
+    "answer_canonicalization": {
+      "status": "post_score_development_null_unscored_separate_artifact",
+      "changed_rows_by_arm": {
+        "choice_nfkc_only": 0,
+        "choice_curated_confusable_exploratory": 0,
+        "fraction_percent_explicit_question_contract_exploratory": 0
+      },
+      "rolled_into_best_240": false
+    },
+    "answer_contract_repair_v1_1": {
+      "status": "post_score_development_evaluated_separately_correct_to_correct_null",
+      "changed_rows": 1,
+      "changed_task_ids": [
+        "val_0223"
+      ],
+      "before_correct": true,
+      "after_correct": true,
+      "net_correct_change": 0,
+      "correct_after": 240,
+      "n": 274,
+      "rolled_into_four_arm_wave": false
+    }
+  }
+}

@@ -1,0 +1,535 @@
+{
+  "schema_version": "maxim-full274-results-registry-v1",
+  "benchmark": {
+    "rows": 274,
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+  },
+  "judge": {
+    "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+    "image_judge_rows": 97
+  },
+  "branches": [
+    {
+      "id": "solver_critic_repair",
+      "label": "Solver - Critic - Repair",
+      "preregistered": true,
+      "allow_legacy_finalizer_without_orchestration": true,
+      "report_globs": [
+        "reports/maxim8_variants_full274_20260802/online_v1_evaluation/solver_critic_repair/score.json"
+      ]
+    },
+    {
+      "id": "selective_rag_metadata",
+      "label": "Selective RAG (retrieval reliability gate)",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/selective_rag_metadata/matched_score.json"
+      ]
+    },
+    {
+      "id": "subject_router",
+      "label": "Frozen subject router",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/subject_router/matched_score.json"
+      ]
+    },
+    {
+      "id": "parallel_consensus",
+      "label": "8-way answer clustering / consensus",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/parallel_consensus/matched_score.json"
+      ]
+    },
+    {
+      "id": "calculator_sympy",
+      "label": "Calculator / SymPy verification",
+      "preregistered": true,
+      "allow_legacy_finalizer_without_orchestration": true,
+      "report_globs": [
+        "reports/maxim8_variants_full274_20260802/online_v1_evaluation/calculator_sympy/score.json"
+      ]
+    },
+    {
+      "id": "two_pass_transcription",
+      "label": "Two-pass transcription and solve",
+      "preregistered": true,
+      "allow_legacy_finalizer_without_orchestration": true,
+      "report_globs": [
+        "reports/maxim8_variants_full274_20260802/online_v1_evaluation/two_pass_transcription/score.json"
+      ]
+    },
+    {
+      "id": "answer_canonicalization",
+      "label": "Answer canonicalization",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim8_variants_full274_20260802/offline_v1_evaluation/answer_canonicalization/score.json"
+      ]
+    },
+    {
+      "id": "error_memory",
+      "label": "Frozen memory of common error patterns",
+      "preregistered": true,
+      "allow_legacy_finalizer_without_orchestration": true,
+      "report_globs": [
+        "reports/maxim8_variants_full274_20260802/online_v1_evaluation/error_memory/score.json"
+      ]
+    },
+    {
+      "id": "blind_verifier_raw_selector",
+      "label": "Blind disagreement verifier (preregistered raw selector)",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_blind_disagreement_verifier_v1_20260803/finalized/raw_selector/score.json"
+      ]
+    },
+    {
+      "id": "active_vision",
+      "label": "Active vision: localize, crop, sketch, solve",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_active_vision_v1_20260803/evaluation/score.json"
+      ]
+    },
+    {
+      "id": "query_active_crop_v2",
+      "label": "Query-conditioned active crop verifier v2",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_query_active_crop_v2_20260803/evaluation_orchestrated/score.json"
+      ]
+    },
+    {
+      "id": "native_thinking_v4",
+      "label": "Native thinking math router v4",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_native_thinking_math_router_v4_20260803/evaluation_matched/score.json"
+      ]
+    },
+    {
+      "id": "crossfit_subject_router_oof",
+      "label": "Cross-fit subject router (OOF estimate; non-final)",
+      "preregistered": true,
+      "result_kind": "oof_estimate",
+      "report_globs": [
+        "reports/maxim_crossfit_router_v1_20260803/score.json"
+      ]
+    },
+    {
+      "id": "tiled_vision",
+      "label": "Overlapping tiled vision",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_tiled_vision_v1_20260803/**/score.json",
+        "reports/maxim_tiled_vision_v1_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "budgeted_thinking_v5",
+      "label": "Budgeted thinking math router v5",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_native_thinking_math_router_v5_20260803/evaluation_orchestrated/score.json",
+        "reports/maxim_native_thinking_math_router_v5_20260803/**/score.json",
+        "reports/maxim_budgeted_thinking_math_router_v5_20260803/**/score.json"
+      ]
+    },
+    {
+      "id": "structural_rag",
+      "label": "Structural element RAG",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_structural_evidence_rag_v1_20260803/**/score.json"
+      ]
+    },
+    {
+      "id": "mi_rag",
+      "label": "Multi-iteration RAG",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_mi_rag_v1_20260803/**/score.json"
+      ]
+    },
+    {
+      "id": "paired_rag_norag_semantic_support",
+      "label": "Frozen no-tools (semantic gate selected RAG 0/274)",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation/score.json",
+        "reports/maxim_paired_rag_norag_semantic_support_v1_20260803/evaluation_orchestrated/score.json"
+      ]
+    },
+    {
+      "id": "literal_parallel8_lowconf_arbiter",
+      "label": "Literal parallel-8 consensus with low-confidence arbiter",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_literal_parallel8_lowconf_v1_20260803/evaluation/score.json"
+      ]
+    },
+    {
+      "id": "stronger_27b_hard86_composite",
+      "label": "Qwen3.5-27B hard86 composite",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_stronger27_hard86_20260803/evaluation_orchestrated/score.json",
+        "reports/maxim_stronger_27b_math_disagreement_router_v1_20260803/**/score.json",
+        "reports/maxim_stronger_27b_hard86_composite_v1_20260803/**/score.json"
+      ]
+    },
+    {
+      "id": "stronger_27b_direct",
+      "label": "Qwen3.5-27B direct full274",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_stronger27_direct_full274_20260803/evaluation/score.json",
+        "reports/maxim_stronger27_direct_full274_20260803/evaluation_orchestrated/score.json",
+        "reports/maxim_stronger_27b_direct_full274_v1_20260803/evaluation_orchestrated/score.json",
+        "reports/maxim_stronger_27b_direct_full274_v1_20260803/**/score.json"
+      ]
+    },
+    {
+      "id": "final_meta_verifier_v2",
+      "label": "Frozen 10-way final meta-verifier v2",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_final_meta_verifier_v2_20260803/**/score.json",
+        "reports/maxim_final_meta_verifier_v2_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "final_meta_verifier_v3",
+      "label": "Frozen 12-way final meta-verifier v3",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_final_meta_verifier_v3_20260803/**/score.json",
+        "reports/maxim_final_meta_verifier_v3_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "parser_augmented_solver_v1",
+      "label": "PaddleOCR-VL structured parser + Qwen3.5-9B solver",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/**/score.json",
+        "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/**/matched_score.json",
+        "reports/maxim_parser_augmented_solver_v1_20260803/**/score.json",
+        "reports/maxim_parser_augmented_solver_v1_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "evidence_gap_seeker_inspector_v1",
+      "label": "Evidence-gap Seeker to Inspector",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_evidence_gap_seeker_inspector_v1_final_20260803/**/score.json",
+        "reports/maxim_evidence_gap_seeker_inspector_v1_final_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "element_aware_rag_v2",
+      "label": "Element-aware base dense RAG v2 control",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_training_approaches_prereg_v1_20260803/evaluation_element_dense_base_v2/score.json",
+        "reports/maxim_training_approaches_prereg_v1_20260803/evaluation_element_dense_base_v2/matched_score.json",
+        "reports/maxim_element_aware_rag_v2_20260803/**/score.json",
+        "reports/maxim_element_aware_rag_v2_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "bge_m3_hardneg_rag_v1",
+      "label": "BGE-M3 whole-book hard-negative RAG",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_bge_m3_hardneg_v1_20260803/**/score.json",
+        "reports/maxim_bge_m3_hardneg_v1_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "qwen35_docvqa_sft_v1",
+      "label": "Qwen3.5-9B DocVQA LoRA",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_qwen35_docvqa_sft_v1_20260803/**/score.json",
+        "reports/maxim_qwen35_docvqa_sft_v1_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "visual_sketchpad_v2",
+      "label": "Conservative Visual Sketchpad v2",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_visual_sketchpad_v2_20260803/**/score.json",
+        "reports/maxim_visual_sketchpad_v2_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "element_sparse_graph_v3",
+      "label": "Element-aware sparse BM25 plus graph RAG v3",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_training_approaches_prereg_v1_20260803/evaluation_element_sparse_graph_v3/score.json",
+        "reports/maxim_training_approaches_prereg_v1_20260803/evaluation_element_sparse_graph_v3/matched_score.json"
+      ]
+    },
+    {
+      "id": "element_dense_sparse_graph_base_v3",
+      "label": "Element-aware dense sparse graph RAG v3",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_training_approaches_prereg_v1_20260803/evaluation_element_dense_sparse_graph_base_v3/score.json",
+        "reports/maxim_training_approaches_prereg_v1_20260803/evaluation_element_dense_sparse_graph_base_v3/matched_score.json"
+      ]
+    },
+    {
+      "id": "parser_augmented_conservative_v2",
+      "label": "Parser-augmented solver with generic saturation and repetition gate",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_document_parser_v1_20260803/parser_augmented_conservative_v2/**/score.json",
+        "reports/maxim_document_parser_v1_20260803/parser_augmented_conservative_v2/**/matched_score.json",
+        "reports/maxim_parser_augmented_conservative_v2_20260803/**/score.json",
+        "reports/maxim_parser_augmented_conservative_v2_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "dual_granularity_page_element_rrf_base_v1",
+      "label": "Dual-granularity page and element RRF RAG",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_training_approaches_prereg_v1_20260803/evaluation_dual_granularity_v1/score.json",
+        "reports/maxim_training_approaches_prereg_v1_20260803/evaluation_dual_granularity_v1/matched_score.json"
+      ]
+    },
+    {
+      "id": "final_meta_verifier_v2_choice_token_compat_v21",
+      "label": "Meta-verifier v2.1 numeric choice-token compatibility",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_final_meta_verifier_v2_choice_token_compat_v21_20260803/**/score.json",
+        "reports/maxim_final_meta_verifier_v2_choice_token_compat_v21_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "final_meta_verifier_v3_choice_token_compat_v31",
+      "label": "Meta-verifier v3.1 numeric choice-token compatibility",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_final_meta_verifier_v3_choice_token_compat_v31_20260803/**/score.json",
+        "reports/maxim_final_meta_verifier_v3_choice_token_compat_v31_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "pairwise_selector_v1",
+      "label": "Synthetic whole-book pairwise selector",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_pairwise_selector_v1_20260804/**/score.json",
+        "reports/maxim_pairwise_selector_v1_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_failclosed_v1",
+      "label": "Fail-closed synthetic pairwise selector: V2.1 default vs Active-Crop override",
+      "preregistered": true,
+      "preregistration": "reports/maxim_pairwise_selector_v21_active_crop_failclosed_v1_20260804/preregistered_profile.json",
+      "preregistration_sha256": "71105edb6d9ddea89082657383cbb588d7d5552ef245b59d576902483c5811f6",
+      "report_globs": [
+        "reports/maxim_pairwise_selector_v21_active_crop_failclosed_v1_20260804/**/score.json",
+        "reports/maxim_pairwise_selector_v21_active_crop_failclosed_v1_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_semantic_adapter_v11",
+      "label": "Fail-closed V2.1 vs Active-Crop selector trained on explicit semantic adapters v1.1",
+      "preregistered": true,
+      "preregistration": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_v11_20260804/preregistered_profile.json",
+      "preregistration_sha256": "983a7048acb57f993373528df94c8419d67c090e8de4a7014f2c84257f73ec25",
+      "preregistration_audit": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_v11_20260804/preregistration_audit.json",
+      "preregistration_audit_sha256": "5cab2a4ec5d22722be8efe64cc7422034b87b6d7bb9bd209cb1fd0812f24dd12",
+      "superseded_before_calls": true,
+      "superseded_source_call_count": 0,
+      "supersession_attestation": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_v11_20260804/superseded_before_calls_attestation.json",
+      "supersession_attestation_sha256": "44167aad62f3d0e4ec732ba5687dc14025df160bf903df1dce844c4dc7925cb9",
+      "exact_public_v21_full_dag_reproduction": false,
+      "report_globs": [
+        "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_v11_20260804/**/score.json",
+        "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_v11_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_semantic_adapter_runtime_pinned_v12",
+      "label": "Superseded-before-calls runtime-pinned semantic adapter v1.2",
+      "preregistered": true,
+      "preregistration": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_pinned_v12_20260804/preregistered_profile.json",
+      "preregistration_sha256": "9373611304e2c7da1f03b5e5d9b42b4014ca0b5c875bd569ec3355c535238dcb",
+      "preregistration_audit": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_pinned_v12_20260804/preregistration_audit.json",
+      "preregistration_audit_sha256": "9ccb2f9e7b3a223ef540b1716af03f5981a8eecb2012fdf4ef8b423cd8434153",
+      "superseded_before_calls": true,
+      "superseded_source_call_count": 0,
+      "supersession_attestation": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_pinned_v12_20260804/superseded_before_calls_attestation.json",
+      "supersession_attestation_sha256": "990961ec21d4be4ce8950ec5ce9968f22ab769ea847d9c8008ef543a4a14913b",
+      "exact_public_v21_full_dag_reproduction": false,
+      "report_globs": [
+        "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_pinned_v12_20260804/**/score.json",
+        "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_pinned_v12_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_semantic_adapter_runtime_exact_v13",
+      "label": "Superseded-before-calls runtime-exact semantic adapter v1.3",
+      "preregistered": true,
+      "preregistration": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_exact_v13_20260804/preregistered_profile.json",
+      "preregistration_sha256": "e39268d46e4554dd9b4d59479acddc9c3ef67a5c52210256a75b9f81c1590267",
+      "preregistration_audit": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_exact_v13_20260804/preregistration_audit.json",
+      "preregistration_audit_sha256": "6695fda1d2810e86996b5a7535b16c1a8d355b01ce0116c46f2bb39df1ab66f2",
+      "superseded_before_calls": true,
+      "superseded_source_call_count": 0,
+      "supersession_attestation": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_exact_v13_20260804/superseded_before_calls_attestation.json",
+      "supersession_attestation_sha256": "a659653e3478efdfb37fd5fb1b90b9153aba27dbe14df73a49cf892ff3e23711",
+      "exact_public_v21_full_dag_reproduction": false,
+      "report_globs": [
+        "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_exact_v13_20260804/**/score.json",
+        "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_exact_v13_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14",
+      "label": "Active runtime-closure semantic adapter v1.4 with exact seven-module staged import closure",
+      "preregistered": true,
+      "preregistration": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/preregistered_profile.json",
+      "preregistration_sha256": "805a130ea97d9a5a1587998ca02db4002b9b193e964f0baa79bd63cc71acea87",
+      "preregistration_audit": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/preregistration_audit.json",
+      "preregistration_audit_sha256": "671e214853defb2d6481010cf1f6d2aef7e6fadf38c4d2bfab8a3ec43b44d3ec",
+      "server_call_free_preflight": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/server_call_free_preflight_execution.json",
+      "server_call_free_preflight_sha256": "5c3f8370f249ce502b3c78d6e25d4de6e97e9b7334198138fb70fab84f7777dd",
+      "pre_dataset_status_amendment": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/pre_dataset_status_amendment_v1.json",
+      "pre_dataset_status_amendment_sha256": "02b4512fc1f9c436726c5754b5e9f767eaa29400d8d1df1ad50043480295de1c",
+      "pre_dataset_status_amendment_audit": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/pre_dataset_status_amendment_audit.json",
+      "pre_dataset_status_amendment_audit_sha256": "f3fecb348fa3db1203bf5d3149bfa6080762b899a1828664ee95b612fab18547",
+      "anchor27_endpoint_execution_provenance": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/anchor27_endpoint_execution_provenance_attestation.json",
+      "anchor27_endpoint_execution_provenance_sha256": "0f459e01b3aacef5127a3f0bce892d774b8c4ea7b6395122389c51a1b6795fa7",
+      "anchor27_endpoint_provenance_watcher": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/watch_anchor27_endpoint_provenance_milestones_v1.py",
+      "anchor27_endpoint_provenance_watcher_sha256": "8f0f9070b8d3ad2dafdc4e53c9829275dcedd29af1a625b02ba9c3850318fe90",
+      "anchor27_endpoint_provenance_milestone_100": "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/endpoint_provenance_milestones/anchor27_milestone_0100.json",
+      "anchor27_endpoint_provenance_milestone_100_sha256": "89bc536f94477e8d0f5a4e88075afeadfc21e8e5bc8a2e10e00eeda6d462201d",
+      "exact_public_v21_full_dag_reproduction": false,
+      "report_globs": [
+        "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/**/score.json",
+        "reports/maxim_pairwise_selector_v21_active_crop_semantic_adapter_runtime_closure_v14_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "pairwise_tfidf_logreg_v21_active_crop_failclosed_v1",
+      "label": "Frozen CPU TF-IDF/logistic pairwise selector: V2.1 default vs Active-Crop override",
+      "preregistered": true,
+      "preregistration": "reports/maxim_pairwise_tfidf_logreg_v21_active_crop_failclosed_v1_20260804/preregistered_profile.json",
+      "preregistration_sha256": "b6d05401de2a8f97ca739419dba85c412d2edc95f83f713ec063f1b32464a57f",
+      "data_contract": "reports/maxim_pairwise_tfidf_logreg_v21_active_crop_failclosed_v1_20260804/data_contract_v1.json",
+      "data_contract_sha256": "f20884a8ba856d0bf5e0a7161677e99e67b11cccaba8b6ee9e200524c430cb64",
+      "preregistration_audit": "reports/maxim_pairwise_tfidf_logreg_v21_active_crop_failclosed_v1_20260804/preregistration_audit.json",
+      "preregistration_audit_sha256": "417adfaac196efc0c91e569106d0bb2f57ed1b9ac778545b5caa041ec01c84cd",
+      "preregistration_manifest": "reports/maxim_pairwise_tfidf_logreg_v21_active_crop_failclosed_v1_20260804/preregistration_manifest.json",
+      "preregistration_manifest_sha256": "d12213d9eae097ca34add43889124b77950240a8825a0abea6e232bfd29b1cce",
+      "report_globs": [
+        "reports/maxim_pairwise_tfidf_logreg_v21_active_crop_failclosed_v1_20260804/**/score.json",
+        "reports/maxim_pairwise_tfidf_logreg_v21_active_crop_failclosed_v1_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "blind_ensemble_v2default_v3_repair_v1",
+      "label": "Gold-blind V2.1 default with conservative V3.1 repair",
+      "preregistered": true,
+      "preregistration": "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/preregistered_manifest.json",
+      "preregistration_sha256": "5da12659d2e0dd52a22c0ba5bbc172f5e9a7c60c321a5847bb46da3a8b41ab12",
+      "report_globs": [
+        "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/**/score.json",
+        "reports/maxim_blind_ensemble_v2default_v3_repair_v1_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "blind_ensemble_v2default_active_repair_v1",
+      "label": "Gold-blind V2.1 default with conservative Active-Crop repair",
+      "preregistered": true,
+      "preregistration": "reports/maxim_blind_ensemble_v2default_active_repair_v1_20260804/preregistered_manifest.json",
+      "preregistration_sha256": "ce62aea99f92c8831cfb31b4953c3e0b74823773fd7eef7a8f7a7c44c58f92e9",
+      "report_globs": [
+        "reports/maxim_blind_ensemble_v2default_active_repair_v1_20260804/**/score.json",
+        "reports/maxim_blind_ensemble_v2default_active_repair_v1_20260804/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "blind_ensemble_v2default_triple_agreement_v1",
+      "label": "Gold-blind V2.1 default with strict triple-agreement repair",
+      "preregistered": true,
+      "preregistration": "reports/maxim_blind_ensemble_v2default_triple_agreement_v1_20260804/preregistered_manifest.json",
+      "preregistration_sha256": "cb3834fe8cacb828fd40cf17e2e3b4a2c13b7430bc9e637ae8f33c6bac45f597",
+      "report_globs": [
+        "reports/maxim_blind_ensemble_v2default_triple_agreement_v1_20260804/evaluation_cached_reuse_v1/score.json"
+      ]
+    },
+    {
+      "id": "evidence_gap_fact_intent_compat_v11",
+      "label": "Evidence-gap fact-intent compatibility v1.1",
+      "preregistered": true,
+      "report_globs": [
+        "reports/maxim_evidence_gap_seeker_inspector_v1_fact_intent_compat_v11_20260803/**/score.json",
+        "reports/maxim_evidence_gap_seeker_inspector_v1_fact_intent_compat_v11_20260803/**/matched_score.json"
+      ]
+    },
+    {
+      "id": "consensus_repair_v31_active_pair_v1",
+      "label": "Outcome-blind consensus repair: V3.1 and Active-Crop pair",
+      "preregistered": true,
+      "preregistration": "reports/maxim_consensus_repair_sweep_v1_20260804/preregistered_sweep.json",
+      "preregistration_sha256": "962c7560ec9918d811c8a7ba24e18c3321e1364872cad5a26620f122496e0eb0",
+      "report_globs": [
+        "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_pair/evaluation_cached_reuse_v1/score.json"
+      ]
+    },
+    {
+      "id": "consensus_repair_v31_no_tools_pair_v1",
+      "label": "Outcome-blind consensus repair: V3.1 and no-tools pair",
+      "preregistered": true,
+      "preregistration": "reports/maxim_consensus_repair_sweep_v1_20260804/preregistered_sweep.json",
+      "preregistration_sha256": "962c7560ec9918d811c8a7ba24e18c3321e1364872cad5a26620f122496e0eb0",
+      "report_globs": [
+        "reports/maxim_consensus_repair_sweep_v1_20260804/v31_no_tools_pair/evaluation_cached_reuse_v1/score.json"
+      ]
+    },
+    {
+      "id": "consensus_repair_active_no_tools_pair_v1",
+      "label": "Outcome-blind consensus repair: Active-Crop and no-tools pair",
+      "preregistered": true,
+      "preregistration": "reports/maxim_consensus_repair_sweep_v1_20260804/preregistered_sweep.json",
+      "preregistration_sha256": "962c7560ec9918d811c8a7ba24e18c3321e1364872cad5a26620f122496e0eb0",
+      "report_globs": [
+        "reports/maxim_consensus_repair_sweep_v1_20260804/active_no_tools_pair/evaluation_cached_reuse_v1/score.json"
+      ]
+    },
+    {
+      "id": "consensus_repair_v31_active_no_tools_triple_v1",
+      "label": "Outcome-blind consensus repair: V3.1, Active-Crop, and no-tools triple",
+      "preregistered": true,
+      "preregistration": "reports/maxim_consensus_repair_sweep_v1_20260804/preregistered_sweep.json",
+      "preregistration_sha256": "962c7560ec9918d811c8a7ba24e18c3321e1364872cad5a26620f122496e0eb0",
+      "report_globs": [
+        "reports/maxim_consensus_repair_sweep_v1_20260804/v31_active_no_tools_triple/evaluation_cached_reuse_v1/score.json"
+      ]
+    },
+    {
+      "id": "consensus_repair_two_of_three_majority_v1",
+      "label": "Outcome-blind consensus repair: unique two-of-three majority",
+      "preregistered": true,
+      "preregistration": "reports/maxim_consensus_repair_sweep_v1_20260804/preregistered_sweep.json",
+      "preregistration_sha256": "962c7560ec9918d811c8a7ba24e18c3321e1364872cad5a26620f122496e0eb0",
+      "report_globs": [
+        "reports/maxim_consensus_repair_sweep_v1_20260804/two_of_three_majority/evaluation_cached_reuse_v1/score.json"
+      ]
+    }
+  ]
+}

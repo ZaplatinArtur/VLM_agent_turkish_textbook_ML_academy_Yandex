@@ -1,0 +1,29 @@
+{
+  "schema_version": "holdout80-dedup-audit-v1",
+  "benchmark_input_count": 274,
+  "method": "Unicode-normalized 3-word shingles over official question-page text versus OCR of each of 274 benchmark inputs",
+  "selection_gate": {
+    "containment_lt": 0.65,
+    "jaccard_lt": 0.5
+  },
+  "all_passed": true,
+  "max_observed": {
+    "holdout_task_id": "h80-phys12-u4-q42",
+    "nearest_benchmark_task_id": "val_0261",
+    "containment": 0.395833,
+    "jaccard": 0.05163
+  },
+  "known_math12_activity_exclusions": [
+    3,
+    17,
+    31,
+    43,
+    88
+  ],
+  "exact_selected_asset_sha_matches_to_benchmark": 0,
+  "perceptual_crop_audit": {
+    "performed": false,
+    "reason": "The 274 original bitmaps are not retained under stable task paths; OCR, source-page binding, and exact SHA checks are available."
+  },
+  "limitation": "A full source page contains several MCQs, so containment is conservative and is not a learned semantic-duplicate classifier."
+}

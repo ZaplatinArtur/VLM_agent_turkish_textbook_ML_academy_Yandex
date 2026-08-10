@@ -1,0 +1,54 @@
+{
+  "schema_version": "maxim-public-workbook-profile-v1",
+  "profile_name": "maxim-biology-activity4-imageonly-sourceonly-v1",
+  "expected_rows": 274,
+  "inputs": {
+    "parser_observations": {
+      "path": "reports/maxim_document_parser_v1_20260803/parser_augmented_solver_v1/parser_artifacts/parser_results_274.jsonl",
+      "sha256": "040f9e0884d9be8335d35aa75091315937188eb8e2c76adb17fbad8653400038",
+      "allowed_role": "observable_parser_structure_and_image_binding_only"
+    },
+    "source_locators": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/source_locators.jsonl",
+      "sha256": "47e61467c5470c0f50d63199dbfb3ea9a218b0d14dacfcb3f8649b35c62c776a",
+      "allowed_role": "public_source_identity_only"
+    },
+    "source_index": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/frozen/public_workbook_source_index_meb_def_10_biology_activity4_imageonly_candidate_v1.json",
+      "sha256": "2782d62b6b1610af81800c525ffbbecd68947268e925d9e3fedbeb516d88669d",
+      "allowed_role": "task_id_free_source_native_activity_record_only"
+    }
+  },
+  "documents": [
+    {
+      "document_id": "meb_def_10biyoloji_640bb362f2d5",
+      "pdf_sha256": "640bb362f2d53d31663326ac303c5065f4670f2a0d506300beb5e41869384e2b",
+      "page_count": 183
+    }
+  ],
+  "policy": {
+    "activity_label_projection": "primary_paragraph_title_order_one_v1",
+    "question_number_projection": "primary_layout_then_unique_v1",
+    "image_only_activity_observation_projection": "single_full_page_image_block_without_text_v1",
+    "image_only_activity_record_projection": "unique_reviewed_record_and_unique_pdf_activity_marker_on_visual_page_v1",
+    "expected_image_only_activity_observations": 1,
+    "yandex_public_identity_projection": "url_name_plus_optional_numeric_nosw_v2",
+    "visual_min_good_matches": 50,
+    "visual_min_inliers": 40,
+    "visual_min_inlier_ratio": 0.65,
+    "visual_min_task_hull_fraction": 0.3,
+    "visual_max_median_reprojection_error": 1.0,
+    "visual_min_mapped_inside_fraction": 0.98,
+    "visual_max_scale_anisotropy": 1.15,
+    "visual_min_rank_score_margin": 10.0,
+    "visual_min_rank_score_ratio": 5.0,
+    "ambiguous_or_malformed_action": "abstain",
+    "task_id_is_policy_feature": false,
+    "benchmark_candidate_or_outcome_access": false
+  },
+  "evaluation": {
+    "profile_frozen_before_any_scoring": true,
+    "target_split_status": "previously inspected development replay, not an unseen holdout",
+    "source_only_scope": "one parser-structural image-only observation; public locator; all-page official-PDF visual sweep; one unique attested activity record"
+  }
+}

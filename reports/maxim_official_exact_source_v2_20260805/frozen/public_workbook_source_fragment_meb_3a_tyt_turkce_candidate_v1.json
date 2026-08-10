@@ -1,0 +1,117 @@
+{
+  "schema_version": "public-workbook-source-index-v1",
+  "documents": [
+    {
+      "document_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3",
+      "locator": {
+        "kind": "yandex_public",
+        "public_locator": "ya-disk-public://enaTIeEJ6EkmV8iZcuGkjsW2AQGG8Zk91MZ+kXV1fTsdFdYvBGAaTVhk/JNzKRWhq/J6bpmRyOJonT3VoXnDag==:/MEB-3A-SB-TYT-turkce.pdf",
+        "name": "MEB-3A-SB-TYT-turkce.pdf"
+      },
+      "pdf_sha256": "7e8d45d46ed391a158121858157c30d37bd16b6256f773cf9b13fbc15c6a8f2f",
+      "page_count": 283,
+      "content_page_ranges": [[1, 276]],
+      "questions": [
+        {
+          "record_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3:p26:q9",
+          "content_page_number": 26,
+          "question_number": 9,
+          "answer": "A",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 277,
+          "key_bbox": [473.0, 233.3, 478.4, 241.5],
+          "content_bbox": [311.5, 60.8, 319.2, 69.8],
+          "section": "Sözcükte Anlam - 3",
+          "test_variant": "1. ADIM",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3:p27:q4",
+          "content_page_number": 27,
+          "question_number": 4,
+          "answer": "E",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 277,
+          "key_bbox": [251.4, 254.7, 256.9, 262.9],
+          "content_bbox": [311.5, 122.0, 319.2, 131.0],
+          "section": "Sözcükte Anlam - 3",
+          "test_variant": "2. ADIM",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3:p30:q5",
+          "content_page_number": 30,
+          "question_number": 5,
+          "answer": "A",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 277,
+          "key_bbox": [296.0, 275.8, 301.5, 284.0],
+          "content_bbox": [35.7, 60.8, 43.4, 69.8],
+          "section": "Sözcükte Anlam - 3",
+          "test_variant": "3. ADIM",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3:p32:q6",
+          "content_page_number": 32,
+          "question_number": 6,
+          "answer": "C",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 277,
+          "key_bbox": [340.3, 315.1, 346.2, 323.3],
+          "content_bbox": [35.7, 525.8, 43.4, 534.8],
+          "section": "Cümlede Anlam - 1",
+          "test_variant": "1. ADIM",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3:p39:q5",
+          "content_page_number": 39,
+          "question_number": 5,
+          "question_text": "(I) Evcil hayvanların da kişilikleri var ve bize tam anlamıyla arkadaş olabiliyorlar. (II) Bir anlamda onlar bizi sosyal olmaya zorluyorlar. (III) Size sevgi ve heyecan gösteriyor, sevimlilikler yapıyor ve sizinle oyun oynamak istiyor. (IV) Onunla iletişime geçerek sosyal beceriler kazanıyoruz. (V) Çocuklar için de aynı şey geçerli, çok dışa dönük olmayan çocukların sosyalleşmesine de yardımcı oluyor evcil hayvanlar. Bu parçada numaralanmış cümlelerde evcil hayvanlarla ilgili aşağıdakilerin hangisine değinilmemiştir? A) I. cümlede, insan hayatında var oluş şekillerine değinilmiştir. B) II. cümlede, insanı belli bir davranışa yönlendirdiği üzerinde durulmuştur. C) III. cümlede, insanlarla iletişim kurma yolları anlatılmıştır. D) IV. cümlede, insanlara sağladığı katkı üzerinde durulmuştur. E) V. cümlede, sadece belli özelliklere sahip çocuklara katkı sağladığı belirtilmiştir.",
+          "answer": "E",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 277,
+          "key_bbox": [295.7, 419.5, 301.1, 427.8],
+          "content_bbox": [311.5, 315.7, 319.2, 324.7],
+          "section": "Cümlede Anlam - 2",
+          "test_variant": "2. ADIM",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3:p57:q3",
+          "content_page_number": 57,
+          "question_number": 3,
+          "answer": "A",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 277,
+          "key_bbox": [207.6, 670.3, 213.0, 678.6],
+          "content_bbox": [311.5, 123.0, 319.2, 132.1],
+          "section": "Yardımcı Düşünce - 1",
+          "test_variant": "2. ADIM",
+          "visually_checked": true
+        },
+        {
+          "record_id": "meb_3a_sb_tyt_turkce_7e8d45d46ed3:p62:q5",
+          "content_page_number": 62,
+          "question_number": 5,
+          "answer": "E",
+          "answer_format": "choice",
+          "key_binding_kind": "answer_key_table",
+          "key_page_number": 277,
+          "key_bbox": [295.7, 732.5, 301.1, 740.7],
+          "content_bbox": [38.0, 57.4, 45.7, 66.4],
+          "section": "Yardımcı Düşünce - 2",
+          "test_variant": "1. ADIM",
+          "visually_checked": true
+        }
+      ]
+    }
+  ]
+}

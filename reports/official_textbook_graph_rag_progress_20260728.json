@@ -1,0 +1,316 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-28",
+  "updated_at": "2026-07-28T19:52:41+03:00",
+  "status": "official_39_ingested_graph_and_flat_index_253_complete",
+  "safety": {
+    "gpu_used": true,
+    "gpu_use": "One short retrieval-only BGE replay on physical GPU 2 after nvidia-smi; no Qwen generation.",
+    "long_model_run_started": false,
+    "git_commit_created": false,
+    "files_or_containers_deleted": false,
+    "existing_214_book_artifacts_overwritten": false,
+    "redistribution_allowed": false
+  },
+  "official_catalog": {
+    "manifest": "configs/turkish_official_textbooks_9_12_v1.json",
+    "entries": 41,
+    "grade_counts": {
+      "9": 11,
+      "10": 10,
+      "11": 10,
+      "12": 10
+    },
+    "downloaded_pdfs": 41,
+    "downloaded_provenance_records": 41,
+    "partial_downloads": 0,
+    "remote_bytes_human": "3.7G",
+    "remote_staging": "/home/m.kulyamin/textbook_kb_v2/official_downloads_9_12_v1"
+  },
+  "ingest": {
+    "validated_books": 39,
+    "validated_pages": 9139,
+    "native_text_pages": 9118,
+    "native_text_ratio": 0.9977,
+    "blocked_scanned_books": [
+      {
+        "source_id": "meb_dogm_2024_arabic_grade9",
+        "pages": 169,
+        "native_text_pages": 0,
+        "next_step": "OCR"
+      },
+      {
+        "source_id": "meb_dogm_2024_arabic_grade10",
+        "pages": 153,
+        "native_text_pages": 0,
+        "next_step": "OCR"
+      }
+    ],
+    "nonmath_remote_root": "/home/m.kulyamin/textbook_kb_v2/official_pdf_batch_nonmath_9_12_v1",
+    "math_remote_root": "/home/m.kulyamin/textbook_kb_v2/official_math_9_12_v1"
+  },
+  "official_hybrid_chunks": {
+    "books": 39,
+    "pages": 9139,
+    "units": 47760,
+    "unit_kinds": {
+      "theory": 22728,
+      "exercise": 16934,
+      "solution": 2007,
+      "worked_example": 1382,
+      "other": 4141,
+      "instruction": 544,
+      "answer_key": 24
+    },
+    "low_confidence_units": 4025,
+    "low_confidence_rate": 0.0843,
+    "oversized_units": 509,
+    "oversized_rate": 0.0107,
+    "quality_note": "The corpus is usable, but page-layout mixing, contents-page false positives, short theory labels and oversized units still require parser refinement."
+  },
+  "official_knowledge_graph": {
+    "books": 39,
+    "nodes": 47760,
+    "searchable_nodes": 41044,
+    "edges": 36286,
+    "exercises": 16934,
+    "relation_counts": {
+      "theory_for": 30948,
+      "worked_example_for": 3629,
+      "solution_of": 1709
+    }
+  },
+  "merged_253_graph": {
+    "composition": "existing_214_plus_39_validated_official_books",
+    "hybrid_chunks": "/home/m.kulyamin/textbook_kb_v2/hybrid_chunks_253_official_v1",
+    "graph": "/home/m.kulyamin/textbook_kb_v2/knowledge_graph_253_official_v1",
+    "index": "/home/m.kulyamin/textbook_kb_v2/data_253_official_v1/index_flat",
+    "books": 253,
+    "nodes": 212317,
+    "searchable_nodes": 185462,
+    "edges": 157390,
+    "exercises": 80630,
+    "relation_counts": {
+      "theory_for": 134462,
+      "worked_example_for": 14000,
+      "solution_of": 8928
+    },
+    "exercise_coverage": {
+      "theory_for": 0.8767,
+      "worked_example_for": 0.1736,
+      "solution_of": 0.0683
+    },
+    "flat_index_status": "complete",
+    "flat_index": {
+      "vectors": 185462,
+      "chunks": 185462,
+      "books": 253,
+      "index_type": "IndexFlatIP",
+      "embedder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "corpus_hash": "c85ff00f949ea6529937bef49cedf01acc73c4b4bf320b33f4894d0ee73f93e7",
+      "created_at": "2026-07-28T16:16:32"
+    }
+  },
+  "retrieval_ab_214_vs_219_math_flat": {
+    "status": "valid_retrieval_proxy_only",
+    "reranker_mode": "heuristic_no_cross_encoder",
+    "index_type_both": "IndexFlatIP",
+    "queries": 50,
+    "math_queries": 20,
+    "old_214": {
+      "hits": 200,
+      "empty_calls": 10,
+      "top1_subject_match_rate": 0.8,
+      "has_theory_rate": 0.415,
+      "has_example_rate": 0.085
+    },
+    "new_219_math": {
+      "hits": 225,
+      "empty_calls": 5,
+      "top1_subject_match_rate": 0.9,
+      "has_theory_rate": 0.4533,
+      "has_example_rate": 0.1422
+    },
+    "math_changes": {
+      "old_empty_calls": 5,
+      "new_empty_calls": 0,
+      "restored_ids": [
+        "val_0054",
+        "val_0086",
+        "val_0234",
+        "val_0238",
+        "val_0239"
+      ],
+      "official_book_in_top5": 12,
+      "official_book_at_top1": 7,
+      "top1_changed": 15
+    },
+    "known_regressions": {
+      "val_0250": "Old wrong top-1 remains; no official new book reaches top-5.",
+      "val_0254": "Top-1 changes between old books; no official new book reaches top-5.",
+      "val_0275": "Old wrong top-1 remains; official grade-12 and grade-9 books appear at ranks 3 and 4."
+    },
+    "answer_accuracy_measured": false,
+    "recall_or_mrr_measured": false,
+    "new_summary": "/home/m.kulyamin/textbook_kb_v2/data_219_math_v2/reports/retrieval_219_math_flat_correct50_filter70.json",
+    "new_trace": "/home/m.kulyamin/textbook_kb_v2/data_219_math_v2/reports/retrieval_219_math_flat_correct50_filter70.jsonl"
+  },
+  "retrieval_253_official_flat": {
+    "status": "valid_retrieval_proxy_only",
+    "reranker_mode": "heuristic_no_cross_encoder",
+    "warning": "MLA_RERANK_MODEL was not set in this replay. It must not be presented as a BGE-reranked result.",
+    "inputs": {
+      "tasks": "/home/m.kulyamin/knowledge_rag_eval/data/knowledge_ab_50.jsonl",
+      "tasks_sha256": "3037c9b379d4b7303dd6f68b9206e2e5bff09922066dd2f9e007547739915084",
+      "agent_results": "/home/m.kulyamin/knowledge_rag_eval/results/graph_patch_20260728/fixed50_graph_gate050.jsonl",
+      "agent_results_sha256": "72edfb79aa9b35cf94461d5a8ae69171eca60f72f23126e18339b139836f9ff5",
+      "unique_task_ids": 50,
+      "retrieval_calls": 50,
+      "k": 5
+    },
+    "configuration": {
+      "code_snapshot": "/home/m.kulyamin/textbook_kb_v2/code_retrieval_replay_20260728_v1",
+      "corpus_hash": "c85ff00f949ea6529937bef49cedf01acc73c4b4bf320b33f4894d0ee73f93e7",
+      "index_type": "IndexFlatIP",
+      "min_graph_theory_chars": 70,
+      "include_solutions": false,
+      "relax_grade": false
+    },
+    "summary": {
+      "hits": 250,
+      "empty_calls": 0,
+      "top1_subject_match_rate": 1.0,
+      "card_chars_median": 796.5,
+      "retrieval_text_chars_median": 244.5,
+      "knowledge_kinds": {
+        "exercise": 122,
+        "theory": 113,
+        "worked_example": 15
+      },
+      "has_theory_rate": 0.508,
+      "has_example_rate": 0.132,
+      "official_book_in_top5_calls": 29,
+      "official_book_at_top1_calls": 18,
+      "official_hits": 99
+    },
+    "artifacts": {
+      "summary": "/home/m.kulyamin/textbook_kb_v2/data_253_official_v1/reports/retrieval_253_official_flat_correct50_filter70.json",
+      "summary_sha256": "85dcab458cc7bd8bfae035ede887d399536a0a26d1cf04d2d4303c4c21bf3bb8",
+      "trace": "/home/m.kulyamin/textbook_kb_v2/data_253_official_v1/reports/retrieval_253_official_flat_correct50_filter70.jsonl",
+      "trace_sha256": "83f275c87b3dee6d785601f6c90ab851253c776fc3392c8151549cf045eec486"
+    },
+    "answer_accuracy_measured": false,
+    "relevance_labels_present": false,
+    "recall_or_mrr_measured": false
+  },
+  "retrieval_253_bge_flat": {
+    "status": "valid_bge_retrieval_proxy_only",
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "gpu": "physical GPU 2, NVIDIA A100-SXM4-80GB",
+    "inputs_and_corpus": "identical to retrieval_253_official_flat",
+    "summary": {
+      "hits": 250,
+      "empty_calls": 0,
+      "top1_subject_match_rate": 1.0,
+      "card_chars_median": 807.0,
+      "retrieval_text_chars_median": 348.0,
+      "knowledge_kinds": {
+        "theory": 121,
+        "exercise": 119,
+        "worked_example": 10
+      },
+      "has_theory_rate": 0.484,
+      "has_example_rate": 0.132,
+      "official_book_in_top5_calls": 29,
+      "official_book_at_top1_calls": 20,
+      "official_hits": 100,
+      "top_score_median": 0.2986,
+      "top_score_min": 0.0836,
+      "top_score_max": 0.9547,
+      "gate_0_5_accepted_calls": 21,
+      "gate_0_5_rejected_calls": 29
+    },
+    "gate_0_5_by_subject": {
+      "ATATURKCULUK": "1/1",
+      "English": "0/7",
+      "History": "6/7",
+      "Math": "6/20",
+      "Science": "4/5",
+      "Turkish_language_and_literature": "4/10"
+    },
+    "comparison": {
+      "same_top1_as_heuristic_253": "27/50",
+      "same_top1_as_old_online_graph_run": "11/50",
+      "old_online_graph_gate_0_5_accepted": "16/50",
+      "note": "The old online run used the older graph/index, so this is a stack-level comparison rather than a corpus-only A/B."
+    },
+    "artifacts": {
+      "summary": "/home/m.kulyamin/textbook_kb_v2/data_253_official_v1/reports/retrieval_253_official_flat_bge_correct50_filter70.json",
+      "summary_sha256": "835ee87f83b085766f1dc050b7d3152a9d3a54aa422fe1630d00f719227ee881",
+      "trace": "/home/m.kulyamin/textbook_kb_v2/data_253_official_v1/reports/retrieval_253_official_flat_bge_correct50_filter70.jsonl",
+      "trace_sha256": "9f8d022c82b75f7e1684603cd07338fb20cad7de63664112445b1116d741e7e0"
+    },
+    "answer_accuracy_measured": false,
+    "relevance_labels_present": false,
+    "recall_or_mrr_measured": false,
+    "calibration_warning": "A BGE score above 0.5 is semantic relevance evidence, not proof that using the context improves the final answer."
+  },
+  "rejected_science_family_experiment": {
+    "status": "rejected_and_not_kept_in_local_code",
+    "change": "Temporarily allow a Science query to search science, physics, chemistry and biology books.",
+    "paired_result": {
+      "same_hit_lists": "49/50",
+      "only_changed_task": "val_0025",
+      "official_book_in_top5_calls": "29 -> 30",
+      "official_book_at_top1_calls": "18 -> 19",
+      "answer_accuracy_measured": false
+    },
+    "reason_rejected": "The broad policy added an irrelevant chemistry hit, did not change four of five Science cases, and mixes grade 9-12 books into grade-8 tasks with no grade metadata. Query-routed subject expansion is safer.",
+    "latency_note": "Cold-run median changed from 2968 ms to 6848 ms even for non-Science calls, so the latency difference is not attributed causally to the subject change.",
+    "remote_code_snapshot_preserved": "/home/m.kulyamin/textbook_kb_v2/code_science_family_20260728_v1",
+    "summary": "/home/m.kulyamin/textbook_kb_v2/data_253_official_v1/reports/retrieval_253_official_flat_science_family_correct50_filter70.json",
+    "trace": "/home/m.kulyamin/textbook_kb_v2/data_253_official_v1/reports/retrieval_253_official_flat_science_family_correct50_filter70.jsonl"
+  },
+  "answer_accuracy": {
+    "latest_valid_old_graph_strict": {
+      "baseline": "28/36",
+      "graph": "24/36"
+    },
+    "new_219_or_253_graph_agent_run_completed": false,
+    "math_router_offline_dev_replay": {
+      "baseline": "16/18",
+      "graph": "11/18",
+      "routed": "17/18"
+    },
+    "fixed50_composite_offline_dev_replay": {
+      "baseline": "28/36",
+      "graph": "24/36",
+      "routed": "30/36",
+      "independent_confirmation": false
+    }
+  },
+  "implemented_agent_change": {
+    "setting": "MLA_AGENT_RAG_MATH_POLICY=preserve_b0",
+    "default": "graph",
+    "behavior": "Generate exactly one no-tools Math candidate, preserve it, and only run the narrow natural-number-zero verifier.",
+    "non_math_behavior_changed": false,
+    "remote_tests": "14 passed"
+  },
+  "next_experiment_requiring_agreement": {
+    "tasks": "the same fixed 50 IDs",
+    "conditions": [
+      "canonical B0",
+      "253-book Graph-RAG with the short-theory filter",
+      "253-book Graph-RAG plus the opt-in Math preserve router"
+    ],
+    "preflight": [
+      "nvidia-smi",
+      "confirm GPUs 2-3",
+      "confirm Qwen/Qwen3.5-9B vLLM config",
+      "MLA_TEXT_ONLY=false",
+      "50 unique physical images",
+      "same exact metric and strict denominator"
+    ],
+    "long_gpu_run_started": false
+  }
+}

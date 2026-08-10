@@ -1,0 +1,78 @@
+{
+  "schema_version": "maxim-v7-next-source-wave-preregistration-v1",
+  "base_pipeline": {
+    "name": "public-workbook-primary-layout-sociology-biology-global-visual-v6",
+    "git_commit": "c8c93f3ecdf019e5534a132b20d2320dbe6269bf",
+    "solver_sha256": "01740f36989e19cec5f809936377bde964befee3c88b3b35f68972e3ee418d57",
+    "score": {
+      "correct": 238,
+      "rows": 274,
+      "accuracy": 0.868613
+    }
+  },
+  "selection_timing": {
+    "candidate_set_selected_by_source_only_audit_before_v6_score_opened": true,
+    "implementation_dispatched_before_v6_score_opened": true,
+    "preregistration_file_committed_after_v6_aggregate_was_recorded": true,
+    "outcome_based_candidate_removal_permitted": false
+  },
+  "locked_candidates": [
+    {
+      "source_family": "samsung_lgs1",
+      "task_ids": [
+        "val_0042",
+        "val_0043",
+        "val_0044",
+        "val_0046"
+      ],
+      "expected_source_structure": "unique question binding plus sectioned official answer list on PDF page 25"
+    },
+    {
+      "source_family": "meb_dd_tyt_philosophy",
+      "task_ids": [
+        "val_0149",
+        "val_0150"
+      ],
+      "expected_source_structure": "unique question binding plus inline official solution and independent answer-table consistency"
+    },
+    {
+      "source_family": "meb_def_10_biology_activity_4",
+      "task_ids": [
+        "val_0178"
+      ],
+      "expected_source_structure": "unique global visual binding to Activity 4 plus official key on PDF page 180"
+    },
+    {
+      "source_family": "meb_ck_history_fill_blank",
+      "task_ids": [
+        "val_0196"
+      ],
+      "expected_source_structure": "unique fill-in activity binding plus explicit official key on PDF page 18"
+    }
+  ],
+  "freeze_gate": {
+    "official_pdf_sha256_pins_required": true,
+    "source_pdf_reverification_required": true,
+    "unique_binding_or_abstain": true,
+    "full_eligible_page_visual_sweep_required_where_visual": true,
+    "answer_type_projection_audit_required": true,
+    "all_eight_candidates_in_one_profile": true,
+    "source_only_tests_required": true,
+    "commit_and_remote_sha_match_required_before_scoring": true
+  },
+  "evaluation_gate": {
+    "one_shot_post_freeze_score": true,
+    "same_fixed_274_row_denominator": true,
+    "same_177_deterministic_97_image_partition": true,
+    "no_score_guided_subset_sweep": true,
+    "report_lower_or_equal_result_without_same-wave_repair": true
+  },
+  "forbidden_inputs": [
+    "benchmark_reference_answers",
+    "evaluator_verdicts_as_router_features",
+    "v6_task_correctness_as_candidate_filter",
+    "manual_gain_allowlist",
+    "llm_judge_without_source_certificate"
+  ],
+  "interpretation": "development replay only; unseen-book or multilingual holdout required for a production-generalization claim"
+}

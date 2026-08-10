@@ -1,0 +1,117 @@
+{
+  "schema_version": "maxim-query-active-crop-preregistered-profile-v2",
+  "status": "frozen_before_generation_and_before_score",
+  "condition": "maxim_query_conditioned_active_crop_verifier_v2",
+  "frozen_at_utc": "2026-08-03T17:26:53.587819+00:00",
+  "benchmark": {
+    "rows": 274,
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9"
+  },
+  "fallback": {
+    "identity": "frozen no-tools Qwen3.5-9B v2_cot",
+    "sha256": "496236da966ed68aa81af3d33da1c40b85c5a11b342de253ada244f97320de8f",
+    "default_for_nonroute_and_every_gate_failure": true
+  },
+  "blind_routing": {
+    "selected_rows": 43,
+    "minimum_large_image_pixels": 600000,
+    "rules_any": [
+      "no-tools forced_answer is exactly true",
+      "no-tools public reasoning contains a pinned visual anchor and max native image pixels >= 600000",
+      "no-tools public reasoning contains a pinned uncertainty anchor and max native image pixels >= 600000"
+    ],
+    "visual_anchors": [
+      "görsel",
+      "şekil",
+      "grafik",
+      "tablo",
+      "harita",
+      "diyagram",
+      "resim",
+      "figure",
+      "chart",
+      "map",
+      "diagram"
+    ],
+    "uncertainty_anchors": [
+      "muhtemelen",
+      "muhtemel",
+      "olabilir",
+      "görünüyor",
+      "emin değil",
+      "belirsiz",
+      "net değil",
+      "yaklaşık",
+      "likely",
+      "probably",
+      "uncertain"
+    ],
+    "route_reason_counts": {
+      "visual_anchor_plus_large_native_image": 13,
+      "uncertainty_anchor_plus_large_native_image": 25,
+      "no_tools_forced_answer_parse_signal": 13
+    },
+    "labels_scores_or_judge_used": false
+  },
+  "model": {
+    "name": "Qwen/Qwen3.5-9B",
+    "expected_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "backend": "openai-compatible-vllm"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "top_p": 0.95,
+    "enable_thinking": false,
+    "structured_mode": "response_format_json_schema",
+    "locator_max_tokens": 1200,
+    "solver_verifier_max_tokens": 3072,
+    "locator_seed": 26080311,
+    "solver_verifier_seed": 26080329,
+    "logical_calls_per_routed_task": 2,
+    "maximum_http_attempts_per_logical_call": 2,
+    "retry_policy": "transport_or_schema_error_only_inside_frozen call",
+    "max_fallback_context_chars_per_field": 5000
+  },
+  "active_crop": {
+    "maximum_zoom_regions": 2,
+    "bbox_coordinates": "[left,top,right,bottom] integer 0..1000",
+    "minimum_normalized_side": 60,
+    "padding_fraction": 0.12,
+    "native_upscale_rule": "4x if min crop side <=450px; 3x if <=750px; otherwise 2x",
+    "maximum_upscale": 4,
+    "resampling": "Pillow LANCZOS",
+    "contrast": 1.08,
+    "sharpness": 1.18,
+    "solver_inputs": "untouched original image(s) first, then 1-2 deterministic native crops"
+  },
+  "selection_gate": {
+    "default": "copy exact frozen no-tools row",
+    "select_active_answer_only_if": [
+      "runner has no error and answer differs canonically from no-tools",
+      "verifier says baseline_supported is false",
+      "verifier confidence >= 0.90",
+      "locator overall confidence >= 0.80",
+      "every used region confidence >= 0.70",
+      "all_required_evidence_visible is true",
+      "original_crop_consistent is true",
+      "answer_format_verified is true",
+      "at least two nonempty visible facts",
+      "at least two nonempty verification checks",
+      "candidate answer passes deterministic answer-type validation"
+    ],
+    "any_failure": "copy exact frozen no-tools row"
+  },
+  "gold_blind_contract": {
+    "queue_forbidden_key_regex": "(?:reference(?:_answer|_solution)?|gold(?:_answer)?|judge|verdict|score|correct)",
+    "reference_gold_score_judge_fields_in_queue": false,
+    "generation_gold_access": false,
+    "score_conditioned_routing": false,
+    "prepare_runner_composer_do_not_load_score_or_judge_artifacts": true
+  },
+  "evaluation": {
+    "benchmark": "frozen274",
+    "required_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+    "fresh_judge_only_after_complete_274_row_composition": true
+  },
+  "freeze_rule": "No route, prompt, schema, crop, decoding, retry, threshold, composition, or fallback rule may change after generation begins."
+}

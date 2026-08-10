@@ -1,0 +1,13 @@
+{
+  "schema_version": "maxim-9b-baseline-selector-superseded-freeze-record-v1",
+  "selector_id": "maxim_9b_baseline_selector_v1",
+  "status": "superseded_not_executed",
+  "superseded_freeze_sha256": "001b4d5664c44e7ba686a4457a838e6f50991611751e7cb6fb8ad70f1a5619b4",
+  "selection_was_run": false,
+  "evaluation_was_run": false,
+  "superseded_reasons": [
+    "chronology_failed_to_disclose_known_historical_aggregate_score_and_prior_task_outcomes",
+    "runtime_trusted_pool_supplied_opaque_id_and_evaluation_route_without_independent_row_bindings"
+  ],
+  "replacement": "maxim_9b_baseline_selector_v1_1"
+}

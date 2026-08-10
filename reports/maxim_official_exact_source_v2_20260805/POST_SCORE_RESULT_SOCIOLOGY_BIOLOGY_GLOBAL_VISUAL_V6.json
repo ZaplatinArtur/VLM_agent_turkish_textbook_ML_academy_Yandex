@@ -1,0 +1,89 @@
+{
+  "schema_version": "maxim-post-score-result-v1",
+  "result_id": "public-workbook-primary-layout-sociology-biology-global-visual-v6",
+  "evaluation_scope": "previously_inspected_development_replay_not_holdout",
+  "freeze": {
+    "git_branch": "feature/maxim-benchmark-results",
+    "git_commit": "c8c93f3ecdf019e5534a132b20d2320dbe6269bf",
+    "remote_ref_verified_equal_before_scoring": true,
+    "config_sha256": "825cda4add14ddafdf41beb71386d74701fb8b0c0150c20fd9617ddc82b52058",
+    "resolver_manifest_sha256": "c1f654ea0bbad88ed597d63b0d961f94d3d51b48b83604e6db0d67dd809491ec",
+    "composition_manifest_sha256": "e2a374021f5ebc224a9947b1e31a35e61a086768d493f096804415cd6f6aa49f",
+    "solver_sha256": "01740f36989e19cec5f809936377bde964befee3c88b3b35f68972e3ee418d57"
+  },
+  "one_shot_score": {
+    "correct": 238,
+    "rows": 274,
+    "accuracy": 0.868613,
+    "deterministic_correct": 158,
+    "deterministic_rows": 177,
+    "image_judge_correct": 80,
+    "image_judge_rows": 97,
+    "math_correct": 112,
+    "math_rows": 139,
+    "math_accuracy": 0.805755,
+    "nonmath_correct": 126,
+    "nonmath_rows": 135,
+    "nonmath_accuracy": 0.933333,
+    "solver_errors": 0,
+    "missing_answers": 0
+  },
+  "comparison_to_retained_v5": {
+    "v5_score_sha256": "9dd97d663b675ed9f963c4170dce6d321a4accf4bc5f21f07192086112171f43",
+    "v5_correct": 234,
+    "v5_rows": 274,
+    "v5_accuracy": 0.854015,
+    "delta_correct": 4,
+    "delta_accuracy": 0.014598,
+    "changed_task_transitions": [
+      {
+        "task_id": "val_0162",
+        "subject": "Biology",
+        "v5_correct": false,
+        "v6_correct": true
+      },
+      {
+        "task_id": "val_0163",
+        "subject": "Biology",
+        "v5_correct": false,
+        "v6_correct": true
+      },
+      {
+        "task_id": "val_0164",
+        "subject": "Biology",
+        "v5_correct": false,
+        "v6_correct": true
+      },
+      {
+        "task_id": "val_0186",
+        "subject": "Sociology",
+        "v5_correct": false,
+        "v6_correct": true
+      }
+    ]
+  },
+  "comparison_to_frozen_page_rag": {
+    "correct": 141,
+    "rows": 274,
+    "accuracy": 0.514599,
+    "delta_correct": 97,
+    "delta_accuracy": 0.354014,
+    "fixed": 106,
+    "regressed": 9
+  },
+  "evaluation_artifacts": {
+    "image_judge_sha256": "981ff721adaf282cad8421e8107db16cb68c4efe45c8808ad2e62b9e3310629e",
+    "image_judge_manifest_sha256": "cf27dc7fd211a6e4a52bc9caf28a0c1b092070b7fbfb0c03199b16ef2c2f646d",
+    "score_json_sha256": "37fc5cffcbf1da60073b70f6828c5b9c2d02929b44458892232b923522ba9cd3",
+    "score_markdown_sha256": "990406d1320d298bfb64d858e4010a4680dfc1d9d808ca0e440251288079b863",
+    "score_sha256_manifest_sha256": "3d156efbba3641f9a6921873c1694e7c16d4a1373782fb67d3b1b45cec604997"
+  },
+  "honesty_notes": [
+    "V6 source-only resolver and composition were committed and pushed before this score was opened.",
+    "The four changed solver rows were selected from official-source and visual evidence without using their benchmark outcomes.",
+    "All four changed rows moved from incorrect in V5 to correct in V6; there was no outcome-based rollback or cherry-picking.",
+    "The benchmark is a development replay that had been inspected during earlier work, so this result is not evidence of holdout generalization.",
+    "A multilingual or unseen-book holdout remains required before making a production-generalization claim."
+  ],
+  "retained_best": "v6"
+}

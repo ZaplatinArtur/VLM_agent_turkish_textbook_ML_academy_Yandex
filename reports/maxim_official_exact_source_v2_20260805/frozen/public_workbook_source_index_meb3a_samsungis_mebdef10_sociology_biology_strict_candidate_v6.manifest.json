@@ -1,0 +1,26 @@
+{
+  "benchmark_outcome_access": false,
+  "created_at_utc": "2026-08-05T09:22:46.743208+00:00",
+  "documents": 11,
+  "inputs": [
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb_ek_sociology_coordinate_choice_candidate_v1.json",
+      "sha256": "0d7f4e04851e95d4390daac6b5c80b6ac8e82e9d52e1ff0ecfa3407446630e41"
+    },
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb_def_10_biology_activity_candidate_v1.json",
+      "sha256": "2312706f5f91d0d9b023748cb68b139398b3a4a72bb6ca472a0673c61c011363"
+    },
+    {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb3a_samsungis_mebdef10_candidate_v5.json",
+      "sha256": "731a7271daad531b9537c833232dc2b31e8d55514e81981d447056e27454e736"
+    }
+  ],
+  "output": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\reports\\maxim_official_exact_source_v2_20260805\\frozen\\public_workbook_source_index_meb3a_samsungis_mebdef10_sociology_biology_strict_candidate_v6.json",
+    "sha256": "715afe9e73b27ded5f52213e24e35da1b397ff9234f2ccf8319a5f6854fc285e"
+  },
+  "records": 135,
+  "schema_version": "maxim-public-workbook-index-merge-v1",
+  "task_id_present": false
+}

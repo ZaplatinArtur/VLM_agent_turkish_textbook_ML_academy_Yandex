@@ -1,0 +1,18 @@
+{
+  "schema_version": "maxim-9b-source-calibrated-pre-route-draft-provenance-v1",
+  "status": "superseded_before_any_benchmark_evaluation",
+  "reason": "outcome-free route authority became available immediately after the draft freeze; final primary candidate must byte-preserve all image-judge rows",
+  "benchmark_evaluation_performed": false,
+  "draft_uncovered_replacements": 0,
+  "draft_hashes": {
+    "preregistration_sha256": "6571aa60a5d6a17a953f6706e091d44240ea5c894ad602a1ead12ffb87b79fb9",
+    "selector_code_sha256": "880cc094a0e6cc352de33e3a008962887652f3df32acf62cf8307d15136aa9d5",
+    "tests_sha256": "fa0764598a0db7303eae5d7bcf23eeb296032c231f02ee9fcf0a4e18f33c3296",
+    "candidate_solver_sha256": "87fb71fa6a259f77cf8506a169d770f9f90bc1bdc10630583b91460240d9e680",
+    "candidate_manifest_sha256": "8adcd8ca52f0c969637f8ad55b02f8a80589e98e9349e4404efaf41faa975207",
+    "freeze_sha256": "67b6c4b8803ff59c86dfc8ec6c493b9b8d4a1c63269a6a5c23a758806e95263c",
+    "freeze_projection_sha256": "5d53270eccb4fe10098215678145d377d8a75f437b75518e4086aa52a9384db0",
+    "freeze_pins_sha256": "943a963a967bcd24cd01ff0f92aa30c2010ba599380635d74acee0ae7fbe6bfe"
+  },
+  "replacement_freeze_policy": "deterministic_only primary plus separately frozen full candidate requiring fresh image judge"
+}

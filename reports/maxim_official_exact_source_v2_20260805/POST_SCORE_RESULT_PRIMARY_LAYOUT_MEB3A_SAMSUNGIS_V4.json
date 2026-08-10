@@ -1,0 +1,83 @@
+{
+  "schema_version": "maxim-post-score-result-v4",
+  "profile_name": "maxim-public-workbook-primary-layout-meb3a-samsungis-v4",
+  "evaluation_status": "previously_inspected_development_replay_not_holdout",
+  "pre_score_commit": "36527299ea8c52db18d1f04cfbb1332846eed16f",
+  "remote_branch": "feature/maxim-benchmark-results",
+  "remote_commit_verified_before_scoring": true,
+  "gold_access_during_generation_or_source_admission": false,
+  "result": {
+    "correct": 233,
+    "rows": 274,
+    "accuracy": 0.850365,
+    "previous_v3_correct": 230,
+    "previous_v3_accuracy": 0.839416,
+    "delta_vs_v3_correct": 3,
+    "delta_vs_v3_pp": 1.095,
+    "frozen_page_rag_correct": 141,
+    "frozen_page_rag_accuracy": 0.514599,
+    "delta_vs_frozen_page_rag_correct": 92,
+    "delta_vs_frozen_page_rag_pp": 33.577
+  },
+  "slices": {
+    "deterministic": {
+      "correct": 157,
+      "rows": 177,
+      "accuracy": 0.887006
+    },
+    "image_judge": {
+      "correct": 76,
+      "rows": 97,
+      "accuracy": 0.783505
+    },
+    "math": {
+      "correct": 111,
+      "rows": 139,
+      "accuracy": 0.798561
+    },
+    "non_math": {
+      "correct": 122,
+      "rows": 135,
+      "accuracy": 0.903704
+    },
+    "turkish_language_and_literature": {
+      "correct": 21,
+      "rows": 21,
+      "accuracy": 1.0
+    }
+  },
+  "source_only_delta": {
+    "accepted_certificates": 111,
+    "answer_overrides": 22,
+    "new_answer_changes_vs_v3": 3,
+    "new_changes_correct": 3,
+    "new_changes_regressed": 0,
+    "new_change_task_ids": [
+      "val_0189",
+      "val_0191",
+      "val_0194"
+    ]
+  },
+  "artifacts": {
+    "image_judge_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_evaluation/image_judge_manifest.json",
+      "sha256": "ef6c27e7d1acc7b39ea8f131a9cb8cd7650f811e67e4183eb8d9655ec3d668ed"
+    },
+    "image_judge": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_evaluation/matched_image97_judge.jsonl",
+      "sha256": "07e351b14632a46789633d8cba7553f71501b35e772b1d078d723730d539f0dd"
+    },
+    "score_json": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_evaluation/score.json",
+      "sha256": "81127ad16c92ed974a1a52d6cdc8d874df83c480a54e1a8b0263f3d8c432e804"
+    },
+    "score_markdown": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_evaluation/score.md",
+      "sha256": "7d9c745e9c5b5adb21b1f165a0326296b3dc3a7ab5251c13eb6f75bafc691942"
+    },
+    "score_hash_manifest": {
+      "path": "reports/maxim_official_exact_source_v2_20260805/public_workbook_primary_layout_meb3a_samsungis_v4_sealed_evaluation/score.sha256",
+      "sha256": "f4f93553750f6305866f4d85e427e6fb73f76ff2d4553b05a29ea4b6e15a3ba7"
+    }
+  }
+}

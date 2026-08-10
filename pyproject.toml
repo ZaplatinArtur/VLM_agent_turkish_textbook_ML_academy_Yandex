@@ -14,6 +14,7 @@ dependencies = [
     "langgraph>=0.2",
     "faiss-cpu>=1.8",
     "numpy>=1.26",
+    "packaging>=23",
     "Pillow>=10.0",
     "pydantic>=2.7,<3",
     "pydantic-settings>=2.2",
@@ -31,6 +32,7 @@ sources = ["openpyxl>=3.1"]
 dev = ["pytest>=8"]
 tracing = ["langfuse>=3"]
 deep-search = ["trafilatura>=2.0"]
+official-source = ["pypdf>=6.10,<7", "pdfplumber>=0.11,<1"]
 
 [project.scripts]
 vlm-judge = "vlm_judge.cli:main"

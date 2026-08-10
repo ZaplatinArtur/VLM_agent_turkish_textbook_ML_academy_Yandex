@@ -51,6 +51,7 @@ class CrossEncoderRanker(Ranker):
             query: str,
             chunks: list[RetrievedChunk] | None = None,
             subject: str | None = None,
+            grade: int | str | None = None,
     ) -> list[RetrievedChunk]:
         if not chunks:
             return list(chunks or [])

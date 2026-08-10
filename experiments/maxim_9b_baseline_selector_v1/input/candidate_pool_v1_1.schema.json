@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "maxim-9b-baseline-selector-pool-row-v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "row_index", "anchor", "routers", "parallel_batches"],
+  "properties": {
+    "schema_version": {"const": "maxim-9b-baseline-selector-pool-row-v1.1"},
+    "row_index": {"type": "integer", "minimum": 0, "maximum": 273},
+    "anchor": {"$ref": "#/$defs/candidate"},
+    "routers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v4", "v5"],
+      "properties": {
+        "v4": {"$ref": "#/$defs/candidate"},
+        "v5": {"$ref": "#/$defs/candidate"}
+      }
+    },
+    "parallel_batches": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parallel8_v1", "parallel8_reasoning_first_v2"],
+      "properties": {
+        "parallel8_v1": {"$ref": "#/$defs/batch"},
+        "parallel8_reasoning_first_v2": {"$ref": "#/$defs/batch"}
+      }
+    }
+  },
+  "$defs": {
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finish_reason", "error", "forced_answer", "input_tokens", "output_tokens", "call_count",
+        "temperature", "seed", "prompt_version", "upstream_artifact_sha256",
+        "new_arm_gold_reference_correctness_outcome_or_judge_access", "source_access"
+      ],
+      "properties": {
+        "finish_reason": {"enum": ["stop", "length", "error", "missing"]},
+        "error": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+        "forced_answer": {"type": "boolean"},
+        "input_tokens": {"type": "integer", "minimum": 0},
+        "output_tokens": {"type": "integer", "minimum": 0},
+        "call_count": {"type": "integer", "minimum": 0},
+        "temperature": {"anyOf": [{"type": "null"}, {"type": "number", "minimum": 0}]},
+        "seed": {"anyOf": [{"type": "null"}, {"type": "integer"}]},
+        "prompt_version": {"type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,128}$"},
+        "upstream_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "new_arm_gold_reference_correctness_outcome_or_judge_access": {"const": false},
+        "source_access": {"const": false}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available", "model", "final_answer", "generation"],
+      "properties": {
+        "available": {"type": "boolean"},
+        "model": {"const": "Qwen/Qwen3.5-9B"},
+        "final_answer": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+        "generation": {"$ref": "#/$defs/generation"}
+      }
+    },
+    "batch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["final", "raw_votes"],
+      "properties": {
+        "final": {"$ref": "#/$defs/candidate"},
+        "raw_votes": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {"$ref": "#/$defs/candidate"}
+        }
+      }
+    }
+  }
+}

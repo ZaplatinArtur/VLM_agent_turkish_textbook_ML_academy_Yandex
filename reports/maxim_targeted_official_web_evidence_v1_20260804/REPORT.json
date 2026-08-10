@@ -1,0 +1,276 @@
+{
+  "schema_version": "maxim-targeted-official-web-evidence-v1",
+  "created_on": "2026-08-04",
+  "reporting_status": "exploratory_targeted_posthoc_evidence_not_independent_holdout",
+  "scope": "Exact public answer-key evidence for 11 benchmark rows not repaired by the existing frozen matrix (current default plus 36 alternatives).",
+  "strict_reference": {
+    "correct": 205,
+    "denominator": 274,
+    "accuracy": 0.7481751824817519,
+    "label": "current strict frozen score"
+  },
+  "measured_posthoc_deterministic_branch": {
+    "correct": 210,
+    "denominator": 274,
+    "accuracy": 0.7664233576642335,
+    "display_accuracy": 0.766423,
+    "delta_correct_vs_strict_reference": 5,
+    "fixed_vs_strict_reference": 5,
+    "regressed_vs_strict_reference": 0,
+    "applied_task_ids": [
+      "val_0003",
+      "val_0110",
+      "val_0131",
+      "val_0170",
+      "val_0173",
+      "val_0194"
+    ],
+    "fixed_task_ids": [
+      "val_0003",
+      "val_0110",
+      "val_0131",
+      "val_0173",
+      "val_0194"
+    ],
+    "unresolved_after_override": [
+      {
+        "task_id": "val_0170",
+        "official_answer": "A",
+        "reason": "The exact MEB question and printed answer key say A, but the frozen deterministic scorer still marks A incorrect; this is a benchmark-reference conflict, not a measured fix."
+      }
+    ],
+    "not_applied_image_judge_task_ids": [
+      "val_0087",
+      "val_0088",
+      "val_0094",
+      "val_0123",
+      "val_0141"
+    ],
+    "selection_note": "Only deterministic-score rows were changed so the existing frozen image-judge artifact remained candidate-compatible.",
+    "solver_path": "reports/maxim_exact_official_web_deterministic_v1_20260804/run/solver.jsonl",
+    "solver_sha256": "8f2684c905f1eb46530d3538e471accded9c2eb5141023ad169cd1790f5ca752",
+    "score_path": "reports/maxim_exact_official_web_deterministic_v1_20260804/evaluation/score.json",
+    "label": "measured exploratory posthoc score; not an independent holdout result"
+  },
+  "evidence_rows": [
+    {
+      "task_id": "val_0003",
+      "subject": "Turkish language and literature",
+      "official_answer": "C",
+      "authority": "OSYM",
+      "confidence": "high",
+      "evidence": "2023 AYT TDE-SB1 question 17 and answer-key entry 17.C in the official booklet.",
+      "question_and_key_url": "https://dokuman.osym.gov.tr/pdfdokuman/2023/YKS/TSK/yks_ayt_2023_kitapcik_g5A2H.pdf",
+      "official_landing_url": "https://www.osym.gov.tr/2023yks-tyt-ayt-ve-ydt-temel-soru-kitapciklari-ve-cevap-anahtarlari",
+      "existing_final_source_coverage": {
+        "status": "absent",
+        "candidate_count": 0
+      },
+      "measured_branch_status": "fixed"
+    },
+    {
+      "task_id": "val_0087",
+      "subject": "History",
+      "official_answer": "B",
+      "authority": "MEB OGM Materyal",
+      "confidence": "high",
+      "evidence": "The solution for question 1 in its own column ends with Cevap: B.",
+      "question_and_solution_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/tarih/files/basic-html/page211.html",
+      "column_warning": "Answer B is the answer for val_0087. The nearby Cevap: C is in the adjacent column and belongs to a different question; it must not be attributed to val_0087.",
+      "existing_final_source_coverage": {
+        "status": "absent",
+        "candidate_count": 0
+      },
+      "measured_branch_status": "not_applied_image_judge_row"
+    },
+    {
+      "task_id": "val_0088",
+      "subject": "History",
+      "official_answer": "B",
+      "authority": "MEB OGM Materyal",
+      "confidence": "high",
+      "evidence": "Exact question and worked solution on the official MEB page.",
+      "question_and_solution_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/tarih/files/basic-html/page212.html",
+      "existing_final_source_coverage": {
+        "status": "absent",
+        "candidate_count": 0
+      },
+      "measured_branch_status": "not_applied_image_judge_row"
+    },
+    {
+      "task_id": "val_0094",
+      "subject": "Turkish language and literature",
+      "official_answer": "D",
+      "authority": "MEB OGM Materyal",
+      "confidence": "high",
+      "evidence": "Exact question and worked solution on the official MEB page.",
+      "question_and_solution_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/tde/files/basic-html/page14.html",
+      "existing_final_source_coverage": {
+        "status": "present_but_all_scored_false",
+        "candidate_count": 2
+      },
+      "measured_branch_status": "not_applied_image_judge_row"
+    },
+    {
+      "task_id": "val_0110",
+      "subject": "Chemistry",
+      "official_answer": "D",
+      "authority": "MEB OGM Materyal",
+      "confidence": "high",
+      "evidence": "Simyadan Kimyaya, 4.TEST, question 8; the official key lists 8.D.",
+      "question_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/kimya/files/basic-html/page26.html",
+      "answer_key_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/kimya/files/basic-html/page321.html",
+      "existing_final_source_coverage": {
+        "status": "absent",
+        "candidate_count": 0
+      },
+      "measured_branch_status": "fixed"
+    },
+    {
+      "task_id": "val_0123",
+      "subject": "Chemistry",
+      "official_answer": "B",
+      "authority": "MEB OGM Materyal",
+      "confidence": "high",
+      "evidence": "Exact question and worked solution on the official MEB page.",
+      "question_and_solution_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/kimya/files/basic-html/page38.html",
+      "existing_final_source_coverage": {
+        "status": "absent",
+        "candidate_count": 0
+      },
+      "measured_branch_status": "not_applied_image_judge_row"
+    },
+    {
+      "task_id": "val_0131",
+      "subject": "Physics",
+      "official_answer": "C",
+      "authority": "MEB OGM Materyal",
+      "confidence": "high",
+      "evidence": "Fizik Bilimine Giris, 1.TEST, question 4; the official key lists 4.C.",
+      "question_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/fizik/files/basic-html/page13.html",
+      "answer_key_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/fizik/files/basic-html/page363.html",
+      "existing_final_source_coverage": {
+        "status": "absent",
+        "candidate_count": 0
+      },
+      "measured_branch_status": "fixed"
+    },
+    {
+      "task_id": "val_0141",
+      "subject": "Physics",
+      "official_answer": "D",
+      "authority": "MEB OGM Materyal",
+      "confidence": "high",
+      "evidence": "Exact question and worked solution on the official MEB page.",
+      "question_and_solution_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/konu-pekistirme/tyt/fizik/files/basic-html/page26.html",
+      "existing_final_source_coverage": {
+        "status": "present_but_all_scored_false",
+        "candidate_count": 26
+      },
+      "measured_branch_status": "not_applied_image_judge_row"
+    },
+    {
+      "task_id": "val_0170",
+      "subject": "Biology",
+      "official_answer": "A",
+      "authority": "MEB Defterim Biyoloji 10",
+      "confidence": "high",
+      "evidence": "Test 2 question 32 appears on page 38; the printed key on page 179 lists question 32 as A.",
+      "question_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/defterim/10/biyoloji/files/basic-html/page38.html",
+      "answer_key_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/defterim/10/biyoloji/files/basic-html/page179.html",
+      "existing_final_source_coverage": {
+        "status": "present_but_all_scored_false",
+        "candidate_count": 36
+      },
+      "measured_branch_status": "frozen_deterministic_scorer_conflict"
+    },
+    {
+      "task_id": "val_0173",
+      "subject": "Biology",
+      "official_answer": "D",
+      "authority": "MEB Defterim Biyoloji 10",
+      "confidence": "high",
+      "evidence": "Test 4 question 1 appears on page 45; the printed key on page 179 lists question 1 as D.",
+      "question_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/defterim/10/biyoloji/files/basic-html/page45.html",
+      "answer_key_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/defterim/10/biyoloji/files/basic-html/page179.html",
+      "existing_final_source_coverage": {
+        "status": "absent",
+        "candidate_count": 0
+      },
+      "measured_branch_status": "fixed"
+    },
+    {
+      "task_id": "val_0194",
+      "subject": "Turkish language and literature",
+      "official_answer": "A",
+      "authority": "MEB 3 Adim Turkce",
+      "confidence": "medium",
+      "evidence": "Yardimci Dusunce, 2.ADIM, question 3; the reproduced printed key lists 3.A.",
+      "official_pdf_url": "https://ogmmateryal.eba.gov.tr/panel/upload/etkilesimli/kitap/3adim/tyt/turkce/turkce.pdf",
+      "official_pdf_status": "HTTP 404 observed during the 2026-08-04 research pass",
+      "identical_copy_url": "https://kurguluyorum.com/wp-content/uploads/2025/03/3-Adim-Turkce-Soru-Bankasi.pdf",
+      "authority_warning": "The available answer-table evidence is an identical third-party copy because the official MEB endpoint was unavailable; this row has lower source authority than the other ten.",
+      "existing_final_source_coverage": {
+        "status": "absent",
+        "candidate_count": 0
+      },
+      "measured_branch_status": "fixed"
+    }
+  ],
+  "projections": {
+    "existing_37_final_source_oracle_reference": {
+      "correct": 244,
+      "denominator": 274,
+      "accuracy": 0.8905109489051095
+    },
+    "token_coverage_projection": {
+      "correct": 252,
+      "denominator": 274,
+      "accuracy": 0.9197080291970803,
+      "display_accuracy": 0.919708,
+      "calculation": "244 existing-source oracle correct + 8 exact answers absent from every existing source",
+      "deployable": false
+    },
+    "full_adjudicated_projection": {
+      "correct": 255,
+      "denominator": 274,
+      "accuracy": 0.9306569343065694,
+      "display_accuracy": 0.930657,
+      "calculation": "244 existing-source oracle correct + all 11 exact-evidence rows, including 3 rows requiring re-adjudication",
+      "deployable": false
+    },
+    "strict_baseline_plus_new_tokens_projection": {
+      "correct": 213,
+      "denominator": 274,
+      "accuracy": 0.7773722627737226,
+      "display_accuracy": 0.777372,
+      "calculation": "205 strict correct + 8 exact answers absent from every existing source",
+      "deployable": false
+    },
+    "strict_baseline_plus_all_adjudicated_rows_projection": {
+      "correct": 216,
+      "denominator": 274,
+      "accuracy": 0.7883211678832117,
+      "display_accuracy": 0.788321,
+      "calculation": "205 strict correct + all 11 exact-evidence rows after resolving scorer conflicts",
+      "deployable": false
+    }
+  },
+  "interpretation": "The only measured result in this report is the posthoc deterministic branch at 210/274 = 0.766423, with five fixes and zero regressions versus the 205/274 strict branch. Values above 0.90 are candidate-coverage or adjudication projections, not achieved benchmark scores.",
+  "limitations": [
+    "The 11 rows were researched after benchmark outcome exposure, so this is targeted posthoc analysis rather than an independent holdout evaluation.",
+    "An oracle reads per-row correctness and is not a deployable routing policy.",
+    "Five evidence rows use the frozen image-judge partition and were deliberately not substituted into the measured deterministic branch.",
+    "Three official answers conflict with all existing scored outcomes and need protocol-level re-adjudication before they can count as measured fixes.",
+    "val_0194 relies on a third-party copy while the official MEB PDF endpoint is unavailable.",
+    "A preregistered policy and untouched holdout are required before making a production or 0.90 accuracy claim."
+  ],
+  "resource_audit": {
+    "web_search_used": true,
+    "model_generation_calls_for_exact_keys": 0,
+    "shared_gpu_used": false,
+    "external_compute_used": false,
+    "measured_composition_and_scoring": "local file composition and local scoring",
+    "local_math_cpu_run": "separate experiment; local CPU only and not included in this web-evidence score"
+  }
+}

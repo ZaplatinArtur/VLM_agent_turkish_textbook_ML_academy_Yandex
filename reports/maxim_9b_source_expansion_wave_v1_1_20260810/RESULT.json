@@ -1,0 +1,240 @@
+{
+  "schema_version": "maxim-9b-source-expansion-wave-v1.1-release-result-v1",
+  "created_date": "2026-08-10",
+  "status": "audited_final",
+  "local_artifact_verification": "pass",
+  "independent_postscore_audit": {
+    "status": "pass",
+    "reported_via_parent_coordination": true,
+    "separate_evidence_artifact_pinned": false
+  },
+  "benchmark": {
+    "kind": "repeatedly_used_development_benchmark",
+    "rows": 274,
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "unseen_holdout": false,
+    "production_accuracy_claim": false
+  },
+  "model_lineage": {
+    "answer_producing_model": "Qwen/Qwen3.5-9B",
+    "all_9b": true,
+    "qwen_27b_answers_present": false
+  },
+  "wave_artifacts": {
+    "freeze": {
+      "path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/FINAL_WAVE_FREEZE.json",
+      "sha256": "efcf854f011357e35f48bd86d934521ccaf252343988e04023403cced5c34a5c"
+    },
+    "independent_audit_amendment": {
+      "path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/INDEPENDENT_AUDIT_AMENDMENT.json",
+      "sha256": "4d0720122a0a55d8c560f895ad3ab8b4bc1b24b9779e0132d24313cc9f6d6749",
+      "status": "pass"
+    },
+    "attempt_marker": {
+      "path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/ATTEMPT_STARTED.json",
+      "sha256": "6dfd82ec124e863bd172d5e10abc20f1f88cd5865767b5cee1a5391abc47adaa"
+    },
+    "completion": {
+      "path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/WAVE_COMPLETION.json",
+      "sha256": "318be80043ffac433a9482d0fc2bde8acf99d1fe1c3b8ed44dfffcee8a36506e",
+      "status": "all_ten_completed_outputs_hash_frozen",
+      "all_returncodes_zero": true,
+      "all_ten_completed_before_manifest": true
+    }
+  },
+  "official": {
+    "headline_arm": "official16",
+    "status": "audited_final",
+    "base_arm": "base240",
+    "base_correct": 240,
+    "new_correct": 249,
+    "total": 274,
+    "accuracy": 0.908759,
+    "delta_correct": 9,
+    "delta_percentage_points": 3.2847,
+    "fixes_vs_base": 9,
+    "regressions_vs_base": 0,
+    "math": {
+      "correct": 117,
+      "total": 139,
+      "accuracy": 0.841727
+    },
+    "score_source_split": {
+      "deterministic": {
+        "correct": 158,
+        "total": 177
+      },
+      "image_judge": {
+        "correct": 91,
+        "total": 97
+      }
+    },
+    "fixed_task_ids_vs_base": [
+      "val_0048",
+      "val_0050",
+      "val_0051",
+      "val_0054",
+      "val_0055",
+      "val_0056",
+      "val_0057",
+      "val_0058",
+      "val_0182"
+    ],
+    "regressed_task_ids_vs_base": []
+  },
+  "arms": {
+    "base240": {
+      "classification": "official_comparison_baseline",
+      "correct": 240,
+      "total": 274,
+      "accuracy": 0.875912,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/official/base240/metrics.json",
+      "metrics_json_sha256": "eb89ef624e99df8b26559d2d21f8fddda2b14852305395e388fed35307a0d4a6"
+    },
+    "math5_v11": {
+      "classification": "official_source_component_ablation",
+      "correct": 245,
+      "total": 274,
+      "accuracy": 0.894161,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/official/math5_v11/metrics.json",
+      "metrics_json_sha256": "67d2cc2c50853c1c4c7df8c2781b927309e82fe7943f200af542ec7d354a44f1"
+    },
+    "english5": {
+      "classification": "official_source_component_ablation",
+      "correct": 241,
+      "total": 274,
+      "accuracy": 0.879562,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/official/english5/metrics.json",
+      "metrics_json_sha256": "169409382a087c34f1a350c58e40de71752fe41eaf447b218d8e26769cf57a39"
+    },
+    "meb7_6": {
+      "classification": "official_source_component_ablation",
+      "correct": 243,
+      "total": 274,
+      "accuracy": 0.886861,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/official/meb7_6/metrics.json",
+      "metrics_json_sha256": "ab7394a3fe2b1443d86ba875c4331a3c8c6fbae66f6ca22c7f90914d9b75f1ca"
+    },
+    "official16": {
+      "classification": "official_headline_candidate",
+      "correct": 249,
+      "total": 274,
+      "accuracy": 0.908759,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/official/official16/metrics.json",
+      "metrics_json_sha256": "969cece754bcf3eadd2fded4b519d9974e69a64c27e906e54e5ab9ecae470d8e"
+    },
+    "bs11_8_research": {
+      "classification": "research_evaluation_only",
+      "correct": 241,
+      "total": 274,
+      "accuracy": 0.879562,
+      "production_eligible": false,
+      "license_verified": false,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/research/bs11_8_research/metrics.json",
+      "metrics_json_sha256": "8f0ec088cad573ef6a31d890921e160c35f0717fde80e66e937b808aeec95d06"
+    },
+    "research_bs24": {
+      "classification": "research_evaluation_only",
+      "correct": 250,
+      "total": 274,
+      "accuracy": 0.912409,
+      "production_eligible": false,
+      "license_verified": false,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/research/research_bs24/metrics.json",
+      "metrics_json_sha256": "b61ecfe6370926207e33dca297adf84ff4b159674c33bcaaab5f1f0d69b48d99"
+    },
+    "fenomen12_research": {
+      "classification": "research_evaluation_only",
+      "correct": 241,
+      "total": 274,
+      "accuracy": 0.879562,
+      "production_eligible": false,
+      "license_verified": false,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/research/fenomen12_research/metrics.json",
+      "metrics_json_sha256": "f0cb1bec71be77a529831a59444d9585feda96dd4bbd0852de2728e8949a0b01"
+    },
+    "research_fenomen28": {
+      "classification": "research_evaluation_only",
+      "correct": 250,
+      "total": 274,
+      "accuracy": 0.912409,
+      "production_eligible": false,
+      "license_verified": false,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/research/research_fenomen28/metrics.json",
+      "metrics_json_sha256": "bfb56dacfc7c25289a0ee24ca932b1392cc36c5e94f2c6682ef146ca01d5009e"
+    },
+    "research_all36": {
+      "classification": "research_evaluation_only",
+      "correct": 251,
+      "total": 274,
+      "accuracy": 0.916058,
+      "production_eligible": false,
+      "license_verified": false,
+      "official_headline_eligible": false,
+      "source_asset_redistribution_allowed": false,
+      "metrics_json_path": "experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/execution/outputs/research/research_all36/metrics.json",
+      "metrics_json_sha256": "77075786b15aa25d8aaa889ea14cec1a8799b1a66807afa4bb55dff522e10b27"
+    }
+  },
+  "research_governance": {
+    "arm_ids": [
+      "bs11_8_research",
+      "research_bs24",
+      "fenomen12_research",
+      "research_fenomen28",
+      "research_all36"
+    ],
+    "classification": "research_evaluation_only",
+    "license_status": "unverified",
+    "production_eligible": false,
+    "official_headline_eligible": false,
+    "outputs_must_remain_separate": true,
+    "copied_pdf_or_crop_assets": []
+  },
+  "external_retrieval_evidence": {
+    "separate_from_project_benchmark_score": true,
+    "project_score_attribution": false,
+    "dataset": {
+      "id": "mteb/TurHistQuadRetrieval",
+      "revision": "b6e74379b7486da28ce81c3d459cd7bbd87d4987",
+      "license": "mit",
+      "corpus_rows": 1213,
+      "query_rows": 1024,
+      "relevant_passages_per_query": 2,
+      "manifest_path": "experiments/maxim_turhistquad_embedder_bakeoff_v1/frozen/dataset_manifest.json",
+      "manifest_sha256": "0d3237d7ff247e16fa4201f0723c2efd4457f0e3a0efae6b804af406c421957a"
+    },
+    "preregistration": {
+      "path": "experiments/maxim_turhistquad_embedder_bakeoff_v1/PREREGISTRATION.json",
+      "sha256": "4a9e7047282b9002b99d4f7f754bbc9b2bc201f287381dda0b287f9292f45fe7"
+    },
+    "conditions": {
+      "current_minilm": {
+        "recall_at_1": 0.10205078125,
+        "recall_at_5": 0.2490234375,
+        "mrr": 0.3192536587199147,
+        "result_path": "experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/current_minilm/result.json",
+        "result_sha256": "23627f2e99612b2ef3a97a499954350ff74c76ff233165298d2c721f995942ca"
+      },
+      "gte_multilingual_base": {
+        "recall_at_1": 0.20751953125,
+        "recall_at_5": 0.39404296875,
+        "mrr": 0.5515815939849256,
+        "result_path": "experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/gte_multilingual_base_t439/result.json",
+        "result_sha256": "1536c27cb37193c79913d41ee5325a3c2825f3d3f337a4fb523270649035c403"
+      },
+      "bge_m3": {
+        "model_id": "BAAI/bge-m3",
+        "model_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "model_license": "mit",
+        "embedding_dimension": 1024,
+        "recall_at_1": 0.24365234375,
+        "recall_at_5": 0.47216796875,
+        "mrr": 0.6408793805552973,
+        "result_path": "experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/bge_m3_dense/result.json",
+        "result_sha256": "4af68b76bc70cb16513754fa5c9b5f792ccf0a7570a75829d7d845d6461d74c5"
+      }
+    },
+    "interpretation": "BGE-M3 is supported as an optional semantic candidate generator on a separate public retrieval benchmark. These numbers are not a measured gain on Benchmark-274 and do not change the 249/274 project result."
+  }
+}

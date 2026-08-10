@@ -1,12 +1,17 @@
+import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-DATA_DIR = PROJECT_ROOT / "data"
+DATA_DIR = Path(os.environ.get("MLA_DATA_DIR", PROJECT_ROOT / "data")).expanduser()
 BOOKS_DIR = DATA_DIR / "books"
-CHUNKS_JSONL_DIR = DATA_DIR / "chunks" / "jsonl"
+CHUNKS_JSONL_DIR = Path(
+    os.environ.get("MLA_CHUNKS_JSONL_DIR", DATA_DIR / "chunks" / "jsonl")
+).expanduser()
 TESSDATA_DIR = DATA_DIR / "tessdata"
-INDEX_DIR = DATA_DIR / "cache" / "index"
+INDEX_DIR = Path(
+    os.environ.get("MLA_INDEX_DIR", DATA_DIR / "cache" / "index")
+).expanduser()
 
 
 def ensure_data_dirs() -> None:

@@ -1,0 +1,189 @@
+{
+  "schema_version": "maxim8-final-report-config-v1",
+  "benchmark": {
+    "path": "../../artifacts/baselines/basic_page_rag_v1/validation_274.jsonl",
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "n": 274,
+    "math_n": 139,
+    "non_math_n": 135
+  },
+  "scorer": {
+    "path": "../../scripts/score_maxim_full274.py",
+    "sha256": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf"
+  },
+  "matched_judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+  "matched_judge_profile": {
+    "lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+    "prompt_version": "judge-v2",
+    "model": "Qwen/Qwen3.5-9B",
+    "seed": 20260714,
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "enable_thinking": false,
+    "use_response_format": true,
+    "image_mode": "data_url",
+    "backend": "openai-compatible"
+  },
+  "baseline_reference": {
+    "correct": 141,
+    "n": 274
+  },
+  "baseline": {
+    "id": "basic_page_rag",
+    "name": "Basic page-RAG",
+    "matched_score": {
+      "path": "../maxim_ideas_full274_20260731/scorer_frozen_replay.json",
+      "sha256": "8252121d4037e2a7f01c4b743af4d113b69e83875195fb9a8f43a24988846335",
+      "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+      "matched": true,
+      "judge_artifact": {
+        "path": "../../artifacts/baselines/basic_page_rag_v1/agent_rag_judge.jsonl",
+        "sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4"
+      }
+    }
+  },
+  "ideas": [
+    {
+      "id": "solver_critic_repair",
+      "name": "Solver - Critic - Repair",
+      "matched_score": {
+        "path": "online_v1_evaluation/solver_critic_repair/score.json",
+        "sha256": "10ac64bc3145ab5710f5268edb4bf7ecef4961ab291f36179a4f6d23fa7e9c9b",
+        "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true,
+        "judge_artifact": {
+          "path": "online_v1_evaluation/solver_critic_repair/matched_image97_judge.jsonl",
+          "sha256": "b6fbefa3e04a03578e469a16fee53fbd0ca10bf7ccf6a37a32a9b959897d3e17"
+        }
+      }
+    },
+    {
+      "id": "selective_rag_metadata",
+      "name": "Selective RAG (retrieval reliability gate)",
+      "matched_score": {
+        "path": "offline_v1_evaluation/selective_rag_metadata/matched_score.json",
+        "sha256": "9e90e69a01a17f16ca72d0571a486ce5432382210376e2cd4f66a37edc31f332",
+        "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true,
+        "judge_artifact": {
+          "path": "offline_v1_evaluation/selective_rag_metadata/matched_image97_judge.jsonl",
+          "sha256": "e01f140ded294a6554163f0d28b8b8d4fba5cd7b25c77f1a20ca59ae3ce2700a"
+        }
+      },
+      "replay_score": {
+        "path": "offline_v1_evaluation/selective_rag_metadata/mixed_replay_score.json",
+        "sha256": "f5b5e493e7ca7af8f0cedab600f679aa69f504fb4cb21db8fefc68146874913b",
+        "judge_lineage": "mixed-current-and-historical-replay",
+        "matched": false
+      },
+      "manifest": {
+        "path": "offline_v1_evaluation/selective_rag_metadata/evaluation_manifest.json",
+        "sha256": "194d61b5a0f3f493fb5ccdad5b7242e529a39708b3e802e2db012d570b6e571c"
+      }
+    },
+    {
+      "id": "subject_router",
+      "name": "Router by task type",
+      "matched_score": {
+        "path": "offline_v1_evaluation/subject_router/matched_score.json",
+        "sha256": "5c50cc2bb882d0c83386d324fafe0470433172845b4ebb5e787d41d288ad306f",
+        "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true,
+        "judge_artifact": {
+          "path": "offline_v1_evaluation/subject_router/matched_image97_judge.jsonl",
+          "sha256": "432bbddfe9509d9bdc67e79c568f747a2f20468ea00f7e2e1755e55dc55aca77"
+        }
+      },
+      "replay_score": {
+        "path": "offline_v1_evaluation/subject_router/mixed_replay_score.json",
+        "sha256": "5ee30f55fb1731e19a86db37ac563f3b7b69bb48ba32c15017e1ad6da195fe87",
+        "judge_lineage": "mixed-current-and-historical-replay",
+        "matched": false
+      },
+      "manifest": {
+        "path": "offline_v1_evaluation/subject_router/evaluation_manifest.json",
+        "sha256": "a9ee1687af9bda5ebba1f6a6cc00e79bdb97a14160b9641fd3738b624ed11cab"
+      }
+    },
+    {
+      "id": "parallel_consensus",
+      "name": "8-way answer clustering / consensus",
+      "matched_score": {
+        "path": "offline_v1_evaluation/parallel_consensus/matched_score.json",
+        "sha256": "8955844dede3c03bb5938755f8eafde6555bd9e88b2de92e173d8b12640cd7f9",
+        "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true,
+        "judge_artifact": {
+          "path": "offline_v1_evaluation/parallel_consensus/matched_image97_judge.jsonl",
+          "sha256": "ebf4b8be834f3d0df60b7b8def4a62583bd48d377177f4c352e8537d0a3c1848"
+        }
+      },
+      "manifest": {
+        "path": "offline_v1_evaluation/parallel_consensus/evaluation_manifest.json",
+        "sha256": "2f49f57b98b0153df0d59b28471075b1f7b2876a2e485231764e3530edaf2517"
+      }
+    },
+    {
+      "id": "calculator_sympy",
+      "name": "Calculator / SymPy verification",
+      "matched_score": {
+        "path": "online_v1_evaluation/calculator_sympy/score.json",
+        "sha256": "04a30f628930b935387330a00ef57f8fde71047ec38b8a53730bc3111cd46bc6",
+        "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true,
+        "judge_artifact": {
+          "path": "online_v1_evaluation/calculator_sympy/matched_image97_judge.jsonl",
+          "sha256": "69dcf520c735543ddcb49958ca656c1d2a8aa16f96222a42679381ee2952774a"
+        }
+      }
+    },
+    {
+      "id": "two_pass_transcription",
+      "name": "Two-pass transcription and solve",
+      "matched_score": {
+        "path": "online_v1_evaluation/two_pass_transcription/score.json",
+        "sha256": "22118875d09574ea4a1a1426663133b49348c1c125889682f71214193a41d6b9",
+        "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true,
+        "judge_artifact": {
+          "path": "online_v1_evaluation/two_pass_transcription/matched_image97_judge.jsonl",
+          "sha256": "afda98e3cc7c15d8920c4c325496c3591df09ba298844f81e0e8749c19853a33"
+        }
+      },
+      "schema_recovery": {
+        "task_id": "val_0115",
+        "policy": "fail_closed_no_positive_credit",
+        "audit_path": "online_v1_evaluation/two_pass_transcription/fresh_judge_v2_result.recovery_audit.json",
+        "audit_sha256": "4c4e5bcfefc97268894bdd67b7ee4ecbdc4fe4783abf918d8d5ae3981b429cf0"
+      }
+    },
+    {
+      "id": "answer_canonicalization",
+      "name": "Answer canonicalization",
+      "matched_score": {
+        "path": "offline_v1_evaluation/answer_canonicalization/score.json",
+        "sha256": "5ae6af3bb9324b89aa365e06f7335cbce9a43b289332114cd81943e464951589",
+        "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true,
+        "judge_artifact": {
+          "path": "../../artifacts/baselines/basic_page_rag_v1/agent_rag_judge.jsonl",
+          "sha256": "59dcc93454b29dfc65b0a9b1243a177d472b6c0a13cbe46fb5c98079810a73f4"
+        }
+      }
+    },
+    {
+      "id": "error_memory",
+      "name": "Frozen memory of common error patterns",
+      "matched_score": {
+        "path": "online_v1_evaluation/error_memory/score.json",
+        "sha256": "9e1780f5e71216508f7b2993a7b5d5d0c98a53953bbacff82031702d0c0db703",
+        "judge_lineage": "frozen-judge-v2-qwen3.5-9b-seed20260714",
+        "matched": true,
+        "judge_artifact": {
+          "path": "online_v1_evaluation/error_memory/matched_image97_judge.jsonl",
+          "sha256": "ad6067aafd65e35395ec0f80332a58c2e10634292c7ff3a966a6a4c5fccabb34"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "corpus": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\corpus.jsonl",
+      "sha256": "42f9df25773649a5ad3328bd111d1cb6f7333b2637ddcd8c11309648a93605a7"
+    },
+    "qrels": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\qrels.jsonl",
+      "sha256": "5042dda8dd6f2de81ca552bc7ed7c6949ecd82e114109fd35b88f0225a4e1ebc"
+    },
+    "queries": {
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\queries.jsonl",
+      "sha256": "dd044c02a4c5c723f15aa169ac895c9ed6fa9a8f1df7225480c51cbe443b38b3"
+    }
+  },
+  "corpus_rows": 1213,
+  "dataset_id": "mteb/TurHistQuadRetrieval",
+  "dataset_projection_sha256": "2f76b974efda7f2cd7d050ebc22063585030b9df0aede9d55fd34e3ea04d44f4",
+  "dataset_revision": "b6e74379b7486da28ce81c3d459cd7bbd87d4987",
+  "license": "mit",
+  "preregistration": {
+    "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\PREREGISTRATION.json",
+    "sha256": "4a9e7047282b9002b99d4f7f754bbc9b2bc201f287381dda0b287f9292f45fe7"
+  },
+  "project_benchmark_access": false,
+  "project_benchmark_relationship": "none",
+  "qrel_rows": 2048,
+  "query_rows": 1024,
+  "raw": {
+    "corpus": {
+      "bytes": 155755,
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\raw\\corpus\\test-00000-of-00001.parquet",
+      "sha256": "4d4777c88e3f6a41125fba8928212a5e73ff023db481a6cae06d8e9aa0d2efb8"
+    },
+    "qrels": {
+      "bytes": 17307,
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\raw\\qrels\\test-00000-of-00001.parquet",
+      "sha256": "5454bda24d36e5ff433dda4f02a3c4ed0c251eee37d7b4b50874dd6e47f966f5"
+    },
+    "queries": {
+      "bytes": 50220,
+      "path": "C:\\Users\\kmaxc\\PycharmProjects\\VLM_agent_turkish_textbook_basic_rag\\experiments\\maxim_turhistquad_embedder_bakeoff_v1\\frozen\\raw\\queries\\test-00000-of-00001.parquet",
+      "sha256": "789ce61211b04490aeeb7af34be302e2f3f612bb7f8de4163d96ebd4b733baaa"
+    }
+  },
+  "relevant_queries": 1024,
+  "schema_version": "maxim-turhistquad-data-freeze-v1",
+  "split": "test",
+  "training_or_threshold_tuning": false
+}

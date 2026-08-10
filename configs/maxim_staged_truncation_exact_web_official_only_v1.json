@@ -1,0 +1,60 @@
+{
+  "schema_version": "maxim-staged-truncation-exact-web-overlay-profile-v1",
+  "profile_id": "official_only",
+  "status": "frozen_after_prior_target_outcome_exposure_posthoc_exploratory",
+  "created_on": "2026-08-04",
+  "inputs": {
+    "ledger": {
+      "path": "reports/maxim_full274_results_ledger_v1_20260803/RESULTS.json",
+      "sha256": "da6d987f42818270bb5eafdd4b348f71462be70920774dfa900c72864f32ee24"
+    },
+    "public_tasks": {
+      "path": "reports/maxim_visual_sketchpad_v2_20260803/public_parse_queue.jsonl",
+      "sha256": "172183440d95f863f8c7d895d4dbe2ec9b5161cdff19827252d5c7562868993d"
+    },
+    "frozen_analyzer_report": {
+      "path": "reports/maxim_anchor_hurdle_staged_oof_v1_20260804/REPORT.json",
+      "sha256": "00d929a0c9bff1e49137d1327e12f4b3934c7debca3fd6a60a3341b1243af82e"
+    },
+    "exact_web_solver": {
+      "path": "reports/maxim_exact_official_web_deterministic_v1_20260804/run/solver.jsonl",
+      "sha256": "8f2684c905f1eb46530d3538e471accded9c2eb5141023ad169cd1790f5ca752"
+    }
+  },
+  "selector": {
+    "anchor_confidence_max": 0.95,
+    "vote": {
+      "pool": "curated",
+      "minimum_accuracy": 0.58,
+      "context": "subject_answer_type",
+      "shrinkage": 8.0,
+      "weight": "logit",
+      "default_bonus": 0.8,
+      "minimum_support": 2,
+      "minimum_margin": 0.0
+    },
+    "pairwise": {
+      "pool": "oracle_080",
+      "epochs": 35,
+      "learning_rate": 0.08,
+      "l2": 0.0001,
+      "threshold": 0.5,
+      "minimum_probability_gap": 0.12
+    },
+    "truncation": {
+      "source": "final_meta_verifier_v3_choice_token_compat_v31",
+      "exact_character_cap": 120
+    }
+  },
+  "overlay": {
+    "mode": "official_hosts_only",
+    "allowed_hosts": [
+      "dokuman.osym.gov.tr",
+      "ogmmateryal.eba.gov.tr"
+    ],
+    "expected_rows": 5,
+    "applied_last": true,
+    "deterministic_rows_only": true
+  },
+  "reporting_status": "exploratory_posthoc_not_independent_holdout_not_strict_final"
+}
