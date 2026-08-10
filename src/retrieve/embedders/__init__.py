@@ -1,22 +1,23 @@
-"""Embedding interfaces; model-backed implementations load on demand."""
-
-from __future__ import annotations
-
-from typing import Any
-
-from .base import Embedder, SymmetricTextEmbedder
+from .base import (
+    AsymmetricTextEmbedder,
+    Embedder,
+    SymmetricTextEmbedder,
+    TextEmbedder,
+)
+from .sentence_transformer import (
+    E5Embedder,
+    M3Embedder,
+    SentenceTransformerBackend,
+    SentenceTransformerEmbedder,
+)
 
 __all__ = [
     "Embedder",
+    "TextEmbedder",
     "SymmetricTextEmbedder",
+    "AsymmetricTextEmbedder",
+    "SentenceTransformerBackend",
     "SentenceTransformerEmbedder",
+    "M3Embedder",
+    "E5Embedder",
 ]
-
-
-def __getattr__(name: str) -> Any:
-    if name != "SentenceTransformerEmbedder":
-        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    from .sentence_transformer import SentenceTransformerEmbedder
-
-    globals()[name] = SentenceTransformerEmbedder
-    return SentenceTransformerEmbedder

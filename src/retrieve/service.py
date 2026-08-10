@@ -1,3 +1,4 @@
+import os
 import threading
 
 from paths import INDEX_DIR
@@ -15,17 +16,19 @@ _pipeline_lock = threading.Lock()
 
 def build_pipeline(
         chunks: list[RetrievedChunk] | None = None,
+        profile: str | None = None,
 ) -> RetrievalPipeline:
-    from .embedders import SentenceTransformerEmbedder
-    from .rankers import DenseRanker
+    """Собирает пайплайн выбранного профиля (см. retrieve.pipelines).
 
+    ВНИМАНИЕ: пороги confidence.assess_relevance откалиброваны под косинус
+    dense-профиля — при смене профиля их нужно пересчитать.//
+    """
+    from .pipelines import DEFAULT_PROFILE, build_profile
+
+    profile = profile or os.environ.get("RETRIEVE_PROFILE", DEFAULT_PROFILE)
     raw_corpus = get_retrieved_chunks() if chunks is None else chunks
     corpus = [chunk for chunk in raw_corpus if chunk.text.strip()]
-    index = Index(corpus)
-    embedder = SentenceTransformerEmbedder()
-    return RetrievalPipeline(
-        rankers=[DenseRanker(embedder=embedder, index=index, index_dir=INDEX_DIR)],
-    )
+    return build_profile(profile, Index(corpus), index_root=INDEX_DIR)
 
 
 def get_pipeline() -> RetrievalPipeline:
@@ -50,6 +53,5 @@ def textbook_retrieve_checked(
         k: int = 5,
         subject: str | None = None,
 ) -> tuple[list[RetrievedChunk], RelevanceVerdict]:
-    """Как textbook_retrieve, но с вердиктом детектора бесполезного поиска."""
     results = get_pipeline().run(query, k=k, subject=subject)
     return results, assess_relevance(results)
