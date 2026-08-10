@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="500" viewBox="0 0 1600 500" role="img" aria-labelledby="title desc">
   <title id="title">Turkish Textbook VLM Agent</title>
-  <desc id="desc">A visual banner showing a multimodal homework agent connected to textbook retrieval, web search and evaluation.</desc>
+  <desc id="desc">A visual banner showing the three comparable solver conditions and their shared judge and analytics layer.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#07121f"/>
@@ -52,6 +52,7 @@
     <g transform="translate(930 64)" filter="url(#shadow)">
       <path d="M184 172 C78 126 80 75 18 66" fill="none" stroke="#678ba1" stroke-width="3" stroke-dasharray="7 9"/>
       <path d="M184 172 C78 190 74 245 18 258" fill="none" stroke="#678ba1" stroke-width="3" stroke-dasharray="7 9"/>
+      <path d="M308 130 C352 78 386 61 430 58" fill="none" stroke="#678ba1" stroke-width="3" stroke-dasharray="7 9"/>
       <path d="M224 206 C270 264 352 267 410 258" fill="none" stroke="#678ba1" stroke-width="3" stroke-dasharray="7 9"/>
 
       <g transform="translate(120 100)">
@@ -79,12 +80,20 @@
         <text x="28" y="103" fill="#7998ab" font-size="12">controlled baseline</text>
       </g>
 
+      <g transform="translate(410 0)">
+        <rect width="205" height="118" rx="22" fill="#0d2231" stroke="#38556a"/>
+        <circle cx="42" cy="40" r="18" fill="#88a6b9" opacity="0.18"/>
+        <path d="M34 32 L50 48 M50 32 L34 48" stroke="#a9bdcc" stroke-width="3" stroke-linecap="round"/>
+        <text x="28" y="83" fill="#ecf4f8" font-size="17" font-weight="700">NO TOOLS</text>
+        <text x="28" y="103" fill="#7998ab" font-size="12">single multimodal call</text>
+      </g>
+
       <g transform="translate(410 306)">
         <rect width="205" height="118" rx="22" fill="#0d2231" stroke="#38556a"/>
         <circle cx="42" cy="40" r="18" fill="#b28cff" opacity="0.18"/>
         <path d="M32 48 V39 M42 48 V30 M52 48 V35" stroke="#c3a6ff" stroke-width="4" stroke-linecap="round"/>
-        <text x="28" y="83" fill="#ecf4f8" font-size="17" font-weight="700">EVALUATION</text>
-        <text x="28" y="103" fill="#7998ab" font-size="12">judge + paired metrics</text>
+        <text x="28" y="83" fill="#ecf4f8" font-size="15" font-weight="700">JUDGE + ANALYTICS</text>
+        <text x="28" y="103" fill="#7998ab" font-size="12">shared evaluation layer</text>
       </g>
     </g>
   </g>

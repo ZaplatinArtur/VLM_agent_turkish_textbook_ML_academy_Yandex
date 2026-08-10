@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="920" viewBox="0 0 1800 920" role="img" aria-labelledby="title desc">
+  <title id="title">Verified VLM agent and evaluation pipeline</title>
+  <desc id="desc">A task is routed to one of three solver conditions. Each produces a SolveResult. The trusted reference is joined only for the judge, then completion is audited and paired metrics are reported.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07131f"/>
+      <stop offset="1" stop-color="#0d2130"/>
+    </linearGradient>
+    <linearGradient id="runner" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#103747"/>
+      <stop offset="1" stop-color="#122d40"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000814" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#6d8da0"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#55e6c1"/>
+    </marker>
+  </defs>
+
+  <rect width="1800" height="920" rx="30" fill="url(#bg)"/>
+  <g font-family="Inter, Segoe UI, Arial, sans-serif">
+    <text x="60" y="62" fill="#f2f7fa" font-size="30" font-weight="800">Verified system flow</text>
+    <text x="60" y="94" fill="#839faf" font-size="16">One dataset · three solver conditions · one shared judge protocol · paired metrics</text>
+
+    <!-- common input and runner -->
+    <path d="M292 238 H352" fill="none" stroke="#6d8da0" stroke-width="4" marker-end="url(#arrow)"/>
+    <g transform="translate(60 153)" filter="url(#shadow)">
+      <rect width="232" height="170" rx="22" fill="#0e2635" stroke="#345568"/>
+      <rect x="28" y="24" width="62" height="76" rx="9" fill="#173a4c" stroke="#6fb5ff"/>
+      <path d="M40 44 H78 M40 58 H73 M40 72 H78 M40 86 H67" stroke="#8fc8ff" stroke-width="4" stroke-linecap="round"/>
+      <text x="28" y="130" fill="#f0f6f9" font-size="20" font-weight="750">TASK JSONL</text>
+      <text x="28" y="153" fill="#86a3b5" font-size="13">text / screenshot · metadata</text>
+    </g>
+
+    <g transform="translate(352 153)" filter="url(#shadow)">
+      <rect width="260" height="170" rx="22" fill="url(#runner)" stroke="#55e6c1" stroke-width="2"/>
+      <circle cx="45" cy="42" r="18" fill="#55e6c1" opacity="0.17"/>
+      <path d="M36 42 L43 49 L56 33" fill="none" stroke="#65edce" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="28" y="100" fill="#f0f6f9" font-size="20" font-weight="750">BATCH RUNNER</text>
+      <text x="28" y="126" fill="#9ff3df" font-size="14">selects one Solver condition</text>
+      <text x="28" y="149" fill="#86a3b5" font-size="13">resume · concurrency · errors kept</text>
+    </g>
+
+    <!-- branching from runner -->
+    <g fill="none" stroke="#6d8da0" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M612 205 H660 V165 H712"/>
+      <path d="M612 238 H684 V336 H712"/>
+      <path d="M612 270 H660 V535 H712"/>
+    </g>
+
+    <!-- solver lanes -->
+    <g transform="translate(712 112)" filter="url(#shadow)">
+      <rect width="530" height="110" rx="21" fill="#172936" stroke="#7892a3"/>
+      <circle cx="38" cy="37" r="17" fill="#90a7b5" opacity="0.18"/>
+      <path d="M30 29 L46 45 M46 29 L30 45" stroke="#a9bdcc" stroke-width="3" stroke-linecap="round"/>
+      <text x="70" y="39" fill="#f0f6f9" font-size="19" font-weight="750">B0 · NO TOOLS</text>
+      <text x="70" y="65" fill="#a9bdcc" font-size="14">one multimodal model call</text>
+      <text x="70" y="88" fill="#7e98a8" font-size="13">structured answer · forced wrap-up on length failure</text>
+    </g>
+
+    <g transform="translate(712 262)" filter="url(#shadow)">
+      <rect width="530" height="148" rx="21" fill="#2d2631" stroke="#ffbd73"/>
+      <circle cx="38" cy="38" r="17" fill="#ffbd73" opacity="0.18"/>
+      <circle cx="35" cy="35" r="7" fill="none" stroke="#ffbd73" stroke-width="3"/>
+      <path d="M41 41 L49 49" stroke="#ffbd73" stroke-width="3" stroke-linecap="round"/>
+      <text x="70" y="40" fill="#f0f6f9" font-size="19" font-weight="750">B1 · WEB SEARCH</text>
+      <text x="70" y="67" fill="#ffd29f" font-size="14">bounded ReAct loop ↔ web_search</text>
+      <text x="70" y="93" fill="#a9947b" font-size="13">query dedup · call/step budgets · unavailable-tool fallback</text>
+      <text x="70" y="118" fill="#a9947b" font-size="13">tool-disabled structured finish</text>
+    </g>
+
+    <g transform="translate(712 444)" filter="url(#shadow)">
+      <rect width="530" height="224" rx="21" fill="#0d2d32" stroke="#55e6c1" stroke-width="2"/>
+      <circle cx="38" cy="38" r="17" fill="#55e6c1" opacity="0.17"/>
+      <path d="M29 38 L36 45 L49 29" fill="none" stroke="#65edce" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="70" y="40" fill="#f0f6f9" font-size="19" font-weight="750">AGENT RAG · IMAGE-FIRST</text>
+      <text x="30" y="82" fill="#9ff3df" font-size="14" font-weight="700">1 · image evidence → topic + unknown concepts</text>
+      <text x="30" y="112" fill="#9ff3df" font-size="14" font-weight="700">2 · model tool call ↔ direct checked retrieval</text>
+      <text x="52" y="139" fill="#7fa8a8" font-size="13">candidates → fusion/rerank → relevance gate</text>
+      <text x="30" y="169" fill="#9ff3df" font-size="14" font-weight="700">3 · ≤2 searches; one distinct rewrite after weak/empty</text>
+      <text x="30" y="199" fill="#9ff3df" font-size="14" font-weight="700">4 · conflict filter → final answer → image recheck</text>
+    </g>
+
+    <!-- lanes converge into SolveResult -->
+    <g fill="none" stroke="#6d8da0" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M1242 165 H1300 V300 H1350"/>
+      <path d="M1242 336 H1350"/>
+      <path d="M1242 556 H1300 V372 H1350"/>
+    </g>
+    <g transform="translate(1350 240)" filter="url(#shadow)">
+      <rect width="390" height="212" rx="24" fill="#13273b" stroke="#6fb5ff" stroke-width="2"/>
+      <text x="28" y="42" fill="#f0f6f9" font-size="21" font-weight="780">SOLVE RESULT · JSONL</text>
+      <text x="28" y="74" fill="#a8d4ff" font-size="14">answer · solution · condition</text>
+      <text x="28" y="101" fill="#a8d4ff" font-size="14">tool calls · relevance · exit reason</text>
+      <text x="28" y="128" fill="#a8d4ff" font-size="14">image evidence · answer source</text>
+      <text x="28" y="155" fill="#a8d4ff" font-size="14">usage · raw response · error</text>
+      <rect x="28" y="174" width="310" height="22" rx="11" fill="#6fb5ff" opacity="0.12"/>
+      <text x="183" y="190" text-anchor="middle" fill="#8fc8ff" font-size="12">failures remain in the denominator</text>
+    </g>
+
+    <!-- evaluation boundary -->
+    <path d="M60 704 H1740" stroke="#2c4a5d" stroke-width="2"/>
+    <text x="60" y="740" fill="#f2f7fa" font-size="22" font-weight="760">Shared evaluation layer</text>
+    <text x="60" y="765" fill="#829eaf" font-size="14">The trusted reference enters here — it is never exposed to the solving agent.</text>
+
+    <g transform="translate(60 786)">
+      <rect width="230" height="92" rx="18" fill="#2b2436" stroke="#b28cff"/>
+      <text x="22" y="38" fill="#e5d9ff" font-size="16" font-weight="720">TRUSTED REFERENCE</text>
+      <text x="22" y="64" fill="#a998c4" font-size="13">text or answer image</text>
+    </g>
+
+    <g transform="translate(350 776)">
+      <rect width="250" height="112" rx="18" fill="#1c2838" stroke="#7892a3"/>
+      <text x="24" y="37" fill="#f0f6f9" font-size="16" font-weight="720">JUDGE ADAPTER</text>
+      <text x="24" y="64" fill="#9baebb" font-size="13">joins result + task + reference</text>
+      <text x="24" y="87" fill="#9baebb" font-size="13">requires matching task IDs</text>
+    </g>
+
+    <g transform="translate(660 776)">
+      <rect width="220" height="112" rx="18" fill="#251f3e" stroke="#b28cff"/>
+      <text x="24" y="40" fill="#f0f6f9" font-size="16" font-weight="720">BLIND LLM JUDGE</text>
+      <text x="24" y="68" fill="#cbb7ff" font-size="13">strict correctness</text>
+      <text x="24" y="91" fill="#9c8db8" font-size="13">same protocol for all arms</text>
+    </g>
+
+    <g transform="translate(940 776)">
+      <rect width="220" height="112" rx="18" fill="#172a35" stroke="#55e6c1"/>
+      <text x="24" y="40" fill="#f0f6f9" font-size="16" font-weight="720">COMPLETION AUDIT</text>
+      <text x="24" y="68" fill="#9ff3df" font-size="13">coverage · unique IDs</text>
+      <text x="24" y="91" fill="#7fa8a8" font-size="13">valid error-free verdicts</text>
+    </g>
+
+    <g transform="translate(1220 776)">
+      <rect width="220" height="112" rx="18" fill="#332a20" stroke="#ffbd73"/>
+      <text x="24" y="40" fill="#f0f6f9" font-size="16" font-weight="720">PAIRED EVAL</text>
+      <text x="24" y="68" fill="#ffd29f" font-size="13">accuracy · fixed/regressed</text>
+      <text x="24" y="91" fill="#a9947b" font-size="13">McNemar · bootstrap CI</text>
+    </g>
+
+    <g transform="translate(1500 776)">
+      <rect width="240" height="112" rx="18" fill="#122d32" stroke="#55e6c1"/>
+      <text x="24" y="40" fill="#f0f6f9" font-size="16" font-weight="720">REPORTS + ANALYTICS</text>
+      <text x="24" y="68" fill="#9ff3df" font-size="13">JSON / Markdown / SQLite</text>
+      <text x="24" y="91" fill="#7fa8a8" font-size="13">subjects · traces · issues</text>
+    </g>
+
+    <g fill="none" stroke="#6d8da0" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M290 832 H350"/>
+      <path d="M600 832 H660"/>
+      <path d="M880 832 H940"/>
+      <path d="M1160 832 H1220"/>
+      <path d="M1440 832 H1500"/>
+    </g>
+    <path d="M1545 452 V706 H475 V776" fill="none" stroke="#6fb5ff" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  </g>
+</svg>
+

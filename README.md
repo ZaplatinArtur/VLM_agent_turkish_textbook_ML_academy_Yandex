@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/project-hero-v2.svg" alt="Turkish Textbook VLM Agent" width="100%">
+  <img src="docs/assets/project-hero-v3.svg" alt="Turkish Textbook VLM Agent" width="100%">
 </p>
 
 <h1 align="center">Turkish Textbook VLM Agent</h1>
@@ -69,17 +69,23 @@ python -m venv .venv
 Подробные сценарии запуска собраны в
 [`docs/getting-started.md`](docs/getting-started.md).
 
-## Как проходит одна задача
+## Как работает система
 
 <p align="center">
-  <img src="docs/assets/pipeline-overview-v2.svg" alt="Task to agent, retrieval, judge and analytics pipeline" width="100%">
+  <img src="docs/assets/pipeline-overview-v3.svg" alt="Verified task, solver, retrieval, judge and analytics pipeline" width="100%">
 </p>
+
+Runner выбирает один solver: B0 делает одиночный мультимодальный вызов, B1
+работает в ограниченном ReAct-цикле с веб-поиском, а AgentRag выполняет
+image-first поиск по учебникам. Все три ветки сохраняют единый `SolveResult` с
+ответом, trace, usage и ошибками.
 
 В RAG-режиме изображение остаётся главным источником фактов. Агент получает не
 более двух попыток поиска, не передаёт слабые или конфликтующие чанки в финальный
-контекст и сохраняет `relevance`, `exit_reason`, `image_evidence` и
-`answer_source` в trace. По умолчанию retrieval вызывается напрямую в том же
-процессе; HTTP-адаптер оставлен только для раздельного развёртывания.
+контекст и повторно проверяет ответ по screenshot. Эталон не передаётся solver:
+он присоединяется только в judge adapter. После blind judge система проверяет
+полноту task IDs, считает paired fixed/regressed и импортирует результаты в
+reports и VLM Analytics.
 
 ## Структура репозитория
 
