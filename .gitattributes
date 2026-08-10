@@ -23,3 +23,14 @@ reports/maxim_query_active_crop_v2_20260803/solver.jsonl binary
 # LF and must not be converted by core.autocrlf on Windows checkouts.
 experiments/maxim_9b_baseline_selector_v1/input/frozen/SHA256SUMS.txt binary
 experiments/maxim_9b_baseline_selector_v1/input/v1_2/frozen/SHA256SUMS.txt binary
+
+# Audited 2026-08-10 source-expansion release. These files are referenced by
+# exact SHA-256 from the release report and must survive Windows checkouts
+# without Git EOL normalization.
+experiments/maxim_9b_source_expansion_wave_v1_1/final_wave/** binary
+reports/maxim_9b_source_expansion_wave_v1_1_20260810/** binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/PREREGISTRATION.json binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/frozen/dataset_manifest.json binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/current_minilm/result.json binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/gte_multilingual_base_t439/result.json binary
+experiments/maxim_turhistquad_embedder_bakeoff_v1/runs/bge_m3_dense/result.json binary

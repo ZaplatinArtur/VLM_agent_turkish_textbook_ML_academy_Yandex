@@ -13,6 +13,7 @@
 | Clean 9B source rebase | 237/274 = **0,8650** | post-hoc deterministic development replay; Math 107/139 |
 | Active Crop 9B source rebase | 238/274 = **0,8686** | tuned post-hoc development replay; Math 108/139 |
 | Audited all-9B selector v1.2 primary | 240/274 = **0,8759** | one-shot four-arm dev wave; +2 fixes, 0 regressions против tuned 238; Math 109/139 |
+| Audited all-9B official source expansion | 249/274 = **0,9088** | frozen ten-arm wave; +9 fixes, 0 regressions против 240; Math 117/139 |
 | Gold-blind V2.1 + conservative V3.1 repair | 205/274 = **0,7482** | dev-selected anchor |
 | Source-native V6 | 238/274 = **0,8686** | one-shot development replay; 4 изменения ответа относительно V5 |
 | Source-adjudicated V7 | 242/274 = **0,8832** | one-shot development replay; 1 новый ответ + 3 исправления оценки |
@@ -20,7 +21,7 @@
 | Holdout80 raw source evidence | 71/80 = **0,8875** | same-book task-disjoint; неоднородный source composite, не QA accuracy |
 | Holdout80 после принятого protocol erratum | 79/80 = **0,9875**; valid-only 79/79 | 8 переставленных Physics labels и один open-response подтверждены отдельно |
 
-Главная оговорка: **0,8832 — V7 QA на development replay, а 0,8875/0,9875 — source evidence на same-book Holdout80**. Это разные метрики, их нельзя сравнивать как две версии одной accuracy. Holdout проверяет точную адресацию новых заданий внутри уже известных книг, но не end-to-end reasoning и не перенос на новые книги.
+Главная оговорка: **0,908759 — текущая all-9B system metric на development replay, а 0,8875/0,9875 — source evidence на same-book Holdout80**. Это разные метрики, их нельзя сравнивать как две версии одной accuracy. Holdout проверяет точную адресацию новых заданий внутри уже известных книг, но не end-to-end reasoning и не перенос на новые книги. Historical V7 0,8832 также имеет другую model/evaluator lineage и показывается отдельно.
 
 Ещё одна важная оговорка относится к модели. Historical no-tools и более поздняя source-native ladder имеют разную model lineage. Историческая цепочка V1–V7 наследует meta-verifier anchor, в котором 272 из 274 строк были сгенерированы `Qwen/Qwen3.5-27B`, а две строки fail-closed сохранили 9B-ответ. Поэтому historical V6/V7 нельзя называть результатом «9B + RAG».
 
@@ -29,6 +30,8 @@
 Поверх tuned all-9B source anchor был проведён отдельный frozen four-arm selector audit. `v1.2 primary` изменил две deterministic строки (`val_0089` и `val_0251`), обе wrong → correct, и получил 240/274 без regressions относительно 238 anchor. Все 156 source rows и 97 image rows остались byte-identical. Это one-shot волна новых outputs, но всё ещё результат на многократно использованном dev benchmark. Параллельный source-calibrated selector дал честный null result: 0 безопасных override вне source coverage и поэтому не оценивался.
 
 Последующий post-score answer-contract repair v1.1 оставил score 240/274: `val_0223` был очищен из `} }16` в `16`, но outcome уже был correct; `val_0248` fail-closed сохранил wrong anchor. Итого 0 fixes, 0 regressions и 0 outcome diffs. Три generic canonicalization arm дали 0/0/0 изменений.
+
+Следующая frozen source-expansion wave добавила к `base240` шестнадцать заранее определённых официальных source rows: 5 Math, 5 English и 6 MEB. Единственный официальный headline arm `official16` получил **249/274 = 0,908759**, Math 117/139, deterministic 158/177 и image/source-adjudicated 91/97. Относительно `base240` это ровно 9 fixes и 0 regressions. Независимый post-score аудит сообщил `FINAL PASS`. Лучший численно arm `research_all36` дал 251/274, но остаётся только `research_evaluation_only`: лицензии частных источников не проверены, production и официальный headline запрещены.
 
 ## Что читать
 
@@ -43,6 +46,7 @@
 9. [Первичные локальные источники](09_первичные_источники.md) — отчёты, SHA и границы текущего checkout.
 10. [Финальный публичный Holdout80 source-evidence report](../../reports/maxim_holdout80_final_source_evidence_20260809/REPORT_RU.md) — frozen raw, erratum, хронология и ограничения blind-процедуры.
 11. [Audited all-9B selector](10_audited_all_9b_selector.md) — four-arm one-shot wave, 240/274 и source-calibrated null result.
+12. [All-9B source expansion](11_all_9b_source_expansion.md) — ten-arm frozen wave, официальный 249/274 и отдельно research-only 251/274.
 
 ## Короткая формулировка для защиты
 
@@ -57,6 +61,7 @@
 - у V7 один прямой solver-answer gain и три source-backed исправления прежней оценки;
 - clean all-9B source rebase воспроизводится как 237/274, tuned Active Crop rebase — как 238/274; оба результата имеют 44 fixes и 0 regressions относительно своих 9B anchors;
 - frozen all-9B selector `v1.2 primary` получил 240/274: две замены относительно tuned 238 anchor, обе fixes, при 0 regressions; все четыре arm были досчитаны до раскрытия результатов;
+- frozen all-9B `official16` получил 249/274: девять wrong → correct и ни одного correct → wrong относительно `base240`; все десять arm завершились до чтения outputs;
 - source-native этапы не используют `task_id` как признак поиска или выбора ответа;
 - ранние task-ID keyed результаты 0,766/0,832/0,960 были выявлены и исключены из production claim.
 - frozen raw Holdout80 source-evidence composite равен 71/80; после явно опубликованного erratum — 79/80, а на 79 валидных строках — 79/79.
@@ -65,6 +70,8 @@
 
 - называть 0,8832 качеством на новых книгах или production accuracy;
 - называть all-9B 0,875912 blind holdout или доказанным переносом на новые книги;
+- называть all-9B 0,908759 unseen holdout или production accuracy;
+- использовать research-only 251/274 как официальный headline: у частных источников не подтверждена лицензия;
 - приписывать source-calibrated selector прирост: он сделал 0 uncovered overrides и не оценивался;
 - говорить, что V7 научил модель решать ещё четыре задачи;
 - приписывать element-level proxy результат 0,4489 методу ColPali;

@@ -5,17 +5,26 @@ from __future__ import annotations
 from typing import Any
 
 from .base import Ranker
-from .fusion import DEFAULT_RRF_K, ReciprocalRankFusion
+from .fusion import (
+    DEFAULT_PRIMARY_CANDIDATE_WEIGHT,
+    DEFAULT_RRF_K,
+    DEFAULT_SEMANTIC_CANDIDATE_WEIGHT,
+    PrimaryCandidateUnion,
+    ReciprocalRankFusion,
+)
 from .graph import GraphExpansionRanker
 from .lexical import BM25Ranker
 from .rerank import KnowledgeReranker
 
 __all__ = [
     "BM25Ranker",
+    "DEFAULT_PRIMARY_CANDIDATE_WEIGHT",
     "DEFAULT_RRF_K",
+    "DEFAULT_SEMANTIC_CANDIDATE_WEIGHT",
     "DenseRanker",
     "GraphExpansionRanker",
     "KnowledgeReranker",
+    "PrimaryCandidateUnion",
     "Ranker",
     "ReciprocalRankFusion",
 ]

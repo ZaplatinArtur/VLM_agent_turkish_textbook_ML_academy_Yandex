@@ -12,6 +12,7 @@ _LAZY_ATTRS = {
     "EmbeddingCache": (".cache", "EmbeddingCache"),
     "FaissVectorStore": (".vector_store", "FaissVectorStore"),
     "Index": (".index", "Index"),
+    "PrimaryCandidateUnion": (".rankers", "PrimaryCandidateUnion"),
     "Ranker": (".rankers", "Ranker"),
     "ReciprocalRankFusion": (".rankers", "ReciprocalRankFusion"),
     "Relevance": (".confidence", "Relevance"),

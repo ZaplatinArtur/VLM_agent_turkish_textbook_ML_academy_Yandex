@@ -34,6 +34,12 @@ class IndexKind(str, Enum):
     AUTO = "auto"
 
 
+def resolve_index_kind(kind: IndexKind, size_hint: int) -> IndexKind:
+    if kind is IndexKind.AUTO:
+        return IndexKind.FLAT if size_hint <= FLAT_MAX_VECTORS else IndexKind.HNSW
+    return kind
+
+
 def _to_matrix(vectors: list[list[float]]) -> np.ndarray:
     matrix = np.asarray(vectors, dtype="float32")
     if matrix.ndim == 1:
@@ -49,8 +55,7 @@ def _normalize(matrix: np.ndarray) -> np.ndarray:
 
 def make_index(dim: int, kind: IndexKind = IndexKind.AUTO, size_hint: int = 0):
     """Создаёт пустой FAISS-индекс заданного типа."""
-    if kind is IndexKind.AUTO:
-        kind = IndexKind.FLAT if size_hint <= FLAT_MAX_VECTORS else IndexKind.HNSW
+    kind = resolve_index_kind(kind, size_hint)
     if kind is IndexKind.FLAT:
         return faiss.IndexFlatIP(dim)
     if kind is IndexKind.HNSW:
@@ -112,6 +117,18 @@ class FaissVectorStore:
     @property
     def size(self) -> int:
         return self._index.ntotal
+
+    @property
+    def dimension(self) -> int:
+        return int(self._index.d)
+
+    @property
+    def index_kind(self) -> IndexKind:
+        if isinstance(self._index, faiss.IndexFlat):
+            return IndexKind.FLAT
+        if getattr(self._index, "hnsw", None) is not None:
+            return IndexKind.HNSW
+        raise ValueError(f"unsupported persisted FAISS type: {self.index_type}")
 
     def save(self, directory: Path | str) -> None:
         """Сохраняет снимок индекса на диск: сам индекс FAISS + порядок chunk_id.

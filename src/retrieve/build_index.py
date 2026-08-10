@@ -17,6 +17,15 @@ from typing import Any
 
 from paths import CHUNKS_JSONL_DIR, INDEX_DIR
 
+
+def pipeline_index_directory(pipeline: Any) -> Path:
+    """Return the snapshot directory built by the active candidate arm."""
+    rankers = getattr(pipeline, "rankers", ())
+    candidate = rankers[0] if rankers else None
+    semantic = getattr(candidate, "semantic", None)
+    semantic_index_dir = getattr(semantic, "index_dir", None)
+    return Path(semantic_index_dir) if semantic_index_dir is not None else INDEX_DIR
+
 def corpus_inventory(chunks: list[Any]) -> dict[str, Any]:
     chunk_ids = [str(chunk.chunk_id) for chunk in chunks]
     duplicate_ids = len(chunk_ids) - len(set(chunk_ids))
@@ -94,11 +103,13 @@ def main(argv: list[str] | None = None) -> int:
         if callable(build):
             build()
     pipeline.persist()
+    built_index_dir = pipeline_index_directory(pipeline)
     elapsed = round(time.perf_counter() - started, 3)
     print(
         json.dumps(
             {
-                "index": load_manifest(INDEX_DIR),
+                "index": load_manifest(built_index_dir),
+                "index_dir": str(built_index_dir),
                 "build_or_load_seconds": elapsed,
             },
             ensure_ascii=False,

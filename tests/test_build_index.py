@@ -1,4 +1,8 @@
-from retrieve.build_index import corpus_inventory
+from pathlib import Path
+from types import SimpleNamespace
+
+from paths import INDEX_DIR
+from retrieve.build_index import corpus_inventory, pipeline_index_directory
 from schemas.retrieve import RetrievedChunk
 
 
@@ -29,3 +33,17 @@ def test_corpus_inventory_reports_data_quality_and_coverage() -> None:
     assert inventory["duplicate_chunk_ids"] == 1
     assert inventory["empty_texts"] == 1
     assert inventory["subjects"] == {"math": 2, "science": 1}
+
+
+def test_pipeline_index_directory_reports_optional_semantic_snapshot(tmp_path):
+    bge_dir = tmp_path / "bge-index"
+    pipeline = SimpleNamespace(
+        rankers=[
+            SimpleNamespace(
+                semantic=SimpleNamespace(index_dir=bge_dir),
+            )
+        ]
+    )
+
+    assert pipeline_index_directory(pipeline) == bge_dir
+    assert pipeline_index_directory(SimpleNamespace(rankers=[])) == Path(INDEX_DIR)
