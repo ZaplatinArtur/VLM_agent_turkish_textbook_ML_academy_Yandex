@@ -48,6 +48,15 @@ REGISTRY = {
         "note": "вопрос = скриншот экзаменационного задания (как наши задачи); "
                 "20 дисциплин, Apache 2.0",
     },
+    "mgsm": {
+        "hf": "juletxara/mgsm",
+        "multimodal": False,
+        "languages": ["en", "es", "fr", "de", "ru", "zh", "ja", "th", "sw",
+                      "bn", "te"],
+        "note": "открытые числовые ответы (не multiple choice): 250 школьных "
+                "матзадач, вручную переведённых на 10 языков; exact-match "
+                "без судьи — закрывает дыру открытых вопросов",
+    },
     "kaleidoscope": {
         "hf": "CohereLabs/kaleidoscope",
         "multimodal": True,
@@ -150,6 +159,28 @@ def fetch_exams_v(langs, limit):
         print(f"exams-v/{lang}: {len(rows)} задач -> {path.relative_to(ROOT)}")
 
 
+def fetch_mgsm(langs, limit):
+    from datasets import load_dataset
+    for lang in langs:
+        ds = load_dataset(REGISTRY["mgsm"]["hf"], lang, split="test")
+        rows = []
+        for i, r in enumerate(ds):
+            if limit and i >= limit:
+                break
+            rows.append({
+                "task_id": f"mgsm_{lang}_{i:04d}",
+                "subject": "Maths",
+                "grade": None,
+                "question": r["question"],
+                "question_images": [],
+                "reference_answer": str(r["answer_number"]),
+                "answer_type": "numeric",
+                "reference_solution": r.get("answer") or None,
+            })
+        path = write_rows(rows, "mgsm", lang)
+        print(f"mgsm/{lang}: {len(rows)} задач -> {path.relative_to(ROOT)}")
+
+
 def fetch_kaleidoscope(langs, limit):
     from datasets import load_dataset
     from PIL import Image
@@ -213,6 +244,8 @@ def main() -> int:
         or REGISTRY[args.bench]["languages"]
     if args.bench == "tumlu":
         fetch_tumlu(langs, args.limit)
+    elif args.bench == "mgsm":
+        fetch_mgsm(langs, args.limit)
     elif args.bench == "exams-v":
         fetch_exams_v(langs, args.limit)
     elif args.bench == "kaleidoscope":
