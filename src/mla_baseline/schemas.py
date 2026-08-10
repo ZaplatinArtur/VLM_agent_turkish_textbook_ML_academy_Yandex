@@ -70,6 +70,7 @@ class ToolCallLog(BaseModel):
     returned_chunk_ids: list[str] = Field(default_factory=list)
     latency_ms: float | None = None
     relevance: dict | None = None
+    diag: dict | None = None
     error: str | None = None
 
 

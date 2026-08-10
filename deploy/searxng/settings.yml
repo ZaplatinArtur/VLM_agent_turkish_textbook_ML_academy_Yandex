@@ -1,0 +1,79 @@
+# Настройки SearXNG для прогонов B1. Комментарии объясняют, почему именно так —
+# каждая строка ниже закрывает конкретную причину пустой выдачи из разбора
+# reports/web_search_diag.txt.
+
+use_default_settings: true
+
+general:
+  instance_name: "mla-baseline"
+  debug: false
+
+server:
+  secret_key: "!!! задаётся переменной SEARXNG_SECRET !!!"
+  # Лимитер режет «ботов» по частоте и заголовкам. Агент ходит из скрипта,
+  # четырьмя параллельными задачами — для лимитера это бот, и он отдаёт
+  # пустоту вместо ответа. Инстанс локальный и не публичный: выключаем.
+  limiter: false
+  public_instance: false
+  image_proxy: false
+  method: "GET"
+
+search:
+  # Без json в formats API молча отдаёт пустой результат — первая вещь,
+  # которую надо проверять на новом инстансе (probe_searxng.py это делает).
+  formats:
+    - html
+    - json
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "tr"
+  # Ошибки движка не должны превращаться в тишину: пусть SearXNG сообщает
+  # о них в unresponsive_engines, наш клиент это читает и ретраит.
+  suspended_times:
+    SearxEngineAccessDenied: 60
+    SearxEngineCaptcha: 60
+    SearxEngineTooManyRequests: 30
+
+outgoing:
+  request_timeout: 10.0
+  max_request_timeout: 15.0
+  pool_connections: 100
+  pool_maxsize: 20
+  enable_http2: true
+
+engines:
+  # Ширина пула — не роскошь, а единственная защита от бана. Замер на 540
+  # запросах: когда duckduckgo жив, пустых 0 из 240; когда он в капче —
+  # 277 из 300. Инстанс держался на одном движке, потому что google cse и
+  # startpage были забанены наглухо, а brave и mojeek лежали через раз.
+  - name: duckduckgo
+    disabled: false
+  - name: duckduckgo web
+    disabled: false
+  - name: brave
+    disabled: false
+  - name: mojeek
+    disabled: false
+  - name: startpage
+    disabled: false
+  - name: bing
+    disabled: false
+  - name: yandex
+    disabled: false
+  - name: qwant
+    disabled: false
+  - name: yahoo
+    disabled: false
+  # Мета-движки: проксируют чужую выдачу, свою капчу показывают редко —
+  # именно они должны подхватывать, когда основные в бане.
+  - name: dogpile
+    disabled: false
+  - name: zapmeta
+    disabled: false
+  - name: privacywall
+    disabled: false
+  # Справочные: медленно тонут, полезны на определениях и датах.
+  - name: wikipedia
+    disabled: false
+  - name: wikidata
+    disabled: false

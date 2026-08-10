@@ -1,0 +1,555 @@
+﻿инстанс: http://localhost:8080
+  версия: 2026.8.4+c63835bd2, движков включено: 274
+  JSON API отвечает: 18 результатов на 'test'
+
+пробуем 540 запросов (все)
+
+   1. было:empty стало: 20 рез.  10006 мс  başında paralı olmak deyim anlamı  мертвы: duckduckgo,google cse,mojeek,startpage
+   2. было:empty стало:  0 рез.    438 мс  parabol tepe noktası formülü p(x)=(x-a)^2-b  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+   3. было:empty стало:  0 рез.  10026 мс  yarım çember üzerindeki noktalardan üçgen çizme problem  мертвы: brave,duckduckgo,google cse,startpage
+   4. было:hit   стало:  0 рез.    858 мс  f(x)*f'(x) işareti grafiği nasıl yorumlanır  мертвы: brave,duckduckgo,google cse,startpage
+   5. было:hit   стало:  0 рез.  10005 мс  Atatürk inkılapları görsel soru tarım ticaret ulaşım sa  мертвы: brave,duckduckgo,google cse,startpage
+   6. было:empty стало:  0 рез.    329 мс  renk körülüğü kalıtım tipi  мертвы: brave,duckduckgo,google cse,startpage
+   7. было:empty стало:  0 рез.  10005 мс  matematik çark problemi çözüm yöntemi  мертвы: brave,duckduckgo,google cse,startpage
+   8. было:empty стало: 20 рез.  10008 мс  a < b < 0 olmak üzere a/b ifadesinin aralığı nedir  мертвы: duckduckgo,google cse,startpage,wikipedia
+   9. было:empty стало:  0 рез.  10005 мс  başında paralı olmak deyim  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  10. было:empty стало:  0 рез.   7310 мс  fizik sorusu eşit zaman aralığında eşit miktarda su akı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  11. было:empty стало: 20 рез.  10030 мс  "Güneşin portakal lokmaları" anlamı  мертвы: duckduckgo,google cse,mojeek,startpage,wikipedia
+  12. было:empty стало:  0 рез.  10087 мс  coğrafya öğretimi amaçları  мертвы: brave,duckduckgo,google cse,startpage
+  13. было:hit   стало:  0 рез.   3006 мс  tersine aksine farkı Türkçe  мертвы: brave,duckduckgo,google cse,startpage
+  14. было:empty стало:  0 рез.  10029 мс  English hotel reservation dialogue structure logic  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  15. было:empty стало:  0 рез.  10022 мс  yarım çember üzerinde 8 nokta üçgen çizme sorusu  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  16. было:empty стало:  0 рез.  10037 мс  EKOK 3 ve 5 katları nedir  мертвы: brave,duckduckgo,google cse,startpage
+  17. было:empty стало:  0 рез.  10006 мс  Pythagoras teoremi formülü nedir?  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  18. было:empty стало:  0 рез.   4178 мс  integral mutlak değer problemi çözümü |x^2 - 1|  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  19. было:empty стало:  0 рез.  10005 мс  Sydney vs Reykjavik weather clothing comparison  мертвы: brave,duckduckgo,google cse,startpage
+  20. было:hit   стало:  0 рез.  10008 мс  trigonometrik denklem tan(4x) + tan(6x) = 0 çözümü  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+  21. было:empty стало:  0 рез.   1455 мс  sünger üreme şekilleri  мертвы: brave,duckduckgo,google cse,startpage
+  22. было:empty стало: 20 рез.  10008 мс  mantıkta eğer o zaman önermesinin eşdeğeri nedir ya da   мертвы: duckduckgo,google cse,mojeek,startpage
+  23. было:empty стало:  0 рез.  10026 мс  trigonometri denklemi tan(ax)+tan(bx)=0 çözümü  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+  24. было:empty стало:  0 рез.  10019 мс  iklim ve hava durumu farkı tanımı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  25. было:empty стало:  0 рез.  10005 мс  kimya laboratuvarı deneyinde kullanılan cam malzemeler   мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  26. было:hit   стало:  0 рез.   1436 мс  simya astronmi astroloji mitoloji felsefe tıp din kapsa  мертвы: brave,duckduckgo,google cse,startpage
+  27. было:empty стало:  0 рез.  10005 мс  müsilağ yapışkan yapı biyolojik kimya disiplinleri  мертвы: brave,duckduckgo,google cse,startpage
+  28. было:empty стало:  0 рез.    796 мс  mermer temizlik için asit kullanımı zarar  мертвы: brave,duckduckgo,google cse,startpage
+  29. было:empty стало:  0 рез.  10032 мс  simya dönemi araçları kroze imbik su banyosu su terazis  мертвы: brave,duckduckgo,google cse,startpage
+  30. было:empty стало:  0 рез.    754 мс  ikinci dereceden denklemin tek kökü olması için diskrim  мертвы: brave,duckduckgo,google cse,startpage
+  31. было:hit   стало:  0 рез.  10021 мс  birim vektörler ile açıortay denklemi  мертвы: brave,duckduckgo,google cse,startpage
+  32. было:empty стало: 20 рез.   1884 мс  fizik hız vektörel mi skaler mi sürat vektörel mi skale  мертвы: duckduckgo,google cse,startpage
+  33. было:empty стало:  0 рез.  10046 мс  trigonometri sin^2x - 1 = -cos^2x özdeşlik  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  34. было:hit   стало:  0 рез.     28 мс  mantik ifadesi p->q ~p v q denkligi  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  35. было:empty стало:  0 рез.  10029 мс  faktoriyel çarpma özelliği (n+1)! / n!  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+  36. было:empty стало:  0 рез.  10005 мс  Türkçe anlatım teknikleri: çürük elma, buz dağı metafor  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  37. было:empty стало:  0 рез.   6839 мс  doğal çevre ortamları litosfer atmosfer hidrosfer biyos  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  38. было:empty стало:  0 рез.  10005 мс  mutlak değer tanımı x>0  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  39. было:empty стало:  0 рез.  10005 мс  küp köşeden parça çıkartınca ayrıt uzunlukları toplamı   мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  40. было:empty стало:  0 рез.  10005 мс  ikinci dereceden denklemin tek kök olması için delta ko  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  41. было:empty стало:  0 рез.    648 мс  fonksiyonlarda (g-f)(x) tanim kümesi nasıl bulunur  мертвы: brave,duckduckgo,google cse,startpage
+  42. было:empty стало:  0 рез.  10005 мс  fizik bilimi yasalarından doğrudan yararlanan alan mühe  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+  43. было:empty стало:  0 рез.   1906 мс  kimya laboratuvarı görsel tanımı termometre pipet ayrım  мертвы: brave,duckduckgo,google cse,startpage
+  44. было:empty стало:  0 рез.    274 мс  "a8 - a6 = 6pi 3. cemberin cevresi" matematik soru çözü  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+  45. было:hit   стало: 19 рез.  10007 мс  LGS matematik sorusu çözümü 1 Mart haftanın hangi günü  мертвы: duckduckgo,google cse,startpage
+  46. было:empty стало:  0 рез.    773 мс  yetkinlik ve olgunluk kelimelerinin anlam farkı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  47. было:empty стало:  0 рез.  10007 мс  sönmüş kireç ve sönmemiş kireç kimyasal formülü farkı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  48. было:empty стало:  0 рез.  10006 мс  iki çark dönüşü olasılık sorusu çözüm örneği  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  49. было:empty стало:  0 рез.  10018 мс  vektör doğrultu aynıdır mı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  50. было:empty стало:  0 рез.  10027 мс  Türkçe metinde "çürük elma" ve "buz dağı" metaforlarını  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  51. было:hit   стало:  0 рез.  10024 мс  doğa ve insan etkileşimi tanımı örnekler  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  52. было:empty стало:  0 рез.  10006 мс  f(x+y)=f(x)+f(y) fonksiyon özelliği f(x)=kx mıdır  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  53. было:empty стало:  0 рез.  10005 мс  yadsımak kelimesinin anlamı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  54. было:empty стало: 20 рез.  10016 мс  doğa ve insan etkileşimi tanımı, örnekleri  мертвы: duckduckgo,google cse,mojeek,startpage
+  55. было:empty стало:  0 рез.    688 мс  "Türkçe 'yola çıkarak' ve 'hareketle' farkı örnek cümle  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  56. было:empty стало:  0 рез.  10005 мс  72'nin tam bölenleri  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  57. было:empty стало:  0 рез.  10005 мс  elementer madde ve bileşik tanımı örnekler  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  58. было:empty стало:  0 рез.  10006 мс  Howard Pyle Kral Arthur kitapları Türkçe kaynak  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  59. было:hit   стало:  0 рез.  10018 мс  f(x)=x³·|x| fonksiyonunun grafiği ve özellikleri  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  60. было:hit   стало:  0 рез.  10005 мс  ayakkabı kampanyası %50 indirim %20 ekstra indirim en u  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+  61. было:hit   стало:  0 рез.  10006 мс  a < b < 0 olmak üzere (a+b)/b ifadesinin aralığı nasıl   мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  62. было:empty стало:  0 рез.  10007 мс  (-23) + (-7) işleminin sonucu nasıl bulunur?  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  63. было:hit   стало:  0 рез.  10028 мс  dikdörtgen alan formülü  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+  64. было:empty стало:  0 рез.   9200 мс  kalsiyum oksit kireç  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  65. было:empty стало:  0 рез.  10005 мс  kromozom yapısı kromatit sentromer kinetokor tanımı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  66. было:empty стало:  0 рез.    423 мс  kareköklü ifadelerin değerleri 11 ile 14 arası olma ola  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  67. было:empty стало:  0 рез.  10024 мс  matematik sorusu benzerlik oranı 4 kat yakınlaştırma pa  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  68. было:empty стало:  0 рез.    805 мс  matematiksel çarpım işareti ne anlama gelir?  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  69. было:empty стало:  0 рез.  10007 мс  asal sayı, bölenler, Venn diyagramı kesişimi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  70. было:empty стало:  0 рез.    930 мс  fizik sıvılar yüzey gerilme sıcaklık ilişkisi damla yay  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  71. было:empty стало:  0 рез.  10007 мс  dik piramidin görünüşü hangisi olamaz sorusu çözümü  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  72. было:empty стало:  0 рез.  10005 мс  Aristo Empedokles simyacı mı filozof mu  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  73. было:empty стало:  0 рез.  10005 мс  x^2 + 70x - 800 = 0 denklem çözümleri  мертвы: brave,duckduckgo,google cse,startpage
+  74. было:empty стало:  0 рез.   3403 мс  vektörlerin doğrultusu büyüklüğü nasıl bulunur örnek  мертвы: brave,duckduckgo,google cse,startpage
+  75. было:empty стало:  0 рез.  10005 мс  LGS 2024 alan sorusu turuncu beyaz kare öteleme çözümü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  76. было:empty стало:  0 рез.    526 мс  GHS korozif işaret anlamı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  77. было:empty стало:  0 рез.    603 мс  mersin balığı ömrü boyu büyür mü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  78. было:empty стало: 19 рез.  10006 мс  Warsaw Chopin Airport arrival time agenda reading compr  мертвы: duckduckgo,google cse,mojeek,startpage
+  79. было:empty стало:  0 рез.    749 мс  Türkçe dil bilgisi: Mesajlaşma boşluklarını doldurma  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  80. было:empty стало:  0 рез.  10006 мс  ABCD dörtgeni 5 br sağa 4 br yukarı ötelenir köşe nokta  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  81. было:empty стало:  0 рез.    900 мс  rasyonel sayılar toplama ve çıkarma işlemleri örnekler  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  82. было:hit   стало:  0 рез.  10029 мс  Simya sistemik bilgi birikimi sağladığı için bilim deği  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  83. было:empty стало:  0 рез.   1431 мс  English hotel reservation dialogue sequence logic  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  84. было:empty стало:  0 рез.  10015 мс  bakteri eşeysiz üreme mi yapar  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  85. было:hit   стало:  0 рез.    785 мс  kimya dalları tanımları analitik biyokimya fizikokimya   мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  86. было:hit   стало:  0 рез.  10022 мс  parabol tepe noktası formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  87. было:hit   стало:  0 рез.  10023 мс  element ve bileşik tanımı atom yapısı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  88. было:empty стало:  0 рез.    646 мс  edebi metinlerde üslup ve işleniş farkı nedir?  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  89. было:empty стало:  0 рез.  10005 мс  "küçük prens" kitabı cümle içinde isim-fiil zarf-fiil s  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+  90. было:empty стало:  0 рез.  10020 мс  yarım çember üzerindeki 8 noktadan 3 tane seçme problem  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  91. было:empty стало:  0 рез.  10006 мс  Kroze kimya aracı nedir  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  92. было:empty стало:  0 рез.  10021 мс  "yarım çember üzerinde işaretli 8 nokta verilmiştir"  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  93. было:empty стало:  0 рез.    709 мс  Rutherford alfa saçılma deneyi sonuçları şıklar  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  94. было:empty стало:  0 рез.  10007 мс  "Güneşin portakal lokmaları" anlamı, "kulak kabarttığım  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  95. было:empty стало:  0 рез.     16 мс  fizik sıvı yüzey gerilimi sıcaklık ilişkisi  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+  96. было:empty стало:  0 рез.  10008 мс  kareköklü ifade çarpımı nasıl yapılır örnekler  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+  97. было:hit   стало: 20 рез.   1372 мс  matematik diziler indirme bağıntısı a(n+3)=a(n+2)+a(n)  мертвы: duckduckgo,google cse,mojeek,startpage
+  98. было:empty стало:  0 рез.  10024 мс  Mısır uygarlığı sınıfsız toplum mu yoksa sınıflı mı  мертвы: brave,duckduckgo,google cse,startpage
+  99. было:empty стало:  0 рез.  10005 мс  simya döneminde elementlerin gezegenlerle eşleşmeleri  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 100. было:empty стало:  0 рез.  10005 мс  Mısır uygarlığı sınıfsız toplum mu yoksa sınıf sistemi   мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 101. было:empty стало:  0 рез.  10005 мс  Câbir bin Hayyan dört unsur simya  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 102. было:hit   стало:  0 рез.    457 мс  SO2 CO2 NH3 atom sayısı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 103. было:empty стало:  0 рез.  10025 мс  18225 bölü 243 işlemi sonucu  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 104. было:empty стало:  0 рез.    904 мс  dikdörtgen prizma kendi ağırlığına karşı dayanıklılık o  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 105. было:empty стало:  0 рез.  10016 мс  Atatürk 10. Yıl Nutku Az zamanda çok ve büyük işler yap  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 106. было:empty стало:  0 рез.    938 мс  TYT biyoloji soyağacı sorusu çözüm  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 107. было:empty стало:  0 рез.  10024 мс  kimya sorusu element bileşik görsel atom sayısı 3 2  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 108. было:empty стало: 20 рез.   1486 мс  Cauchy fonksiyon denklemi f(x+y)=f(x)+f(y) çözümü f(x)=  мертвы: duckduckgo,google cse,startpage
+ 109. было:empty стало:  0 рез.  10020 мс  fizik kapiler hareket yüzey gerilimi sıcaklık bağıntısı  мертвы: brave,duckduckgo,google cse,startpage
+ 110. было:empty стало:  0 рез.   1125 мс  laboratuvarda titrasyon işleminde kullanılan malzemeler  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 111. было:empty стало:  0 рез.  10005 мс  alanın karekökü nasıl alınır  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 112. было:empty стало:  0 рез.    761 мс  zihinden toplama yöntemleri onluk birlikleri ayırarak t  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 113. было:hit   стало:  0 рез.  10015 мс  kimyasal bileşiklerin yaygın isimleri kostik kireç asit  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 114. было:empty стало:  0 рез.    665 мс  küp köşeden parça çıkartınca yüzey alanı ve ayrıt uzunl  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 115. было:empty стало:  0 рез.  10005 мс  pozitif yönlü dönüş tanımı saat yönü tersi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 116. было:empty стало:  0 рез.    746 мс  metin yorumlama sorusu fındık hava durumu  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 117. было:empty стало:  0 рез.  10026 мс  Pascal üçgeni altıgenli temsil A B C sayıları  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 118. было:empty стало:  0 рез.   2022 мс  işçi iş süresi hız problemi grafik çözümü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 119. было:empty стало:  0 рез.  10019 мс  dereceyi radyana çevirme formülü radyanı dereceye çevir  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 120. было:empty стало: 20 рез.   1101 мс  rasyonel fonksiyonun süreklilik koşulu ve tanım kümesi  мертвы: duckduckgo,google cse,mojeek,startpage
+ 121. было:empty стало:  0 рез.  10008 мс  "yayımlandı" kelimesinin kullanımı ve anlamı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 122. было:hit   стало:  0 рез.  10006 мс  köklü ifadelerde çarpma işlemi ve farkın karesi formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 123. было:empty стало:  0 рез.  10006 мс  elementer ve bileşiklerin moleküler yapısı örnekleri  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 124. было:empty стало:  0 рез.      6 мс  derece radyan çevirme formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 125. было:hit   стало:  0 рез.  10021 мс  "Etkinlik-3" "HÜCRE DÖNGÜSÜ" "Eşeysiz üreme" kavram har  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 126. было:empty стало:  0 рез.  10005 мс  ikinci dereceden denklem çözümü örnek x^2 + 70x - 800 =  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 127. было:empty стало:  0 рез.  10004 мс  sin x = √2/2 denkleminin çözüm kümesi Türkçe  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 128. было:empty стало:  0 рез.  10028 мс  dizi tanımı tanım kümesi natural sayılar mı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 129. было:empty стало:  0 рез.  10027 мс  bir kareden başka bir kare kesilip çıkartıldığında kala  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 130. было:empty стало:  0 рез.   1080 мс  simya tanımı bilimsel mi değil mi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 131. было:empty стало:  0 рез.  10021 мс  bitki doku kültürü totipotans gen yitirimi klonlama  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 132. было:hit   стало:  0 рез.  10006 мс  kimya dalları tanımları analitik biyokimya fizikokimya   мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 133. было:hit   стало: 20 рез.  10028 мс  fonksiyon grafikleri f ve g ilişkisi f(a) < g(a) tam sa  мертвы: duckduckgo,google cse,mojeek,startpage
+ 134. было:empty стало:  0 рез.  10005 мс  313 ile kaç çarpıldığında 1878 elde edilir?  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 135. было:empty стало:  0 рез.  10017 мс  matematik tam sayı olabilmesi için üs şartı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 136. было:empty стало:  0 рез.  10005 мс  matematik sorusu çember çapı artışı aritmetik dizi görs  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 137. было:empty стало: 20 рез.  10029 мс  Howard Pyle 1876 illüstratörlük kariyerine başlayan Tür  мертвы: duckduckgo,google cse,mojeek,startpage,wikipedia
+ 138. было:empty стало:  0 рез.     29 мс  "Türkçe'de 'pratik' kelimesinin anlamı nedir?", "Türkçe  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 139. было:hit   стало:  0 рез.  10032 мс  Mısır uygarlığı özellikleri sınıfsız toplum mu  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 140. было:empty стало:  0 рез.   1379 мс  mantıkta eğer o zaman önermesi ile ya da veya önermesi   мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 141. было:hit   стало:  0 рез.  10024 мс  çemberin genel denklemi x^2+y^2+Dx+Ey+F=0 merkez ve yar  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 142. было:hit   стало: 20 рез.  10006 мс  DNA baz eşleşmesi çift zincir yapı ve desenli kartlar t  мертвы: duckduckgo,google cse,mojeek,startpage
+ 143. было:empty стало:  0 рез.  10006 мс  küpün bir köşesinden küp çıkarıldığında ayrıtların topl  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 144. было:empty стало:  0 рез.   8644 мс  sayısal eşitsizlik on milyonlar basamağı karşılaştırma  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 145. было:empty стало: 20 рез.  10011 мс  kimya maddelerin sınıflandırılması karışımlar bileşikle  мертвы: duckduckgo,google cse,mojeek,startpage
+ 146. было:empty стало:  0 рез.  10006 мс  "Atatürk 10. Yıl Nutku Az zamanda çok ve büyük işler ya  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 147. было:empty стало:  0 рез.  10024 мс  kalıtım kavram haritası a b c d e f g h  мертвы: brave,duckduckgo,google cse,startpage
+ 148. было:empty стало:  0 рез.   1719 мс  "çam ağacı eşeysiz üreme"  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 149. было:empty стало:  0 рез.  10017 мс  fizik kapiler yükselme sıcaklık yüzey gerilimi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 150. было:empty стало:  0 рез.  10027 мс  Câbir bin Hayyan damıtma kabı imbibik  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 151. было:hit   стало: 20 рез.   1528 мс  72 sayısının tam bölenleri listesi  мертвы: duckduckgo,google cse,mojeek,startpage
+ 152. было:empty стало:  0 рез.  10025 мс  dizi tanımı tanım kümesi doğal sayılar mı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 153. было:empty стало:  0 рез.   7716 мс  dikdörtgen alan hesabı kenar uzunlukları doğal sayı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 154. было:hit   стало:  0 рез.  10005 мс  Rutherford atom modeli alfa saçılması deneyi sonuçları  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 155. было:empty стало:  0 рез.  10024 мс  Simya dönemi araçları kroze imbik su terazi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 156. было:hit   стало:  0 рез.  10020 мс  fonksiyon grafiği f(a)=f(b)=1 f(c)=f(d)=3 sıralama prob  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 157. было:hit   стало:  0 рез.  10005 мс  tan(4x) + tan(6x) = 0 çözüm kümesi x cinsinden  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 158. было:hit   стало:  0 рез.    278 мс  koordinat sistemi öteleme problemi örnek soru  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 159. было:empty стало:  0 рез.  10030 мс  DNA eşleşmesi sırasında serbest nükleotid miktarı grafi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 160. было:empty стало:  0 рез.    884 мс  kimyasal madde uyarı işaretleri anlamı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 161. было:hit   стало:  0 рез.  10005 мс  f(x) * f'(x) işareti nasıl bulunur  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 162. было:empty стало:  0 рез.    433 мс  f(x)*f'(x) g(x) fonksiyonu grafiği nasıl çıkar  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 163. было:empty стало:  0 рез.  10020 мс  daire x ekseninde merkezi x ekseninde y=x ve y=-x doğru  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 164. было:empty стало:  0 рез.  10022 мс  "Bilim dergisinde bulunan bir çapraz bulmacanın dolduru  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 165. было:empty стало:  0 рез.  10005 мс  Petrokimya bulmacası kimya disiplinleri endüstrileri me  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 166. было:empty стало:  0 рез.  10005 мс  fizik alt dalları uygulamaları örnekler mekaniğe asma k  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 167. было:empty стало:  0 рез.  10005 мс  geometrik seri toplam formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 168. было:empty стало:  0 рез.  10006 мс  Ebû Bekir er-Râzî Câbir bin Hayyan kimya tarihi eşleşti  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 169. было:empty стало:  0 рез.    353 мс  "most of the teens prefer listening to pop music" meani  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 170. было:empty стало: 27 рез.   1222 мс  ters orantı formülü nasıl bulunur  мертвы: google cse,mojeek,startpage
+ 171. было:empty стало: 10 рез.   6026 мс  dünya haritası paralel numaralandırması I II III IV V  мертвы: brave,google cse,mojeek,startpage
+ 172. было:empty стало:  0 рез.  10006 мс  Sally'nin 18. doğum günü İngilizce ödevi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 173. было:empty стало:  0 рез.  10007 мс  türkçe matematik sorusu çözümlü örnek doğal sayı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 174. было:empty стало: 10 рез.    969 мс  Mısır uygarlığı toplum yapısı sınıflar  мертвы: brave,google cse,mojeek,startpage
+ 175. было:empty стало: 10 рез.    878 мс  bir çemberin çapı üzerine çizilen üçgenin açısı kaç der  мертвы: brave,google cse,mojeek,startpage
+ 176. было:hit   стало: 10 рез.   1158 мс  Atatürk 10. Yıl Nutku Az zamanda çok ve büyük işler yap  мертвы: brave,google cse,mojeek,startpage
+ 177. было:empty стало:  0 рез.    872 мс  "başında paralı olmak" deyim  мертвы: brave,duckduckgo,google cse,startpage
+ 178. было:hit   стало: 10 рез.   1229 мс  fizik alt dalları örnekler mekanik optik elektromanyeti  мертвы: brave,google cse,startpage
+ 179. было:empty стало: 10 рез.    717 мс  English grammar hotel reservation dialogue structure  мертвы: brave,google cse,mojeek,startpage
+ 180. было:hit   стало: 10 рез.    868 мс  n kenarlı düzgün çokgen içinde a sayısı ile oluşturulan  мертвы: brave,google cse,mojeek,startpage
+ 181. было:empty стало:  0 рез.  10020 мс  "Türkçe 'yola çıkarak' ve 'hareketle' kullanımı efsane   мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 182. было:hit   стало:  0 рез.    789 мс  iki doğrunun dik olması eğim çarpımı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 183. было:hit   стало: 10 рез.    958 мс  Fuzuli Bagdat fethi Seyhi Leyla ve Mecnun tesvik  мертвы: brave,google cse,mojeek,startpage
+ 184. было:empty стало:  0 рез.   1067 мс  "Güneşin portakal lokmaları daha dökülmüş" Mehmet Yaşar  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 185. было:hit   стало: 10 рез.   1040 мс  f(x)=x³·|x| fonksiyonunun x=1 ve x=-1 noktalarındaki te  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 186. было:empty стало: 10 рез.   1059 мс  dikdörtgen alan formülü cebirsel ifade  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 187. было:empty стало:  0 рез.  10030 мс  sünger üreme şekilleri eşeysiz cinsel  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 188. было:empty стало: 20 рез.   8998 мс  faktöriyel tanımı formülü 0! kaçtır  мертвы: duckduckgo,google cse,mojeek,startpage,wikipedia
+ 189. было:empty стало: 19 рез.   1462 мс  "Türkçe'de 'pratik' kelimesinin anlamı nedir?", "Türkçe  мертвы: duckduckgo,google cse,mojeek,startpage,wikipedia
+ 190. было:empty стало: 10 рез.    904 мс  Fuzuli Bagdat fetihinde tanistirdigi kimdir Leyla vu Me  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 191. было:empty стало: 10 рез.    665 мс  karenin alanı formülü  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 192. было:empty стало: 10 рез.   1178 мс  kesirlerle bölme işlemi kuralı Türkçe  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 193. было:empty стало: 10 рез.   1730 мс  mersin balığı yüzyılların fazla yaşayabilir  мертвы: brave,google cse,mojeek,startpage
+ 194. было:empty стало: 10 рез.  10022 мс  DNA eşleşmesi sırasında nükleotid kullanımı grafiği yor  мертвы: brave,google cse,mojeek,startpage
+ 195. было:empty стало: 10 рез.   3889 мс  Fuzuli Leyla vü Mecnun yazarını teşvik eden kimdir  мертвы: brave,google cse,mojeek,startpage
+ 196. было:empty стало: 10 рез.    915 мс  360, 306 ve 486 sayılarının EBOB'u nasıl bulunur  мертвы: brave,google cse,mojeek,startpage
+ 197. было:empty стало: 10 рез.    845 мс  geometrik seri toplam formülü Türkçe  мертвы: brave,google cse,startpage
+ 198. было:empty стало: 10 рез.   2152 мс  simya kimya farkı simyanın bilim olarak kabul edilmemes  мертвы: brave,google cse,startpage
+ 199. было:empty стало: 10 рез.   1049 мс  sünger eşeysiz üreme mi yapar  мертвы: brave,google cse,startpage
+ 200. было:hit   стало: 10 рез.   1545 мс  düzgün çokgen içinde a sayısı ile oluşturulan kesir for  мертвы: brave,google cse,mojeek,startpage
+ 201. было:empty стало: 10 рез.   1218 мс  nüfus piramidi yaş grupları oranları grafik analizi  мертвы: brave,google cse,mojeek,startpage
+ 202. было:empty стало: 10 рез.   2577 мс  Türkiye coğrafya soruları 21 haziran gündüz süresi enle  мертвы: brave,google cse,mojeek,startpage
+ 203. было:hit   стало: 10 рез.    929 мс  mantık p önermesi denk önerme p->q ~p v q  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 204. было:empty стало:  0 рез.  10005 мс  9. sınıf coğrafya haritada büyük kültür bölgeleri içeri  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 205. было:empty стало:  0 рез.  10023 мс  kimya güvenlik işaretleri zehirli yanıcı deri teması ön  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 206. было:empty стало:  0 рез.  10024 мс  "Şekildeki K dikdörtgenler prizmasının boyutları 2x, 2x  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 207. было:hit   стало:  0 рез.  10041 мс  çember denklemi genel form x^2+y^2+Dx+Ey+F=0 merkezi ya  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 208. было:empty стало: 10 рез.  10024 мс  Howard Pyle Kral Arthur kitapları derleme  мертвы: brave,google cse,startpage
+ 209. было:empty стало: 10 рез.    850 мс  satış fiyatı maliyet kâr ilişkisi  мертвы: brave,google cse,startpage
+ 210. было:empty стало: 10 рез.  10028 мс  I. Dünya Savaşı Osmanlı ekonomik durumu gıda fiyatları  мертвы: brave,google cse,mojeek,startpage
+ 211. было:empty стало:  0 рез.  10005 мс  Fuzuli Bagdat fetihinde tanistiği Baki  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 212. было:empty стало:  0 рез.    825 мс  Atatürk görselleri tarım ulaşım sağlık ticaret sanayi s  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 213. было:empty стало: 10 рез.    975 мс  a < b < 0 olmak üzere a/b ifadesinin aralığı nasıl bulu  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 214. было:hit   стало:  0 рез.  10005 мс  dikdörtgenler prizması silindir dayanıklılık oranı soru  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 215. было:empty стало:  0 рез.   1077 мс  arı üreme sistemi erkek arı sperm mitoz mayoz  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 216. было:empty стало: 10 рез.    672 мс  5x=6y denklemi çözümü doğal sayılar  мертвы: brave,google cse,mojeek,startpage
+ 217. было:hit   стало: 10 рез.   4013 мс  coğrafya öğretim amaçları  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 218. было:hit   стало:  0 рез.  10005 мс  türev f(x)*f'(x) formülü ve yorumu  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 219. было:empty стало: 10 рез.  10032 мс  I. Dünya Savaşı Osmanlı İmparatorluğu gıda fiyatları ta  мертвы: brave,google cse,startpage
+ 220. было:empty стало: 10 рез.  10025 мс  telafi etmek, feragat etmek, istila etmek, talimatlar,   мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 221. было:empty стало:  0 рез.  10019 мс  damıtma kabı imbik câbir bin hayyan hintli simyacılar  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 222. было:empty стало: 10 рез.   6053 мс  kromozom yapısı sentromer kinetokor tanımı  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 223. было:empty стало: 10 рез.    928 мс  renk körlüğü genetik geçişi soyağacı örneği  мертвы: brave,google cse,mojeek,startpage
+ 224. было:hit   стало: 10 рез.    944 мс  birim küplerle oluşturulan dikdörtgen prizma yüzey boya  мертвы: brave,google cse,mojeek,startpage
+ 225. было:empty стало: 10 рез.   1250 мс  açı dönüşümü derece dakika saniye formül  мертвы: brave,google cse,mojeek,startpage
+ 226. было:empty стало: 10 рез.   1493 мс  rasyonel sayılar çarpma ve bölme işlemleri örnekler  мертвы: brave,google cse,mojeek,startpage
+ 227. было:empty стало: 10 рез.   6543 мс  biyoloji TYT LYS soyağacı renk körü sorusu cevap anahta  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 228. было:empty стало: 10 рез.   2569 мс  vektör doğrultu aynı mı  мертвы: brave,google cse,mojeek,startpage
+ 229. было:empty стало: 10 рез.    894 мс  okul duvarı afişler yeşil alan çarpanlarına ayırma soru  мертвы: brave,google cse,mojeek,startpage
+ 230. было:empty стало: 10 рез.    947 мс  mutlak değer limit problemi x -> 0+ |x| - x çözümü  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 231. было:empty стало: 10 рез.    895 мс  faktöriyel nedir nasıl hesaplanır 0! kaçtır  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 232. было:empty стало: 10 рез.    730 мс  iki sayı arasında kaç tane doğal sayı vardır formülü  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 233. было:empty стало: 10 рез.    922 мс  Câbir bin Hayyan imbik damıtma aleti geliştirdi mi?  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 234. было:empty стало:  0 рез.   1258 мс  "Ilkel toplumlarda toplum yaşamı dinî kurallara göre dü  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 235. было:empty стало: 10 рез.    862 мс  türkiye'de doğal sayılar tanımı meb  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 236. было:empty стало:  0 рез.   1177 мс  "Yapılacak bir deneyin yönergesinde yukarıdaki cam malz  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 237. было:empty стало: 10 рез.    990 мс  trigonometri özdeşlik sin^2x - 1 = ?  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 238. было:empty стало: 10 рез.    851 мс  4cosx + 4cos^2x - 3 çarpanlara ayırma  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 239. было:empty стало: 10 рез.   1274 мс  karenin alanı formülü kenar uzunluğu  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 240. было:empty стало: 10 рез.   1035 мс  Teflon keşfi tesadüf mü sistematik çalışma mı  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 241. было:empty стало:  0 рез.   1485 мс  "Amy likes parties a lot" meaning in English  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 242. было:empty стало: 10 рез.    795 мс  fonksiyonlarda işlem tanim kümesi kesismidir mi birlesi  мертвы: brave,google cse,mojeek,startpage
+ 243. было:empty стало: 10 рез.   1805 мс  koordinat sistemi öteleme problemi çözümlü örnek  мертвы: brave,google cse,mojeek,startpage
+ 244. было:empty стало:  0 рез.   1226 мс  "Kameraları T, T1, T2, T3, T4 ve T5 noktalarına yerleşt  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 245. было:empty стало: 10 рез.   4028 мс  iklim ve hava durumu farkı  мертвы: brave,google cse,mojeek,startpage
+ 246. было:empty стало: 28 рез.   2593 мс  21 Haziran'dan sonra gündüzler kısalıyorsa Kuzey mi Gün  мертвы: google cse,mojeek,startpage
+ 247. было:empty стало: 10 рез.   5227 мс  trafik lambası döngüsü süreleri toplama ve mod işlemi ö  мертвы: brave,google cse,mojeek,startpage
+ 248. было:empty стало: 10 рез.    971 мс  oktagon kaç köşelidir pentagon kaç köşelidir altıgen ka  мертвы: brave,google cse,mojeek,startpage
+ 249. было:empty стало: 10 рез.   1229 мс  Stephen Hawking biography text A Beautiful Mind exercis  мертвы: brave,google cse,mojeek,startpage
+ 250. было:empty стало: 10 рез.   2111 мс  Karadeniz fındık hasadı hava durumu raporu çiftçi  мертвы: brave,google cse,mojeek,startpage
+ 251. было:empty стало: 10 рез.    889 мс  trigonometri sin^2x - 1 = ? özdeşlik  мертвы: brave,google cse,mojeek,startpage
+ 252. было:empty стало:  0 рез.    783 мс  "Most of the teens prefer listening to pop music" cümle  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 253. было:hit   стало: 10 рез.    966 мс  birim vektör toplama açıortay denklemi analitik geometr  мертвы: brave,google cse,mojeek,startpage
+ 254. было:hit   стало: 10 рез.    914 мс  açıortay denklemi analitik geometri nokta uzaklık  мертвы: brave,google cse,mojeek,startpage
+ 255. было:empty стало: 10 рез.   1048 мс  dikdörtgen alan hesaplama kenar uzunluğu x+20 2x+30  мертвы: brave,google cse,mojeek,startpage
+ 256. было:empty стало: 10 рез.    937 мс  fark kareleri özdeşliği (x-y)(x+y) = x^2 - y^2 örneği  мертвы: brave,google cse,mojeek,startpage
+ 257. было:empty стало: 10 рез.    694 мс  müsilağ yapışkan yapı kimya disiplinleri  мертвы: brave,google cse,mojeek,startpage
+ 258. было:empty стало: 10 рез.   1184 мс  trigonometri tan(4x)+tan(6x)=0 denklemi en büyük kök  мертвы: brave,google cse,mojeek,startpage
+ 259. было:empty стало:  0 рез.  10005 мс  sayısal eşitsizlik yüz binler basamağı karşılaştırma  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 260. было:empty стало: 10 рез.   5594 мс  coğrafya gölge uzunluğu değişimi grafik ekvator dönence  мертвы: brave,google cse,mojeek,startpage
+ 261. было:empty стало:  0 рез.   1304 мс  "Atatürk İnkılapları" soru tarım ticaret ulaşım sağlık   мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 262. было:empty стало: 10 рез.    869 мс  matematik fonksiyon teğet doğrusu soru çözümü türev  мертвы: brave,google cse,mojeek,startpage
+ 263. было:empty стало: 10 рез.    876 мс  kalıtım genotip fenotip kavram haritası boşluklar  мертвы: brave,google cse,mojeek,startpage
+ 264. было:empty стало: 10 рез.   1266 мс  kimya laboratuvarı termometre pipet ayırt etme  мертвы: brave,google cse,mojeek,startpage
+ 265. было:empty стало: 10 рез.    910 мс  Aristo Empedokles simyacı mı  мертвы: brave,google cse,mojeek,startpage
+ 266. было:empty стало: 10 рез.  10006 мс  kesit alanı hacim oranı düz prizma formülü  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 267. было:empty стало: 10 рез.   1036 мс  matematik sorusu n kenarlı çokgen sembolü (A+1)...(A+n)  мертвы: brave,google cse,mojeek,startpage
+ 268. было:empty стало: 10 рез.   1014 мс  Hangi canlılar sadece eşeysiz üreme ile çoğalır?  мертвы: brave,google cse,mojeek,startpage
+ 269. было:empty стало:  0 рез.   1238 мс  "Buna göre çeşitli terimlerin bulunduğu kutucuklardan k  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 270. было:hit   стало: 10 рез.   1056 мс  kimya tarihi soru cevapları element teorisi simyacı câb  мертвы: brave,google cse,mojeek,startpage
+ 271. было:hit   стало: 10 рез.    873 мс  doğrulara uzaklık formülü analitik geometri  мертвы: brave,google cse,mojeek,startpage
+ 272. было:empty стало:  0 рез.    900 мс  "Türkinkilabi Es'sizdir" tabela görseli test sorusu  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 273. было:hit   стало: 10 рез.   1055 мс  Simya dönemi araçları kroze imbik su banyosu su terazis  мертвы: brave,google cse,mojeek,startpage
+ 274. было:hit   стало: 10 рез.    716 мс  fonksiyon bileşkesi süreklilik problemi çözüm yöntemi  мертвы: brave,google cse,mojeek,startpage
+ 275. было:hit   стало: 10 рез.   1292 мс  kimya sorusu element bileşik görsel atom sayısı X Y gaz  мертвы: brave,google cse,mojeek,startpage
+ 276. было:empty стало: 10 рез.    872 мс  satış fiyatı maliyet kâr formülü  мертвы: brave,google cse,mojeek,startpage
+ 277. было:empty стало: 10 рез.    940 мс  sıvı damlaları kohezyon kuvveti ile yayılma ilişkisi  мертвы: brave,google cse,mojeek,startpage
+ 278. было:empty стало: 10 рез.    911 мс  fizik dayanıklılık basınç farkı  мертвы: brave,google cse,mojeek,startpage
+ 279. было:empty стало: 10 рез.    776 мс  vektör toplama çıkarma işlemleri nasıl yapılır örnek  мертвы: brave,google cse,mojeek,startpage
+ 280. было:empty стало: 10 рез.    902 мс  biyoloji kromozom yapısı sentromer kinetokor tanımı  мертвы: brave,google cse,mojeek,startpage
+ 281. было:hit   стало: 10 рез.    921 мс  vektörlerin doğrultusu ve büyüklüğü nasıl karşılaştırıl  мертвы: brave,google cse,mojeek,startpage
+ 282. было:hit   стало: 10 рез.   1154 мс  Petrokimya Biyokimya Fizikokimya Artım Kimyager soru  мертвы: brave,google cse,mojeek,startpage
+ 283. было:hit   стало: 10 рез.    964 мс  107 sayısının 2, 3 ve 5 sayılarının pozitif tam sayı ku  мертвы: brave,google cse,mojeek,startpage
+ 284. было:empty стало: 10 рез.    831 мс  müsilağ kimya disiplinleri anahtar kelimeler analitik a  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 285. было:empty стало: 10 рез.    947 мс  TYT biyoloji soyağacı renk körü sorusu çözüm  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 286. было:empty стало: 10 рез.   1013 мс  mermer temizliğinde asit kullanımı zarar  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 287. было:empty стало: 10 рез.    908 мс  fizik hareket tipleri öteleme dönme titreşim tanımı örn  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 288. было:hit   стало: 10 рез.   1175 мс  fizik alt dalları örnek cihazlar mekanik asma köprü opt  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 289. было:empty стало:  0 рез.  10005 мс  matematik diziler açıklık ortanca formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 290. было:empty стало:  0 рез.  10041 мс  açı dönüşümü derece dakika saniye  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 291. было:hit   стало: 10 рез.   1322 мс  tuz ruhu zaç yağı kezzap çamaşır sodası sönmemiş kireç   мертвы: brave,google cse,mojeek,startpage
+ 292. было:empty стало: 26 рез.   1447 мс  Antik Yunan felsefesinin ortaya çıkış nedenleri sorgula  мертвы: google cse,mojeek,startpage
+ 293. было:empty стало: 10 рез.    683 мс  soyağacı renk körü otozomal çekinik x çekinik karşılaşt  мертвы: brave,google cse,mojeek,startpage
+ 294. было:hit   стало: 10 рез.   1109 мс  otel resepsiyon rezervasyon diyalog sıralaması İngilizc  мертвы: brave,google cse,mojeek,startpage
+ 295. было:empty стало:  0 рез.    965 мс  "ÖRNEK 24" "Aşağıdaki işlemlerde verilmeyen rakamlarını  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 296. было:empty стало: 10 рез.   1082 мс  okul duvarı afiş alanı matematik sorusu  мертвы: brave,google cse,mojeek,startpage
+ 297. было:empty стало: 10 рез.    901 мс  trigonometri tam sayı değerleri toplamı sorusu  мертвы: brave,google cse,mojeek,startpage
+ 298. было:empty стало: 10 рез.    913 мс  tersine ve aksine Türkçe farkı  мертвы: brave,google cse,mojeek,startpage
+ 299. было:empty стало: 10 рез.   1084 мс  kimya alt disiplinleri sınıflandırma örnekleri  мертвы: brave,google cse,mojeek,startpage
+ 300. было:empty стало: 10 рез.   1104 мс  Câbir bin Hayyan damıtma kabı albük geliştirdi mi?  мертвы: brave,google cse,mojeek,startpage
+ 301. было:empty стало: 10 рез.    977 мс  kimya laboratuvarı cam malzemeleri pipet termometre beh  мертвы: brave,google cse,startpage
+ 302. было:empty стало: 10 рез.    939 мс  fizik hız sürat vektörel skaler farkı  мертвы: brave,google cse,mojeek,startpage
+ 303. было:hit   стало: 28 рез.   1410 мс  tan(4x) + tan(6x) = 0 denklemi çözümü x cinsinden  мертвы: google cse,mojeek,startpage
+ 304. было:hit   стало: 28 рез.   1076 мс  risk piktoğramları eşleştirme sorusu kimya  мертвы: google cse,mojeek,startpage
+ 305. было:empty стало:  0 рез.  10006 мс  karınca yiyecek saklamak için yaptığı odar ve bu odalar  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 306. было:hit   стало:  0 рез.      4 мс  I. Dünya Savaşı İstanbul gıda fiyatları tablosu serbest  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 307. было:empty стало: 10 рез.    967 мс  fizik sıvı yüzey gerilimi sıcaklık ilişkisi soru çözümü  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 308. было:empty стало:  0 рез.   1062 мс  "İlkel toplumlarda, toplum yaşamı dinî kurallara göre d  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 309. было:empty стало: 10 рез.    762 мс  rakamların kibrit çöpü sayısı formülü  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 310. было:empty стало:  0 рез.   1414 мс  "I can't miss this organisation" meaning in English con  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 311. было:empty стало: 10 рез.  10005 мс  sünger hem eşeysiz hem cinsel üreme mi yapar  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 312. было:empty стало: 10 рез.  10030 мс  kalıtım kavram haritası boşluk doldurma  мертвы: brave,google cse,startpage,wikipedia
+ 313. было:empty стало: 29 рез.   1374 мс  Atatürk görselleri tarım ulaşım sağlık ticaret sanayi  мертвы: google cse,mojeek,startpage
+ 314. было:empty стало: 10 рез.    963 мс  fizik alt dalları uygulama alanları örnekler mekani opt  мертвы: brave,google cse,mojeek,startpage
+ 315. было:empty стало: 10 рез.    905 мс  faktöriyel formülü ve özellikleri  мертвы: brave,google cse,mojeek,startpage
+ 316. было:empty стало:  0 рез.   8117 мс  Câbir bin Hayyan dört element simya teorisi  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 317. было:empty стало: 10 рез.   1215 мс  karenin alanı formülü a^2  мертвы: brave,google cse,mojeek,startpage
+ 318. было:empty стало: 10 рез.   4017 мс  Mayoz profaz I crossing over nedir? Kardeş olmayan krom  мертвы: brave,google cse,mojeek,startpage
+ 319. было:empty стало: 10 рез.   1295 мс  güneş ışığı geliş açısı gölge boyu ilişkisi formül  мертвы: brave,google cse,mojeek,startpage
+ 320. было:empty стало: 10 рез.    958 мс  açı ölçü birimleri derece dakika saniye dönüşümü formül  мертвы: brave,google cse,mojeek,startpage
+ 321. было:hit   стало: 10 рез.    794 мс  câbir bin hayyan simyacı mı aristo filozof mu  мертвы: brave,google cse,mojeek,startpage
+ 322. было:empty стало:  0 рез.    981 мс  "Petrokimya Biyokimya Fizikokimya Arıtım Kimyager" soru  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 323. было:empty стало: 20 рез.  10006 мс  simya dönemi gezegen sembolleri elementler  мертвы: duckduckgo,google cse,mojeek,startpage
+ 324. было:empty стало:  0 рез.  10030 мс  kibrit çöpü ile yazılan rakamların kibrit sayısı formül  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 325. было:hit   стало:  0 рез.  10015 мс  faktoriyel özellikleri (2n+1)! / (2n-1)!  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 326. было:hit   стало: 26 рез.   1270 мс  kimya laboratuvarı malzemeleri bek ne demektir  мертвы: google cse,mojeek,startpage
+ 327. было:empty стало: 10 рез.   1216 мс  simya astronomi astroloji mitoloji felsefe tıp din alan  мертвы: brave,google cse,mojeek,startpage
+ 328. было:empty стало: 10 рез.    808 мс  a < b < 0 olmak üzere m = (a+b)/b ifadesinin çözüm alan  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 329. было:empty стало: 10 рез.  10005 мс  fizik vektör sorusu eşit birim kareler A ve B vektörler  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 330. было:hit   стало: 10 рез.  10024 мс  prizma hacim formülü kesit alanı  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 331. было:empty стало:  0 рез.  10033 мс  hava durumu ve iklim koşulları arasındaki fark nedir  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 332. было:empty стало:  0 рез.  10026 мс  "LGS DNA modeli boncuklar beşgen kartonlar desenli kart  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 333. было:empty стало:  0 рез.    853 мс  fındık kurutma hava durumu iklim farkı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 334. было:empty стало: 10 рез.    850 мс  matematik sorusu 3 roman 1 hikaye 12 cm boşluk 2 roman   мертвы: brave,google cse,mojeek,startpage
+ 335. было:empty стало: 10 рез.    974 мс  bakteri üreme şekli bölünme  мертвы: brave,google cse,mojeek,startpage
+ 336. было:empty стало: 10 рез.   1147 мс  Türkiye haritası 21 haziran gündüz süresi enlem ilişkis  мертвы: brave,google cse,mojeek,startpage
+ 337. было:empty стало:  0 рез.  10023 мс  örnek 24 matematik semboller rakamlar çözüm  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 338. было:hit   стало: 10 рез.   5694 мс  "Dinamit" icat tarihi simya dönemi  мертвы: brave,google cse,mojeek,startpage
+ 339. было:empty стало:  0 рез.  10005 мс  kromozom yapısı I II III sentromer kinetokor soru çözüm  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 340. было:empty стало:  0 рез.   5914 мс  1924 yılında kabul edilen kanunlar ve uygulamalar  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 341. было:hit   стало: 27 рез.   1603 мс  tuz ruhu zaç yağı kezzap çamaşır sodası sönmemiş kireç   мертвы: google cse,mojeek,startpage
+ 342. было:empty стало:  0 рез.    915 мс  "Your offer sounds awesome. Why not?" meaning accept or  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 343. было:empty стало:  0 рез.    939 мс  "Güneşin portakal lokmaları daha dökülmüş" metni yazarı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 344. было:empty стало: 10 рез.    919 мс  daire grafiği açıdan kişi sayısına çevirme formülü  мертвы: brave,google cse,mojeek,startpage
+ 345. было:empty стало: 10 рез.   1167 мс  dikdörtgenler prizması silindir dayanıklılık formülü ke  мертвы: brave,google cse,mojeek,startpage
+ 346. было:empty стало:  0 рез.   8444 мс  "a_n = pi * d_n aritmetik dizi cember problemi"  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 347. было:hit   стало: 10 рез.   1619 мс  fizik biliminin yasalarından doğrudan yararlanan alanla  мертвы: brave,google cse,mojeek,startpage
+ 348. было:empty стало: 10 рез.   1088 мс  bitkisel çoğalma yöntemleri yumru soğan gövde kökü yapr  мертвы: brave,google cse,mojeek,startpage
+ 349. было:hit   стало: 10 рез.   1032 мс  dikdörtgenler prizması kendi ağırlığına karşı dayanıklı  мертвы: brave,google cse,mojeek,startpage
+ 350. было:empty стало: 10 рез.   1926 мс  matematik EBOB problemi çözümü örnek  мертвы: brave,google cse,mojeek,startpage
+ 351. было:empty стало: 10 рез.   1075 мс  başında paralansın deyim anlamı  мертвы: brave,google cse,mojeek,startpage
+ 352. было:empty стало: 10 рез.   3220 мс  açı ölçü birimleri derece dakika saniye dönüşümü  мертвы: brave,google cse,mojeek,startpage
+ 353. было:empty стало: 10 рез.   1626 мс  televizyon duvar montajı alan hesabı cebirsel ifade sor  мертвы: brave,google cse,mojeek,startpage
+ 354. было:hit   стало: 10 рез.  10006 мс  Türk lisesi kimya müfredatı Ebû Bekir er-Râzi Câbir bin  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 355. было:empty стало: 10 рез.   3481 мс  biyoloji kromozom bölünmesi kromatit sentromer kinetoko  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 356. было:empty стало:  0 рез.   9996 мс  dikdörtgen alan formülü üslü sayı çarpımı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 357. было:empty стало:  0 рез.  10029 мс  Sally'nin 18. doğum günü sürprizi İngilizce yazışma öde  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 358. было:empty стало:  0 рез.   1663 мс  matematik ödev sorusu çözüm kontrolü 6^a * 15^b / 9^b *  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+ 359. было:empty стало: 10 рез.   2413 мс  Mısır Uygarlığı sınıfsız toplum mu?  мертвы: brave,google cse,startpage
+ 360. было:hit   стало: 10 рез.   1268 мс  rasyonel fonksiyonun sürekli olduğu küme payda sıfır  мертвы: brave,google cse,startpage
+ 361. было:hit   стало: 10 рез.   1197 мс  asetil salisilik asit moleküler formülü kaç karbon hidr  мертвы: brave,google cse,mojeek,startpage
+ 362. было:empty стало: 10 рез.    866 мс  matematik denklem sistemi çözüme örneği  мертвы: brave,google cse,mojeek,startpage
+ 363. было:empty стало: 10 рез.   1000 мс  pozitif yön döndürme matematik açı ölçüsü  мертвы: brave,google cse,mojeek,startpage
+ 364. было:hit   стало: 10 рез.   2132 мс  gelişmeleri kaçırma korkusu (FOMO) tanımı ve sosyal med  мертвы: brave,google cse,mojeek,startpage
+ 365. было:empty стало: 10 рез.   1106 мс  topografya haritası alan ölçeği hesaplaması örnek  мертвы: brave,google cse,mojeek,startpage
+ 366. было:hit   стало: 10 рез.   4471 мс  Ebû Bekir er-Râzi kimya katkıları, Câbir bin Hayyan kim  мертвы: brave,google cse,mojeek,startpage
+ 367. было:empty стало: 10 рез.    957 мс  Teflon keşfinin bilimsel yöntemle mi yoksa tesadüf mü o  мертвы: brave,google cse,mojeek,startpage
+ 368. было:hit   стало: 27 рез.   5708 мс  CO kanda oksijen yetersizliği nasıl oluşur?  мертвы: google cse,mojeek,startpage
+ 369. было:empty стало: 10 рез.   3247 мс  dikdörtgen alan formülü kenar uzunlukları  мертвы: brave,google cse,mojeek,startpage
+ 370. было:empty стало: 10 рез.    983 мс  Tevhid-i Tedrisat Kanunu tarihi  мертвы: brave,google cse,startpage
+ 371. было:empty стало:  0 рез.   1134 мс  "Receptionist: Very well. We'll have the room ready for  мертвы: brave,duckduckgo,google cse,startpage
+ 372. было:empty стало:  0 рез.   5102 мс  "Atatürk İnkılapları" soru traktör tren doktor sağlık g  мертвы: brave,duckduckgo,google cse,startpage
+ 373. было:hit   стало: 10 рез.    990 мс  matematiksel çarpım işareti boşluklu yazımda ne anlama   мертвы: brave,google cse,startpage
+ 374. было:empty стало: 10 рез.  10005 мс  Petrokimya Biyokimya Fizikokimya Arıtım kimya disiplinl  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 375. было:empty стало: 10 рез.   6777 мс  simyada elementlerin gezegenlerle eşleşmesi  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 376. было:empty стало:  0 рез.  10015 мс  rasyonel sayılar çarpma işlemi örneği (-2/5)*(4/5)  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 377. было:empty стало:  0 рез.  10005 мс  LGS matematik sorusu n kenarlı düzgün çokgen içine yazı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 378. было:hit   стало: 10 рез.    844 мс  genetik monohibrit çaprazlama homozigot baskın olasılık  мертвы: brave,google cse,startpage
+ 379. было:empty стало: 10 рез.   1006 мс  CaO yaygın adı  мертвы: brave,google cse,startpage
+ 380. было:empty стало:  0 рез.  10016 мс  Câbir bin Hayyan damıtma alembik imbik  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 381. было:empty стало:  0 рез.  10028 мс  mitoz evreleri sırası profaz metafaz anafaz telofaz  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 382. было:empty стало:  0 рез.  10019 мс  "a_n = pi * d_n aritmetik dizi cember problemi a8-a6=6p  мертвы: brave,duckduckgo,google cse,startpage
+ 383. было:hit   стало:  0 рез.   5106 мс  Tuz ruhu çamaşır suyu tepkimesi hangi gazı verir?  мертвы: brave,duckduckgo,google cse,startpage
+ 384. было:empty стало: 10 рез.    792 мс  Ebû Bekir er-Râzî ve Câbir bin Hayyan kimlerdir  мертвы: brave,google cse,startpage
+ 385. было:hit   стало:  0 рез.  10006 мс  f(x)=x³·|x| fonksiyonunun x=0 noktasında türevi var mı?  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 386. было:empty стало:  0 рез.    756 мс  başında paralı deyim  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 387. было:hit   стало: 10 рез.   1868 мс  kimya güvenlik piktogramları patlayıcı yanıcı oksitleyi  мертвы: brave,google cse,startpage
+ 388. было:empty стало: 10 рез.    816 мс  matematik teğet doğrusu eğim formülü  мертвы: brave,google cse,mojeek,startpage
+ 389. было:empty стало:  0 рез.  10006 мс  "Şekilde [AB] ve [BC] çaplı yarıçemberler çizilmiştir"   мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 390. было:empty стало:  0 рез.  10005 мс  iki sayı arasında kaç tane tam sayı var formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 391. было:empty стало: 10 рез.   1098 мс  matematik eşitsizlik çözümü örnek soru  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 392. было:empty стало: 10 рез.   1097 мс  litosfer tanımı astenosfer tanımı farkı  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 393. было:empty стало: 10 рез.    848 мс  kesit alanı hacim oranı silindir prizma formülü  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 394. было:hit   стало: 10 рез.    871 мс  360, 306, 486 sayılarının ebob'u nasıl bulunur?  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 395. было:empty стало: 10 рез.    848 мс  doğa-insan etkileşimi örnekleri karşılıklı etkileşim  мертвы: brave,google cse,startpage,wikipedia
+ 396. было:empty стало:  0 рез.  10005 мс  "Atatürk İnkılapları" görsel soru traktör tren doktor s  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+ 397. было:empty стало:  0 рез.  10029 мс  zihinden toplama yöntemleri onluk birlikleri ayırma kol  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 398. было:empty стало:  0 рез.  10019 мс  "Cevdet Çelik Çal kitabı Güneşin portakal lokmaları"  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 399. было:empty стало:  0 рез.   7262 мс  Sevr antlaşması haritası sorusu cevap Fransızlar Güneyd  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 400. было:empty стало:  0 рез.  10005 мс  çam ağacı üreme şekilleri eşeysiz mi eşeyli mi  мертвы: brave,duckduckgo,google cse,startpage
+ 401. было:empty стало:  0 рез.   1551 мс  trigonometri tanımı cosx aralık  мертвы: brave,duckduckgo,google cse,startpage
+ 402. было:hit   стало: 10 рез.   1127 мс  faktoriyel özelliği (n+1)! = (n+1)n!  мертвы: brave,google cse,startpage
+ 403. было:empty стало:  0 рез.  10028 мс  LGS 2024 matematik sorusu alan sorusu 16x^2 beyaz karto  мертвы: brave,duckduckgo,google cse,startpage,wikipedia
+ 404. было:empty стало: 10 рез.  10022 мс  mitoz evreleri sıralaması profaz metafaz anafaz telofaz  мертвы: brave,google cse,startpage,wikipedia
+ 405. было:empty стало:  0 рез.  10025 мс  "Aşağıda bazı canlıların görselleri verilmiştir Buna gö  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 406. было:empty стало: 10 рез.  10025 мс  güneş ışınları geliş açısı gölge boyu ilişkisi formül  мертвы: brave,google cse,mojeek,startpage
+ 407. было:empty стало:  0 рез.  10006 мс  rasyonel sayılarda çarpma işleminin değişme ve birleşme  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 408. было:empty стало:  0 рез.  10006 мс  kareköklü ifadelerin değerleri karşılaştırma  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 409. было:empty стало: 10 рез.  10006 мс  kimyasal bileşiklerin yaygın adlarındaki kelimeler: kos  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 410. было:hit   стало: 10 рез.  10036 мс  80 sayısının tam bölenleri listesi  мертвы: brave,google cse,mojeek,startpage
+ 411. было:empty стало: 10 рез.   1190 мс  müsilağ kimya disiplinleri analitik anorganik organik f  мертвы: brave,google cse,mojeek,startpage
+ 412. было:empty стало: 10 рез.   2394 мс  Mısır uygarlığı toplum yapısı sınıfsız mı?  мертвы: brave,google cse,startpage
+ 413. было:empty стало:  0 рез.    605 мс  "başında paralı olmak" anlamı  мертвы: brave,duckduckgo,google cse,startpage
+ 414. было:empty стало: 10 рез.    878 мс  Sydney vs Reykjavik climate comparison  мертвы: brave,google cse,startpage
+ 415. было:empty стало: 10 рез.   1113 мс  birim küplerle oluşturulan küpte yüzlerin rengi olasılı  мертвы: brave,google cse,startpage
+ 416. было:empty стало: 10 рез.   1038 мс  sin x = √2/2 denkleminin çözüm kümesi Türkçe müfredat  мертвы: brave,google cse,startpage,wikipedia
+ 417. было:empty стало:  0 рез.   1013 мс  Türkçe anlatım tekniği sorusu çözüm "Benzetme - karşıla  мертвы: brave,duckduckgo,google cse,startpage
+ 418. было:hit   стало: 10 рез.   1348 мс  bitkilerde klorofil yapısı hangi element içerir?  мертвы: brave,google cse,startpage
+ 419. было:hit   стало: 10 рез.    997 мс  çember denklemi teğet nokta merkezi bulma kare ABCD ken  мертвы: brave,google cse,mojeek,startpage
+ 420. было:empty стало: 10 рез.   1026 мс  hotel reservation dialogue sequence logic English  мертвы: brave,google cse,mojeek,startpage
+ 421. было:hit   стало: 10 рез.  10026 мс  aristo element teorisi dört temel element ateş su topra  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 422. было:empty стало: 10 рез.  10029 мс  genetik bağımsız olay olasılık toplamı çarpımı  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 423. было:empty стало:  0 рез.   8021 мс  NH3 molecule atom sayısı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 424. было:empty стало:  0 рез.  10032 мс  6^a * 15^b / 9^b * 10^c tam sayı olması için a, b, c il  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 425. было:empty стало:  0 рез.  10006 мс  Türkçe dil bilgisi sorusu telafi etmek karşılamanın anl  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 426. было:empty стало:  0 рез.    707 мс  kimya güvenlik işaretleri GHS zehirli yanıcı deri temas  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 427. было:empty стало: 20 рез.   1549 мс  a < b < 0 olmak üzere a/b ifadesinin çözümü nedir  мертвы: duckduckgo,google cse,mojeek,startpage,wikipedia
+ 428. было:empty стало:  0 рез.   1979 мс  otel resepsiyon diyalog sıralaması İngilizce örnek  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 429. было:empty стало:  0 рез.   1491 мс  LCM 12 18 ortak katı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 430. было:empty стало:  0 рез.    450 мс  Sevr Antlaşması haritası Fransa nüfuz alanları  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 431. было:empty стало:  0 рез.  10023 мс  kombinasyon formülü C(n,k) nasıl hesaplanır örnek  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 432. было:empty стало:  0 рез.    221 мс  mitoz evreleri profaz metafaz anafaz telofaz özellikler  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 433. было:empty стало:  0 рез.   1036 мс  dil bilgisi sorusu III. cümlede kanıta dayalı nesnel bi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 434. было:empty стало:  0 рез.   1933 мс  güneş ışınları geliş açısı gölge boyu ilişkisi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 435. было:empty стало:  0 рез.    826 мс  ikinci dereceden denklem diskriminant formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 436. было:empty стало:  0 рез.  10006 мс  mitoz bölünme evreleri sırası profaz metafaz anafaz tel  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 437. было:empty стало:  0 рез.     22 мс  müzik enstrümanı silindir sayısıyla çalma kombinasyonu   мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 438. было:empty стало:  0 рез.  10044 мс  mitoz evreleri sırası profaz metafaz anafaz telofaz öze  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 439. было:empty стало:  0 рез.      5 мс  mitotik evreler sırası profaz metafaz anafaz telofaz öz  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 440. было:empty стало:  0 рез.   1217 мс  (100-2a)(150-2a) çarpımı  мертвы: brave,duckduckgo,google cse,startpage
+ 441. было:empty стало:  0 рез.    619 мс  arı sperm oluşumu mitoz mayoz ploidi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 442. было:empty стало:  0 рез.   1351 мс  Taşma kabı problemi kütle hesabı Archimedes ilkesi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 443. было:hit   стало:  0 рез.  10005 мс  f(x+y)=f(x)+f(y) fonksiyonu nedir?  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 444. было:hit   стало:  0 рез.    825 мс  trigonometrik denklem tan(4x) + tan(6x) = 0 çözüm kümes  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 445. было:empty стало: 20 рез.   1149 мс  analitik geometride açıortayın denklemi eğim vektör yön  мертвы: duckduckgo,google cse,mojeek,startpage
+ 446. было:empty стало:  0 рез.   1355 мс  matematikte pozitif yönde dönüş tanımı saat yönü mü yok  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 447. было:empty стало:  0 рез.    768 мс  sıvı damlaları yayılması kohezyon ve adhezyon kuvvetler  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 448. было:empty стало:  0 рез.    438 мс  Türkçe anlatım teknikleri örnekleri öyküleyici betimley  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 449. было:empty стало:  0 рез.    787 мс  dikdörtgen alan hesabı (100-2a)(150-2a)  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 450. было:empty стало:  0 рез.  10020 мс  dikdörtgen alanı bölmek için %50 oranında kesim nasıl y  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 451. было:hit   стало:  0 рез.    719 мс  hemoglobin yapısal formül element  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 452. было:empty стало:  0 рез.    988 мс  kuyumculuk karışım yoğunluğu hesaplama formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 453. было:empty стало:  0 рез.   1729 мс  analitik geometride açıortayın eğimi formülü  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 454. было:empty стало:  0 рез.    819 мс  matematikte a'nın b kuvveti ne demektir  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 455. было:empty стало:  0 рез.    454 мс  Pascal üçgeni formülü binom katsayıları  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 456. было:empty стало:  0 рез.    699 мс  matematik sorusu 3 roman 4 hikaye kitabı üst noktaları   мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 457. было:hit   стало:  0 рез.    954 мс  altın ayar tanımı karışım yoğunluğu nasıl hesaplanır  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 458. было:empty стало:  0 рез.    825 мс  kimya sorusu element bileşik görsel atom sayısı  мертвы: brave,duckduckgo,google cse,startpage
+ 459. было:empty стало:  0 рез.  10025 мс  coğrafya öğretiminin amaçları nelerdir  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 460. было:empty стало:  0 рез.      8 мс  "sağlıklı dişi" "renk körü dişi" soyagacı soru çözümü  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 461. было:empty стало:  0 рез.  10005 мс  Çember denklemleri genel denkleminin açılımı, teğet doğ  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 462. было:empty стало:  0 рез.  10005 мс  fonksiyon grafiği f(a)=f(b)=1 f(c)=f(d)=3 sıralama prob  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 463. было:empty стало:  0 рез.    777 мс  Milli Mücadele dönemi soru bankası cevap anahtarı  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 464. было:empty стало: 26 рез.   1100 мс  hg elementinin etkileri hakkında bilgi  мертвы: google cse,mojeek,startpage
+ 465. было:empty стало: 10 рез.    921 мс  zihinden toplama yöntemleri kolay toplanan sayıları gru  мертвы: brave,google cse,mojeek,startpage
+ 466. было:empty стало: 10 рез.    752 мс  iklim koşulları ve hava durumu farkı  мертвы: brave,google cse,mojeek,startpage
+ 467. было:hit   стало: 10 рез.    908 мс  Atatürk inkılapları görsel soru cevap anahtarı traktör   мертвы: brave,google cse,mojeek,startpage
+ 468. было:hit   стало: 10 рез.  10029 мс  Cauchy fonksiyon denklemi f(x+y)=f(x)+f(y) çözümü  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 469. было:empty стало: 10 рез.    906 мс  fizik sorusu çözümü kılcal boru sıvı yükselme alçalma ı  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 470. было:empty стало: 10 рез.   6144 мс  Ebû Bekir er-Râzî kimya katkıları madde sınıflandırma  мертвы: brave,google cse,mojeek,startpage
+ 471. было:hit   стало: 10 рез.   1054 мс  küp hacmi formülü ayrırt  мертвы: brave,google cse,mojeek,startpage
+ 472. было:empty стало: 10 рез.    860 мс  fonksiyonlarda işlem tanim kümesi görüntu kümesi nasıl   мертвы: brave,google cse,mojeek,startpage
+ 473. было:hit   стало: 10 рез.  10018 мс  kimyasal bileşikler yaygın isimleri kostik kireç asit o  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 474. было:empty стало: 10 рез.    775 мс  I. Dünya Savaşı Osmanlı ekonomik durumu gıda fiyatları   мертвы: brave,google cse,mojeek,startpage
+ 475. было:empty стало: 10 рез.   1187 мс  tam sayıların bölenleri tanımı n_a kümesi  мертвы: brave,google cse,mojeek,startpage
+ 476. было:empty стало: 10 рез.    920 мс  arı üreme sistemi erkek arı sperm oluşumu mitoz mayoz p  мертвы: brave,google cse,mojeek,startpage
+ 477. было:empty стало: 10 рез.    908 мс  maliyet kâr satış fiyatı oranı nasıl bulunur  мертвы: brave,google cse,mojeek,startpage
+ 478. было:empty стало: 10 рез.    968 мс  Câbir bin Hayyan albük  мертвы: brave,google cse,mojeek,startpage
+ 479. было:hit   стало: 10 рез.    708 мс  kohezyon kuvveti ve yüzey gerilimi ilişkisi  мертвы: brave,google cse,mojeek,startpage
+ 480. было:empty стало: 10 рез.    941 мс  dünya dönmesi açısal hız çizgisel hız farkı  мертвы: brave,google cse,mojeek,startpage
+ 481. было:empty стало: 10 рез.  10007 мс  fonksiyonlarda işlem tanim kümesi kesismidir mi  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 482. было:hit   стало: 10 рез.  10022 мс  telafi etmek ne demek  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 483. было:empty стало: 10 рез.   1408 мс  soyagac renk körü dişi sağlıklı baba otozomal çekinik  мертвы: brave,google cse,mojeek,startpage
+ 484. было:hit   стало: 10 рез.    961 мс  matematikte ab iki basamaklı sayı ifadesinin değeri ned  мертвы: brave,google cse,mojeek,startpage
+ 485. было:empty стало: 10 рез.   1572 мс  iki sayı arasında kaç tane doğal sayı formülü  мертвы: brave,google cse,mojeek,startpage
+ 486. было:empty стало: 10 рез.    957 мс  haploid sperm oluşumu mitoz mayoz  мертвы: brave,google cse,mojeek,startpage
+ 487. было:hit   стало: 10 рез.   1410 мс  360, 306, 486 sayılarının ebob'u  мертвы: brave,google cse,mojeek,startpage
+ 488. было:empty стало:  0 рез.    887 мс  "hukukun tarihî gelişimi toplumsal ihtiyaçlar"  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 489. было:empty стало: 10 рез.    980 мс  aritmetik dizi genel terimi çevre hesabı çap artışı  мертвы: brave,google cse,mojeek,startpage
+ 490. было:empty стало:  0 рез.  10006 мс  sayısal eşitsizlik onbinler basamağı karşılaştırma  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 491. было:empty стало:  0 рез.   7931 мс  sıvı damlası şekli kohezyon adhezyon ilişkisi  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 492. было:empty стало: 10 рез.    885 мс  Mısır uygarlığı özellikleri sınıfsız toplum mu yoksa sı  мертвы: brave,google cse,mojeek,startpage
+ 493. было:empty стало: 10 рез.   1043 мс  mayoz profaz I crossing over hangi kromatitler arasında  мертвы: brave,google cse,mojeek,startpage
+ 494. было:empty стало: 10 рез.    994 мс  Ebû Bekir er-Râzî Câbir bin Hayyan kimya tarihi karşıla  мертвы: brave,google cse,mojeek,startpage
+ 495. было:empty стало: 25 рез.   1202 мс  ikinci dereceden denklemin tek kök olması için diskrimi  мертвы: google cse,mojeek,startpage
+ 496. было:empty стало: 10 рез.    928 мс  LGS matematik sorusu alan sorusu 16x^2 beyaz karton 2 c  мертвы: brave,google cse,mojeek,startpage
+ 497. было:empty стало: 10 рез.    910 мс  Pitagor teoremi örnek soru çözümleri 250 200 cm bariyer  мертвы: brave,google cse,mojeek,startpage
+ 498. было:empty стало:  0 рез.    870 мс  matematik problemi "iki ayakkabıdan eşit miktarda indir  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 499. было:empty стало: 10 рез.    954 мс  fizik kılcal boru yüzey gerilimi sıcaklık ilişkisi  мертвы: brave,google cse,mojeek,startpage
+ 500. было:empty стало: 10 рез.    890 мс  tek sayı ile toplanma çarpma kuralları  мертвы: brave,google cse,mojeek,startpage
+ 501. было:empty стало: 10 рез.    875 мс  Ebû Bekir er-Râzî kimya maddeleri sınıflandırma krozei  мертвы: brave,google cse,mojeek,startpage
+ 502. было:empty стало:  0 рез.    598 мс  "I can't miss this" meaning accept invitation English  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 503. было:hit   стало: 10 рез.   1313 мс  konik kova su doluluk oranı yükseklik grafiği  мертвы: brave,google cse,mojeek,startpage
+ 504. было:empty стало: 10 рез.    937 мс  çıkarma işlemini bulma sorusu A315B 7C35 355D9  мертвы: brave,google cse,mojeek,startpage
+ 505. было:hit   стало: 10 рез.   1021 мс  fizik biliminin yasalarından doğrudan yararlanan alanla  мертвы: brave,google cse,mojeek,startpage
+ 506. было:empty стало: 10 рез.    825 мс  80'in tam bölenleri  мертвы: brave,google cse,mojeek,startpage
+ 507. было:empty стало: 10 рез.    925 мс  23 Eylül tarihinde Dünya'nın Güneş etrafındaki konumu v  мертвы: brave,google cse,mojeek,startpage
+ 508. было:empty стало: 10 рез.    935 мс  daire grafiği açı hesaplama formülü  мертвы: brave,google cse,mojeek,startpage
+ 509. было:empty стало: 10 рез.    948 мс  Türk Kurtuluş Savaşı Mebusan Meclisi Ankara Büyük Mille  мертвы: brave,google cse,mojeek,startpage
+ 510. было:hit   стало: 10 рез.    812 мс  telafi etmek kelimesi anlamı  мертвы: brave,google cse,mojeek,startpage
+ 511. было:hit   стало: 10 рез.    909 мс  matematik eşitsizlik çözümü örnek problem  мертвы: brave,google cse,mojeek,startpage
+ 512. было:empty стало: 10 рез.   2274 мс  topografya haritası çizgi ölçek kesir ölçek dönüşümü 2   мертвы: brave,google cse,mojeek,startpage
+ 513. было:hit   стало: 10 рез.   1058 мс  birim vektörler açıortay denklemi analitik geometri  мертвы: brave,google cse,mojeek,startpage
+ 514. было:empty стало: 10 рез.   1488 мс  doğa ve insan etkileşimi karşılıklı etkileşim örnekleri  мертвы: brave,google cse,mojeek,startpage
+ 515. было:hit   стало: 10 рез.    810 мс  feragat etmek ne demek  мертвы: brave,google cse,mojeek,startpage
+ 516. было:empty стало: 10 рез.    878 мс  soygaca göre otozomal çekinik renk körü  мертвы: brave,google cse,mojeek,startpage
+ 517. было:empty стало: 10 рез.   1092 мс  dördün üçüncü kuvveti ne demek matematikte  мертвы: brave,google cse,mojeek,startpage
+ 518. было:empty стало: 10 рез.  10006 мс  lise coğrafya dersi öğretim amaçları  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 519. было:empty стало:  0 рез.  10005 мс  Türkçe kelime yadsiamak anlamı  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 520. было:empty стало: 20 рез.  10009 мс  CaO yaygın adı kireç  мертвы: duckduckgo,google cse,mojeek,startpage,wikipedia
+ 521. было:empty стало:  0 рез.  10005 мс  simya bilimsel midir, simya astronomi astroloji mitoloj  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 522. было:empty стало: 10 рез.  10007 мс  gölge uzunluğu ekvator yengeç dönencesi oğlak dönencesi  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 523. было:empty стало: 10 рез.  10009 мс  çember denkleminin açılımı (x-h)^2 + (y-k)^2 = r^2  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 524. было:empty стало: 10 рез.    969 мс  Karadeniz Bölgesi fındık hasadı hava durumu raporu taki  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 525. было:empty стало: 10 рез.  10006 мс  biyoloji kromozom yapısı sentromer kinetokor kromatit t  мертвы: brave,google cse,mojeek,startpage
+ 526. было:empty стало:  0 рез.  10007 мс  sin x = sqrt(2)/2 genell çözümü formül Türkçe  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 527. было:empty стало:  0 рез.    276 мс  Câbir bin Hayyan damıtma kabı albük  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 528. было:hit   стало: 10 рез.   5110 мс  sin x = √2/2 denkleminin çözüm kümesi genel formül  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 529. было:hit   стало: 10 рез.  10029 мс  sünger üreme şekilleri eşeysiz mi eşeyli mi  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 530. было:empty стало: 10 рез.  10006 мс  Jane's free time activities table analysis once a month  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 531. было:empty стало: 20 рез.  10006 мс  Lily Lincoln Sally birthday texting exercise answer key  мертвы: duckduckgo,google cse,mojeek,startpage
+ 532. было:empty стало:  0 рез.    723 мс  doğa ve insan etkileşimi tanımı a doğanın insan üzerind  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 533. было:empty стало: 10 рез.   1600 мс  kimya alt disiplinleri örnek tepkimeler  мертвы: brave,google cse,mojeek,startpage
+ 534. было:empty стало:  0 рез.  10007 мс  ABCD dörtgeni 5 br sağa 4 br yukarı ötelenir koordinatl  мертвы: brave,duckduckgo,google cse,mojeek,startpage,wikipedia
+ 535. было:empty стало: 10 рез.  10006 мс  Bakteri üreme yolları eşeysiz mi eşeyli mi?  мертвы: brave,google cse,mojeek,startpage,wikipedia
+ 536. было:hit   стало: 10 рез.   1098 мс  50 derece güney enlemi güneş ışınları dik açı hangi tar  мертвы: brave,google cse,mojeek,startpage
+ 537. было:empty стало:  0 рез.   3061 мс  "Atatürk 10. Yıl Nutku az zamanda çok ve büyük işler ya  мертвы: brave,duckduckgo,google cse,mojeek,startpage
+ 538. было:empty стало: 10 рез.    730 мс  trigonometri çarpanlara ayırma 4cos^2x + 4cosx - 3  мертвы: brave,google cse,mojeek,startpage
+ 539. было:empty стало: 10 рез.   1401 мс  davetiyenin konusu yer zaman kim davet eden kim  мертвы: brave,google cse,mojeek,startpage
+ 540. было:empty стало: 10 рез.    995 мс  küpün bir köşesinden küp şeklinde kesilince yüzey alanı  мертвы: brave,google cse,mojeek,startpage
+
+пусто/ошибка: 277/540 (51%)
+  было empty:  432 запросов → сейчас находится 195 (45%)
+  было hit  :  108 запросов → сейчас находится 68 (63%)
+медиана задержки: 1487 мс
+результаты по движкам: duckduckgo 2400, brave 644
+отвалившиеся движки: google cse ×540, startpage ×540, brave ×506, mojeek ×466, duckduckgo ×300, wikipedia ×181
+
+гейт пройден: бэкенд отвечает, прогон запускать можно

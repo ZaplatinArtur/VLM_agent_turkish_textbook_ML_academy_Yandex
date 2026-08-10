@@ -1,0 +1,21 @@
+{
+  "source_rows": 42553,
+  "canonical_pages": 42553,
+  "duplicate_rows_removed": 0,
+  "conflicting_ids": 0,
+  "parse_errors": 0,
+  "low_information_pages": 14435,
+  "boilerplate_pages_text_suppressed": 14435,
+  "text_chunks": 97694,
+  "image_chunks": 4,
+  "total_chunks": 97698,
+  "exact_content_duplicate_groups_across_ids": 19,
+  "max_chars": 1600,
+  "overlap_chars": 200,
+  "outputs": {
+    "pages": "data/corpus/pages.jsonl",
+    "chunks": "data/corpus/chunks.jsonl",
+    "conflicts": "data/corpus/conflicts.jsonl",
+    "parse_errors": "data/corpus/parse_errors.jsonl"
+  }
+}

@@ -188,8 +188,13 @@ data/visual_retrive/*.log
 # Generated run outputs and local source artifacts.
 results/
 /outputs/
+
+# локальные данные и артефакты, не для репозитория
+# корпус ÖdevJet: 38 МБ gzip, забран с a100-2 перед потерей доступа (2026-07-31)
+data/corpus_backup/*.gz
 /images/
 *.zip
 *.xlsx
 msedge_*.png
 graphify-out/
+data/mlbench/*/images/

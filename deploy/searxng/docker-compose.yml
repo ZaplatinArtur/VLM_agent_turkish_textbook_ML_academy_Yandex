@@ -1,0 +1,37 @@
+# SearXNG для веб-поиска B1. Поднимается где угодно — GPU не нужен.
+#
+#   cd deploy/searxng
+#   SEARXNG_SECRET=$(openssl rand -hex 32) docker compose up -d
+#   python ../../scripts/probe_searxng.py --url http://localhost:8080
+#
+# Инстанс, на котором мерили b1, отдавал пустоту в 48–71% вызовов окнами по
+# 100% (reports/web_search_diag.txt). Здешние настройки бьют по трём причинам
+# такой пустоты: выключенный JSON, встроенный лимитер и узкий набор движков,
+# из которых Google и Bing первыми уходят в бан.
+
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: mla-searxng
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./settings.yml:/etc/searxng/settings.yml:ro
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080/
+      - SEARXNG_SECRET=${SEARXNG_SECRET:-change-me-please-32-bytes-minimum}
+      - UWSGI_WORKERS=4
+      - UWSGI_THREADS=4
+    healthcheck:
+      # проверяем именно JSON-выдачу: html-морда может жить при мёртвом API
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/search?q=test&format=json"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

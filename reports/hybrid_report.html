@@ -1,0 +1,214 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гибридная метрика: категории и предметы</title>
+<style>
+:root { color-scheme: light dark; }
+.rep {
+  --surface: #fcfcfb; --page: #f9f9f7;
+  --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --baseline: #c3c2b7; --ring: rgba(11,11,11,.10);
+  --accent: #2a78d6; --dim: #c3c2b7;
+  --good: #0ca30c; --bad: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .rep {
+    --surface: #1a1a19; --page: #0d0d0d;
+    --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --ring: rgba(255,255,255,.10);
+    --accent: #3987e5; --dim: #52514e;
+  }
+}
+:root[data-theme="dark"] .rep {
+  --surface: #1a1a19; --page: #0d0d0d;
+  --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --baseline: #383835; --ring: rgba(255,255,255,.10);
+  --accent: #3987e5; --dim: #52514e;
+}
+.rep { background: var(--page); color: var(--ink);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  margin: 0; padding: 24px 16px; }
+.rep .wrap { max-width: 960px; margin: 0 auto; }
+.rep h1 { font-size: 20px; margin: 0 0 4px; }
+.rep h2 { font-size: 15px; margin: 30px 0 10px; }
+.rep .sub { color: var(--ink2); margin: 0 0 20px; }
+.rep .card { background: var(--surface); border: 1px solid var(--ring);
+  border-radius: 10px; padding: 16px; }
+.rep .kpis { display: flex; flex-wrap: wrap; gap: 12px; }
+.rep .kpi { flex: 1 1 150px; }
+.rep .kpi .v { font-size: 30px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.rep .kpi .l { color: var(--ink2); font-size: 12px; margin-top: 2px; }
+.rep svg text { font: 12px system-ui, -apple-system, "Segoe UI", sans-serif; }
+.rep svg .num { font-variant-numeric: tabular-nums; }
+.rep table { border-collapse: collapse; width: 100%; font-size: 13px;
+  font-variant-numeric: tabular-nums; }
+.rep th { text-align: left; color: var(--ink2); font-weight: 600;
+  border-bottom: 1px solid var(--baseline); padding: 6px 10px 6px 0; }
+.rep td { border-bottom: 1px solid var(--grid); padding: 7px 10px 7px 0;
+  vertical-align: top; }
+.rep th.r, .rep td.r { text-align: right; }
+.rep .overflow { overflow-x: auto; }
+.rep .best { font-weight: 650; }
+.rep .up { color: var(--good); } .rep .down { color: var(--bad); }
+.rep .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.rep .foot { color: var(--muted); font-size: 12px; margin-top: 26px; }
+</style>
+<div class="rep"><div class="wrap">
+<h1>Гибридная метрика: категории вопросов и предметы</h1>
+<p class="sub">Одна цифра на задачу без смешения инструментов: <b>exact-match там, где эталон
+детерминированный</b> (202 авто-задачи), <b>LLM-судья только там, где exact бессилен</b>
+(72: free_form + транскрибированные эталоны-картинки) · 274 из 298 задач
+(24 без валидного эталона исключены) · Qwen3.5-9B, A100, 32k</p>
+
+<div class="kpis">
+<div class="kpi card"><div class="v">69.7%</div><div class="l">B0 (без тулов)</div></div>
+<div class="kpi card"><div class="v">70.1%</div><div class="l">B1 deep + роутинг</div></div>
+<div class="kpi card"><div class="v">58.8% / 58.4%</div><div class="l">то же без reasoning</div></div>
+<div class="kpi card"><div class="v">±1 задача</div><div class="l">разрыв B0↔B1dr: паритет</div></div>
+</div>
+
+<h2>1 · Итог и категории вопросов</h2>
+<div class="card overflow"><table>
+<tr><th>Категория</th><th class="r">n</th><th class="r">B0</th><th class="r">B1 deep+routed</th>
+<th class="r">B0 без R</th><th class="r">B1dr без R</th></tr>
+<tr><td>Закрытые (выбор варианта)</td><td class="r">236</td>
+<td class="r best">75.4%</td><td class="r">74.6%</td><td class="r">63.6%</td><td class="r">64.0%</td></tr>
+<tr><td>Открытые с точным ответом</td><td class="r">35</td>
+<td class="r">34.3%</td><td class="r best">42.9%</td><td class="r">31.4%</td><td class="r">22.9%</td></tr>
+<tr><td>Открытые произвольные</td><td class="r">3</td>
+<td class="r">33.3%</td><td class="r">33.3%</td><td class="r">0%</td><td class="r">33.3%</td></tr>
+<tr><td><b>Итого (274)</b></td><td class="r"></td>
+<td class="r"><b>69.7%</b></td><td class="r best"><b>70.1%</b></td>
+<td class="r"><b>58.8%</b></td><td class="r"><b>58.4%</b></td></tr>
+</table>
+<p class="note">На открытых задачах с точным ответом гибрид использует exact для 18 текстовых
+эталонов и судью для транскрибированных — отсюда отличие от чисто судейской таблицы сводного
+отчёта (там 40/40). Преимущество B1dr на открытых (+8.6 пп) — это 3 задачи из 35, в пределах шума.</p></div>
+
+<h2>2 · Разбивка по предметам</h2>
+<div class="card overflow"><table>
+<tr><th>Предмет</th><th class="r">n</th><th class="r">B0</th><th class="r">B1 deep+routed</th>
+<th class="r">B0 без R</th><th class="r">B1dr без R</th><th>поиск (B1dr − B0)</th></tr>
+<tr><td>Math</td><td class="r">139</td><td class="r best">75.5%</td><td class="r">73.4%</td>
+<td class="r">61.2%</td><td class="r">62.6%</td><td class="down">−2.2 пп (роутинг: поиск выключен)</td></tr>
+<tr><td>Chemistry</td><td class="r">32</td><td class="r">62.5%</td><td class="r best">84.4%</td>
+<td class="r">56.3%</td><td class="r">56.3%</td><td class="up">+21.9 пп</td></tr>
+<tr><td>Turkish language and literature</td><td class="r">21</td><td class="r best">61.9%</td><td class="r">57.1%</td>
+<td class="r">52.4%</td><td class="r">52.4%</td><td class="down">−4.8 пп</td></tr>
+<tr><td>Physics</td><td class="r">19</td><td class="r">73.7%</td><td class="r best">78.9%</td>
+<td class="r">78.9%</td><td class="r">68.4%</td><td class="up">+5.3 пп</td></tr>
+<tr><td>Biology</td><td class="r">19</td><td class="r best">57.9%</td><td class="r">52.6%</td>
+<td class="r">36.8%</td><td class="r">47.4%</td><td class="down">−5.3 пп</td></tr>
+<tr><td>Geography</td><td class="r">14</td><td class="r best">85.7%</td><td class="r">78.6%</td>
+<td class="r">71.4%</td><td class="r">57.1%</td><td class="down">−7.1 пп</td></tr>
+<tr><td>History</td><td class="r">10</td><td class="r">50.0%</td><td class="r best">60.0%</td>
+<td class="r">50.0%</td><td class="r">40.0%</td><td class="up">+10.0 пп</td></tr>
+<tr><td>English</td><td class="r">9</td><td class="r">55.6%</td><td class="r">55.6%</td>
+<td class="r">55.6%</td><td class="r">44.4%</td><td>0</td></tr>
+<tr><td>Science</td><td class="r">5</td><td class="r best">60.0%</td><td class="r">20.0%</td>
+<td class="r">20.0%</td><td class="r">60.0%</td><td class="down">−40 пп (n=5, шум)</td></tr>
+<tr><td>Sociology</td><td class="r">3</td><td class="r">66.7%</td><td class="r">66.7%</td>
+<td class="r">66.7%</td><td class="r">66.7%</td><td>0</td></tr>
+<tr><td>Philosophy</td><td class="r">2</td><td class="r">50.0%</td><td class="r">50.0%</td>
+<td class="r">100%*</td><td class="r">50.0%</td><td>0</td></tr>
+<tr><td>ATATÜRKÇÜLÜK</td><td class="r">1</td><td class="r">0%</td><td class="r">0%</td>
+<td class="r">0%</td><td class="r">0%</td><td>—</td></tr>
+</table>
+<p class="note">Жирным — лучший вариант в строке. При n&lt;15 (нижняя половина таблицы) одна
+задача — это 7–50 пп: колебания там объясняются сэмплированием (* — и «100%» у Philosophy
+без reasoning — две задачи). Устойчивые сигналы: связка «reasoning + роутинг» на Math
+и выигрыш поиска на Chemistry/History (знаниевые вопросы: константы, даты, факты).</p></div>
+
+<h2>3 · Из чего складывается гибрид</h2>
+<div class="card overflow"><table>
+<tr><th>Зона</th><th class="r">n</th><th class="r">B0</th><th class="r">B1 deep+routed</th>
+<th class="r">B0 без R</th><th class="r">B1dr без R</th></tr>
+<tr><td>exact-зона (детерминированные эталоны)</td><td class="r">202</td>
+<td class="r best">75.7%</td><td class="r">74.3%</td><td class="r">61.4%</td><td class="r">62.9%</td></tr>
+<tr><td>судейская зона (free_form + транскрибированные эталоны)</td><td class="r">72</td>
+<td class="r">52.8%</td><td class="r best">58.3%</td><td class="r">51.4%</td><td class="r">45.8%</td></tr>
+</table>
+<p class="note">Судья по 202 авто-задачам в гибрид не входит — там он используется только
+для калибровки (согласие с exact 97%). Судейская зона ниже exact-зоны на ~20 пп: там
+открытые задачи с развёрнутым решением и машинные (VL-транскрибированные) эталоны —
+часть разрыва создают транскрипции-огрызки, а не модель (см. errors_analysis.md).</p></div>
+
+<h2>4 · agent_rag: ретрив по корпусу учебников (BM25-стек команды ретрива)</h2>
+<div class="card overflow">
+<p style="margin:0 0 10px">Инструмент search_textbooks (агентский тул, ≤3 вызовов): BM25-индекс
+по 42 553 страницам решений ÖdevJet (216 книг, 1–8 классы), собранным и проиндексированным
+по конвейеру команды ретрива. Тот же ReAct-каркас, что у B1 — меняется только источник.</p>
+<table>
+<tr><th>Условие</th><th class="r">exact (202)</th><th class="r">гибрид (274)</th>
+<th class="r">Math</th><th class="r">искали</th><th class="r">forced</th></tr>
+<tr><td>B0 (без тулов)</td><td class="r best">75.7%</td><td class="r">69.7%</td>
+<td class="r best">80%</td><td class="r">—</td><td class="r">5%</td></tr>
+<tr><td>B1 deep + роутинг (веб)</td><td class="r">74.3%</td><td class="r best">70.1%</td>
+<td class="r">78%</td><td class="r">~28%</td><td class="r">18%</td></tr>
+<tr><td>agent_rag (учебники, без роутинга)</td><td class="r">61.4%</td><td class="r">57.7%</td>
+<td class="r">59%</td><td class="r">82%</td><td class="r">56%</td></tr>
+<tr><td>agent_rag + роутинг</td><td class="r">71.8%</td><td class="r">66.4%</td>
+<td class="r">75%</td><td class="r">39%</td><td class="r">26%</td></tr>
+</table>
+<p class="note">Закон «ретрив топит математику» воспроизвёлся в третий раз и на учебном корпусе:
+Math 80% (B0) → 59% (agent_rag), −21 пп; знаниевые растут (Physics +26, History +16, Chemistry +10
+в сыром варианте). Роутинг возвращает +10.4 пп — та же формула, что подняла B1 c 64.4 до 74.3.
+Отставание от веб-поиска объяснимо: корпус покрывает 1–8 классы (валидация тянется до лицея),
+ранжирование чисто лексическое (BM25 без реранкера, который есть в deep-стеке), и чанки по 6k
+символов чаще оставляют цикл без чистого JSON-финала (forced 26–56% против 18% у B1dr).</p></div>
+
+<h2>5 · Разбор ошибок в условиях с инструментами</h2>
+<div class="card overflow">
+<p style="margin:0 0 10px">Разбор логов tool_calls (2026-07-31) показал, что потери поисковых
+условий создаёт преимущественно <b>каркас тул-цикла</b>, а не содержимое найденного.
+Подробно — в <b>tool_errors_analysis.md</b>, воспроизведение — scripts/analyze_tool_errors.py.</p>
+<table>
+<tr><th>Что найдено</th><th class="r">Масштаб</th><th>Следствие</th></tr>
+<tr><td>SearXNG возвращал ноль URL по запросу</td>
+<td class="r">54% / 71% / 48% вызовов (сниппеты / deep / deep+роутинг)</td>
+<td>Прогон b1_deep измерял неработающий бэкенд, а не качество глубокого стека —
+сравнение «deep хуже сниппетов» недействительно</td></tr>
+<tr><td>Аварийный финал (forced) вместо чистого JSON</td>
+<td class="r">agent_rag 56% задач, B1 deep 42%, B0 5%</td>
+<td>Объясняет 83% потерь agent_rag относительно B0; точность на forced-задачах 50% против 67%</td></tr>
+<tr><td>Бюджет выжигается на первом же шаге ReAct</td>
+<td class="r">44 задачи agent_rag без единого вызова: 31.8% против 54.5% у B0, медиана 16 448 токенов</td>
+<td>Инструмент вредит задачам, ни разу не будучи вызванным</td></tr>
+<tr><td>Модель «вызывает» несуществующие инструменты (reasoning, JSON, final_answer)</td>
+<td class="r">7–9% вызовов agent_rag; в веб-условиях — 0</td>
+<td>Каждый такой вызов сжигает шаг цикла</td></tr>
+<tr><td>Стоп-сообщения (дубль, лимит) игнорируются</td>
+<td class="r">дубли 11–24%, вызовы после лимита 5–7%</td>
+<td>Текстовый сигнал не управляет моделью — нужно снимать привязку тула</td></tr>
+<tr><td>Навигационный шаблон ÖdevJet в чанках корпуса</td>
+<td class="r">16% выдач agent_rag с контентом</td>
+<td>Чистится фильтром в скрейпере + пересборкой BM25</td></tr>
+</table>
+<p class="note"><b>Калибровка шума.</b> В routed-условиях математика идёт буквально по коду B0
+(тул не привязан), поэтому расхождение на этих 139 задачах — чистый шум сэмплинга при temp 0.6:
+−2.2 пп у B1dr и −4.3 пп у agent_rag+роутинг, ответ меняется на 17–24 задачах из 139.
+Значит любые различия меньше ~5 пп в одиночном прогоне ничего не значат — включая «паритет»
+B0 и B1dr. Значимы только крупные эффекты: аблация reasoning (−11 пп), сырой agent_rag (−12 пп),
+пустая выдача веб-поиска.</p></div>
+
+<h2>6 · Что видно на гибридной метрике</h2>
+<div class="card"><table>
+<tr><td>1</td><td><b>B0 и B1dr неразличимы:</b> 69.7% vs 70.1% — разница в одну задачу из 274,
+то есть заведомо внутри шума сэмплинга (см. раздел 5: идентичный код даёт разброс до 4.3 пп).
+Устойчиво здесь другое — ранжирование условий не зависит от выбора метрики
+(exact / судья / гибрид).</td></tr>
+<tr><td>2</td><td><b>Аблация reasoning на гибриде: −10.9 / −11.7 пп</b> (69.7→58.8, 70.1→58.4).
+Reasoning остаётся крупнейшим фактором качества независимо от метрики.</td></tr>
+<tr><td>3</td><td><b>Поиск помогает там, где вопрос знаниевый</b> (Chemistry +21.9, History +10),
+<b>и не вредит математике только благодаря роутингу</b>. Это же правило «когда искать» —
+готовая формула для agent_rag.</td></tr>
+<tr><td>4</td><td><b>Слабое место обеих конфигураций — открытые задачи</b> (34–43% против 75%
+на закрытых): именно здесь нужны человеческие эталоны вместо транскрипций, чтобы отделить
+реальные пробелы модели от шума оценки.</td></tr>
+</table></div>
+
+<p class="foot">Гибрид: exact-match (eval.py) для 202 авто-задач + вердикты text-binary-v4
+для 72 судейских · прогоны reports/*_32k.jsonl · вердикты reports/judge_out_*.jsonl ·
+разбор ошибок: errors_report.html, errors_analysis.md · разбор тул-цикла:
+tool_errors_analysis.md (scripts/analyze_tool_errors.py) · сводная история экспериментов:
+summary_experiments.html</p>
+</div></div>

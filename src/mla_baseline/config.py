@@ -29,6 +29,10 @@ class Settings(BaseSettings):
     request_timeout_s: float = 300.0
     enable_thinking: bool = False
 
+    # Аблация «без reasoning»: thinking выключен во ВСЕХ вызовах
+    # (chat_template_kwargs.enable_thinking=false), бюджеты не меняются
+    disable_thinking: bool = False
+
     prompt_version: str = "v1"
 
     # Как выбивать строгий JSON из модели:
@@ -56,7 +60,40 @@ class Settings(BaseSettings):
     # B1: веб-поиск через self-hosted SearXNG.
     searxng_url: str = "http://localhost:8080"
     search_k: int = 5
-    agent_max_steps: int = 6
+    # Устойчивость поиска. По разбору логов (reports/web_search_diag.txt)
+    # пустая выдача шла окнами по 100% и не зависела от формулировки запроса:
+    # отваливался бэкенд. Отсюда ретраи, пауза между запросами (бурст от
+    # параллельных задач банят движки), кэш повторов и размыкатель цепи.
+    searx_language: str = "tr"       # пусто — без ограничения языка
+    searx_fallback_engines: str = ""  # напр. "duckduckgo,brave" — третья ступень
+    searx_timeout_s: float = 30.0
+    searx_retries: int = 2           # доп. попыток на ступень лестницы
+    searx_backoff_s: float = 1.5     # пауза перед повтором (× номер попытки)
+    # Минимум между запросами к инстансу. Измерено на живой пробе: при паузе
+    # 0.5 с движки банят инстанс за десяток запросов (пустых 64%), при 6 с
+    # они успевают отпустить (пустых 20%). Прогон это удлиняет, но поиск,
+    # который не ищет, стоит дороже.
+    searx_min_interval_s: float = 3.0
+    searx_cache_ttl_s: float = 900.0   # 26% запросов в прогонах повторялись
+    # Инстанс, отдавший выдачу за последние N секунд, считается живым: его
+    # пустота — «не нашлось», а не поломка. Без этого правила клиент принимал
+    # за поломку любую пустоту с отвалившимися движками, а на живом инстансе
+    # с широким пулом пара движков лежит почти всегда.
+    searx_alive_window_s: float = 300.0
+    searx_unavailable_streak: int = 3  # отказов подряд до размыкания цепи
+    searx_cooldown_s: float = 60.0     # пауза при разомкнутой цепи
+    agent_max_steps: int = 6         # максимум итераций ReAct-цикла
+    # Бюджет ОДНОГО шага цикла. Разбор прогонов (tool_errors_analysis.md):
+    # при общем бюджете на шаг модель сжигала все 16k на первом же шаге и
+    # не доходила до ответа (44 задачи agent_rag: 31.8% против 54.5% у B0).
+    # Промежуточным шагам — короткий бюджет, финальному ответу — полный.
+    # 4096 оказалось мало, когда у модели включено размышление: замер
+    # b1_search на V100 показал, что 49 из 89 «сорванных» задач упирались
+    # ровно в этот лимит посреди <think> и возвращали пустой content.
+    agent_step_max_tokens: int = 8192
+    search_max_calls: int = 3        # лимит веб-поисков на задачу (как у rag)
+    # b1_routed: предметы (через запятую), где поиск отключён — по данным
+    # прогонов поиск вредит вычислительным задачам и помогает знаниевым
     b1_no_search_subjects: str = "Math"
 
     # B1-deep: чтение страниц и внешний reranker.
@@ -64,7 +101,14 @@ class Settings(BaseSettings):
     deep_search_pages: int = 8
     deep_search_chunks: int = 6
 
-    # Опциональная трассировка в Langfuse.
+    # agent_rag: BM25-сервер команды ретрива (vlm_judge.retrieval_server)
+    textbook_search_url: str = "http://localhost:8770"
+    rag_top_k: int = 5              # фрагментов на запрос
+    rag_max_calls: int = 3          # лимит обращений к корпусу на задачу
+    rag_max_context_chars: int = 6000  # символов корпуса в контекст (контракт ретрива)
+
+    # Трассировка в Langfuse. Ключи читаем из стандартных имён (без MLA_-префикса),
+    # чтобы .env выглядел как в доке Langfuse; tracing.py прокинет их в SDK.
     langfuse_enabled: bool = False
     langfuse_public_key: str | None = Field(
         None,

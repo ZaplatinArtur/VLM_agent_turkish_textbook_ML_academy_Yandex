@@ -113,6 +113,11 @@ Arama kuralları:
 - Aynı sorguyu tekrar etme; sonuç yetersizse kendi bilginle çöz.
 """
 
+FINISH_NOW_V1 = """\
+Araç kullanımı bitti; yeni arama yapamazsın. Elindeki bilgilerle çözümü \
+tamamla ve YALNIZCA istenen JSON formatında nihai cevabını ver.\
+"""
+
 WRAPUP_V1 = """\
 Süren doldu. Aşağıda kendi çözüm taslağının son kısmı var:
 
@@ -134,12 +139,14 @@ def _prompt(system: str) -> dict[str, object]:
     return {
         "system": system,
         "rag_tool_policy": RAG_TOOL_POLICY_V1,
+        "agent_tool_note": RAG_TOOL_POLICY_V1,
         "image_evidence": IMAGE_EVIDENCE_PROMPT_V1,
         "retrieval_conflict": RETRIEVAL_CONFLICT_PROMPT_V1,
         "image_final_verification": IMAGE_FINAL_VERIFICATION_PROMPT_V1,
         "answer_type_hints": ANSWER_TYPE_HINTS_V1,
         "user_text": USER_TEXT_V1,
         "b1_tool_note": B1_TOOL_NOTE_V1,
+        "finish_now": FINISH_NOW_V1,
         "wrapup": WRAPUP_V1,
         "last_resort": LAST_RESORT_V1,
     }

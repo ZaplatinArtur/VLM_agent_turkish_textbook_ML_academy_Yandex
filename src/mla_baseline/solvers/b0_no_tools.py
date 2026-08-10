@@ -31,17 +31,25 @@ class B0NoTools(Solver):
             base_url=settings.vllm_base_url,
             api_key=settings.vllm_api_key,
             model=settings.model_name,
+            # именно max_tokens в payload: langchain шлёт max_completion_tokens,
+            # который Ollama молча игнорирует (вылезает за лимит до num_ctx);
+            extra_body=self._base_extra_body(settings.max_tokens),
             temperature=settings.temperature,
             top_p=settings.top_p,
             presence_penalty=settings.presence_penalty,
             timeout=settings.request_timeout_s,
             max_retries=2,
-            extra_body={
-                "max_tokens": settings.max_tokens,
-                "top_k": settings.top_k,
-                "chat_template_kwargs": {"enable_thinking": settings.enable_thinking},
-            },
         )
+
+    def _base_extra_body(self, max_tokens: int) -> dict:
+        extra: dict = {"max_tokens": max_tokens, "top_k": self.settings.top_k}
+        if self.settings.disable_thinking:
+            extra["chat_template_kwargs"] = {"enable_thinking": False}
+        else:
+            extra["chat_template_kwargs"] = {
+                "enable_thinking": self.settings.enable_thinking
+            }
+        return extra
 
     def build_messages(self, task: Task) -> list:
         content: list[dict] = [{"type": "text", "text": self.prompt["user_text"]}]
@@ -94,15 +102,11 @@ class B0NoTools(Solver):
 
         llm = self.llm
         if max_tokens is not None or not think:
-            extra_body = {
-                "max_tokens": max_tokens or self.settings.max_tokens,
-                "top_k": self.settings.top_k,
-                "chat_template_kwargs": {
-                    "enable_thinking": self.settings.enable_thinking if think else False
-                },
-            }
-            llm = self.llm.bind(extra_body=extra_body)
-
+            extra = self._base_extra_body(max_tokens or self.settings.max_tokens)
+            if not think:
+                # финалу думать не надо — иначе thinking сжигает весь бюджет
+                extra["chat_template_kwargs"] = {"enable_thinking": False}
+            llm = self.llm.bind(extra_body=extra)
         response = llm.invoke(
             messages,
             config={

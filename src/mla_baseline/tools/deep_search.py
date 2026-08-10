@@ -12,17 +12,14 @@ import urllib.parse
 import urllib.request
 
 from ..config import Settings
+from .searx import MSG_EMPTY, search_or_raise
 
 _HDRS = {"User-Agent": "Mozilla/5.0 (compatible; mla-baseline/0.1)"}
 
 
 def _searx_urls(settings: Settings, query: str, k: int) -> list[dict]:
-    url = (f"{settings.searxng_url.rstrip('/')}/search?"
-           + urllib.parse.urlencode({"q": query, "format": "json", "language": "tr"}))
-    req = urllib.request.Request(url, headers=_HDRS)
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        data = json.loads(resp.read())
-    return data.get("results", [])[:k]
+    """Ссылки для полнотекстового стека; сеть и ретраи — в searx.py."""
+    return search_or_raise(settings, query).results[:k]
 
 
 def _fetch_text(url: str, timeout: float = 10.0) -> str:
@@ -65,12 +62,11 @@ def _rerank(settings: Settings, query: str, docs: list[str]) -> list[float]:
 
 def deep_search(settings: Settings, query: str) -> str:
     """Возвращает топ-фрагменты полных страниц по запросу, с источниками."""
-    try:
-        hits = _searx_urls(settings, query, settings.deep_search_pages)
-    except Exception as exc:
-        return f"Arama hatası: {type(exc).__name__}. Aramasız devam et."
+    # ToolUnavailable намеренно не глушим: цикл снимет инструмент, а не
+    # заставит модель искать заново в мёртвый бэкенд
+    hits = _searx_urls(settings, query, settings.deep_search_pages)
     if not hits:
-        return "Sonuç bulunamadı. Sorguyu değiştir veya aramadan çöz."
+        return MSG_EMPTY
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
         texts = list(pool.map(lambda h: _fetch_text(h.get("url", "")), hits))

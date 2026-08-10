@@ -1,36 +1,29 @@
 """Веб-поиск для B1: self-hosted SearXNG (JSON API).
 
 Инструмент возвращает модели пронумерованный список результатов (заголовок,
-URL, сниппет). Ошибки поиска не роняют прогон — модель получает текст ошибки
-и может продолжить без поиска.
+URL, сниппет). Сеть, ретраи и различение «не нашлось» / «поиск не работает»
+живут в `searx.py`; здесь только форматирование выдачи для модели.
 """
 
-import json
-import urllib.parse
-import urllib.request
-
 from ..config import Settings
+from .searx import MSG_EMPTY, SearxResponse, search_or_raise
 
 
-def searxng_search(settings: Settings, query: str) -> str:
-    url = (f"{settings.searxng_url.rstrip('/')}/search?"
-           + urllib.parse.urlencode({"q": query, "format": "json", "language": "tr"}))
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "mla-baseline/0.1"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.loads(resp.read())
-    except Exception as exc:
-        return f"Arama hatası: {type(exc).__name__}. Aramasız devam et."
-
-    results = data.get("results", [])[: settings.search_k]
+def format_results(response: SearxResponse, k: int) -> str:
+    results = response.results[:k]
     if not results:
-        return "Sonuç bulunamadı. Sorguyu değiştir veya aramasız devam et."
+        return MSG_EMPTY
     lines = []
     for i, r in enumerate(results, 1):
         snippet = (r.get("content") or "").strip()
         lines.append(f"{i}. {r.get('title', '').strip()}\n   {r.get('url', '')}"
                      + (f"\n   {snippet}" if snippet else ""))
     return "\n".join(lines)
+
+
+def searxng_search(settings: Settings, query: str) -> str:
+    """Сниппеты по запросу. ToolUnavailable — если бэкенд не отвечает."""
+    return format_results(search_or_raise(settings, query), settings.search_k)
 
 
 # JSON-схема инструмента для bind_tools (OpenAI-формат)
