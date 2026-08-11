@@ -91,7 +91,9 @@ def save_image(img, bench: str, lang: str, task_id: str) -> dict:
     if img.mode not in ("RGB", "L"):
         img = img.convert("RGB")
     img.save(img_dir / name, format="PNG")
-    rel = f"data/mlbench/{bench}/images/{name}"
+    # путь ОТНОСИТЕЛЬНО data_root (settings.data_root="data"), как в валидации:
+    # солвер сам добавит префикс data/, писать его здесь нельзя
+    rel = f"mlbench/{bench}/images/{name}"
     return {"image_id": f"{task_id}_img1", "format": "file_path",
             "data": rel, "mime_type": "image/png", "caption": None}
 
