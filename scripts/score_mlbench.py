@@ -75,6 +75,35 @@ def main() -> int:
                 f"{(a1 - a0) * 100:+.1f} | {searched}/{len(common)} | "
                 f"{empty}/{len(calls) or 1} |")
 
+    # MGSM: открытые числовые ответы (файлы mgsm_<lang>_<b0|b1>.jsonl)
+    mgsm_tasks: dict[str, dict] = {}
+    for p in (ROOT / "data/mlbench/mgsm").glob("*.jsonl"):
+        mgsm_tasks.update(load(p))
+    mgsm_runs: dict[tuple, dict] = {}
+    for p in sorted(res_dir.glob("mgsm_*_b*.jsonl")):
+        _, lang, cond = p.stem.split("_")
+        mgsm_runs[(lang, cond)] = load(p)
+    if mgsm_runs:
+        out("\n## MGSM (открытые числовые ответы, exact match)\n")
+        out("| Язык | n | B0 | b1_search | Δ |")
+        out("|---|---|---|---|---|")
+        for lang in ("en", "de", "fr", "es", "ru", "zh", "ja", "th", "sw",
+                     "bn", "te"):
+            b0 = mgsm_runs.get((lang, "b0"), {})
+            b1 = mgsm_runs.get((lang, "b1"), {})
+            common = [t for t in b0 if t in b1
+                      and not b0[t].get("error") and not b1[t].get("error")]
+            if len(common) < 200:
+                continue
+            a0 = sum(match(b0[t].get("final_answer") or "",
+                           mgsm_tasks[t]["reference_answer"], "numeric")
+                     for t in common) / len(common)
+            a1 = sum(match(b1[t].get("final_answer") or "",
+                           mgsm_tasks[t]["reference_answer"], "numeric")
+                     for t in common) / len(common)
+            out(f"| {lang} | {len(common)} | {a0:.1%} | {a1:.1%} | "
+                f"{(a1 - a0) * 100:+.1f} |")
+
     # предметы: только TUMLU (у EXAMS-V предметы уже сгруппированы в данных)
     out("\n## TUMLU: предметы × языки (B0)\n")
     subj_acc: dict[str, dict[str, tuple]] = defaultdict(dict)
