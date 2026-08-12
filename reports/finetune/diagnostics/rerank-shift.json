@@ -1,0 +1,131 @@
+{
+  "запросов": 57,
+  "ухудшилось": 14,
+  "примеры": [
+    {
+      "query": "dünyanın etrafı dönme ve kendi ekseni etrafında dönme",
+      "было": "5-sinif-fen-bilimleri-ders-kitabi-cevaplari-meb-yayinlari-1-kitap:0047",
+      "стало": "5-sinif-matematik-ders-kitabi-cevaplari-ozgun-yayinlari:0216",
+      "та же книга": false,
+      "пересечение было": 0.667,
+      "пересечение стало": 0.5
+    },
+    {
+      "query": "okuma anlama soruları nasıl çözülür",
+      "было": "3-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari:0037",
+      "стало": "2-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-2-kitap:0031",
+      "та же книга": false,
+      "пересечение было": 0.4,
+      "пересечение стало": 0.0
+    },
+    {
+      "query": "metin ana düşüncesi slogan bulma",
+      "было": "3-sinif-turkce-ders-kitabi-cevaplari-meb-yayinlari:0152",
+      "стало": "5-sinif-turkce-ders-kitabi-cevaplari-koza-yayinlari:0241",
+      "та же книга": false,
+      "пересечение было": 0.2,
+      "пересечение стало": 0.2
+    },
+    {
+      "query": "bir küpün hacmi ve yüzey alanı nasıl hesaplanır",
+      "было": "5-sinif-matematik-ders-kitabi-cevaplari-ozgun-yayinlari:0242",
+      "стало": "6-sinif-matematik-ders-kitabi-cevaplari-ogun-yayinlar:0327",
+      "та же книга": false,
+      "пересечение было": 0.571,
+      "пересечение стало": 0.286
+    },
+    {
+      "query": "rasyonel sayılar çarpma özdeşlikleri",
+      "было": "7-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari:0070",
+      "стало": "7-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari:0055",
+      "та же книга": true,
+      "пересечение было": 0.75,
+      "пересечение стало": 0.25
+    },
+    {
+      "query": "rasyonel sayı bölme işlemi nasıl yapılır",
+      "было": "7-sinif-matematik-ders-kitabi-cevaplari-edat-yayinlari:0080",
+      "стало": "7-sinif-matematik-ders-kitabi-cevaplari-edat-yayinlari:0054",
+      "та же книга": true,
+      "пересечение было": 0.667,
+      "пересечение стало": 0.167
+    },
+    {
+      "query": "tuşlu telefonla yazılan harflerin oluşturduğu sayıdaki rakamların toplamı",
+      "было": "8-sinif-matematik-ders-kitabi-cevaplari-berkay-yayinlari:0104",
+      "стало": "1-sinif-matematik-ders-kitabi-cevaplari-acilim-yayinlari:0082",
+      "та же книга": false,
+      "пересечение было": 0.125,
+      "пересечение стало": 0.0
+    },
+    {
+      "query": "çok basamaklı sayıların okunuşu nasıl yapılır",
+      "было": "5-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-1-kitap:0099",
+      "стало": "5-sinif-matematik-ders-kitabi-cevaplari-tuna-yayinlari:0015",
+      "та же книга": false,
+      "пересечение было": 0.833,
+      "пересечение стало": 0.167
+    },
+    {
+      "query": "toplama işleminde kolay toplanan sayıları gruplama yöntemi",
+      "было": "3-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari:0067",
+      "стало": "2-sinif-matematik-ders-kitabi-cevaplari-tekno-arti-yayinlari:0096",
+      "та же книга": false,
+      "пересечение было": 0.429,
+      "пересечение стало": 0.429
+    },
+    {
+      "query": "indirim oranı karşılaştırma en uygun fiyat",
+      "было": "7-sinif-matematik-ders-kitabi-cevaplari-edat-yayinlari:0179",
+      "стало": "7-sinif-matematik-ders-kitabi-cevaplari-berkay-yayinlari:0140",
+      "та же книга": false,
+      "пересечение было": 0.4,
+      "пересечение стало": 0.4
+    },
+    {
+      "query": "kareli zeminde doğru parçasının uzunluğu nasıl bulunur",
+      "было": "3-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari:0209",
+      "стало": "4-sinif-matematik-ders-kitabi-cevaplari-pasifik-yayinlari:0232",
+      "та же книга": false,
+      "пересечение было": 0.286,
+      "пересечение стало": 0.143
+    },
+    {
+      "query": "kesin olay ve olasılık örnekleri",
+      "было": "8-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari:0123",
+      "стало": "8-sinif-matematik-ders-kitabi-cevaplari-sonuc-yayinlari:0126",
+      "та же книга": false,
+      "пересечение было": 0.75,
+      "пересечение стало": 0.25
+    },
+    {
+      "query": "negatif sayıların toplama işlemi nasıl yapılır",
+      "было": "7-sinif-matematik-ders-kitabi-cevaplari-edat-yayinlari:0012",
+      "стало": "5-sinif-matematik-ders-kitabi-cevaplari-ozgun-yayinlari:0128",
+      "та же книга": false,
+      "пересечение было": 0.833,
+      "пересечение стало": 0.5
+    },
+    {
+      "query": "tam sayıların karşılaştırılması en büyük en küçük",
+      "было": "6-sinif-matematik-ders-kitabi-cevaplari-doga-yayinlari:0076",
+      "стало": "5-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari-1-kitap:0107",
+      "та же книга": false,
+      "пересечение было": 0.8,
+      "пересечение стало": 0.4
+    }
+  ],
+  "базовая": {
+    "hit@1": 71.9,
+    "пересечение с запросом": 0.464
+  },
+  "дообученная": {
+    "hit@1": 61.4,
+    "пересечение с запросом": 0.335
+  },
+  "на сломанных": {
+    "пересечение было": 0.551,
+    "пересечение стало": 0.264,
+    "та же книга": 0.143
+  }
+}

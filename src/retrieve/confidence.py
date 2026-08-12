@@ -1,14 +1,12 @@
-"""Детектор бесполезного поиска.
+"""Детектор бесполезного поиска: top-1 score ниже порога — выдаче не доверяем.
 
-Плотный ретрив ВСЕГДА что-то возвращает — даже на вопрос не по теме учебника
-он выдаст k наименее далёких чанков с низким score. Если отдать их агенту как
-есть, тот начнёт сочинять ответ по нерелевантному тексту. Детектор смотрит на
-score выдачи и решает, стоит ли ей доверять.
+Порог свой у каждого профиля, шкалы у энкодеров разные (PROFILE_MIN_SCORE).
+Новый профиль калибруется заново:
 
-Два сигнала (score — косинус в [−1, 1], т.к. векторы нормализованы):
-  * абсолют: top-1 score ниже порога → ничего похожего в корпусе нет;
-  * маржа:   top-1 почти не оторвался от top-2 → «размазанное» совпадение,
-             ретрив не уверен, какой чанк релевантнее (по умолчанию выключено).
+    python -m retrieve.compare --systems <профиль> --reference none --calibrate
+
+Профили с хвостом-кросс-энкодером берут общий CROSS_ENCODER_MIN_SCORE.
+Альтернатива порогу — retrieve.gate, там решает LLM.
 """
 
 from dataclasses import dataclass
@@ -16,14 +14,27 @@ from enum import Enum
 
 from schemas.retrieve import RetrievedChunk
 
-DEFAULT_MIN_SCORE = 0.5
-DEFAULT_MIN_MARGIN = 0.0
+DEFAULT_MIN_SCORE = 0.57
+CROSS_ENCODER_MIN_SCORE = 0.5
+
+PROFILE_MIN_SCORE = {
+    "minilm": DEFAULT_MIN_SCORE,
+    "e5-small": 0.8643,
+    "rrf_e5-small_bm25_cross-encoder": CROSS_ENCODER_MIN_SCORE,
+    "rrf_e5-small_bm25_qwen3-reranker": CROSS_ENCODER_MIN_SCORE,
+    "rrf_e5-base_m3_bm25_cross-encoder": CROSS_ENCODER_MIN_SCORE,
+}
+
+
+def min_score_for(profile: str | None) -> float:
+    return PROFILE_MIN_SCORE.get(profile or "", DEFAULT_MIN_SCORE)
 
 
 class Relevance(str, Enum):
     CONFIDENT = "confident"
     WEAK = "weak"
     EMPTY = "empty"
+    ERROR = "error"  # оценить не удалось (гейт недоступен) — выдачу скрываем
 
 
 @dataclass
@@ -39,9 +50,12 @@ class RelevanceVerdict:
 
 def assess_relevance(
         results: list[RetrievedChunk],
-        min_score: float = DEFAULT_MIN_SCORE,
-        min_margin: float = DEFAULT_MIN_MARGIN,
+        min_score: float | None = None,
+        profile: str | None = None,
 ) -> RelevanceVerdict:
+    """Оценивает выдачу. min_score важнее profile; без обоих — DEFAULT_MIN_SCORE."""
+    if min_score is None:
+        min_score = min_score_for(profile)
     if not results:
         return RelevanceVerdict(Relevance.EMPTY, None, "выдача пуста")
     top_score = results[0].score
@@ -51,12 +65,4 @@ def assess_relevance(
             top_score,
             f"top-1 score {top_score:.3f} < порога {min_score:.2f}",
         )
-    if min_margin > 0 and len(results) >= 2:
-        margin = top_score - results[1].score
-        if margin < min_margin:
-            return RelevanceVerdict(
-                Relevance.WEAK,
-                top_score,
-                f"маржа top1−top2 {margin:.3f} < {min_margin:.2f}",
-            )
     return RelevanceVerdict(Relevance.CONFIDENT, top_score, "уверенное попадание")

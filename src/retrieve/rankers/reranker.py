@@ -1,14 +1,18 @@
 from __future__ import annotations
 
 import math
+import os
 import threading
 from typing import Any, Protocol
 
 from schemas.retrieve import RetrievedChunk
 
-from .base import Ranker
+from .base import Ranker, rescored
 
 DEFAULT_RERANKER_MODEL = "BAAI/bge-reranker-v2-m3"
+# LoRA-адаптер дообученного реранкера: переменная, а не отдельный профиль —
+# состав пайплайна тот же, меняются веса одной ступени.
+ADAPTER_ENV = "RETRIEVE_RERANKER_ADAPTER"
 
 
 class CrossEncoderLike(Protocol):
@@ -22,6 +26,16 @@ def _sigmoid(value: float) -> float:
     return exp / (1.0 + exp)
 
 
+def _needs_sigmoid(model: CrossEncoderLike) -> bool:
+    """True, если predict отдаёт логиты, а не готовую вероятность.
+
+    CrossEncoder применяет default_activation_function сам; вторая сигмоида
+    поверх сплющит шкалу в [0.5, 0.73] и сломает порог по score.
+    """
+    activation = getattr(model, "default_activation_function", None)
+    return "sigmoid" not in type(activation).__name__.lower()
+
+
 class CrossEncoderRanker(Ranker):
     def __init__(
             self,
@@ -29,10 +43,16 @@ class CrossEncoderRanker(Ranker):
             top_n: int = 100,
             batch_size: int = 32,
             cross_encoder: CrossEncoderLike | None = None,
+            activation: str = "auto",
+            adapter_path: str | None = None,
     ) -> None:
+        if activation not in ("auto", "sigmoid", "none"):
+            raise ValueError(f"unknown activation {activation!r}: auto | sigmoid | none")
         self.model_name = model_name
         self.top_n = top_n
         self.batch_size = batch_size
+        self.activation = activation
+        self.adapter_path = adapter_path or os.environ.get(ADAPTER_ENV) or None
         self._model = cross_encoder
         self._load_lock = threading.Lock()
 
@@ -41,9 +61,21 @@ class CrossEncoderRanker(Ranker):
         if self._model is None:
             with self._load_lock:
                 if self._model is None:
+                    import torch
                     from sentence_transformers import CrossEncoder
 
-                    self._model = CrossEncoder(self.model_name)
+                    # На карте fp16 (вчетверо быстрее, метрики те же), на CPU fp32.
+                    dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+                    model = CrossEncoder(self.model_name, model_kwargs={"torch_dtype": dtype})
+                    if self.adapter_path:
+                        from peft import PeftModel
+
+                        # merge_and_unload вливает B·A обратно в веса, чтобы на
+                        # инференсе адаптер ничего не стоил.
+                        merged = PeftModel.from_pretrained(model.model, self.adapter_path)
+                        model.model = merged.merge_and_unload()
+                        model.model.eval()
+                    self._model = model
         return self._model
 
     def rank(
@@ -57,10 +89,9 @@ class CrossEncoderRanker(Ranker):
         head = chunks[: self.top_n]
         tail = chunks[self.top_n:]
         pairs = [[query, chunk.text] for chunk in head]
-        raw_scores = self.model.predict(pairs, batch_size=self.batch_size)
-        scored = [
-            chunk.model_copy(update={"score": _sigmoid(float(score))})
-            for chunk, score in zip(head, raw_scores)
-        ]
-        scored.sort(key=lambda chunk: -chunk.score)
-        return scored + tail
+        model = self.model
+        raw_scores = model.predict(pairs, batch_size=self.batch_size)
+        squash = _sigmoid if self.activation == "sigmoid" or (
+            self.activation == "auto" and _needs_sigmoid(model)
+        ) else float
+        return rescored(head, tail, [squash(float(score)) for score in raw_scores])

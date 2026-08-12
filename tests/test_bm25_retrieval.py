@@ -1,4 +1,9 @@
-from retrieve.rankers.bm25 import BM25Ranker, tokenize
+import pytest
+
+pytest.importorskip("bm25s")
+pytest.importorskip("Stemmer")
+
+from retrieve.rankers.bm25 import BM25Ranker, fold_case
 from schemas.retrieve import RetrievedChunk
 
 
@@ -34,8 +39,26 @@ def build() -> BM25Ranker:
     return BM25Ranker(index=StubIndex(corpus()))
 
 
-def test_tokenize_drops_single_char_noise_keeps_digits():
-    assert tokenize("A üçgen 7 !!") == ["üçgen", "7"]
+def test_turkish_case_folding_follows_the_language():
+    # casefold() дал бы "işik" и "ki" + комбинирующая точка + "tap":
+    # в турецком I → ı, İ → i, иначе заглавные формы не совпадут со строчными.
+    assert fold_case("IŞIK") == "ışık"
+    assert fold_case("KİTAP") == "kitap"
+    assert fold_case("İLK") == "ilk"
+    # для английского правило другое: "I" остаётся "i"
+    assert fold_case("I AM", language="english") == "i am"
+
+
+def test_uppercase_query_finds_lowercase_text():
+    results = build().rank("ÜÇGEN ALAN")
+    assert results and results[0].chunk_id == "d1"
+
+
+def test_inflected_forms_match_through_the_stemmer():
+    # kitaplarımızdan -> kitap: без стемминга это разные термы и совпадения нет.
+    books = [make_chunk("b1", "kitaplarımızdan öğrendiklerimiz", "turkce")]
+    results = BM25Ranker(index=StubIndex(books)).rank("kitap")
+    assert [c.chunk_id for c in results] == ["b1"]
 
 
 def test_most_lexically_relevant_chunk_ranks_first():

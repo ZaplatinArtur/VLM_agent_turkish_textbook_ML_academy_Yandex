@@ -5,8 +5,8 @@ set -euo pipefail
 # must already be listening; this script intentionally does not manage the GPU
 # server process.
 python_bin="${PYTHON_BIN:-python}"
-tasks="${TASKS:-data/validation.jsonl}"
-chunks_dir="data/chunks/jsonl"
+tasks="${TASKS:-data/eval/validation.jsonl}"
+chunks_dir="data/corpus/chunks/jsonl"
 output_dir="${OUTPUT_DIR:-results/rag_eval}"
 report_dir="${REPORT_DIR:-reports/rag_eval}"
 base_url="${BASE_URL:-http://127.0.0.1:8000/v1}"

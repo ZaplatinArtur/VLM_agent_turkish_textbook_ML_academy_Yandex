@@ -6,7 +6,7 @@
 
 Запуск:
   python -m mla_baseline.report --results results/b0_full_v2_cot.jsonl \\
-      --tasks data/validation.jsonl [--meta data/validation.meta.jsonl] [--out ...]
+      --tasks data/eval/validation.jsonl [--meta data/eval/validation.meta.jsonl] [--out ...]
 или флагом --report у runner-а.
 """
 

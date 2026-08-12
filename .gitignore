@@ -176,6 +176,18 @@ __marimo__/
 data/*
 !data/tasks.sample.jsonl
 
+# Reports: keep the tables and their sources, drop archives and superseded runs.
+# Отчёты с по-запросными метриками остаются в гите намеренно: по ним строится
+# любой новый срез без повторного прогона на карте.
+reports/*.tgz
+reports/**/*_raw.json
+# Безэталонные сравнения: выводы живут в парных .md и в runbook, сырьё не нужно.
+reports/*_vs_*.json
+# Ранние прогоны на старом эталоне (81 запрос против нынешних 187). Их числа с
+# текущими таблицами не сравнимы, а выводы перенесены в закрытые вопросы runbook.
+reports/v100/
+reports/v100_qrels/
+
 # Generated run outputs and local source artifacts.
 results/
 /outputs/

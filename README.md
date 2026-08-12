@@ -153,7 +153,7 @@ cp .env.example .env             # и поправить под машину
 Собирает сообщения для модели, не вызывая её, — проверка контрактов и картинок:
 
 ```bash
-python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --dry-run
+python -m mla_baseline.runner --tasks data/eval/tasks.sample.jsonl --dry-run
 ```
 
 ## Локальная проверка на слабом железе (Ollama)
@@ -165,7 +165,7 @@ python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --dry-run
 ollama pull qwen3.5:9b-q4_K_M
 # .env: MLA_VLLM_BASE_URL=http://localhost:11434/v1
 #       MLA_MODEL_NAME=qwen3.5:9b-q4_K_M
-python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --condition b0_no_tools
+python -m mla_baseline.runner --tasks data/eval/tasks.sample.jsonl --condition b0_no_tools
 ```
 
 Квант Q4 — только для проверки пайплайна; метрики для сравнения условий
@@ -201,7 +201,7 @@ vllm serve Qwen/Qwen3.5-9B \
 
 ```bash
 # smoke: 2 задачи из примера
-python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --condition b0_no_tools --limit 2
+python -m mla_baseline.runner --tasks data/eval/tasks.sample.jsonl --condition b0_no_tools --limit 2
 
 # полный прогон
 python -m mla_baseline.runner --tasks data/tasks.jsonl --condition b0_no_tools
@@ -218,23 +218,23 @@ python -m mla_baseline.runner --tasks data/tasks.jsonl --condition b0_no_tools
 ответами. Пайплайн: таблица → Task JSONL → прогон → метрики.
 
 ```bash
-# 1. Таблица -> data/validation.jsonl + validation.meta.jsonl,
+# 1. Таблица -> data/eval/validation.jsonl + validation.meta.jsonl,
 #    картинки -> data/images/ (resume: уже скачанные пропускаются)
 python -m mla_baseline.sheet --sheet-id 15VJ_gVErnAy2fJLT-JBUO5WvSsBNthhRQyVHti-RVhc
 # либо из локального архива картинок (имена файлов = basename URL из таблицы):
-python -m mla_baseline.sheet --csv data/validation_sheet.csv --archive-dir <папка с картинками>
+python -m mla_baseline.sheet --csv data/eval/validation_sheet.csv --archive-dir <папка с картинками>
 
 # 2. Прогон (CoT включается через MLA_PROMPT_VERSION=v2_cot в .env)
-python -m mla_baseline.runner --tasks data/validation.jsonl --condition b0_no_tools
+python -m mla_baseline.runner --tasks data/eval/validation.jsonl --condition b0_no_tools
 
 # 3. Быстрые метрики (exact match до LLM-as-Judge)
 python -m mla_baseline.eval --results results/b0_no_tools_v2_cot.jsonl \
-    --tasks data/validation.jsonl --meta data/validation.meta.jsonl --by question_type
+    --tasks data/eval/validation.jsonl --meta data/eval/validation.meta.jsonl --by question_type
 
 # 4. HTML-отчёт с графиками (KPI, точность и состав по предметам, длина
 #    ответов, таблица промахов). Или сразу флагом: runner ... --report
 python -m mla_baseline.report --results results/b0_no_tools_v2_cot.jsonl \
-    --tasks data/validation.jsonl --meta data/validation.meta.jsonl
+    --tasks data/eval/validation.jsonl --meta data/eval/validation.meta.jsonl
 ```
 
 Отчёт — самодостаточный HTML (без внешних зависимостей), открывается локально,
@@ -246,9 +246,29 @@ tasks лежит одноимённый `*.meta.jsonl` — подхватитс�
 в «нужен судья». Срезы: `--by subject|grade|type|class|question_format|question_type`.
 Промахи для разбора: `--dump-misses misses.jsonl`.
 
+## Раскладка data/
+
+`data/` разделён по происхождению: `corpus/` — источник (books, chunks, tessdata),
+`eval/` — то, чем меряем (validation, qrels, наборы запросов), `cache/` —
+производное и пересобираемое. Вне этого деления остался `data/images/` с
+картинками задач: на него завязаны `mla_baseline.sheet` и
+`vlm_judge.validation_archive`.
+
+Сам `data/` в `.gitignore`, поэтому вместе с кодом раскладка не приезжает. Если
+у вас каталог из прежней плоской версии (`data/books`, `data/chunks/jsonl`,
+`data/validation.jsonl`), выполните переезд один раз:
+
+```bash
+python scripts/migrate_data_layout.py           # показать план
+python scripts/migrate_data_layout.py --apply
+```
+
+Скрипт заодно правит ссылки на сканы страниц внутри чанков (`books/...` →
+`corpus/books/...`). Повторный запуск безопасен.
+
 ## Парная оценка B0 против textbook RAG
 
-Корпус должен лежать в `data/chunks/jsonl/*.jsonl`. Он не коммитится в Git.
+Корпус должен лежать в `data/corpus/chunks/jsonl/*.jsonl`. Он не коммитится в Git.
 Сначала проверьте его состав и один раз постройте постоянный FAISS-индекс:
 
 ```bash
@@ -270,7 +290,7 @@ bash scripts/run_rag_evaluation.sh
 Перед дорогим прогоном скрипт проверяет, что локальные изображения существуют,
 эталоны заполнены, а вместо текста вопроса нет заглушки `(soru görselde)`.
 Последнее обязательно для text-only judge. Если используется старый
-`data/validation.jsonl` только с картинками, сначала нужен подготовленный
+`data/eval/validation.jsonl` только с картинками, сначала нужен подготовленный
 набор с транскрипциями условий (с теми же `task_id`) либо обновлённый
 validation-архив от команды judge.
 
@@ -288,7 +308,7 @@ python -m mla_baseline.prepare_text_only \
   --output data/tasks_text_only.jsonl
 ```
 
-Скрипт на одном и том же `data/validation.jsonl`:
+Скрипт на одном и том же `data/eval/validation.jsonl`:
 
 1. запускает `b0_no_tools` и `agent_rag` с одинаковой моделью и промптом;
 2. готовит оба результата для строгого binary LLM judge;
@@ -303,7 +323,7 @@ python -m mla_baseline.prepare_text_only \
 Пути и endpoint можно переопределить без изменения скрипта:
 
 ```bash
-TASKS=data/validation.jsonl \
+TASKS=data/eval/validation.jsonl \
 BASE_URL=http://127.0.0.1:8000/v1 \
 MODEL=Qwen/Qwen3.5-9B \
 MLA_CONCURRENCY=4 \

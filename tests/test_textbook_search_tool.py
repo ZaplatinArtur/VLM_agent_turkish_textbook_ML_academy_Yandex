@@ -97,11 +97,13 @@ def test_local_search_calls_checked_retrieval_without_http() -> None:
     assert calls == [{"query": "dikdörtgen alanı", "k": 5, "subject": "math"}]
     assert result["returned"] == 1
     assert result["retrieved"] == 1
+    # Фильтр по классу не отменяет вердикт ретрива: пересчёт здесь применил бы
+    # порог по умолчанию к чужой шкале, а у семантического гейта порога нет вовсе.
     assert result["relevance"] == {
         "label": "confident",
         "is_useful": True,
         "top_score": 0.91,
-        "reason": "уверенное попадание",
+        "reason": "test confident hit",
     }
     assert result["hits"] == [
         {
@@ -152,6 +154,33 @@ def test_local_search_hides_weak_chunks_from_model() -> None:
     assert result["relevance"]["label"] == "weak"
     assert formatted["relevance"]["label"] == "weak"
     assert "This text must not reach the model" not in json.dumps(formatted)
+
+
+def test_grade_filter_that_empties_the_list_downgrades_the_verdict() -> None:
+    def retriever(
+        query: str,
+        *,
+        k: int,
+        subject: str | None,
+    ) -> tuple[list[RetrievedChunk], RelevanceVerdict]:
+        return [
+            RetrievedChunk(
+                chunk_id="book-1:7",
+                text="Sadece 6. sınıf içeriği.",
+                score=0.95,
+                metadata={"subject": "math", "grade": 6},
+            )
+        ], RelevanceVerdict(
+            relevance=Relevance.CONFIDENT,
+            top_score=0.95,
+            reason="test confident hit",
+        )
+
+    result = LocalTextbookSearchClient(retriever=retriever).search("alan", grade=9)
+
+    assert result["retrieved"] == 0
+    assert result["hits"] == []
+    assert result["relevance"]["label"] == "empty"
 
 
 def test_local_search_reports_retriever_failure() -> None:

@@ -1,6 +1,5 @@
-"""Validate the textbook corpus and build/load its persistent FAISS index.
+"""Проверка корпуса и сборка (или загрузка) постоянного индекса FAISS.
 
-Examples:
     python -m retrieve.build_index --dry-run
     python -m retrieve.build_index --sample-query "dikdörtgen alan formülü"
 """
@@ -11,6 +10,7 @@ import argparse
 import json
 import time
 from collections import Counter
+from collections.abc import Sequence
 from typing import Any
 
 from paths import CHUNKS_JSONL_DIR, INDEX_DIR
@@ -18,7 +18,7 @@ from paths import CHUNKS_JSONL_DIR, INDEX_DIR
 from .parsing import get_retrieved_chunks
 
 
-def corpus_inventory(chunks: list[Any]) -> dict[str, Any]:
+def corpus_inventory(chunks: Sequence[Any]) -> dict[str, Any]:
     chunk_ids = [str(chunk.chunk_id) for chunk in chunks]
     duplicate_ids = len(chunk_ids) - len(set(chunk_ids))
     empty_texts = sum(not str(chunk.text).strip() for chunk in chunks)
@@ -71,7 +71,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.dry_run:
         return 0
 
-    # Delay optional ML imports until after the dependency-free corpus check.
+    # Импорты ML откладываются: проверка корпуса выше не требует зависимостей.
     from .persistence import load_manifest
     from .service import build_pipeline
 

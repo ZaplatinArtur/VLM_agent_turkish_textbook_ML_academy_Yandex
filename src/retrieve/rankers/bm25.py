@@ -1,28 +1,30 @@
+"""Лексический BM25 поверх bm25s (разреженные матрицы) со стеммингом Snowball.
+
+Регистр приводится fold_case() по правилам языка, а не casefold().
+"""
+
 from __future__ import annotations
 
-import math
-import re
 import threading
-from collections import Counter
+
+import numpy as np
 
 from schemas.retrieve import RetrievedChunk
 
 from ..index import Index
 from .base import Ranker
 
-_TOKEN_PATTERN = re.compile(r"[^\W_]+", re.UNICODE)
-
+DEFAULT_LANGUAGE = "turkish"
 DEFAULT_K1 = 1.5
 DEFAULT_B = 0.75
 
 
-def tokenize(text: str) -> list[str]:
-    tokens: list[str] = []
-    for token in _TOKEN_PATTERN.findall(text.casefold()):
-        if len(token) < 2 and not token.isdigit():
-            continue
-        tokens.append(token)
-    return tokens
+def fold_case(text: str, language: str = DEFAULT_LANGUAGE) -> str:
+    """Приводит регистр по правилам языка. Порядок замен важен: İ → i должно
+    произойти раньше lower(), иначе останется комбинирующая точка U+0307."""
+    if language == "turkish":
+        text = text.replace("İ", "i").replace("I", "ı")
+    return text.lower()
 
 
 class BM25Ranker(Ranker):
@@ -32,18 +34,17 @@ class BM25Ranker(Ranker):
             fetch_k: int = 200,
             k1: float = DEFAULT_K1,
             b: float = DEFAULT_B,
+            language: str = DEFAULT_LANGUAGE,
     ) -> None:
         self.index = index or Index()
         self.fetch_k = fetch_k
         self.k1 = k1
         self.b = b
+        self.language = language
+        self._retriever = None
+        self._stemmer = None
         self._chunk_ids: list[str] = []
         self._chunks_by_id: dict[str, RetrievedChunk] = {}
-        self._doc_len: list[int] = []
-        self._doc_terms: list[Counter] = []
-        self._postings: dict[str, list[int]] = {}
-        self._idf: dict[str, float] = {}
-        self._avgdl = 0.0
         self._built = False
         self._build_lock = threading.Lock()
 
@@ -53,30 +54,44 @@ class BM25Ranker(Ranker):
         with self._build_lock:
             if self._built:
                 return
+            import bm25s
+            import Stemmer
+
             chunks = self.index.get()
             self._chunks_by_id = {chunk.chunk_id: chunk for chunk in chunks}
             self._chunk_ids = [chunk.chunk_id for chunk in chunks]
-            self._doc_terms = []
-            self._doc_len = []
-            self._postings = {}
-            document_freq: Counter = Counter()
-            for position, chunk in enumerate(chunks):
-                terms = Counter(tokenize(chunk.text))
-                self._doc_terms.append(terms)
-                self._doc_len.append(sum(terms.values()))
-                for term in terms:
-                    self._postings.setdefault(term, []).append(position)
-                    document_freq[term] += 1
-            total = len(chunks)
-            self._avgdl = (sum(self._doc_len) / total) if total else 0.0
-            self._idf = {
-                term: math.log(1 + (total - freq + 0.5) / (freq + 0.5))
-                for term, freq in document_freq.items()
-            }
+            if not chunks:
+                self._retriever = None
+                self._built = True
+                return
+            self._stemmer = Stemmer.Stemmer(self.language)
+            tokens = bm25s.tokenize(
+                [fold_case(chunk.text, self.language) for chunk in chunks],
+                lower=False,  # регистр уже приведён по правилам языка
+                stopwords=self.language,
+                stemmer=self._stemmer,
+                show_progress=False,
+            )
+            retriever = bm25s.BM25(k1=self.k1, b=self.b)
+            retriever.index(tokens, show_progress=False)
+            self._retriever = retriever
             self._built = True
 
     def invalidate(self) -> None:
         self._built = False
+
+    def _query_tokens(self, query: str) -> list[str]:
+        import bm25s
+
+        tokenized = bm25s.tokenize(
+            fold_case(query, self.language),
+            lower=False,
+            stopwords=self.language,
+            stemmer=self._stemmer,
+            show_progress=False,
+            return_ids=False,
+        )
+        return list(tokenized[0]) if tokenized else []
 
     def _allowed_positions(
             self,
@@ -91,12 +106,11 @@ class BM25Ranker(Ranker):
             allowed_ids = subset if allowed_ids is None else allowed_ids & subset
         if allowed_ids is None:
             return None
-        positions = {
+        return {
             position
             for position, chunk_id in enumerate(self._chunk_ids)
             if chunk_id in allowed_ids
         }
-        return positions
 
     def rank(
             self,
@@ -106,34 +120,28 @@ class BM25Ranker(Ranker):
     ) -> list[RetrievedChunk]:
         if not self._built:
             self.build()
-        if not self._chunk_ids:
+        if self._retriever is None:
             return []
-        query_terms = [term for term in tokenize(query) if term in self._postings]
-        if not query_terms:
+        tokens = self._query_tokens(query)
+        if not tokens:
             return []
         allowed = self._allowed_positions(chunks, subject)
         if allowed is not None and not allowed:
             return []
 
-        scores: dict[int, float] = {}
-        for term in query_terms:
-            idf = self._idf[term]
-            for position in self._postings[term]:
-                if allowed is not None and position not in allowed:
-                    continue
-                freq = self._doc_terms[position][term]
-                length = self._doc_len[position]
-                denom = freq + self.k1 * (
-                    1 - self.b + self.b * length / (self._avgdl or 1.0)
-                )
-                contribution = idf * freq * (self.k1 + 1) / denom
-                scores[position] = scores.get(position, 0.0) + contribution
-
-        limit = len(allowed) if chunks else self.fetch_k
-        top = sorted(scores.items(), key=lambda item: -item[1])[:limit]
-        results = []
-        for position, score in top:
-            chunk = self._chunks_by_id.get(self._chunk_ids[position])
-            if chunk is not None:
-                results.append(chunk.model_copy(update={"score": float(score)}))
-        return results
+        scores = self._retriever.get_scores(tokens)
+        if allowed is not None:
+            mask = np.zeros(len(scores), dtype=bool)
+            mask[list(allowed)] = True
+            scores = np.where(mask, scores, 0.0)
+        matched = np.flatnonzero(scores > 0)
+        if matched.size == 0:
+            return []
+        limit = min(len(allowed) if chunks else self.fetch_k, matched.size)
+        top = matched[np.argsort(-scores[matched], kind="stable")[:limit]]
+        return [
+            self._chunks_by_id[self._chunk_ids[position]].model_copy(
+                update={"score": float(scores[position])}
+            )
+            for position in top
+        ]

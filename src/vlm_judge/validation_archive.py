@@ -192,6 +192,8 @@ def build_validation_manifest(
 ) -> dict[str, Any]:
     """Resolve Sheet1 rows to local question/reference images from columns E/F and L/M."""
     load_workbook = _require_openpyxl()
+    # read_only держит файл открытым до close(): на Windows незакрытый handle
+    # не даёт удалить каталог, из-за чего падает уборка во временных тестах.
     workbook = load_workbook(workbook_path, read_only=True, data_only=True)
     sheet = workbook["Sheet1"]
     records: list[dict[str, Any]] = []
@@ -258,6 +260,7 @@ def build_validation_manifest(
         records.append(record)
         reference_kinds[reference_kind] += 1
         subject_counts[raw_subject] += 1
+    workbook.close()
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8", newline="\n") as destination:
@@ -327,6 +330,8 @@ def build_validation_seed_manifest(
                 "prompt_version": EXTRACTION_PROMPT_VERSION,
             }
         )
+    workbook.close()
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8", newline="\n") as destination:
         for record in records:

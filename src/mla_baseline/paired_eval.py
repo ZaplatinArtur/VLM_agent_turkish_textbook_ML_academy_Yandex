@@ -455,7 +455,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--rag-results", type=Path, required=True)
     parser.add_argument("--baseline-judge", type=Path)
     parser.add_argument("--rag-judge", type=Path)
-    parser.add_argument("--chunks-dir", type=Path, default=Path("data/chunks/jsonl"))
+    parser.add_argument("--chunks-dir", type=Path, default=Path("data/corpus/chunks/jsonl"))
     parser.add_argument(
         "--out-json", type=Path, default=Path("reports/rag_eval_summary.json")
     )

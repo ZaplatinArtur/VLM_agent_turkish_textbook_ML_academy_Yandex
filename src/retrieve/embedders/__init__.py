@@ -5,10 +5,15 @@ from .base import (
     TextEmbedder,
 )
 from .sentence_transformer import (
+    E5_BASE_MODEL,
+    E5_SMALL_MODEL,
+    M3_MODEL,
+    MINILM_MODEL,
+    QWEN3_EMBEDDING_MODEL,
     E5Embedder,
-    M3Embedder,
+    PlainEmbedder,
+    Qwen3Embedder,
     SentenceTransformerBackend,
-    SentenceTransformerEmbedder,
 )
 
 __all__ = [
@@ -17,7 +22,12 @@ __all__ = [
     "SymmetricTextEmbedder",
     "AsymmetricTextEmbedder",
     "SentenceTransformerBackend",
-    "SentenceTransformerEmbedder",
-    "M3Embedder",
+    "PlainEmbedder",
     "E5Embedder",
+    "Qwen3Embedder",
+    "MINILM_MODEL",
+    "E5_SMALL_MODEL",
+    "E5_BASE_MODEL",
+    "M3_MODEL",
+    "QWEN3_EMBEDDING_MODEL",
 ]

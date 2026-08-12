@@ -1,4 +1,5 @@
-"""Public retrieval API with lazy imports for optional ML dependencies."""
+"""Публичный API ретрива. Импорты ленивые: тяжёлые ML-зависимости подтягиваются
+только тем, кто действительно берёт соответствующее имя."""
 
 from __future__ import annotations
 
@@ -12,10 +13,10 @@ _LAZY_ATTRS = {
     "DenseRanker": (".rankers", "DenseRanker"),
     "E5Embedder": (".embedders", "E5Embedder"),
     "Embedder": (".embedders", "Embedder"),
-    "M3Embedder": (".embedders", "M3Embedder"),
     "EmbeddingCache": (".cache", "EmbeddingCache"),
     "FaissVectorStore": (".vector_store", "FaissVectorStore"),
     "Index": (".index", "Index"),
+    "PlainEmbedder": (".embedders", "PlainEmbedder"),
     "Ranker": (".rankers", "Ranker"),
     "ReciprocalRankFusion": (".rankers", "ReciprocalRankFusion"),
     "build_profile": (".pipelines", "build_profile"),
@@ -23,10 +24,6 @@ _LAZY_ATTRS = {
     "Relevance": (".confidence", "Relevance"),
     "RelevanceVerdict": (".confidence", "RelevanceVerdict"),
     "RetrievalPipeline": (".pipeline", "RetrievalPipeline"),
-    "SentenceTransformerEmbedder": (
-        ".embedders",
-        "SentenceTransformerEmbedder",
-    ),
     "assess_relevance": (".confidence", "assess_relevance"),
     "build_pipeline": (".service", "build_pipeline"),
     "get_pipeline": (".service", "get_pipeline"),

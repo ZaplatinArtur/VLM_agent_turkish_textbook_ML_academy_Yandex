@@ -1,3 +1,9 @@
+"""Хранилище векторов на FAISS: точный перебор на малых корпусах, HNSW на больших.
+
+Тип индекса выбирается по размеру (IndexKind.AUTO), потому что на графе жёсткий
+фильтр по книге или предмету деградирует до пустой выдачи.
+"""
+
 import json
 from collections.abc import Iterable
 from enum import Enum
@@ -102,6 +108,10 @@ class FaissVectorStore:
     def size(self) -> int:
         return self._index.ntotal
 
+    @property
+    def dim(self) -> int:
+        return self._index.d
+
     def save(self, directory: Path | str) -> None:
         """Сохраняет снимок индекса на диск: сам индекс FAISS + порядок chunk_id.
 
@@ -140,10 +150,8 @@ class FaissVectorStore:
     ) -> list[tuple[str, float]]:
         """Возвращает до k пар (chunk_id, score), отсортированных по убыванию.
 
-        allowed_ids ограничивает поиск подмножеством (предмет, конкретная книга,
-        кандидаты предыдущей стадии). Фильтр применяется до поиска, а не после,
-        поэтому k результатов набирается из разрешённых чанков, а не из общего
-        топа, где разрешённых могло не оказаться вовсе.
+        allowed_ids ограничивает поиск подмножеством (предмет, книга, кандидаты
+        предыдущей стадии) до поиска, а не после: k набирается из разрешённых.
         """
         if k <= 0 or self._index.ntotal == 0:
             return []

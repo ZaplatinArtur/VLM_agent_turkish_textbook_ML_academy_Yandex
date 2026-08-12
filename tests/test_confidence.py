@@ -1,7 +1,10 @@
 from retrieve.confidence import (
+    CROSS_ENCODER_MIN_SCORE,
     DEFAULT_MIN_SCORE,
+    PROFILE_MIN_SCORE,
     Relevance,
     assess_relevance,
+    min_score_for,
 )
 from schemas.retrieve import RetrievedChunk
 
@@ -30,13 +33,30 @@ def test_high_top_score_is_confident():
     assert verdict.top_score == 0.72
 
 
-def test_margin_check_flags_flat_distribution_when_enabled():
-    results = [chunk("a", 0.70), chunk("b", 0.69)]
-    assert assess_relevance(results, min_margin=0.0).is_useful  # off by default
-    weak = assess_relevance(results, min_margin=0.05)
-    assert weak.relevance is Relevance.WEAK
+def test_profile_sets_its_own_threshold():
+    # 0.70 — уверенное попадание для MiniLM и явный мусор для e5-small,
+    # у которого даже чужие запросы дают ~0.84.
+    results = [chunk("a", 0.70)]
+    assert assess_relevance(results, profile="minilm").is_useful
+    assert not assess_relevance(results, profile="e5-small").is_useful
 
 
-def test_margin_check_passes_on_clear_winner():
-    results = [chunk("a", 0.70), chunk("b", 0.40)]
-    assert assess_relevance(results, min_margin=0.05).is_useful
+def test_explicit_min_score_wins_over_profile():
+    results = [chunk("a", 0.70)]
+    assert assess_relevance(results, min_score=0.6, profile="e5-small").is_useful
+
+
+def test_unknown_and_missing_profile_fall_back_to_default():
+    assert min_score_for(None) == DEFAULT_MIN_SCORE
+    assert min_score_for("m3") == DEFAULT_MIN_SCORE
+    assert min_score_for("e5-small") == PROFILE_MIN_SCORE["e5-small"]
+
+
+def test_cross_encoder_profiles_share_one_threshold():
+    # Скор кросс-энкодера — вероятность релевантности пары, а не косинус:
+    # шкала не зависит от того, какой ретривер подал кандидатов.
+    assert (
+        min_score_for("rrf_e5-small_bm25_cross-encoder")
+        == min_score_for("rrf_e5-base_m3_bm25_cross-encoder")
+        == CROSS_ENCODER_MIN_SCORE
+    )

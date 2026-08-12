@@ -1,10 +1,9 @@
-"""Normalize retrieval metadata found in textbook filenames.
+"""Нормализация метаданных, зашитых в имена файлов учебников.
 
-The parser corpus predates the shared retrieval contract: most JSONL chunks
-contain only ``textbook`` and ``page``.  Agent tool calls, however, can filter
-by an English or Turkish subject and by grade.  This module derives those
-fields from slugs such as ``7-sinif-matematik-...`` and provides one canonical
-comparison boundary.
+Корпус парсера старше общего контракта ретрива: в чанках есть только `textbook`
+и `page`, а агент фильтрует по предмету (на английском или турецком) и классу.
+Модуль достаёт эти поля из слагов вида `7-sinif-matematik-...` и держит единое
+место сравнения названий предметов.
 """
 
 from __future__ import annotations
@@ -94,7 +93,7 @@ def _plain(value: str) -> str:
 
 
 def canonical_subject(value: Any) -> str | None:
-    """Return a stable English subject label for Turkish or English input."""
+    """Каноническое английское имя предмета для турецкого или английского входа."""
 
     if value is None:
         return None
@@ -109,7 +108,7 @@ def subjects_match(left: Any, right: Any) -> bool:
 
 
 def infer_textbook_metadata(textbook: str) -> dict[str, Any]:
-    """Derive grade and subject from a normalized textbook slug."""
+    """Класс и предмет из слага учебника."""
 
     slug = textbook.casefold()
     inferred: dict[str, Any] = {}
@@ -124,7 +123,7 @@ def infer_textbook_metadata(textbook: str) -> dict[str, Any]:
 
 
 def enrich_chunk_metadata(chunk: RetrievedChunk) -> RetrievedChunk:
-    """Fill contract fields without overwriting explicit parser metadata."""
+    """Дозаполняет поля контракта, не затирая то, что уже проставил парсер."""
 
     metadata = dict(chunk.metadata)
     textbook = str(metadata.get("textbook") or chunk.chunk_id.split(":", 1)[0])
