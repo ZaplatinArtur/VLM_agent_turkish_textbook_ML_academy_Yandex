@@ -1,0 +1,87 @@
+{
+  "schema_version": "maxim274-identity-free-selective-fusion-independent-audit-v1.1",
+  "status": "PASS",
+  "auditor": "Codex independent agent /root/selective_fusion_audit",
+  "created_utc": "2026-08-12T14:35:52Z",
+  "freeze_sha256": "a384e8d7e975b5f93b655f2af671004dde3e742895569bba81e76567d22175e1",
+  "checks": {
+    "freeze_closure": true,
+    "candidate_atomic_outputs_absent_at_freeze": true,
+    "partial_generic_cache_not_opened": true,
+    "no_gold_outcomes_score": true,
+    "selector_signature_has_no_identity": true,
+    "generic_projection_removes_identity_before_selector": true,
+    "all_outer_identity_used_for_alignment_only": true,
+    "invalid_generic_always_preserves_base251": true,
+    "parseable_baseline_always_preserved": true,
+    "generic_switch_requires_valid_contract_and_unparseable_baseline": true,
+    "precompletion_census_246_hold_10_exposed": true,
+    "valid_but_wrong_semantic_risk_disclosed": true,
+    "no_nonregression_or_improvement_guarantee_claimed": true,
+    "binary_exclusive_output_and_postwrite_verification": true,
+    "full_denominator_274": true,
+    "tests_pass": true,
+    "invalid_v1_lineage_preserved_and_disclosed": true
+  },
+  "evidence": {
+    "freeze_sidecar_exact": true,
+    "frozen_descriptor_closure": "15 of 15 exact SHA-256, byte-size, and declared row-count checks passed",
+    "freeze_created_utc": "2026-08-12T14:28:51.536729Z",
+    "freeze_file_write_utc": "2026-08-12T14:28:51Z",
+    "candidate_atomic_completion_absent_at_audit": true,
+    "candidate_atomic_predictions_absent_at_audit": true,
+    "candidate_execution_freeze_sha256": "7096b70b25281da114d70956fd8f7a468372eb315c955584fe83217b30bc630d",
+    "candidate_independent_audit_sha256": "943c17d8f4a9be0876b38c170ac554db751df49c0c243146795a1e8024445570",
+    "hybrid_v3_1_freeze_sha256": "c904f1ea7151513cb83757cc80e21e8dd1cdbd8c7eb4fbf47a40ee40e35ac177",
+    "hybrid_v3_1_independent_audit_sha256": "412809bf7dd33b25e582f425ac04eded14ed9ac919f6f0ec59ae781be3301128",
+    "hybrid_route_decisions_sha256": "0f6a31ec8d862ba67f61a8d90e96a0bd1e2a77d071a51ff1a36c512eeaea974c",
+    "base251_solver_sha256": "f87f6ad41817c3d55fde5630781cd6f9f958350bfde72bdebeb8567b454c832a",
+    "normalization_sha256": "3e62b6ae5f020e75718a0e2ca4e173fa2474c3154fa32741f6958828beacf7dd",
+    "precompletion_census": {
+      "total_rows": 274,
+      "certified_noid_rows_preserved": 18,
+      "generic_rows": 256,
+      "parseable_baseline_rows_preserved": 246,
+      "maximum_valid_generic_switch_exposure": 10,
+      "by_answer_type": {
+        "choice": {
+          "parseable": 209,
+          "unparseable": 2
+        },
+        "free_form": {
+          "parseable": 1,
+          "unparseable": 1
+        },
+        "numeric": {
+          "parseable": 8,
+          "unparseable": 4
+        },
+        "short_text": {
+          "parseable": 28,
+          "unparseable": 3
+        }
+      }
+    },
+    "selector_parameters_exact": [
+      "answer_type",
+      "baseline_answer",
+      "generic_projection",
+      "normalizer"
+    ],
+    "unit_tests": "7 passed",
+    "additional_hostile_schema_cases_fail_closed": 21,
+    "parseable_baseline_disagreement_holds_checked": 25,
+    "identity_mismatch_abort_cases_checked": 3,
+    "invalid_v1_freeze_sha256": "2e6fea7188b1e501ec2eb2dc56ffff3488bc946d177c2cb5504355d52c844f50"
+  },
+  "interpretation": "PASS certifies frozen ancestry, pre-atomic chronology, identity-free arbitration, strict structural validation, fail-closed fallback behavior, the 18+246 preservation census, the maximum 10-row switch exposure, implementation closure, and tests. It is not a score and does not claim semantic correctness, improvement, or non-regression versus 251/274.",
+  "guards": {
+    "api_called": false,
+    "candidate_completion_opened": false,
+    "candidate_predictions_opened": false,
+    "partial_generic_cache_opened": false,
+    "gold_opened": false,
+    "outcomes_opened": false,
+    "score_opened": false
+  }
+}
