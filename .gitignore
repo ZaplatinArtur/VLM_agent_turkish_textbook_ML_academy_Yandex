@@ -188,6 +188,8 @@ reports/*_vs_*.json
 reports/v100/
 reports/v100_qrels/
 
+docs/runbook.md
+
 # Generated run outputs and local source artifacts.
 results/
 /outputs/
