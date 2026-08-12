@@ -1,0 +1,75 @@
+{
+  "schema_version": "maxim-noid-content-source-independent-audit-v1",
+  "status": "PASS",
+  "auditor": "Codex independent agent /root/hybrid_protocol",
+  "created_utc": "2026-08-12T05:59:57Z",
+  "freeze_sha256": "76a09995b1104b4b5fec67bb737e73e4a5b21032916f37a24a563118802a8a7c",
+  "freeze_projection_sha256": "ca463c2fd99512edda0931fe55d2d6e7ad3c0af52252d4940d9794625f65d46c",
+  "checks": {
+    "freeze_hash_matches_request": true,
+    "freeze_projection_verifier_passes": true,
+    "tests_pass_5_of_5": true,
+    "rules_and_candidates_frozen_before_postfreeze_scoring": true,
+    "selection_inputs_exactly_ocr_text_answer_type_input_mode": true,
+    "router_rejects_unexpected_observable_fields": true,
+    "task_id_not_used_for_selection": true,
+    "benchmark_id_filename_and_input_hash_not_used_for_selection": true,
+    "reference_score_outcome_and_prior_verdict_not_used_for_selection": true,
+    "task_identity_used_only_after_decision_for_output_alignment": true,
+    "decisions_have_274_unique_ordinals_and_one_action_each": true,
+    "decisions_contain_no_task_identity_or_answer_fields": true,
+    "source_database_contains_no_task_or_benchmark_identity": true,
+    "source_hashes_are_provenance_only_and_not_input_identity": true,
+    "strict_arm_is_anchored_to_pinned_base240": true,
+    "archived_base249_arm_is_diagnostic_only": true,
+    "paired_base240_result_recomputed_as_251_of_274": true,
+    "paired_base240_fixes_exactly_11": true,
+    "paired_base240_regressions_exactly_0": true
+  },
+  "evidence": {
+    "source_database_sha256": "c1307ba10d98287295b7f81bf7b415406bb32ff68c59aae34d57511d8eb1eae6",
+    "decisions_sha256": "fd2b43204fe027369418c18ffb96bbf93be0fddadbc7d6ddd3fbad1c09f40db6",
+    "decisions_rows": 274,
+    "decisions_unique_input_ordinals": 274,
+    "selected_rows": 18,
+    "abstained_rows": 256,
+    "strict_base240_solver_sha256": "09aa8d69e7de3a02bbc9b28b2b269b845a0dee1a40ef2d6aa55f7e966a779bef",
+    "strict_output_solver_sha256": "f87f6ad41817c3d55fde5630781cd6f9f958350bfde72bdebeb8567b454c832a",
+    "strict_metrics_sha256": "8d55d663850873b8a493fc2507097ee9c94e3807e071b041c27344125861d674"
+  },
+  "paired_result_vs_base240": {
+    "base_correct": 240,
+    "new_correct": 251,
+    "total": 274,
+    "accuracy": 0.916058,
+    "fixes": 11,
+    "regressions": 0,
+    "fixed_task_ids": [
+      "val_0048",
+      "val_0050",
+      "val_0051",
+      "val_0054",
+      "val_0055",
+      "val_0056",
+      "val_0057",
+      "val_0058",
+      "val_0182",
+      "val_0213",
+      "val_0216"
+    ],
+    "regressed_task_ids": []
+  },
+  "interpretation": {
+    "headline": "strict content/source overlay over base240",
+    "not_claimed": [
+      "unseen holdout generalization",
+      "gain over archived ID-composed base249"
+    ],
+    "note": "The historical baseline_* fields inside the shared scorer metrics refer to an older frozen-page-RAG baseline; this audit therefore recomputed and reports the requested paired comparison directly against the pinned base240 arm."
+  },
+  "guards": {
+    "api_called": false,
+    "frozen_files_modified": false,
+    "postfreeze_metrics_read_for_requested_result_audit": true
+  }
+}

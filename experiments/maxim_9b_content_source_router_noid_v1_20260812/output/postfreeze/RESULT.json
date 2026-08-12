@@ -1,0 +1,99 @@
+{
+  "schema_version": "maxim-noid-content-source-postscore-result-v1",
+  "created_date": "2026-08-12",
+  "status": "scored_pending_independent_freeze_audit",
+  "benchmark": {
+    "rows": 274,
+    "sha256": "5a6a38ccae7835f0d015f6e5979834208347b8e6e7a8d6884e4af97605f51ed9",
+    "classification": "repeatedly_used_development_benchmark",
+    "unseen_holdout": false
+  },
+  "selection_policy": {
+    "inputs": ["ocr_text", "answer_type", "input_mode"],
+    "task_id_routing": false,
+    "benchmark_id_routing": false,
+    "input_filename_routing": false,
+    "exact_input_sha_routing": false,
+    "task_id_role": "postdecision_output_alignment_only",
+    "fail_closed": true
+  },
+  "source_database": {
+    "new_books_downloaded": 0,
+    "existing_official_books_reused": 3,
+    "runtime_records_imported": 17,
+    "answer_graph_bindings": 16,
+    "research_or_private_source_records": 0,
+    "sha256": "c1307ba10d98287295b7f81bf7b415406bb32ff68c59aae34d57511d8eb1eae6"
+  },
+  "candidate_freeze": {
+    "path": "experiments/maxim_9b_content_source_router_noid_v1_20260812/output/FREEZE.json",
+    "sha256": "76a09995b1104b4b5fec67bb737e73e4a5b21032916f37a24a563118802a8a7c",
+    "projection_sha256": "ca463c2fd99512edda0931fe55d2d6e7ad3c0af52252d4940d9794625f65d46c",
+    "decisions_sha256": "fd2b43204fe027369418c18ffb96bbf93be0fddadbc7d6ddd3fbad1c09f40db6",
+    "selected_rows": 18,
+    "selected_source_rows": 16,
+    "selected_tool_rows": 2
+  },
+  "arms": {
+    "artifact_a_over_archived249": {
+      "classification": "diagnostic_only_base_contains_legacy_exact_id_composition",
+      "base_correct": 249,
+      "new_correct": 251,
+      "total": 274,
+      "accuracy": 0.916058,
+      "fixes_vs_own_base": 2,
+      "regressions_vs_own_base": 0,
+      "fixed_task_ids": ["val_0213", "val_0216"],
+      "solver_sha256": "f87f6ad41817c3d55fde5630781cd6f9f958350bfde72bdebeb8567b454c832a",
+      "image_judge_sha256": "66859d1011d25bf5b43bb896387f13bffec08d31027dbbcc635e01d130d71250",
+      "metrics_sha256": "a175f4a72b0b88304c6574d5d8e99a77d52c7402a651431d0c42455e46056c1d"
+    },
+    "strict_b_over_base240": {
+      "classification": "strict_noid_content_overlay_headline_candidate",
+      "base_correct": 240,
+      "new_correct": 251,
+      "total": 274,
+      "accuracy": 0.916058,
+      "fixes_vs_own_base": 11,
+      "regressions_vs_own_base": 0,
+      "fixed_task_ids": [
+        "val_0048", "val_0050", "val_0051", "val_0054", "val_0055",
+        "val_0056", "val_0057", "val_0058", "val_0182", "val_0213",
+        "val_0216"
+      ],
+      "changed_solver_task_ids": [
+        "val_0048", "val_0049", "val_0050", "val_0051", "val_0052",
+        "val_0053", "val_0054", "val_0055", "val_0056", "val_0057",
+        "val_0058", "val_0181", "val_0182", "val_0183", "val_0184",
+        "val_0185", "val_0213", "val_0216"
+      ],
+      "solver_sha256": "f87f6ad41817c3d55fde5630781cd6f9f958350bfde72bdebeb8567b454c832a",
+      "image_judge_sha256": "f2375bf3cea7492e3947ea285ca5db9262a50a5c5abfc92f2dc68cc1386095bf",
+      "metrics_sha256": "8d55d663850873b8a493fc2507097ee9c94e3807e071b041c27344125861d674",
+      "math": {"correct": 119, "total": 139, "accuracy": 0.856115},
+      "deterministic": {"correct": 160, "total": 177},
+      "image_judge": {"correct": 91, "total": 97}
+    }
+  },
+  "research_score": {
+    "status": "not_applicable",
+    "private_sources_used": false,
+    "separate_research_arm_built": false
+  },
+  "remaining": {
+    "wrong_count": 23,
+    "wrong_subjects": {"Math": 20, "Biology": 2, "Chemistry": 1},
+    "gains_needed_for_261": 10,
+    "wrong_task_ids": [
+      "val_0061", "val_0063", "val_0067", "val_0073", "val_0076",
+      "val_0086", "val_0100", "val_0165", "val_0170", "val_0204",
+      "val_0205", "val_0208", "val_0218", "val_0230", "val_0232",
+      "val_0243", "val_0245", "val_0248", "val_0252", "val_0253",
+      "val_0257", "val_0267", "val_0274"
+    ]
+  },
+  "independent_audit": {
+    "status": "pending",
+    "requested_from": "hybrid_protocol_agent"
+  }
+}

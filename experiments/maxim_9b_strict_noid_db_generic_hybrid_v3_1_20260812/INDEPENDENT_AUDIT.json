@@ -1,0 +1,81 @@
+{
+  "schema_version": "strict-noid-db-generic-hybrid-v3.1-independent-audit-v1",
+  "status": "PASS",
+  "auditor": "/root/hybrid_protocol/strict_hybrid_v31_audit",
+  "created_utc": "2026-08-12T06:21:28.3092931Z",
+  "freeze_sha256": "c904f1ea7151513cb83757cc80e21e8dd1cdbd8c7eb4fbf47a40ee40e35ac177",
+  "checks": {
+    "freeze_sha256_and_sidecar_exact": true,
+    "frozen_artifact_and_implementation_closure_exact": true,
+    "six_tests_pass": true,
+    "selector_projection_exactly_ocr_answer_type_input_mode": true,
+    "selector_receives_no_identity_subject_route_hash_theory_or_prior_output": true,
+    "runtime_alignment_id_read_only_after_selector_return": true,
+    "imported_noid_freeze_implementation_audit_and_source_db_exact": true,
+    "imported_noid_independent_audit_status_pass_and_pin_exact": true,
+    "source_db_declares_no_task_identity_and_has_no_forbidden_identity_keys": true,
+    "strict_maxim_anchor_is_exact_base240_and_base249_is_not_a_runtime_fallback": true,
+    "generic_contract_is_transport_neutral_and_exact_qwen35_9b": true,
+    "generic_compose_requires_exact_external_candidate_and_pass_audit_hash_pins": true,
+    "silent_generic_fallback_forbidden": true,
+    "coverage_and_hybrid_control_outputs_created_after_freeze": true,
+    "maxim274_coverage_recomputed_from_pinned_public_queue": true,
+    "ykslop_dev185_coverage_recomputed_from_pinned_public_queue": true,
+    "route_ordinals_unique_and_generic_queues_are_exact_abstained_subsets": true,
+    "preliminary_v3_freeze_explicitly_superseded_by_exact_sha256": true,
+    "no_score_gold_or_outcome_artifact_used_for_this_audit": true
+  },
+  "evidence": {
+    "pytest": "6 passed in 0.33s",
+    "generic_output_contract_sha256": "199595b7c7944b6cda763d9f31bf8e186d55dce12b1eff399e08bbb45c92ffc2",
+    "strict_base240_sha256": "09aa8d69e7de3a02bbc9b28b2b269b845a0dee1a40ef2d6aa55f7e966a779bef",
+    "imported_noid_freeze_sha256": "76a09995b1104b4b5fec67bb737e73e4a5b21032916f37a24a563118802a8a7c",
+    "imported_noid_audit_sha256": "c1d67ea44fa88f487aa4e65c7c78c3b1e13cbce0564ac1b06f50d009a4e45d82",
+    "imported_noid_projection_sha256": "ca463c2fd99512edda0931fe55d2d6e7ad3c0af52252d4940d9794625f65d46c",
+    "imported_source_db_sha256": "c1307ba10d98287295b7f81bf7b415406bb32ff68c59aae34d57511d8eb1eae6",
+    "imported_source_db_records": 17,
+    "preliminary_v3_freeze_sha256": "47f1c394f3d1d82719d1ac221b6240b9e16eaa6882f996a02589c83d339ff511",
+    "freeze_write_utc": "2026-08-12T06:16:50.3106216Z",
+    "earliest_coverage_output_write_utc": "2026-08-12T06:17:04.7176013Z",
+    "maxim274": {
+      "public_queue_sha256": "134281d4ba1d9828b686974d36fdaaa599c4b365907d9f97082d90863f982101",
+      "rows": 274,
+      "certified_accepted": 18,
+      "abstained_to_generic": 256,
+      "family_counts": {
+        "abstain": 256,
+        "english10": 5,
+        "integer_block_lcm": 1,
+        "math12": 5,
+        "meb7": 6,
+        "signed_temperature_change": 1
+      },
+      "coverage_sha256": "53dd3021638cc43628d0e5e5ddba1aa2d5db4f2c0ebd409b021ba6991daf6d44",
+      "route_decisions_sha256": "0f6a31ec8d862ba67f61a8d90e96a0bd1e2a77d071a51ff1a36c512eeaea974c",
+      "generic_queue_sha256": "b222a2fbc17afd33141802b727e302052b352743753221e44202a2bb5e156820"
+    },
+    "ykslop_dev185": {
+      "public_queue_sha256": "b2b03dfb53218e7e099c5129c4ef6acd096d8c44e44b2e82a37c84c746e549a2",
+      "rows": 185,
+      "certified_accepted": 0,
+      "abstained_to_generic": 185,
+      "family_counts": {
+        "abstain": 185
+      },
+      "coverage_sha256": "eb8d5c431d79b295d9fe9dc7b5751bee353bb6ee30e70731d6a5cc62d6653d8e",
+      "route_decisions_sha256": "f5b509d6369a8b7cf127222b334140eafe36fb212a00d50185e969cbdb7f0828",
+      "generic_queue_sha256": "b2b03dfb53218e7e099c5129c4ef6acd096d8c44e44b2e82a37c84c746e549a2"
+    }
+  },
+  "guards": {
+    "api_called_by_auditor": false,
+    "gpu_used_by_auditor": false,
+    "gold_file_opened_by_auditor": false,
+    "outcome_file_opened_by_auditor": false,
+    "sealed_final80_opened_by_auditor": false,
+    "score_executed_by_auditor": false,
+    "frozen_file_modified_by_auditor": false,
+    "audit_scope_includes_model_quality_or_future_generic_predictions": false
+  },
+  "interpretation": "PASS certifies the frozen selector protocol, artifact closure, fail-closed no-ID branch, transport-neutral exact-model output contract, and post-freeze coverage only. It is not a score or a claim about generic-model accuracy."
+}

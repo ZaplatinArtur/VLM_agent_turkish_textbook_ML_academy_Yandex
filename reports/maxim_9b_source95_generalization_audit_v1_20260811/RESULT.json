@@ -1,0 +1,77 @@
+{
+  "schema_version": "maxim-9b-source95-generalization-audit-v1-summary",
+  "audited_experiment": "maxim_9b_source95_tool_wave_v1_20260811",
+  "audited_result": {
+    "correct": 261,
+    "denominator": 274,
+    "accuracy": 0.9525547445255474,
+    "combined_metrics_sha256": "893f06b973a74dbebe2df77048bb2c9c232119a7d3c945f3fe900e53f83f5293",
+    "freeze_sha256": "00dc9bedbaefdbc887071363f9483b3f7e643b01feda7222b4488ae09364714d",
+    "completion_sha256": "394c045c4ebc6ba5777c1d457258f4ff79846786ac93792a2f54d69fe731b1e2"
+  },
+  "execution": {
+    "cpu_only": true,
+    "gpu_used": false,
+    "model_calls": 0,
+    "network_calls": 0,
+    "pytest": "5 passed",
+    "joint_original_wave_and_audit_pytest": "23 passed"
+  },
+  "verdict": {
+    "metric_arithmetic_and_frozen_artifact_are_real": true,
+    "honest_scope": "benchmark-specific model-plus-offline-proof overlay",
+    "valid_unseen_task_or_production_pipeline_score": false,
+    "tool_selection_uses_exact_task_id": true,
+    "certificates_require_exact_known_image_sha256": true,
+    "semantic_or_ocr_dispatcher_present": false,
+    "production_service_wired": false,
+    "same_textbook_unseen_task_automatically_gets_overlay": false
+  },
+  "counterfactuals": {
+    "reidentified_tasks_tested": 12,
+    "reidentified_tasks_rejected": 12,
+    "reidentified_tasks_accepted": 0,
+    "pixel_identical_png_reencodes_tested": 12,
+    "pixel_identical_png_reencodes_rejected_by_sha_size_gate": 12,
+    "strict_end_to_end_generalizable_fix_slots": 0,
+    "strict_end_to_end_generalizable_fix_slots_denominator": 12
+  },
+  "kernel_reuse": {
+    "unseen_structured_cases_passed": 11,
+    "unseen_structured_cases_total": 11,
+    "reusable_kernel_task_slots_denominator": 12,
+    "hardcoded_nonparameterized_task_slots": [
+      "val_0204"
+    ],
+    "passed_task_slots": [
+      "val_0253",
+      "val_0216",
+      "val_0232",
+      "val_0245",
+      "val_0086",
+      "val_0213",
+      "val_0230",
+      "val_0067",
+      "val_0267",
+      "val_0205",
+      "val_0218"
+    ],
+    "interpretation": "the arithmetic kernels can be reused only after a new task-ID-free parser, projection verifier, semantic router, option binder and production integration are built"
+  },
+  "production_scan": {
+    "project_roots": [
+      "C:/Users/kmaxc/PycharmProjects/VLM_agent_turkish_textbook_basic_rag",
+      "C:/Users/kmaxc/PycharmProjects/VLM_agent_turkish_textbook_source95",
+      "C:/Users/kmaxc/PycharmProjects/VLM"
+    ],
+    "production_files_scanned": 345,
+    "source95_task_or_tool_marker_hits": 0,
+    "basic_rag_setuptools_packages_src_only": true,
+    "experiment_directory_packaged": false
+  },
+  "source_artifacts": {
+    "tool_wave_py_sha256": "8a70d55e2c6c54044b6c67bb841115019f3375d94343b356a67afafb60044c28",
+    "prior_result_json_sha256": "fe53e6ab65ba153ca80d6979d2f7bab3e842301b07956e826185f169b7660560",
+    "prior_report_ru_sha256": "b1dd2eddedd185c6c7c5db3040548072ad7909c7940d9374ed590c0ff38bdee7"
+  }
+}
