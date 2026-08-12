@@ -84,10 +84,17 @@ def write_rows(rows, bench: str, lang: str) -> Path:
     return path
 
 
+MAX_IMAGE_SIDE = 1600  # исходники EXAMS-V до 62 Мп — кодировщик V100 на таких
+                       # уходит в таймауты 900с+; 1600px = масштаб наших
+                       # валидационных скриншотов, текст читается уверенно
+
+
 def save_image(img, bench: str, lang: str, task_id: str) -> dict:
     img_dir = OUT_ROOT / bench / "images"
     img_dir.mkdir(parents=True, exist_ok=True)
     name = f"{task_id}.png"
+    if max(img.size) > MAX_IMAGE_SIDE:
+        img.thumbnail((MAX_IMAGE_SIDE, MAX_IMAGE_SIDE))
     if img.mode not in ("RGB", "L"):
         img = img.convert("RGB")
     img.save(img_dir / name, format="PNG")
