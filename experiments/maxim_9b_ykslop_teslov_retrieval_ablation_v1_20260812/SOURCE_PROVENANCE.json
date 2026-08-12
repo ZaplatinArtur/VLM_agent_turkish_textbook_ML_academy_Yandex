@@ -1,0 +1,44 @@
+{
+  "schema_version": "ykslop-teslov-retrieval-source-provenance-v1",
+  "status": "SCAFFOLD_NOT_FROZEN",
+  "api_called": false,
+  "gold_or_outcomes_read": false,
+  "teslov_source": {
+    "author": "Даниил Теслов <d.teslov@edu.centraluniversity.ru>",
+    "hybrid_commit": "6aa0683c85c2e69f47c04f8f5da31bc18509503f",
+    "final_profile_commit": "2116cb1288a8f773e1ccd929dac05382d319327e",
+    "upstream_branch": "origin/feature/embedder_and_search",
+    "ported_shapes": [
+      "BM25 lexical ranking",
+      "weighted reciprocal-rank fusion with rrf_k=60",
+      "stable top-N cross-encoder reranking"
+    ]
+  },
+  "base_reranker": {
+    "model_id": "BAAI/bge-reranker-v2-m3",
+    "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+    "revision_source": "experiments/maxim_source_localization_reranker_bakeoff_v1/frozen_models/bge_reranker_v2_m3.artifact_manifest.json",
+    "artifact_manifest_present": true,
+    "local_snapshot_present": true,
+    "offline_two_pair_smoke_passed": true
+  },
+  "outcome_free_yks_census": {
+    "artifact": "BASE_BGE_CONTEXT_CENSUS.json",
+    "artifact_sha256": "ecc55bfa57351d28c015c07811050beb7cf2f3c8175e439b705453999f0aca56",
+    "public_rows": 185,
+    "query_chunk_pairs": 447,
+    "legacy_bm25_nonempty_rows": 126,
+    "base_bge_nonempty_rows": 128,
+    "top1_changed_where_both_nonempty": 55,
+    "top2_set_changed_rows": 62,
+    "gold_or_outcomes_read": false,
+    "per_row_results_persisted": false,
+    "relevance_or_qa_metric_claimed": false
+  },
+  "tuned_adapter": {
+    "expected_path": "data/models/bge-reranker-v2/chosen",
+    "present_at_scaffold_time": false,
+    "download_attempted": false,
+    "execution_policy": "fail_closed_until_weights_and_artifact_manifest_are_present"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": "yks185-base-bge-context-census-provenance-v1",
+  "status": "POSTRUN_HASH_ATTESTATION",
+  "created_date": "2026-08-13",
+  "inference_rerun_for_attestation": false,
+  "result": {
+    "path": "BASE_BGE_CONTEXT_CENSUS.json",
+    "size": 1105,
+    "sha256": "ecc55bfa57351d28c015c07811050beb7cf2f3c8175e439b705453999f0aca56"
+  },
+  "implementation": [
+    {
+      "path": "run_base_bge_census.py",
+      "size": 7042,
+      "sha256": "2254253c52193527c95c25bd66e9f5684620c84fdbe09a248468dfec8a31e06b"
+    },
+    {
+      "path": "teslov_retrieval.py",
+      "size": 11515,
+      "sha256": "70049ee54e21a1d43d0b122f223c6e067ea721e9bddf081610ab35c26782e723"
+    },
+    {
+      "path": "../../src/retrieve/rankers/cross_encoder.py",
+      "size": 6619,
+      "sha256": "12bc826c58edb90f5d1c5f8fffd3f43d0c24caecefe6908360615b2d405647be"
+    },
+    {
+      "path": "../../src/retrieve/rankers/base.py",
+      "size": 942,
+      "sha256": "e2faab2526186326f3e79fe134d4b31fb2ae648bc3c780594890b39fa0290a30"
+    },
+    {
+      "path": "../../src/retrieve/rankers/__init__.py",
+      "size": 1183,
+      "sha256": "974c5400ca604e7f6c483d2ca3f12c2db4e69ea4109d6666f7f5e9a35ee24fcb"
+    },
+    {
+      "path": "../../src/schemas/retrieve.py",
+      "size": 358,
+      "sha256": "6aa428a1092770ba2aee03e48d7a242cae7b6c85e22ee509ae308715456fd5f1"
+    }
+  ],
+  "model_artifact_manifest": {
+    "path": "../maxim_source_localization_reranker_bakeoff_v1/frozen_models/bge_reranker_v2_m3.artifact_manifest.json",
+    "size": 1482,
+    "sha256": "8e3d916b3c6701a08029023ffdaa57bee2bdf8d205c7f0bf4a908e19db31076c",
+    "model_id": "BAAI/bge-reranker-v2-m3",
+    "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "numpy": "2.5.1",
+    "torch": "2.13.0+cpu",
+    "transformers": "5.14.1",
+    "sentence_transformers": "5.3.0",
+    "network_policy": "HF_HUB_OFFLINE=1;TRANSFORMERS_OFFLINE=1;HF_DATASETS_OFFLINE=1;local_files_only=true"
+  },
+  "claims": {
+    "gold_or_outcomes_read": false,
+    "per_row_results_persisted": false,
+    "retrieval_relevance_metric_claimed": false,
+    "qa_accuracy_claimed": false,
+    "tuned_adapter_used": false
+  }
+}

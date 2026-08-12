@@ -7,7 +7,9 @@ from retrieve import config as config_module
 from retrieve.config import BgeM3Config
 from retrieve.rankers import (
     BM25Ranker,
+    CrossEncoderRanker,
     DenseRanker,
+    KnowledgeReranker,
     PrimaryCandidateUnion,
     ReciprocalRankFusion,
 )
@@ -62,6 +64,37 @@ def test_disabled_bge_keeps_legacy_hybrid_pipeline_shape(monkeypatch):
     assert isinstance(candidate_ranker.rankers[1], BM25Ranker)
     assert candidate_ranker.weights == [0.65, 0.35]
     assert candidate_ranker.rankers[0].strict_provenance is False
+    assert isinstance(pipeline.rankers[1], KnowledgeReranker)
+
+
+def test_teslov_cross_encoder_is_explicit_lazy_and_pinned(monkeypatch):
+    monkeypatch.setenv("MLA_RERANK_BACKEND", "teslov_cross_encoder")
+    monkeypatch.delenv("MLA_RERANK_MODEL", raising=False)
+    monkeypatch.setenv("MLA_RERANK_DEVICE", "cpu")
+
+    pipeline = build_pipeline(
+        [make_chunk("a", "triangle area")],
+        bge_m3_config=BgeM3Config(enabled=False),
+    )
+
+    reranker = pipeline.rankers[1]
+    assert isinstance(reranker, CrossEncoderRanker)
+    assert reranker.model_name == "BAAI/bge-reranker-v2-m3"
+    assert reranker.revision == "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+    assert reranker.local_files_only is True
+    assert reranker.device == "cpu"
+    assert reranker._model is None, "pipeline construction must remain lazy"
+
+
+def test_teslov_cross_encoder_rejects_unpinned_model(monkeypatch):
+    monkeypatch.setenv("MLA_RERANK_BACKEND", "teslov_cross_encoder")
+    monkeypatch.setenv("MLA_RERANK_MODEL", "some/other-model")
+
+    with pytest.raises(ValueError, match="pinned"):
+        build_pipeline(
+            [make_chunk("a", "triangle area")],
+            bge_m3_config=BgeM3Config(enabled=False),
+        )
 
 
 def test_enabled_bge_fails_closed_when_runtime_version_metadata_is_missing(

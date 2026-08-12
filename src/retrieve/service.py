@@ -151,6 +151,15 @@ def build_pipeline(
             weights=[0.65, 0.35],
         )
     rerank_model = os.environ.get("MLA_RERANK_MODEL", "").strip() or None
+    rerank_backend = (
+        os.environ.get("MLA_RERANK_BACKEND", "knowledge").strip().casefold()
+        or "knowledge"
+    )
+    if rerank_backend not in {"knowledge", "teslov_cross_encoder"}:
+        raise ValueError(
+            "MLA_RERANK_BACKEND must be 'knowledge' or "
+            "'teslov_cross_encoder'"
+        )
     rerank_top_n_raw = os.environ.get("MLA_RERANK_TOP_N")
     try:
         rerank_top_n = int(rerank_top_n_raw or "40")
@@ -169,16 +178,30 @@ def build_pipeline(
                 f"window ({required_rerank_top_n})"
             )
         rerank_top_n = max(rerank_top_n, required_rerank_top_n)
-    rankers = [
-        fused,
-        KnowledgeReranker(
+    if rerank_backend == "teslov_cross_encoder":
+        from .rankers import CrossEncoderRanker
+        from .rankers.cross_encoder import DEFAULT_RERANKER_MODEL
+
+        if rerank_model not in (None, DEFAULT_RERANKER_MODEL):
+            raise ValueError(
+                "the Teslov cross-encoder backend is pinned to "
+                f"{DEFAULT_RERANKER_MODEL!r}"
+            )
+        reranker = CrossEncoderRanker(
+            model_name=DEFAULT_RERANKER_MODEL,
+            top_n=rerank_top_n,
+            local_files_only=True,
+            device=os.environ.get("MLA_RERANK_DEVICE", "").strip() or None,
+        )
+    else:
+        reranker = KnowledgeReranker(
             model_name=rerank_model,
             top_n=rerank_top_n,
             min_graph_theory_chars=int(
                 os.environ.get("MLA_GRAPH_MIN_THEORY_CHARS", "70")
             ),
-        ),
-    ]
+        )
+    rankers = [fused, reranker]
     if graph is not None:
         rankers.append(
             GraphExpansionRanker(
