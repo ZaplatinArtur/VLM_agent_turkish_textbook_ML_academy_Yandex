@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="460" viewBox="0 0 1600 460" role="img" aria-labelledby="title desc">
+  <title id="title">Агент по турецким учебникам</title>
+  <desc id="desc">Схема проекта: задание, проверка официального источника, решение с поиском по учебникам и единая оценка.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#06111d"/>
+      <stop offset="0.58" stop-color="#0a1d2b"/>
+      <stop offset="1" stop-color="#102b3d"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#55e6c1"/>
+      <stop offset="0.52" stop-color="#6fb5ff"/>
+      <stop offset="1" stop-color="#b28cff"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#6fb5ff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#6fb5ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="#a9c3d4" opacity="0.11"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-25%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="13" stdDeviation="18" flood-color="#000814" flood-opacity="0.48"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="460" rx="34" fill="url(#background)"/>
+  <rect width="1600" height="460" rx="34" fill="url(#dots)"/>
+  <circle cx="1370" cy="20" r="430" fill="url(#glow)"/>
+  <path d="M0 424 C310 365 535 468 810 408 C1110 344 1340 443 1600 372 L1600 460 L0 460 Z" fill="#55e6c1" opacity="0.035"/>
+
+  <g font-family="Inter, Segoe UI, Arial, sans-serif">
+    <g transform="translate(82 62)">
+      <rect width="210" height="36" rx="18" fill="#55e6c1" opacity="0.12" stroke="#55e6c1" stroke-opacity="0.48"/>
+      <circle cx="22" cy="18" r="5" fill="#55e6c1"/>
+      <text x="38" y="23" fill="#9ff3df" font-size="14" font-weight="700" letter-spacing="1.4">ПРОЕКТ АКАДЕМИИ</text>
+
+      <text x="0" y="111" fill="#f5f8fb" font-size="46" font-weight="800" letter-spacing="-1.2">Агент по турецким</text>
+      <text x="0" y="169" fill="url(#accent)" font-size="61" font-weight="850" letter-spacing="-1.6">учебникам</text>
+      <text x="0" y="213" fill="#a9bdcc" font-size="19">Решение заданий по изображениям с поиском по учебникам</text>
+
+      <g transform="translate(0 260)">
+        <g>
+          <rect width="144" height="52" rx="14" fill="#0c2434" stroke="#36566a"/>
+          <text x="72" y="24" text-anchor="middle" fill="#8fc8ff" font-size="13" font-weight="750">01 · ЗАДАНИЕ</text>
+          <text x="72" y="41" text-anchor="middle" fill="#8aa5b6" font-size="11">текст или изображение</text>
+        </g>
+        <path d="M151 26 H177" stroke="#688ba0" stroke-width="3" stroke-linecap="round"/>
+        <path d="M172 20 L179 26 L172 32" fill="none" stroke="#688ba0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(188)">
+          <rect width="154" height="52" rx="14" fill="#0c2434" stroke="#b28cff" stroke-opacity="0.75"/>
+          <text x="77" y="24" text-anchor="middle" fill="#cbb7ff" font-size="13" font-weight="750">02 · ИСТОЧНИК</text>
+          <text x="77" y="41" text-anchor="middle" fill="#8aa5b6" font-size="11">проверка совпадения</text>
+        </g>
+        <path d="M349 26 H375" stroke="#688ba0" stroke-width="3" stroke-linecap="round"/>
+        <path d="M370 20 L377 26 L370 32" fill="none" stroke="#688ba0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(386)">
+          <rect width="154" height="52" rx="14" fill="#0c2434" stroke="#55e6c1" stroke-opacity="0.78"/>
+          <text x="77" y="24" text-anchor="middle" fill="#9ff3df" font-size="13" font-weight="750">03 · РЕШЕНИЕ</text>
+          <text x="77" y="41" text-anchor="middle" fill="#8aa5b6" font-size="11">агент и поиск</text>
+        </g>
+        <path d="M547 26 H573" stroke="#688ba0" stroke-width="3" stroke-linecap="round"/>
+        <path d="M568 20 L575 26 L568 32" fill="none" stroke="#688ba0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(584)">
+          <rect width="146" height="52" rx="14" fill="#0c2434" stroke="#ffbd73" stroke-opacity="0.78"/>
+          <text x="73" y="24" text-anchor="middle" fill="#ffd29f" font-size="13" font-weight="750">04 · ОЦЕНКА</text>
+          <text x="73" y="41" text-anchor="middle" fill="#8aa5b6" font-size="11">единая проверка</text>
+        </g>
+      </g>
+    </g>
+
+    <g transform="translate(925 58)" filter="url(#shadow)">
+      <rect width="610" height="330" rx="28" fill="#0b2130" stroke="#315268"/>
+      <text x="30" y="44" fill="#f1f7fa" font-size="21" font-weight="780">ОДИН НАБОР ЗАДАНИЙ</text>
+      <text x="30" y="69" fill="#86a4b6" font-size="14">четыре сопоставимых режима решения</text>
+
+      <g transform="translate(30 91)">
+        <rect width="260" height="82" rx="18" fill="#10293a" stroke="#45677c"/>
+        <circle cx="30" cy="28" r="12" fill="#6fb5ff" opacity="0.17"/>
+        <path d="M24 22 L36 34 M36 22 L24 34" stroke="#9bcfff" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="51" y="33" fill="#f1f7fa" font-size="14" font-weight="760">БЕЗ ИНСТРУМЕНТОВ</text>
+        <text x="21" y="61" fill="#86a4b6" font-size="12">только исходное условие</text>
+      </g>
+
+      <g transform="translate(320 91)">
+        <rect width="260" height="82" rx="18" fill="#10293a" stroke="#ffbd73" stroke-opacity="0.72"/>
+        <circle cx="30" cy="28" r="12" fill="#ffbd73" opacity="0.17"/>
+        <circle cx="28" cy="26" r="5" fill="none" stroke="#ffd29f" stroke-width="2"/>
+        <path d="M32 30 L38 36" stroke="#ffd29f" stroke-width="2" stroke-linecap="round"/>
+        <text x="51" y="33" fill="#f1f7fa" font-size="14" font-weight="760">ПОИСК В ИНТЕРНЕТЕ</text>
+        <text x="21" y="61" fill="#86a4b6" font-size="12">сравниваемый режим</text>
+      </g>
+
+      <g transform="translate(30 187)">
+        <rect width="260" height="82" rx="18" fill="#10293a" stroke="#55e6c1" stroke-opacity="0.78"/>
+        <circle cx="30" cy="28" r="12" fill="#55e6c1" opacity="0.17"/>
+        <path d="M23 27 L28 32 L37 22" fill="none" stroke="#9ff3df" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="51" y="33" fill="#f1f7fa" font-size="14" font-weight="760">ПОИСК ПО УЧЕБНИКАМ</text>
+        <text x="21" y="61" fill="#86a4b6" font-size="12">только релевантные фрагменты</text>
+      </g>
+
+      <g transform="translate(320 187)">
+        <rect width="260" height="82" rx="18" fill="#10293a" stroke="#b28cff" stroke-opacity="0.78"/>
+        <circle cx="30" cy="28" r="12" fill="#b28cff" opacity="0.17"/>
+        <path d="M24 28 H36 M30 22 V34" stroke="#cbb7ff" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="51" y="33" fill="#f1f7fa" font-size="14" font-weight="760">ОФИЦИАЛЬНЫЙ ИСТОЧНИК</text>
+        <text x="21" y="61" fill="#86a4b6" font-size="12">точное совпадение или отказ</text>
+      </g>
+
+      <g transform="translate(30 287)">
+        <rect width="160" height="25" rx="12.5" fill="#55e6c1" opacity="0.13"/>
+        <text x="80" y="17" text-anchor="middle" fill="#9ff3df" font-size="11" font-weight="700">ПРОВЕРКА ФРАГМЕНТОВ</text>
+        <rect x="173" width="143" height="25" rx="12.5" fill="#6fb5ff" opacity="0.13"/>
+        <text x="244" y="17" text-anchor="middle" fill="#9bcfff" font-size="11" font-weight="700">ЕДИНАЯ ОЦЕНКА</text>
+        <rect x="329" width="168" height="25" rx="12.5" fill="#b28cff" opacity="0.13"/>
+        <text x="413" y="17" text-anchor="middle" fill="#cbb7ff" font-size="11" font-weight="700">АНАЛИЗ ХОДА РАБОТЫ</text>
+      </g>
+    </g>
+  </g>
+</svg>

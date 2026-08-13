@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" role="img" aria-labelledby="title desc">
+  <title id="title">Схема работы агента с поиском по учебникам</title>
+  <desc id="desc">Задание проходит проверку официального источника. При точном совпадении возвращается ответ из ключа, иначе агент может дважды вызвать проверяемый поиск по учебникам и формирует результат для единой оценки.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07131f"/>
+      <stop offset="1" stop-color="#0d2332"/>
+    </linearGradient>
+    <linearGradient id="agent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#103a42"/>
+      <stop offset="1" stop-color="#102b3b"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#9fb8cb" opacity="0.10"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000814" flood-opacity="0.42"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#718fa2"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#55e6c1"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#6fb5ff"/>
+    </marker>
+    <marker id="arrowGold" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#ffbd73"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="700" rx="30" fill="url(#bg)"/>
+  <rect width="1600" height="700" rx="30" fill="url(#dots)"/>
+
+  <g font-family="Inter, Segoe UI, Arial, sans-serif">
+    <text x="50" y="55" fill="#f3f7fa" font-size="29" font-weight="800">Как система решает задание</text>
+    <text x="50" y="84" fill="#86a3b5" font-size="15">точный официальный источник · иначе агент с поиском · единая слепая оценка</text>
+
+    <!-- Task -->
+    <g transform="translate(50 245)" filter="url(#shadow)">
+      <rect width="190" height="140" rx="22" fill="#102737" stroke="#45677c"/>
+      <rect x="26" y="22" width="52" height="61" rx="8" fill="#173b4d" stroke="#6fb5ff"/>
+      <path d="M38 40 H66 M38 52 H63 M38 64 H67" stroke="#9bcfff" stroke-width="4" stroke-linecap="round"/>
+      <text x="25" y="109" fill="#f0f6f9" font-size="18" font-weight="760">ЗАДАНИЕ</text>
+      <text x="25" y="129" fill="#86a4b6" font-size="12">текст · изображение · метаданные</text>
+    </g>
+
+    <!-- Router -->
+    <g transform="translate(305 220)" filter="url(#shadow)">
+      <rect width="275" height="190" rx="23" fill="#28253b" stroke="#b28cff" stroke-width="2"/>
+      <circle cx="39" cy="39" r="17" fill="#b28cff" opacity="0.18"/>
+      <path d="M30 39 H48 M39 30 V48" stroke="#cbb7ff" stroke-width="3" stroke-linecap="round"/>
+      <text x="69" y="45" fill="#f2f7fa" font-size="18" font-weight="780">ПОИСК ИСТОЧНИКА</text>
+      <text x="27" y="84" fill="#d5c6ff" font-size="14" font-weight="700">видит только текст задания</text>
+      <text x="27" y="115" fill="#a99fc3" font-size="13">точная привязка к источнику</text>
+      <text x="27" y="141" fill="#a99fc3" font-size="13">иначе — отказ от совпадения</text>
+      <rect x="27" y="158" width="220" height="18" rx="9" fill="#b28cff" opacity="0.12"/>
+      <text x="137" y="171" text-anchor="middle" fill="#cbb7ff" font-size="10" font-weight="700">ЭТАЛОННЫЙ ОТВЕТ СКРЫТ</text>
+    </g>
+
+    <!-- Official answer -->
+    <g transform="translate(655 105)" filter="url(#shadow)">
+      <rect width="255" height="130" rx="21" fill="#142e3c" stroke="#6fb5ff"/>
+      <circle cx="35" cy="34" r="15" fill="#6fb5ff" opacity="0.17"/>
+      <path d="M28 34 L33 39 L43 28" fill="none" stroke="#8fc8ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="61" y="40" fill="#f0f6f9" font-size="17" font-weight="760">ОТВЕТ ИЗ КЛЮЧА</text>
+      <text x="25" y="76" fill="#a8d4ff" font-size="13">надёжная привязка</text>
+      <text x="25" y="101" fill="#86a4b6" font-size="12">без вызова модели и поиска</text>
+    </g>
+
+    <!-- SolveResult -->
+    <g transform="translate(1020 105)" filter="url(#shadow)">
+      <rect width="220" height="130" rx="21" fill="#122c35" stroke="#55e6c1"/>
+      <text x="25" y="40" fill="#f0f6f9" font-size="18" font-weight="780">РЕЗУЛЬТАТ</text>
+      <text x="25" y="73" fill="#9ff3df" font-size="13">ответ · решение · ход работы</text>
+      <text x="25" y="99" fill="#83aaa9" font-size="12">единый формат для всех режимов</text>
+    </g>
+
+    <!-- Judge -->
+    <g transform="translate(1330 105)" filter="url(#shadow)">
+      <rect width="220" height="130" rx="21" fill="#2d2734" stroke="#ffbd73"/>
+      <circle cx="35" cy="34" r="15" fill="#ffbd73" opacity="0.18"/>
+      <path d="M28 38 H42 M31 31 H39 M35 27 V42" stroke="#ffd29f" stroke-width="2.7" stroke-linecap="round"/>
+      <text x="61" y="40" fill="#f0f6f9" font-size="14" font-weight="760">ОЦЕНКА И АНАЛИТИКА</text>
+      <text x="25" y="76" fill="#ffd29f" font-size="13">единая слепая проверка</text>
+      <text x="25" y="101" fill="#aa967d" font-size="12">точность · дельта · ход работы</text>
+    </g>
+
+    <!-- Agent -->
+    <g transform="translate(655 300)" filter="url(#shadow)">
+      <rect width="300" height="235" rx="24" fill="url(#agent)" stroke="#55e6c1" stroke-width="2"/>
+      <circle cx="40" cy="40" r="18" fill="#55e6c1" opacity="0.17"/>
+      <path d="M31 40 L38 47 L51 31" fill="none" stroke="#65edce" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="70" y="46" fill="#f2f7fa" font-size="19" font-weight="790">АГЕНТ С ПОИСКОМ</text>
+      <text x="28" y="86" fill="#9ff3df" font-size="14" font-weight="700">1 · извлечь данные из изображения</text>
+      <text x="28" y="118" fill="#9ff3df" font-size="14" font-weight="700">2 · решить или вызвать поиск</text>
+      <text x="28" y="150" fill="#9ff3df" font-size="14" font-weight="700">3 · отбросить противоречия</text>
+      <text x="28" y="182" fill="#9ff3df" font-size="14" font-weight="700">4 · сверить ответ с изображением</text>
+      <text x="28" y="214" fill="#78a5a7" font-size="12">до 2 разных запросов · 1 переформулировка</text>
+    </g>
+
+    <!-- Tool -->
+    <g transform="translate(1030 330)" filter="url(#shadow)">
+      <rect width="210" height="170" rx="22" fill="#302832" stroke="#ffbd73"/>
+      <circle cx="37" cy="36" r="16" fill="#ffbd73" opacity="0.17"/>
+      <circle cx="34" cy="33" r="7" fill="none" stroke="#ffbd73" stroke-width="3"/>
+      <path d="M40 39 L48 47" stroke="#ffbd73" stroke-width="3" stroke-linecap="round"/>
+      <text x="63" y="42" fill="#f0f6f9" font-size="12" font-weight="760">ПОИСК ПО УЧЕБНИКАМ</text>
+      <text x="24" y="80" fill="#ffd29f" font-size="13">прямой вызов в процессе</text>
+      <text x="24" y="108" fill="#aa967d" font-size="12">5 лучших фрагментов</text>
+      <text x="24" y="132" fill="#aa967d" font-size="12">фильтры: предмет и класс</text>
+      <text x="24" y="156" fill="#aa967d" font-size="12">журнал релевантности</text>
+    </g>
+
+    <!-- Checked retrieval -->
+    <g transform="translate(1310 300)" filter="url(#shadow)">
+      <rect width="240" height="235" rx="23" fill="#102b39" stroke="#6fb5ff" stroke-width="2"/>
+      <text x="25" y="42" fill="#f0f6f9" font-size="17" font-weight="780">ПРОВЕРЯЕМЫЙ ПОИСК</text>
+      <g transform="translate(25 65)">
+        <rect width="190" height="30" rx="15" fill="#6fb5ff" opacity="0.13"/>
+        <text x="95" y="20" text-anchor="middle" fill="#a8d4ff" font-size="12" font-weight="700">BM25 + E5-SMALL</text>
+        <rect y="42" width="190" height="30" rx="15" fill="#55e6c1" opacity="0.13"/>
+        <text x="95" y="62" text-anchor="middle" fill="#9ff3df" font-size="12" font-weight="700">RRF · K = 60</text>
+        <rect y="84" width="190" height="30" rx="15" fill="#b28cff" opacity="0.13"/>
+        <text x="95" y="104" text-anchor="middle" fill="#cbb7ff" font-size="9.5" font-weight="700">ПОВТОРНОЕ РАНЖИРОВАНИЕ BGE + LoRA</text>
+      </g>
+      <text x="25" y="200" fill="#8fc8ff" font-size="12">оценка ≥ 0.50 → уверенная выдача</text>
+      <text x="25" y="220" fill="#7897a9" font-size="12">слабая / пустая → скрыта от агента</text>
+    </g>
+
+    <!-- Arrows -->
+    <path d="M240 315 H305" fill="none" stroke="#718fa2" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M580 268 C610 268 610 170 655 170" fill="none" stroke="#6fb5ff" stroke-width="3" marker-end="url(#arrowBlue)"/>
+    <text x="592" y="194" fill="#9bcfff" font-size="12" font-weight="700">СОВПАДЕНИЕ</text>
+    <path d="M580 353 C610 353 610 418 655 418" fill="none" stroke="#55e6c1" stroke-width="3" marker-end="url(#arrowGreen)"/>
+    <text x="590" y="390" fill="#9ff3df" font-size="12" font-weight="700">НЕТ СОВПАДЕНИЯ</text>
+    <path d="M910 170 H1020" fill="none" stroke="#6fb5ff" stroke-width="3" marker-end="url(#arrowBlue)"/>
+    <path d="M1240 170 H1330" fill="none" stroke="#ffbd73" stroke-width="3" marker-end="url(#arrowGold)"/>
+    <path d="M955 402 H1030" fill="none" stroke="#ffbd73" stroke-width="3" marker-end="url(#arrowGold)"/>
+    <path d="M1240 415 H1310" fill="none" stroke="#6fb5ff" stroke-width="3" marker-end="url(#arrowBlue)"/>
+    <path d="M1430 535 V570 H805 V535" fill="none" stroke="#55e6c1" stroke-width="3" marker-end="url(#arrowGreen)"/>
+    <text x="1060" y="590" fill="#9ff3df" font-size="12" font-weight="700">РЕЛЕВАНТНЫЕ ФРАГМЕНТЫ ВОЗВРАЩАЮТСЯ АГЕНТУ</text>
+    <path d="M805 300 C805 260 965 275 1020 215" fill="none" stroke="#55e6c1" stroke-width="3" marker-end="url(#arrowGreen)"/>
+
+    <!-- Footer -->
+    <g transform="translate(50 625)">
+      <rect width="1500" height="48" rx="18" fill="#0c2432" stroke="#315166"/>
+      <circle cx="27" cy="24" r="6" fill="#55e6c1"/>
+      <text x="46" y="29" fill="#d8e7ee" font-size="12" font-weight="700">СХЕМА ПО УМОЛЧАНИЮ</text>
+      <text x="222" y="29" fill="#8da8b8" font-size="12">rrf_e5-small_bm25_cross-encoder</text>
+      <circle cx="565" cy="24" r="6" fill="#6fb5ff"/>
+      <text x="584" y="29" fill="#d8e7ee" font-size="12" font-weight="700">ПРЯМОЙ ВЫЗОВ</text>
+      <text x="704" y="29" fill="#8da8b8" font-size="12">HTTP не обязателен</text>
+      <circle cx="940" cy="24" r="6" fill="#b28cff"/>
+      <text x="959" y="29" fill="#d8e7ee" font-size="12" font-weight="700">СРАВНИВАЕМЫЕ РЕЖИМЫ</text>
+      <text x="1140" y="29" fill="#8da8b8" font-size="12">без инструментов · интернет · учебники · источники</text>
+    </g>
+  </g>
+</svg>
