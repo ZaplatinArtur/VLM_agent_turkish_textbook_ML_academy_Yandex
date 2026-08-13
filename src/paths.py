@@ -4,16 +4,20 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 DATA_DIR = Path(os.environ.get("MLA_DATA_DIR", PROJECT_ROOT / "data")).expanduser()
-BOOKS_DIR = DATA_DIR / "books"
+CORPUS_DIR = DATA_DIR / "corpus"
+EVAL_DIR = DATA_DIR / "eval"
+CACHE_ROOT = DATA_DIR / "cache"
+
+BOOKS_DIR = CORPUS_DIR / "books"
 VISUAL_RETRIVE_DIR = Path(
     os.environ.get("MLA_VISUAL_RETRIVE_DIR", DATA_DIR / "visual_retrive")
 ).expanduser()
 CHUNKS_JSONL_DIR = Path(
-    os.environ.get("MLA_CHUNKS_JSONL_DIR", DATA_DIR / "chunks" / "jsonl")
+    os.environ.get("MLA_CHUNKS_JSONL_DIR", CORPUS_DIR / "chunks" / "jsonl")
 ).expanduser()
-TESSDATA_DIR = DATA_DIR / "tessdata"
+TESSDATA_DIR = CORPUS_DIR / "tessdata"
 INDEX_DIR = Path(
-    os.environ.get("MLA_INDEX_DIR", DATA_DIR / "cache" / "index")
+    os.environ.get("MLA_INDEX_DIR", CACHE_ROOT / "index")
 ).expanduser()
 
 
@@ -22,6 +26,7 @@ def ensure_data_dirs() -> None:
     VISUAL_RETRIVE_DIR.mkdir(parents=True, exist_ok=True)
     CHUNKS_JSONL_DIR.mkdir(parents=True, exist_ok=True)
     TESSDATA_DIR.mkdir(parents=True, exist_ok=True)
+    EVAL_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def to_data_relpath(path: Path | str) -> str:

@@ -7,7 +7,7 @@
 
 Запуск:
     python -m mla_baseline.errors_report \
-        --tasks data/validation.jsonl --meta data/validation.meta.jsonl \
+        --tasks data/eval/validation.jsonl --meta data/eval/validation.meta.jsonl \
         --transcripts reports/answer_transcripts.json \
         --run B0:reports/b0_full_32k.jsonl:reports/judge_out_b0.jsonl:reports/judge_out_b0_delta.jsonl \
         --run B1dr:reports/b1_deep_routed_32k.jsonl:reports/judge_out_b1dr.jsonl:reports/judge_out_b1dr_delta.jsonl \

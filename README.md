@@ -60,7 +60,7 @@ python -m venv .venv
 
 ```powershell
 .\.venv\Scripts\python.exe -m mla_baseline.runner `
-  --tasks data/tasks.sample.jsonl `
+  --tasks data/eval/tasks.sample.jsonl `
   --condition b0_no_tools `
   --dry-run
 ```
@@ -135,7 +135,7 @@ latency, usage, tool traces и отдельные ответы. Запуск и 
 
 # Проверить сборку агента с прямым textbook retrieval без вызова модели.
 .\.venv\Scripts\python.exe -m mla_baseline.runner `
-  --tasks data/tasks.sample.jsonl `
+  --tasks data/eval/tasks.sample.jsonl `
   --condition agent_rag `
   --dry-run
 
@@ -146,9 +146,20 @@ latency, usage, tool traces и отдельные ответы. Запуск и 
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Полные B0/RAG-прогоны используют локальный корпус в `data/chunks/jsonl/` и
+Полные B0/RAG-прогоны используют локальный корпус в
+`data/corpus/chunks/jsonl/` и
 квоту настроенного LLM backend. Перед полным запуском используйте `--limit` и
 проверьте конфигурацию в `.env.example`.
+
+Локальные данные разделены по происхождению: `data/corpus/` содержит исходный
+корпус, `data/eval/` — оценочные выборки, а `data/cache/` — пересобираемые
+индексы и кэши. Старую раскладку можно перенести командой
+`python scripts/migrate_data_layout.py --apply`.
+
+Экспериментальные retrieval-профили Даниила Теслова выбираются через
+`RETRIEVE_PROFILE` (например, `rrf_e5-small_bm25_cross-encoder`). Их код и
+измерения сохранены в `src/retrieve/pipelines.py` и `reports/measurements/`;
+без переменной окружения остаётся активным современный основной pipeline.
 
 ## Документация
 

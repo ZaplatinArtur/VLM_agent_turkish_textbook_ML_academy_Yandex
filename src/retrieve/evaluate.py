@@ -8,16 +8,12 @@
      "relevant_chunk_ids": ["book:12", ...], "relevant_page_ids": []}
 relevant_chunk_ids приоритетнее; если их нет — матчим по page_id.
 
-Примеры:
-    # быстрый прогон на одной книге, три системы, дельты к первой (bm25)
-    python -m retrieve.evaluate --qrels data/qrels.jsonl \
-        --book 8-sinif-inkilap-tarihi-ders-kitabi-cevaplari-meb-yayinlari \
-        --systems bm25 dense hybrid hybrid_rerank --k 1 5 10
+Дельты считаются к первой системе в списке. `--book` сужает корпус до одной
+книги, `--index-root` переиспользует снапшоты индексов вместо пересборки.
 
-    # на всём корпусе, со снапшотами индексов, в файл
-    python -m retrieve.evaluate --qrels data/qrels.jsonl \
-        --systems dense hybrid_rerank --k 1 5 10 \
-        --index-root data/cache/eval_index --output reports/retrieval_eval.json
+    python -m retrieve.evaluate --qrels data/eval/qrels_llm_all.jsonl \
+        --systems bm25 e5-small rrf_e5-small_bm25 --k 1 5 10 \
+        --index-root data/cache/index --output reports/eval.json
 """
 
 from __future__ import annotations
@@ -39,6 +35,7 @@ from .pipelines import PROFILES, build_profile
 def _read_qrels(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     seen: set[str] = set()
+    without_relevant: list[str] = []
     with path.open("r", encoding="utf-8") as handle:
         for line_number, line in enumerate(handle, start=1):
             if not line.strip():
@@ -51,7 +48,15 @@ def _read_qrels(path: Path) -> list[dict[str, Any]]:
             if not str(record.get("query") or "").strip():
                 raise ValueError(f"query {query_id} is empty")
             record["query_id"] = query_id
+            # Запрос без релевантных документов ничего не измеряет: recall не
+            # определён, hit_rate у всех систем нулевой.
+            if not record.get("relevant_chunk_ids") and not record.get("relevant_page_ids"):
+                without_relevant.append(query_id)
+                continue
             rows.append(record)
+    if without_relevant:
+        print(f"Пропущено запросов без релевантных документов: {len(without_relevant)} "
+              f"({', '.join(without_relevant[:5])}{'...' if len(without_relevant) > 5 else ''})")
     if not rows:
         raise ValueError("qrels file is empty")
     return rows
@@ -75,6 +80,27 @@ def _mean(values: Iterable[float]) -> float:
     return sum(data) / len(data) if data else 0.0
 
 
+def _aggregate(per_query: list[dict[str, Any]], cutoffs: list[int]) -> dict[str, Any]:
+    """Средние по подмножеству запросов — общие и для каждой группы."""
+    aggregate: dict[str, float] = {}
+    for cutoff in cutoffs:
+        key = str(cutoff)
+        for name in ("hit", "recall", "ndcg", "mrr"):
+            label = f"{'hit_rate' if name == 'hit' else name}_at_{cutoff}"
+            aggregate[label] = _mean(row["metrics"][key][name] for row in per_query)
+    latencies = [row["latency_ms"] for row in per_query]
+    return {
+        "queries": len(per_query),
+        "cutoffs": cutoffs,
+        "metrics": aggregate,
+        "latency_ms": {
+            "mean": round(_mean(latencies), 2),
+            "median": round(statistics.median(latencies), 2) if latencies else 0.0,
+            "p95": round(_percentile(latencies, 0.95), 2),
+        },
+    }
+
+
 def evaluate_pipeline(
         pipeline,
         qrels: list[dict[str, Any]],
@@ -84,7 +110,6 @@ def evaluate_pipeline(
     cutoffs = sorted(set(int(k) for k in ks))
     depth = cutoffs[-1]
     per_query: list[dict[str, Any]] = []
-    latencies: list[float] = []
     for qrel in qrels:
         query = str(qrel["query"]).strip()
         subject = qrel.get("subject") or None
@@ -99,7 +124,7 @@ def evaluate_pipeline(
 
         started = time.perf_counter()
         results = pipeline.run(query, k=depth, subject=subject)
-        latencies.append((time.perf_counter() - started) * 1000)
+        latency_ms = (time.perf_counter() - started) * 1000
 
         ranked = [
             chunk.chunk_id if target == "chunk_id" else _page_id(chunk)
@@ -124,24 +149,15 @@ def evaluate_pipeline(
                 "ndcg": dcg / ideal if ideal else 0.0,
                 "mrr": 1.0 / first_hit if first_hit is not None and first_hit <= cutoff else 0.0,
             }
-        per_query.append({"query_id": qrel["query_id"], "metrics": metrics})
+        per_query.append({
+            "query_id": qrel["query_id"],
+            "metrics": metrics,
+            "latency_ms": latency_ms,
+        })
 
-    aggregate: dict[str, float] = {}
-    for cutoff in cutoffs:
-        key = str(cutoff)
-        for name in ("hit", "recall", "ndcg", "mrr"):
-            label = f"{'hit_rate' if name == 'hit' else name}_at_{cutoff}"
-            aggregate[label] = _mean(row["metrics"][key][name] for row in per_query)
-    return {
-        "queries": len(per_query),
-        "cutoffs": cutoffs,
-        "metrics": aggregate,
-        "latency_ms": {
-            "mean": round(_mean(latencies), 2),
-            "median": round(statistics.median(latencies), 2) if latencies else 0.0,
-            "p95": round(_percentile(latencies, 0.95), 2),
-        },
-    }
+    report = _aggregate(per_query, cutoffs)
+    report["per_query"] = per_query
+    return report
 
 
 def load_corpus(book: str | None) -> list[RetrievedChunk]:
@@ -179,9 +195,12 @@ def _format_report(systems: list[str], results: dict[str, dict], cutoffs: list[i
                 delta = value - results[baseline]["metrics"].get(row, 0.0) * 100
                 cells.append(f"{value:>10.1f}% ({delta:+.1f})")
         lines.append(row.ljust(width) + "".join(cells))
-    lat = ["latency mean ms", "latency p95 ms"]
+    # Латентность — время одного онлайн-запроса целиком: кодирование запроса,
+    # поиск, слияние, переранжирование и гейт, если они есть в профиле.
     lines.append("-" * len(header))
-    for label, key in zip(lat, ("mean", "p95")):
+    for label, key in (("latency median ms", "median"),
+                       ("latency mean ms", "mean"),
+                       ("latency p95 ms", "p95")):
         cells = [f"{results[s]['latency_ms'][key]:>21.1f}" for s in systems]
         lines.append(label.ljust(width) + "".join(cells))
     return "\n".join(lines)
@@ -199,15 +218,24 @@ def main(argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(description="Сравнить профили ретрива на qrels")
     parser.add_argument("--qrels", required=True, type=Path)
-    parser.add_argument("--systems", nargs="+", default=["bm25", "dense", "hybrid_rerank"],
+    parser.add_argument("--systems", nargs="+", default=["bm25", "e5-small", "rrf_e5-small_bm25"],
                         choices=PROFILES, help="первый — бейзлайн для дельт")
     parser.add_argument("--k", nargs="+", type=int, default=[1, 5, 10], dest="ks")
     parser.add_argument("--book", default=None, help="прогон на одной книге (иначе весь корпус)")
     parser.add_argument("--index-root", default=None, type=Path,
                         help="каталог снапшотов dense-индексов (иначе строятся в памяти)")
     parser.add_argument("--fetch-k", type=int, default=200)
+    parser.add_argument("--rerank-top-n", type=int, default=100)
+    parser.add_argument("--rerank-batch-size", type=int, default=None,
+                        help="уменьшить, если кросс-энкодер делит карту с LLM и ловит OOM")
+    parser.add_argument("--groups", default=None, type=Path,
+                        help="JSON {query_id: группа}: срезы считаются из одного прогона")
     parser.add_argument("--output", default=None, type=Path)
     args = parser.parse_args(argv)
+
+    groups: dict[str, str] = {}
+    if args.groups:
+        groups = {str(k): str(v) for k, v in json.loads(args.groups.read_text(encoding="utf-8")).items()}
 
     qrels = _read_qrels(args.qrels)
     corpus = load_corpus(args.book)
@@ -217,8 +245,11 @@ def main(argv: list[str] | None = None) -> int:
     results: dict[str, dict] = {}
     for system in args.systems:
         started = time.perf_counter()
-        pipeline = build_profile(system, index, index_root=args.index_root, fetch_k=args.fetch_k)
+        pipeline = build_profile(system, index, index_root=args.index_root,
+                                 fetch_k=args.fetch_k, rerank_top_n=args.rerank_top_n)
         for ranker in pipeline.rankers:
+            if args.rerank_batch_size and hasattr(ranker, "batch_size"):
+                ranker.batch_size = args.rerank_batch_size
             build = getattr(ranker, "build", None)
             if callable(build):
                 build()
@@ -228,13 +259,34 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[{system}] готово за {report['build_and_eval_seconds']}s")
 
     cutoffs = sorted(set(args.ks))
-    print("\n" + _format_report(args.systems, results, cutoffs))
+    print(f"\n===== ГРУППА: все запросы ({len(qrels)}) =====")
+    print(_format_report(args.systems, results, cutoffs))
+
+    # Срезы считаются из уже посчитанных по-запросных метрик: прогонять
+    # профиль отдельно на каждой группе не нужно, запросы независимы.
+    grouped: dict[str, dict[str, dict]] = {}
+    for name in sorted(set(groups.values())):
+        ids = {qid for qid, group in groups.items() if group == name}
+        per_group = {
+            system: _aggregate([r for r in report["per_query"] if r["query_id"] in ids], cutoffs)
+            for system, report in results.items()
+        }
+        size = next(iter(per_group.values()))["queries"] if per_group else 0
+        if not size:
+            print(f"\n===== ГРУППА: {name} — пусто, пропускаю =====")
+            continue
+        grouped[name] = per_group
+        print(f"\n===== ГРУППА: {name} ({size} запросов) =====")
+        print(_format_report(args.systems, per_group, cutoffs))
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
+        # per_query остаётся в отчёте: по нему потом режут любые срезы
+        # (предмет, сложность, класс) без повторного прогона.
         args.output.write_text(
             json.dumps(
-                {"corpus_chunks": len(corpus), "queries": len(qrels), "systems": results},
+                {"corpus_chunks": len(corpus), "queries": len(qrels),
+                 "systems": results, "groups": grouped},
                 ensure_ascii=False,
                 indent=2,
             ),

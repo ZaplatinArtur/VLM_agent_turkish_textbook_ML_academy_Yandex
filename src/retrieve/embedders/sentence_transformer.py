@@ -8,13 +8,22 @@ from typing import Any
 
 from schemas.retrieve import RetrievedChunk
 
-from .base import Embedder, SymmetricTextEmbedder
+from .base import AsymmetricTextEmbedder, Embedder, SymmetricTextEmbedder
 
-DEFAULT_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-E5_MODEL = "intfloat/multilingual-e5-base"
+MINILM_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+DEFAULT_MODEL = MINILM_MODEL
+E5_SMALL_MODEL = "intfloat/multilingual-e5-small"
+E5_BASE_MODEL = "intfloat/multilingual-e5-base"
+E5_MODEL = E5_BASE_MODEL
 M3_MODEL = "BAAI/bge-m3"
+QWEN3_EMBEDDING_MODEL = "Qwen/Qwen3-Embedding-0.6B"
 E5_QUERY_PREFIX = "query: "
 E5_PASSAGE_PREFIX = "passage: "
+QWEN3_TASK = (
+    "Given a query from a Turkish school task, retrieve the textbook page "
+    "that answers it"
+)
+QWEN3_QUERY_PREFIX = f"Instruct: {QWEN3_TASK}\nQuery:"
 
 BGE_M3_SEMANTIC_SMOKE_CONTRACT = "official_model_card_dense_score_v1"
 BGE_M3_SEMANTIC_SMOKE_EXPECTED = (
@@ -252,12 +261,19 @@ class SentenceTransformerEmbedder(SymmetricTextEmbedder, Embedder):
 SentenceTransformerBackend = SentenceTransformerEmbedder
 
 
+class PlainEmbedder(SentenceTransformerEmbedder):
+    """Compatibility name for symmetric MiniLM and BGE-M3 profiles."""
+
+    def __init__(self, model_name: str, **kwargs: Any) -> None:
+        super().__init__(model_name=model_name, **kwargs)
+
+
 class M3Embedder(SentenceTransformerEmbedder):
     def __init__(self, model_name: str = M3_MODEL, **kwargs) -> None:
         super().__init__(model_name=model_name, **kwargs)
 
 
-class E5Embedder(SentenceTransformerEmbedder):
+class E5Embedder(SentenceTransformerEmbedder, AsymmetricTextEmbedder):
     query_prefix = E5_QUERY_PREFIX
     passage_prefix = E5_PASSAGE_PREFIX
 
@@ -273,6 +289,38 @@ class E5Embedder(SentenceTransformerEmbedder):
                 + str(chunk.metadata.get("retrieval_text") or chunk.text)
                 for chunk in chunks
             ]
+        )
+
+    def embed_query(self, query: str) -> list[float]:
+        return self.encode([self.query_prefix + query])[0]
+
+
+class Qwen3Embedder(SentenceTransformerEmbedder, AsymmetricTextEmbedder):
+    """Qwen3 embedding profile with an instruction on the query only."""
+
+    query_prefix = QWEN3_QUERY_PREFIX
+
+    def __init__(
+        self,
+        model_name: str = QWEN3_EMBEDDING_MODEL,
+        batch_size: int = 32,
+        normalize: bool = False,
+        max_seq_length: int | None = 512,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(
+            model_name=model_name,
+            batch_size=batch_size,
+            normalize=normalize,
+            max_length=max_seq_length,
+            **kwargs,
+        )
+
+    def embed_chunks(self, chunks: list[RetrievedChunk]) -> list[list[float]]:
+        if not chunks:
+            return []
+        return self.encode(
+            [str(chunk.metadata.get("retrieval_text") or chunk.text) for chunk in chunks]
         )
 
     def embed_query(self, query: str) -> list[float]:

@@ -82,7 +82,7 @@ def _ensure_turkish(tesseract_cmd: str) -> None:
             return
 
     raise RuntimeError(
-        "Turkish tessdata (tur) is missing. Download tur.traineddata into data/tessdata "
+        "Turkish tessdata (tur) is missing. Download tur.traineddata into data/corpus/tessdata "
         "or set TESSDATA_PREFIX."
     )
 

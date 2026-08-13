@@ -123,6 +123,11 @@ class FaissVectorStore:
         return int(self._index.d)
 
     @property
+    def dim(self) -> int:
+        """Compatibility alias used by Teslov's comparison tooling."""
+        return self.dimension
+
+    @property
     def index_kind(self) -> IndexKind:
         if isinstance(self._index, faiss.IndexFlat):
             return IndexKind.FLAT

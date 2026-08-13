@@ -3,8 +3,8 @@ set -euo pipefail
 
 # Reproducible paired experiment on one fixed task file through OpenRouter.
 python_bin="${PYTHON_BIN:-python}"
-tasks="${TASKS:-data/validation.jsonl}"
-chunks_dir="data/chunks/jsonl"
+tasks="${TASKS:-data/eval/validation.jsonl}"
+chunks_dir="data/corpus/chunks/jsonl"
 output_dir="${OUTPUT_DIR:-results/rag_eval}"
 report_dir="${REPORT_DIR:-reports/rag_eval}"
 base_url="${BASE_URL:-https://openrouter.ai/api/v1}"

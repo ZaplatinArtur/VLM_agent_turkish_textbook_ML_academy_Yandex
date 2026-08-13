@@ -10,7 +10,7 @@
 
 Запуск:
   python -m mla_baseline.eval --results results/b0_no_tools_v2_cot.jsonl \\
-      --tasks data/validation.jsonl [--meta data/validation.meta.jsonl]
+      --tasks data/eval/validation.jsonl [--meta data/eval/validation.meta.jsonl]
 """
 
 import argparse

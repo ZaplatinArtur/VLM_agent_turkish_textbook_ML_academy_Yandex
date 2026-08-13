@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .base import Ranker
+from .base import Ranker, rescored
 from .fusion import (
     DEFAULT_PRIMARY_CANDIDATE_WEIGHT,
     DEFAULT_RRF_K,
@@ -14,6 +14,7 @@ from .graph import GraphExpansionRanker
 from .lexical import BM25Ranker
 from .mmr import MaximalMarginalRelevanceRanker
 from .rerank import KnowledgeReranker
+from .rerank_api import RerankApiRanker
 
 __all__ = [
     "BM25Ranker",
@@ -27,12 +28,16 @@ __all__ = [
     "MaximalMarginalRelevanceRanker",
     "PrimaryCandidateUnion",
     "Ranker",
+    "RerankApiRanker",
     "ReciprocalRankFusion",
+    "StemmedBM25Ranker",
+    "rescored",
 ]
 
 _LAZY = {
     "DenseRanker": ("dense", "DenseRanker"),
     "CrossEncoderRanker": ("reranker", "CrossEncoderRanker"),
+    "StemmedBM25Ranker": ("bm25", "BM25Ranker"),
 }
 
 

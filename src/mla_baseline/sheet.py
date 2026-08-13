@@ -7,7 +7,7 @@
     Question format и т.п.) — для срезов метрик в eval
 
 Запуск:
-  python -m mla_baseline.sheet --csv data/validation_sheet.csv
+  python -m mla_baseline.sheet --csv data/eval/validation_sheet.csv
   python -m mla_baseline.sheet --sheet-id 15VJ_gVErnAy2fJLT-JBUO5WvSsBNthhRQyVHti-RVhc
 """
 
@@ -325,8 +325,8 @@ def main() -> None:
     src.add_argument("--csv", type=Path, help="локальный CSV-экспорт таблицы")
     src.add_argument("--sheet-id", help="id Google Sheets (скачать самим)")
     ap.add_argument("--gid", type=int, default=0)
-    ap.add_argument("--out", type=Path, default=Path("data/validation.jsonl"))
-    ap.add_argument("--meta", type=Path, default=Path("data/validation.meta.jsonl"))
+    ap.add_argument("--out", type=Path, default=Path("data/eval/validation.jsonl"))
+    ap.add_argument("--meta", type=Path, default=Path("data/eval/validation.meta.jsonl"))
     ap.add_argument("--images-dir", type=Path, default=Path("images"),
                     help="куда класть картинки, относительно MLA_DATA_ROOT")
     ap.add_argument("--no-download", action="store_true",
@@ -339,7 +339,7 @@ def main() -> None:
 
     csv_path = args.csv
     if csv_path is None:
-        csv_path = Path("data/validation_sheet.csv")
+        csv_path = Path("data/eval/validation_sheet.csv")
         csv_path.parent.mkdir(parents=True, exist_ok=True)
         fetch_sheet_csv(args.sheet_id, args.gid, csv_path)
         print(f"Таблица скачана: {csv_path}")

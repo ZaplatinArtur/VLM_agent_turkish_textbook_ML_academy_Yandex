@@ -13,7 +13,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from paths import CHUNKS_JSONL_DIR
 from retrieve.confidence import Relevance, assess_relevance
-from retrieve.embedders import SentenceTransformerEmbedder
+from retrieve.embedders import MINILM_MODEL, PlainEmbedder
 from retrieve.index import Index
 from retrieve.rankers import DenseRanker
 from schemas.retrieve import RetrievedChunk
@@ -30,7 +30,10 @@ def load_book(book: str) -> list[RetrievedChunk]:
 def main() -> int:
     spec = json.loads(EXAMPLES_FILE.read_text(encoding="utf-8"))
     book, examples = spec["book"], spec["examples"]
-    ranker = DenseRanker(embedder=SentenceTransformerEmbedder(), index=Index(load_book(book)))
+    ranker = DenseRanker(
+        embedder=PlainEmbedder(MINILM_MODEL),
+        index=Index(load_book(book)),
+    )
 
     print(f"Книга: {book}\n")
     failures = 0

@@ -1,0 +1,17 @@
+{
+  "base_model": "BAAI/bge-reranker-v2-m3",
+  "groups_train": 3700,
+  "groups_val": 411,
+  "negatives": 4,
+  "steps": 1542,
+  "lr": 0.0002,
+  "lora_r": 32,
+  "val_hit_before": 0.5863746958637469,
+  "val_hit_after": 0.8272506082725061,
+  "val_mrr_before": 0.7379156528791566,
+  "val_mrr_after": 0.9012165450121653,
+  "best_hit": 0.851581508515815,
+  "best_mrr": 0.9125709651257095,
+  "best_step": 1050,
+  "minutes": 26.8
+}

@@ -33,7 +33,7 @@ solver, но не отправляет запрос провайдеру:
 
 ```powershell
 .\.venv\Scripts\python.exe -m mla_baseline.runner `
-  --tasks data/tasks.sample.jsonl `
+  --tasks data/eval/tasks.sample.jsonl `
   --condition b0_no_tools `
   --dry-run
 ```
@@ -54,7 +54,7 @@ $env:OPENROUTER_API_KEY = "<your-key>"
 $env:MLA_CONCURRENCY = "1"
 
 .\.venv\Scripts\python.exe -m mla_baseline.runner `
-  --tasks data/tasks.sample.jsonl `
+  --tasks data/eval/tasks.sample.jsonl `
   --condition b0_no_tools `
   --limit 2 `
   --out results/smoke_b0.jsonl
@@ -66,7 +66,7 @@ Runner дописывает JSONL и при повторном запуске п
 
 ## 4. Textbook RAG
 
-Для прямого retrieval нужны чанки в `data/chunks/jsonl/*.jsonl`. Корпус и
+Для прямого retrieval нужны чанки в `data/corpus/chunks/jsonl/*.jsonl`. Корпус и
 построенный индекс не входят в Git.
 
 ```powershell
@@ -81,7 +81,7 @@ Runner дописывает JSONL и при повторном запуске п
 # Прогнать тот же формат задач с RAG tool.
 $env:OPENROUTER_API_KEY = "<your-key>"
 .\.venv\Scripts\python.exe -m mla_baseline.runner `
-  --tasks data/tasks.sample.jsonl `
+  --tasks data/eval/tasks.sample.jsonl `
   --condition agent_rag `
   --limit 2 `
   --out results/smoke_rag.jsonl
@@ -98,7 +98,7 @@ Linux/WSL, text-only dataset:
 
 ```bash
 OPENROUTER_API_KEY="<your-key>" \
-TASKS=data/validation.jsonl \
+TASKS=data/eval/validation.jsonl \
 bash scripts/run_rag_evaluation.sh
 ```
 
@@ -155,4 +155,3 @@ CLI judge доступен через `vlm-judge` или `python -m vlm_judge.cl
 
 Не переносите локальные абсолютные пути, `.env`, SQLite-базы аналитики, ключи или
 скачанные модели в Git.
-

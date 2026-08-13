@@ -1,6 +1,8 @@
 import os
 import threading
+from functools import cache
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from paths import INDEX_DIR
 
@@ -15,6 +17,22 @@ from .pipeline import RetrievalPipeline
 
 _pipelines: dict[tuple[object, ...], RetrievalPipeline] = {}
 _pipeline_lock = threading.Lock()
+
+if TYPE_CHECKING:
+    from .gate import SemanticGate
+
+
+def active_profile(profile: str | None = None) -> str | None:
+    """Return a selected named profile without changing the advanced default."""
+    selected = profile if profile is not None else os.environ.get("RETRIEVE_PROFILE", "")
+    return selected.strip() or None
+
+
+@cache
+def get_gate() -> "SemanticGate | None":
+    from .gate import gate_from_env
+
+    return gate_from_env()
 
 
 def build_pipeline(
@@ -39,7 +57,7 @@ def build_pipeline(
     if mmr_lambda is not None and not 0.0 <= mmr_lambda <= 1.0:
         raise ValueError("mmr_lambda must be between 0 and 1")
 
-    selected_profile = profile or os.environ.get("RETRIEVE_PROFILE", "").strip()
+    selected_profile = active_profile(profile)
     if selected_profile:
         from .parsing import get_retrieved_chunks
         from .pipelines import build_profile
@@ -263,12 +281,13 @@ def get_pipeline(
         fetch_k: int | None = None,
         mmr_lambda: float | None = None,
 ) -> RetrievalPipeline:
-    key = (profile, fetch_k, mmr_lambda)
+    selected_profile = active_profile(profile)
+    key = (selected_profile, fetch_k, mmr_lambda)
     if key not in _pipelines:
         with _pipeline_lock:
             if key not in _pipelines:
                 _pipelines[key] = build_pipeline(
-                    profile=profile,
+                    profile=selected_profile,
                     fetch_k=fetch_k,
                     mmr_lambda=mmr_lambda,
                 )
@@ -318,4 +337,7 @@ def textbook_retrieve_checked(
         subject=subject,
         grade=grade,
     )
-    return results, assess_relevance(results)
+    gate = get_gate()
+    if gate is not None:
+        return gate.judge(query, results)
+    return results, assess_relevance(results, profile=active_profile(profile))

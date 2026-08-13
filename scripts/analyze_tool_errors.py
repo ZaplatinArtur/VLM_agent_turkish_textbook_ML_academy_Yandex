@@ -87,8 +87,8 @@ def main() -> None:
     ap.add_argument("--out", default="reports/tool_errors_stats.txt")
     args = ap.parse_args()
 
-    tasks = load_jsonl("data/validation.jsonl")
-    meta = load_jsonl("data/validation.meta.jsonl")
+    tasks = load_jsonl("data/eval/validation.jsonl")
+    meta = load_jsonl("data/eval/validation.meta.jsonl")
     transcripts = set(json.load(
         (ROOT / "reports/answer_transcripts.json").open(encoding="utf-8")))
     results = {n: load_jsonl(r) for n, (r, _) in RUNS.items()}

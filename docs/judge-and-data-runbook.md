@@ -64,7 +64,7 @@ vlm-judge validate-runs `
 
 ```powershell
 vlm-judge prepare-mla-judge-input `
-  --tasks data/validation.jsonl `
+  --tasks data/eval/validation.jsonl `
   --results results/agent_rag.jsonl `
   --output results/agent_rag_judge_input.jsonl `
   --require-all
@@ -119,4 +119,3 @@ vlm-judge aggregate `
 Overlay заменяет строку того же `(task_id, setup)`, а не добавляет второй голос.
 Для интерпретации всегда сохраняйте dataset version, model, prompt version,
 judge version и retrieval config рядом с отчётом.
-

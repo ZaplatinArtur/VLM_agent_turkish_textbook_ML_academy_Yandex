@@ -19,15 +19,18 @@ class StubRanker:
         self.transform = transform
         self.received: list[RetrievedChunk] | None = None
         self.received_subject: str | None = None
+        self.received_grade: int | str | None = None
 
     def rank(
         self,
         query: str,
         chunks: list[RetrievedChunk],
         subject: str | None = None,
+        grade: int | str | None = None,
     ) -> list[RetrievedChunk]:
         self.received = list(chunks)
         self.received_subject = subject
+        self.received_grade = grade
         return self.transform(list(chunks))
 
 
@@ -68,3 +71,13 @@ def test_subject_is_threaded_through_every_stage():
     pipeline.run("q", k=5, subject="physics")
     assert retriever.received_subject == "physics"
     assert reranker.received_subject == "physics"
+
+
+def test_grade_is_threaded_through_every_stage():
+    retriever = StubRanker(lambda chunks: [make_chunk("a")])
+    reranker = StubRanker(lambda chunks: chunks)
+    pipeline = RetrievalPipeline(rankers=[retriever, reranker])
+
+    pipeline.run("q", k=5, grade=8)
+    assert retriever.received_grade == 8
+    assert reranker.received_grade == 8

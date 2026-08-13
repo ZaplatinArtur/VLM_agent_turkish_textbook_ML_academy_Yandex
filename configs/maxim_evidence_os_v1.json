@@ -71,8 +71,8 @@
   },
   "evaluation": {
     "source_family_metadata": {
-      "path": "data/validation.meta.jsonl",
-      "sha256": "480239348cce16dd32cefa7bed6dcff7b587e174013a3701b976e2732571d1b9"
+      "path": "data/eval/validation.meta.jsonl",
+      "sha256": "509b5160da926b51ddd239b1fdd1c32c56a47d69dcafca95988db19b18eb66a1"
     },
     "grouped_router_score_artifacts": {
       "anchor": {

@@ -3,9 +3,9 @@ import pickle
 from pathlib import Path
 from typing import Any
 
-from paths import DATA_DIR
+from paths import CACHE_ROOT
 
-CACHE_DIR = DATA_DIR / "cache"
+CACHE_DIR = CACHE_ROOT
 
 
 class Cache:

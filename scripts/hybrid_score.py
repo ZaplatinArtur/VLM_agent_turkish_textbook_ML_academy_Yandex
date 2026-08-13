@@ -67,8 +67,8 @@ def main() -> int:
     ap.add_argument("runs", nargs="+", help="имена файлов в reports/ без .jsonl")
     args = ap.parse_args()
 
-    tasks = load("data/validation.jsonl")
-    meta = load("data/validation.meta.jsonl")
+    tasks = load("data/eval/validation.jsonl")
+    meta = load("data/eval/validation.meta.jsonl")
 
     print(f"{'прогон':<26}{'гибрид':>18}{'авто':>7}{'судья':>7}{'ошибок':>8}")
     for name in args.runs:

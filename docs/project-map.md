@@ -14,7 +14,7 @@ scope: full
 - **Основной вход агента:** `src/mla_baseline/runner.py:main`.
 - **Прямой RAG-вход:** `src/retrieve/service.py:textbook_retrieve_checked`.
 - **Главный поток:** `Task JSONL → Solver → OpenRouter/tool → SolveResult → judge → report`.
-- **Быстрая проверка:** `python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --condition b0_no_tools --dry-run`.
+- **Быстрая проверка:** `python -m mla_baseline.runner --tasks data/eval/tasks.sample.jsonl --condition b0_no_tools --dry-run`.
 
 ## Компоненты
 
@@ -64,7 +64,7 @@ scope: full
 | --- | --- | --- |
 | `Task` | `mla_baseline/contracts.py` | `task_id` уникален в одном dataset |
 | `SolveResult` | `mla_baseline/schemas.py` | ошибки и пустые ответы не удаляются из знаменателя |
-| Учебные чанки | `data/chunks/jsonl/` + `retrieve` | корпус локальный; provenance и `chunk_id` сохраняются |
+| Учебные чанки | `data/corpus/chunks/jsonl/` + `retrieve` | корпус локальный; provenance и `chunk_id` сохраняются |
 | FAISS index | `data/cache/index/` | должен соответствовать corpus/embedder manifest |
 | OpenRouter | `mla_baseline/config.py` | ключ только из окружения; live calls платные |
 | Judge output | `vlm_judge/judge_audit.py` | до метрик нужны полнота, уникальные IDs и валидный verdict |
@@ -90,7 +90,7 @@ scope: full
 | Цель | Команда | Статус |
 | --- | --- | --- |
 | Установка | `python -m pip install -e ".[sources,dev]"` | подтверждена manifest, в этом проходе не переустанавливалась |
-| Agent dry-run | `python -m mla_baseline.runner --tasks data/tasks.sample.jsonl --condition b0_no_tools --dry-run` | verified 2026-08-10 |
+| Agent dry-run | `python -m mla_baseline.runner --tasks data/eval/tasks.sample.jsonl --condition b0_no_tools --dry-run` | verified 2026-08-10 |
 | Retrieval inventory | `python -m retrieve.build_index --dry-run` | verified 2026-08-10: 42,981 local chunks |
 | Agent/RAG unit tests | `python -m pytest -q tests/test_dryrun.py tests/test_mla_runner.py tests/test_agent_rag.py tests/test_textbook_search_tool.py` | verified 2026-08-10: 31 passed |
 | Полный test suite | `python -m pytest -q` | not run; содержит тяжёлые исторические пакеты |

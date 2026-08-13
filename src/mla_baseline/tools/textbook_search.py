@@ -195,7 +195,10 @@ class LocalTextbookSearchClient:
                 == str(arguments.grade)
             ]
         chunks = chunks[: arguments.top_k]
-        if arguments.grade is not None:
+        if arguments.grade is not None and not chunks:
+            # Only the empty case gets a new verdict: surviving chunks were
+            # already judged upstream, and re-scoring here would apply the
+            # default threshold to a profile with a different scale.
             from retrieve.confidence import assess_relevance
 
             verdict = assess_relevance(chunks)

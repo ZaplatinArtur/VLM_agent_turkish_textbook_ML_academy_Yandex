@@ -12,6 +12,7 @@ import json
 import os
 import time
 from collections import Counter
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -26,7 +27,7 @@ def pipeline_index_directory(pipeline: Any) -> Path:
     semantic_index_dir = getattr(semantic, "index_dir", None)
     return Path(semantic_index_dir) if semantic_index_dir is not None else INDEX_DIR
 
-def corpus_inventory(chunks: list[Any]) -> dict[str, Any]:
+def corpus_inventory(chunks: Sequence[Any]) -> dict[str, Any]:
     chunk_ids = [str(chunk.chunk_id) for chunk in chunks]
     duplicate_ids = len(chunk_ids) - len(set(chunk_ids))
     empty_texts = sum(not str(chunk.text).strip() for chunk in chunks)

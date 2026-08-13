@@ -1,4 +1,4 @@
-"""Ручная проверка dense-ретрива на одной книге из data/chunks/jsonl.
+"""Ручная проверка dense-ретрива на одной книге из data/corpus/chunks/jsonl.
 
 Запуск из корня проекта:
     python scripts/try_retrieve.py
@@ -22,7 +22,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from paths import CHUNKS_JSONL_DIR
-from retrieve.embedders import SentenceTransformerEmbedder
+from retrieve.embedders import MINILM_MODEL, PlainEmbedder
 from retrieve.pipeline import RetrievalPipeline
 from retrieve.rankers import DenseRanker
 from schemas.retrieve import RetrievedChunk
@@ -73,7 +73,7 @@ def main() -> None:
     print(f"Запрос: {args.query!r}\n")
 
     # Реальный эмбеддер + DenseRanker поверх in-memory индекса, обёрнутые в пайплайн.
-    embedder = SentenceTransformerEmbedder()
+    embedder = PlainEmbedder(MINILM_MODEL)
     ranker = DenseRanker(embedder=embedder, index=InMemoryIndex(chunks))
     pipeline = RetrievalPipeline(rankers=[ranker])
 

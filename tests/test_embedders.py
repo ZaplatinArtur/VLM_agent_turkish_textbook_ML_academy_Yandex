@@ -3,9 +3,14 @@ import math
 import pytest
 
 from retrieve.embedders import sentence_transformer as st_module
-from retrieve.embedders.base import SymmetricTextEmbedder
+from retrieve.embedders.base import AsymmetricTextEmbedder, SymmetricTextEmbedder
 from retrieve.embedders.sentence_transformer import (
     BGE_M3_SEMANTIC_SMOKE_CONTRACT,
+    E5_SMALL_MODEL,
+    QWEN3_EMBEDDING_MODEL,
+    E5Embedder,
+    PlainEmbedder,
+    Qwen3Embedder,
     SentenceTransformerEmbedder,
 )
 from schemas.retrieve import RetrievedChunk
@@ -46,6 +51,55 @@ def test_embed_query_returns_single_vector():
     vector = embedder.embed_query("kuvvet")
     assert embedder.calls == [["kuvvet"]]
     assert vector == [float(len("kuvvet"))]
+
+
+class RecordingE5(E5Embedder):
+    def __init__(self, model_name: str) -> None:
+        super().__init__(model_name)
+        self.calls: list[list[str]] = []
+
+    def encode(self, texts: list[str]) -> list[list[float]]:
+        self.calls.append(list(texts))
+        return [[0.0] for _ in texts]
+
+
+def test_e5_applies_query_and_passage_prefixes():
+    embedder = RecordingE5(E5_SMALL_MODEL)
+    embedder.embed_query("üçgen")
+    embedder.embed_chunks([make_chunk("m1", "üçgen alanı")])
+    assert embedder.calls == [["query: üçgen"], ["passage: üçgen alanı"]]
+
+
+class RecordingQwen3(Qwen3Embedder):
+    def __init__(self, model_name: str) -> None:
+        super().__init__(model_name)
+        self.calls: list[list[str]] = []
+
+    def encode(self, texts: list[str]) -> list[list[float]]:
+        self.calls.append(list(texts))
+        return [[0.0] for _ in texts]
+
+
+def test_qwen3_puts_the_instruction_on_the_query_only():
+    embedder = RecordingQwen3(QWEN3_EMBEDDING_MODEL)
+    embedder.embed_query("üçgen")
+    embedder.embed_chunks([make_chunk("m1", "üçgen alanı")])
+    query_text = embedder.calls[0][0]
+    assert query_text.startswith("Instruct: ")
+    assert query_text.endswith("\nQuery:üçgen")
+    assert embedder.calls[1] == ["üçgen alanı"]
+
+
+def test_e5_is_asymmetric_and_plain_embedder_is_not():
+    assert isinstance(RecordingE5(E5_SMALL_MODEL), AsymmetricTextEmbedder)
+    assert issubclass(PlainEmbedder, SymmetricTextEmbedder)
+
+
+def test_model_name_is_required_and_kept():
+    assert PlainEmbedder("BAAI/bge-m3").model_name == "BAAI/bge-m3"
+    assert E5Embedder(E5_SMALL_MODEL).model_name == E5_SMALL_MODEL
+    with pytest.raises(TypeError):
+        PlainEmbedder()
 
 
 class FakeEncoded:

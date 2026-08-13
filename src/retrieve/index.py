@@ -4,7 +4,7 @@ from .metadata import subjects_match
 
 
 class Index:
-    """In-memory view of chunks loaded from the parser's JSONL store."""
+    """Корпус в памяти: чанки из JSONL-хранилища парсера, доступ по id и фильтрам."""
 
     def __init__(self, chunks: list[RetrievedChunk] | None = None) -> None:
         self._chunks_by_id: dict[str, RetrievedChunk] = {}

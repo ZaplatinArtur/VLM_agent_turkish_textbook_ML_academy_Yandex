@@ -107,7 +107,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--input-dir",
         type=Path,
-        default=PROJECT_ROOT / "data" / "chunks" / "jsonl",
+        default=PROJECT_ROOT / "data" / "corpus" / "chunks" / "jsonl",
     )
     parser.add_argument(
         "--output-dir",

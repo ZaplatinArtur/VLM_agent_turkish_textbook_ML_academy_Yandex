@@ -85,7 +85,7 @@ ENV
   || { echo "ГЕЙТ НЕ ПРОЙДЕН — прогон отменён, чинить поиск"; exit 1; }
 
 # --- прогоны -----------------------------------------------------------------
-TASKS="${TASKS:-data/validation.jsonl}"
+TASKS="${TASKS:-data/eval/validation.jsonl}"
 [ -f "$TASKS" ] || { echo "нет набора задач: $TASKS (скопируй с локальной машины)"; exit 1; }
 for cond in $CONDITIONS; do
   echo "=== $cond ==="

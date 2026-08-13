@@ -1,4 +1,9 @@
-from retrieve.rankers.bm25 import BM25Ranker, tokenize
+import pytest
+
+pytest.importorskip("bm25s")
+pytest.importorskip("Stemmer")
+
+from retrieve.rankers.bm25 import BM25Ranker, fold_case
 from schemas.retrieve import RetrievedChunk
 
 
@@ -6,10 +11,25 @@ class StubIndex:
     def __init__(self, chunks: list[RetrievedChunk]) -> None:
         self._chunks = chunks
 
-    def get(self, subject: str | None = None) -> list[RetrievedChunk]:
-        if subject is None:
-            return self._chunks
-        return [c for c in self._chunks if c.metadata.get("subject") == subject]
+    def get(
+        self,
+        subject: str | None = None,
+        grade: int | str | None = None,
+    ) -> list[RetrievedChunk]:
+        chunks = self._chunks
+        if subject is not None:
+            chunks = [
+                chunk
+                for chunk in chunks
+                if chunk.metadata.get("subject") == subject
+            ]
+        if grade is not None:
+            chunks = [
+                chunk
+                for chunk in chunks
+                if str(chunk.metadata.get("grade")) == str(grade)
+            ]
+        return chunks
 
 
 def make_chunk(chunk_id: str, text: str, subject: str) -> RetrievedChunk:
@@ -34,8 +54,26 @@ def build() -> BM25Ranker:
     return BM25Ranker(index=StubIndex(corpus()))
 
 
-def test_tokenize_drops_single_char_noise_keeps_digits():
-    assert tokenize("A üçgen 7 !!") == ["üçgen", "7"]
+def test_turkish_case_folding_follows_the_language():
+    # casefold() дал бы "işik" и "ki" + комбинирующая точка + "tap":
+    # в турецком I → ı, İ → i, иначе заглавные формы не совпадут со строчными.
+    assert fold_case("IŞIK") == "ışık"
+    assert fold_case("KİTAP") == "kitap"
+    assert fold_case("İLK") == "ilk"
+    # для английского правило другое: "I" остаётся "i"
+    assert fold_case("I AM", language="english") == "i am"
+
+
+def test_uppercase_query_finds_lowercase_text():
+    results = build().rank("ÜÇGEN ALAN")
+    assert results and results[0].chunk_id == "d1"
+
+
+def test_inflected_forms_match_through_the_stemmer():
+    # kitaplarımızdan -> kitap: без стемминга это разные термы и совпадения нет.
+    books = [make_chunk("b1", "kitaplarımızdan öğrendiklerimiz", "turkce")]
+    results = BM25Ranker(index=StubIndex(books)).rank("kitap")
+    assert [c.chunk_id for c in results] == ["b1"]
 
 
 def test_most_lexically_relevant_chunk_ranks_first():
@@ -47,6 +85,19 @@ def test_most_lexically_relevant_chunk_ranks_first():
 def test_subject_filter_restricts_candidates():
     results = build().rank("kuvvet hız", subject="physics")
     assert {c.chunk_id for c in results} <= {"d3", "d4"}
+
+
+def test_grade_filter_restricts_candidates():
+    chunks = [
+        make_chunk("m7", "triangle area", "math").model_copy(
+            update={"metadata": {"subject": "math", "grade": 7}}
+        ),
+        make_chunk("m8", "triangle area", "math").model_copy(
+            update={"metadata": {"subject": "math", "grade": 8}}
+        ),
+    ]
+    results = BM25Ranker(index=StubIndex(chunks)).rank("triangle", grade=8)
+    assert [chunk.chunk_id for chunk in results] == ["m8"]
 
 
 def test_chunks_subset_restricts_search():

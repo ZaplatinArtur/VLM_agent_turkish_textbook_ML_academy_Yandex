@@ -23,7 +23,7 @@
 
 ```powershell
 .\.venv\Scripts\python.exe -m mla_baseline.runner `
-  --tasks data/tasks.sample.jsonl `
+  --tasks data/eval/tasks.sample.jsonl `
   --condition b0_no_tools `
   --dry-run
 
@@ -32,4 +32,3 @@
 
 Полные live-прогоны через OpenRouter выполняйте только по явной необходимости,
 начиная с `--limit` и отдельного output/RunId.
-
