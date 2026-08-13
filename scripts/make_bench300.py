@@ -26,23 +26,40 @@ SRC = ROOT / "data" / "mlbench"
 SEED = 47
 
 
+def strata_key(row: dict) -> tuple:
+    """Ключ страты: предмет + прокси сложности + модальность.
+
+    Явных меток сложности в этих бенчмарках нет, единственный доступный
+    прокси — класс (EXAMS-V; в TUMLU/MGSM его нет вовсе). Модальность
+    (текстовый лист против листа с рисунком) добавлена потому, что она
+    сильнее влияет на результат, чем предмет: картинку надо ещё прочитать.
+    """
+    return (row.get("subject") or "unknown",
+            row.get("grade"),
+            row.get("_modality") or "")
+
+
 def sample_lang(path: Path, n: int) -> list[dict]:
     rows = [json.loads(l) for l in path.open(encoding="utf-8") if l.strip()]
     if len(rows) <= n:
         return rows
-    # стратификация по предмету: доли предметов сохраняются, внутри предмета
-    # порядок задаётся сидом — воспроизводимо на любой машине
+    # стратификация: доли страт сохраняются, внутри страты порядок задаётся
+    # сидом — воспроизводимо на любой машине
     by_subj = defaultdict(list)
     for r in rows:
-        by_subj[r.get("subject") or "unknown"].append(r)
+        by_subj[strata_key(r)].append(r)
     rng = random.Random(SEED)
     picked: list[dict] = []
     # квоты пропорционально размеру предмета, остаток — крупнейшим
     quotas = {s: (len(v) * n) // len(rows) for s, v in by_subj.items()}
     leftover = n - sum(quotas.values())
-    for s in sorted(by_subj, key=lambda s: -len(by_subj[s]))[:leftover]:
+    # остаток — самым крупным стратам; при равенстве размера решает ключ,
+    # чтобы результат не зависел от порядка обхода словаря
+    order = sorted(by_subj, key=lambda s: (-len(by_subj[s]),
+                                           tuple(str(x) for x in s)))
+    for s in order[:leftover]:
         quotas[s] += 1
-    for s in sorted(by_subj):
+    for s in sorted(by_subj, key=lambda k: tuple(str(x) for x in k)):
         pool = sorted(by_subj[s], key=lambda r: r["task_id"])
         rng.shuffle(pool)
         picked.extend(pool[: quotas[s]])

@@ -153,15 +153,23 @@ def fetch_exams_v(langs, limit):
         counts[lang] = i + 1
         tid = f"examsv_{slug(lang)}_{i:04d}"
         img_ref = save_image(r["image"], "exams-v", lang, tid)
+        # grade в источнике — строка вида "[Grade: 12]" или "[Grade: 10-11]";
+        # берём первое число, иначе метка класса теряется (а это единственный
+        # прокси сложности в наборе)
+        grade_digits = re.findall(r"\d+", str(r.get("grade") or ""))
         buckets.setdefault(lang, []).append({
             "task_id": tid,
-            "subject": r.get("subject_grouped") or r.get("subject") or "unknown",
-            "grade": int(r["grade"]) if str(r.get("grade") or "").isdigit() else None,
+            # мелкий subject (20 дисциплин), а не subject_grouped (3 корзины):
+            # стратификация по трём корзинам почти ничего не гарантирует
+            "subject": r.get("subject") or r.get("subject_grouped") or "unknown",
+            "grade": int(grade_digits[0]) if grade_digits else None,
             "question": "(question in the image)",
             "question_images": [img_ref],
             "reference_answer": str(r["answer_key"]).strip(),
             "answer_type": "choice",
             "reference_solution": None,
+            # для стратификации и срезов: текстовый лист или с рисунком/таблицей
+            "_modality": r.get("type") or "text",
         })
     for lang, rows in buckets.items():
         path = write_rows(rows, "exams-v", lang)
