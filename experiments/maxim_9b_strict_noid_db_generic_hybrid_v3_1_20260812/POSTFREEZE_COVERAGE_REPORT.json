@@ -1,0 +1,58 @@
+{
+  "schema_version": "strict-noid-db-generic-hybrid-postfreeze-coverage-v1",
+  "created_utc": "2026-08-12T06:18:16Z",
+  "status": "independently_audited_routed_unscored_waiting_for_generic_predictions",
+  "hybrid_rule_freeze_sha256": "c904f1ea7151513cb83757cc80e21e8dd1cdbd8c7eb4fbf47a40ee40e35ac177",
+  "independent_audit": {
+    "status": "PASS",
+    "sha256": "412809bf7dd33b25e582f425ac04eded14ed9ac919f6f0ec59ae781be3301128"
+  },
+  "maxim274": {
+    "rows": 274,
+    "certified_accepted": 18,
+    "certified_coverage": 0.06569343065693431,
+    "abstained_to_generic": 256,
+    "abstention_rate": 0.9343065693430657,
+    "families": {
+      "meb7": 6,
+      "math12": 5,
+      "english10": 5,
+      "signed_temperature_change": 1,
+      "integer_block_lcm": 1
+    },
+    "coverage_sha256": "53dd3021638cc43628d0e5e5ddba1aa2d5db4f2c0ebd409b021ba6991daf6d44",
+    "route_decisions_sha256": "0f6a31ec8d862ba67f61a8d90e96a0bd1e2a77d071a51ff1a36c512eeaea974c",
+    "generic_queue_sha256": "b222a2fbc17afd33141802b727e302052b352743753221e44202a2bb5e156820",
+    "base240_control_output_sha256": "e851f8ea6b61bd2bff61453b5d8ce923ef663231a8ae222a104214d70b4f81fe",
+    "base240_control_answers_equal_audited_strict_b": true,
+    "answer_mismatches_vs_audited_strict_b": [],
+    "known_audited_score_evidence": {
+      "base_correct": 240,
+      "hybrid_control_correct": 251,
+      "total": 274,
+      "fixes": 11,
+      "regressions": 0,
+      "classification": "reused independently audited development-benchmark evidence; not rescored here"
+    },
+    "generic_candidate": "not_yet_frozen_for_maxim256_queue"
+  },
+  "ykslop_dev185": {
+    "rows": 185,
+    "certified_accepted": 0,
+    "certified_coverage": 0.0,
+    "abstained_to_generic": 185,
+    "abstention_rate": 1.0,
+    "coverage_sha256": "eb8d5c431d79b295d9fe9dc7b5751bee353bb6ee30e70731d6a5cc62d6653d8e",
+    "route_decisions_sha256": "f5b509d6369a8b7cf127222b334140eafe36fb212a00d50185e969cbdb7f0828",
+    "generic_queue_sha256": "b2b03dfb53218e7e099c5129c4ef6acd096d8c44e44b2e82a37c84c746e549a2",
+    "generic_candidate_binding": "GENERIC_CANDIDATE_BINDING_YKSLOP_V6_2.json",
+    "score": "pending generic predictions; no sealed score or outcomes opened"
+  },
+  "guards": {
+    "api_called_by_hybrid_agent": false,
+    "gold_opened": false,
+    "outcomes_opened": false,
+    "sealed_final80_opened": false,
+    "generic_prediction_output_opened": false
+  }
+}

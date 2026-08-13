@@ -1,0 +1,30 @@
+{
+  "schema_version": "strict-hybrid-generic-candidate-binding-v1",
+  "created_utc": "2026-08-12T06:18:16Z",
+  "state": "bound_before_hybrid_prediction_consumption",
+  "hybrid_rule_freeze_sha256": "c904f1ea7151513cb83757cc80e21e8dd1cdbd8c7eb4fbf47a40ee40e35ac177",
+  "generic_output_contract_sha256": "199595b7c7944b6cda763d9f31bf8e186d55dce12b1eff399e08bbb45c92ffc2",
+  "evaluation_set": "ykslop_dev185",
+  "generic_queue_sha256": "b2b03dfb53218e7e099c5129c4ef6acd096d8c44e44b2e82a37c84c746e549a2",
+  "candidate": {
+    "model_exact": "qwen/qwen3.5-9b",
+    "provider_exact": "SiliconFlow",
+    "quantization_exact": "fp8",
+    "transport": "openrouter_chat_completions_nonstream",
+    "stream": false,
+    "seed_present": false,
+    "data_collection": "deny",
+    "zdr": true,
+    "allow_fallbacks": false,
+    "hosted_bitwise_determinism_claimed": false,
+    "execution_freeze_sha256": "c1b275c985489a8fd1e534d93138c00c288c91b22c735793bc5b7c24b726f099",
+    "independent_audit_sha256": "d2371653281c1cbaa4df42521a159c404d37e0037fdf27eaae49c131d76121c9"
+  },
+  "selection": {
+    "adaptive_arm_choice": false,
+    "task_or_benchmark_id_used": false,
+    "gold_outcome_or_prior_prediction_used": false,
+    "transport_or_provider_used_by_hybrid_branch_selector": false,
+    "prediction_output_opened": false
+  }
+}
