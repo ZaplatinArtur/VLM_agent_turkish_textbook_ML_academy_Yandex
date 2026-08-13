@@ -176,6 +176,15 @@ __marimo__/
 # Project data (keep the tiny, dependency-free smoke manifest in Git)
 data/*
 !data/tasks.sample.jsonl
+
+# Дообученный адаптер реранкера: 58 МБ, но без него профиль -tuned не собрать,
+# а хеш коммита заодно служит той самой неизменяемой привязкой весов.
+# Каждый уровень раскрывается отдельно — в игнорируемый каталог git не заходит.
+!data/models/
+data/models/*
+!data/models/bge-reranker-v2/
+data/models/bge-reranker-v2/*
+!data/models/bge-reranker-v2/chosen/
 !data/visual_retrive/
 !data/visual_retrive/.gitkeep
 !data/visual_retrive/README.md

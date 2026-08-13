@@ -19,6 +19,8 @@ TESSDATA_DIR = CORPUS_DIR / "tessdata"
 INDEX_DIR = Path(
     os.environ.get("MLA_INDEX_DIR", CACHE_ROOT / "index")
 ).expanduser()
+MODELS_DIR = DATA_DIR / "models"
+RERANKER_ADAPTER_DIR = MODELS_DIR / "bge-reranker-v2" / "chosen"
 
 
 def ensure_data_dirs() -> None:

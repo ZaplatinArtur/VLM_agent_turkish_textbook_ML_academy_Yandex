@@ -6,13 +6,18 @@ import inspect
 import threading
 from typing import Any, Protocol
 
+from paths import RERANKER_ADAPTER_DIR
+
 from schemas.retrieve import RetrievedChunk
 
 from .base import Ranker, rescored
 
 DEFAULT_RERANKER_MODEL = "BAAI/bge-reranker-v2-m3"
-# LoRA-адаптер дообученного реранкера: переменная, а не отдельный профиль —
-# состав пайплайна тот же, меняются веса одной ступени.
+# Ревизия пинится, иначе обновление весов на Hub разойдётся с замерами.
+DEFAULT_RERANKER_REVISION = "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+# LoRA-адаптер дообученного реранкера: не отдельный профиль — состав пайплайна
+# тот же, меняются веса одной ступени. Лежит в репозитории и берётся сам;
+# переменной можно указать другой, значением "none" — отключить.
 ADAPTER_ENV = "RETRIEVE_RERANKER_ADAPTER"
 
 
@@ -25,6 +30,16 @@ def _sigmoid(value: float) -> float:
         return 1.0 / (1.0 + math.exp(-value))
     exp = math.exp(value)
     return exp / (1.0 + exp)
+
+
+def _resolve_adapter(adapter_path: str | None) -> str | None:
+    """Явный путь важнее переменной, переменная — репозиторного адаптера."""
+    if adapter_path:
+        return adapter_path
+    from_env = (os.environ.get(ADAPTER_ENV) or "").strip()
+    if from_env:
+        return None if from_env.casefold() == "none" else from_env
+    return str(RERANKER_ADAPTER_DIR) if RERANKER_ADAPTER_DIR.is_dir() else None
 
 
 def _needs_sigmoid(model: CrossEncoderLike) -> bool:
@@ -46,14 +61,16 @@ class CrossEncoderRanker(Ranker):
             cross_encoder: CrossEncoderLike | None = None,
             activation: str = "auto",
             adapter_path: str | None = None,
+            revision: str | None = DEFAULT_RERANKER_REVISION,
     ) -> None:
         if activation not in ("auto", "sigmoid", "none"):
             raise ValueError(f"unknown activation {activation!r}: auto | sigmoid | none")
         self.model_name = model_name
+        self.revision = revision
         self.top_n = top_n
         self.batch_size = batch_size
         self.activation = activation
-        self.adapter_path = adapter_path or os.environ.get(ADAPTER_ENV) or None
+        self.adapter_path = _resolve_adapter(adapter_path)
         self._model = cross_encoder
         self._load_lock = threading.Lock()
 
@@ -74,6 +91,8 @@ class CrossEncoderRanker(Ranker):
                         optional_arguments["model_kwargs"] = model_arguments
                     elif "automodel_args" in parameters:
                         optional_arguments["automodel_args"] = model_arguments
+                    if self.revision is not None and "revision" in parameters:
+                        optional_arguments["revision"] = self.revision
                     model = CrossEncoder(self.model_name, **optional_arguments)
                     if self.adapter_path:
                         from peft import PeftModel
@@ -97,10 +116,15 @@ class CrossEncoderRanker(Ranker):
             return list(chunks or [])
         head = chunks[: self.top_n]
         tail = chunks[self.top_n:]
-        pairs = [[query, chunk.text] for chunk in head]
+        return rescored(head, tail, self.score_pairs([[query, c.text] for c in head]))
+
+    def score_pairs(self, pairs: list[list[str]]) -> list[float]:
+        """Оценивает пары (запрос, текст) одним вызовом модели."""
+        if not pairs:
+            return []
         model = self.model
         raw_scores = model.predict(pairs, batch_size=self.batch_size)
         squash = _sigmoid if self.activation == "sigmoid" or (
             self.activation == "auto" and _needs_sigmoid(model)
         ) else float
-        return rescored(head, tail, [squash(float(score)) for score in raw_scores])
+        return [squash(float(score)) for score in raw_scores]
