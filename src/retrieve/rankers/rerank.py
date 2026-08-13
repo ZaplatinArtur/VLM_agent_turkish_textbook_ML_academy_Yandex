@@ -5,10 +5,6 @@ from typing import Any
 
 from schemas.retrieve import RetrievedChunk
 
-# TODO(turkish): lexical.tokenize режет по [a-z0-9] после NFKD, а ı (U+0131) не
-# раскладывается — слова с ней теряются целиком (ışık, ısı, sıfır, yıl → []).
-# BM25 уже переведён на bm25.fold_case; здесь замена сдвинет скоры этой ступени,
-# поэтому нужна вместе с перезамером.
 from .lexical import tokenize
 
 

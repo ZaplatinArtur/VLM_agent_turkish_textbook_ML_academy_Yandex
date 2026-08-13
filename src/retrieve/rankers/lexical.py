@@ -9,10 +9,19 @@ from collections import Counter, defaultdict
 from schemas.retrieve import RetrievedChunk
 
 from ..index import Index
+from .bm25 import fold_case
+
+
+# ı (U+0131) не раскладывается NFKD и не входит в [a-z0-9], поэтому её нужно
+# перевести явно — иначе фильтр вырезает её и рвёт слово (ışık, ısı, sıfır → []).
+_TURKISH_ASCII = str.maketrans(
+    {"ı": "i", "İ": "i", "ş": "s", "ğ": "g", "ç": "c", "ö": "o", "ü": "u"}
+)
 
 
 def tokenize(value: str) -> list[str]:
-    folded = unicodedata.normalize("NFKD", value.casefold())
+    folded = fold_case(value).translate(_TURKISH_ASCII)
+    folded = unicodedata.normalize("NFKD", folded)
     plain = "".join(char for char in folded if not unicodedata.combining(char))
     return [
         token
