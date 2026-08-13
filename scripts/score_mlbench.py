@@ -26,9 +26,26 @@ def load(path: Path) -> dict:
             (json.loads(l) for l in path.open(encoding="utf-8") if l.strip())}
 
 
+# Буква варианта по ПОЗИЦИИ в национальном алфавите: болгарские экзамены
+# нумеруют варианты А/Б/В/Г — модель же отвечает латиницей A/B/C/D.
+# Кириллическая В — это третий вариант, то есть латинская C, а не B.
+_CHOICE_MAP = str.maketrans({
+    "А": "A", "Б": "B", "В": "C", "Г": "D", "Д": "E",
+    "а": "A", "б": "B", "в": "C", "г": "D", "д": "E",
+    "Γ": "D",  # греческая гамма — так модель иногда рисует Г
+})
+
+
+def _norm_choice(ans: str) -> str:
+    return (ans or "").strip().translate(_CHOICE_MAP).upper()[:1]
+
+
 def good(res: dict, task: dict) -> bool:
-    return match(res.get("final_answer") or "", task["reference_answer"],
-                 task.get("answer_type") or "choice")
+    at = task.get("answer_type") or "choice"
+    if at == "choice":
+        return _norm_choice(res.get("final_answer")) == \
+            _norm_choice(task["reference_answer"])
+    return match(res.get("final_answer") or "", task["reference_answer"], at)
 
 
 def main() -> int:
