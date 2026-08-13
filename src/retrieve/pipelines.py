@@ -44,7 +44,7 @@ RRF_E5_SMALL_M3 = "rrf_e5-small_m3_bm25"
 RRF_E5_SMALL_M3_CE = "rrf_e5-small_m3_bm25_cross-encoder"
 RRF_M3_CE = "rrf_m3_bm25_cross-encoder"
 RRF_M3_CE_GATE = "rrf_m3_bm25_cross-encoder_gate"
-DEFAULT_PROFILE = E5_SMALL
+DEFAULT_PROFILE = RRF_E5_SMALL_CE
 PROFILES = (
     "bm25", "minilm", E5_SMALL, E5_BASE, "m3", QWEN3,
     RRF_E5_SMALL, RRF_E5_SMALL_CE, RRF_E5_SMALL_GATE, RRF_E5_SMALL_CE_GATE,

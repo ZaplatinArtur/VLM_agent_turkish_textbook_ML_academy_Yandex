@@ -11,7 +11,7 @@ from retrieve.rankers import (
     PrimaryCandidateUnion,
     ReciprocalRankFusion,
 )
-from retrieve.service import build_pipeline
+from retrieve.service import ADVANCED_PIPELINE, build_pipeline
 from paths import INDEX_DIR
 from schemas.retrieve import RetrievedChunk
 from retrieve.vector_store import IndexKind
@@ -53,6 +53,7 @@ def test_disabled_bge_keeps_legacy_hybrid_pipeline_shape(monkeypatch):
     )
     pipeline = build_pipeline(
         [make_chunk("a", "triangle area")],
+        profile=ADVANCED_PIPELINE,
         bge_m3_config=BgeM3Config(enabled=False),
     )
 
@@ -75,6 +76,7 @@ def test_enabled_bge_fails_closed_when_runtime_version_metadata_is_missing(
     with pytest.raises(RuntimeError, match="missing transformers"):
         build_pipeline(
             [make_chunk("a", "triangle area")],
+            profile=ADVANCED_PIPELINE,
             bge_m3_config=BgeM3Config(enabled=True),
         )
 
@@ -93,6 +95,7 @@ def test_enabled_bge_is_pinned_lazy_lexical_first_and_has_full_rerank_window(
     )
     pipeline = build_pipeline(
         [make_chunk("a", "triangle area")],
+        profile=ADVANCED_PIPELINE,
         bge_m3_config=config,
     )
 
@@ -130,6 +133,7 @@ def test_enabled_bge_rejects_explicit_rerank_window_smaller_than_union(
     with pytest.raises(ValueError, match="at least the enabled BGE candidate window"):
         build_pipeline(
             [make_chunk("a", "triangle area")],
+            profile=ADVANCED_PIPELINE,
             bge_m3_config=BgeM3Config(enabled=True),
         )
 
@@ -140,6 +144,7 @@ def test_enabled_bge_rejects_legacy_index_directory_collision(
     with pytest.raises(ValueError, match="legacy index directory"):
         build_pipeline(
             [make_chunk("a", "triangle area")],
+            profile=ADVANCED_PIPELINE,
             bge_m3_config=BgeM3Config(
                 enabled=True,
                 index_dir=INDEX_DIR,
@@ -159,6 +164,7 @@ def test_enabled_bge_threads_explicit_hnsw_kind_to_dense(
 
     pipeline = build_pipeline(
         [make_chunk("a", "triangle area")],
+        profile=ADVANCED_PIPELINE,
         bge_m3_config=config,
     )
     dense = pipeline.rankers[0].semantic
