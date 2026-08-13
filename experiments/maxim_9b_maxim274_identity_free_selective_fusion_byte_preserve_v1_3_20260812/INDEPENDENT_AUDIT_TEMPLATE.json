@@ -1,0 +1,29 @@
+{
+  "schema_version": "maxim274-selective-fusion-byte-preserve-independent-audit-v1.3",
+  "status": "PENDING",
+  "freeze_sha256": null,
+  "checks": {
+    "freeze_closure_and_runtime_self_hashes": null,
+    "v1_1_freeze_audit_result_exact_pins": null,
+    "candidate_atomic_completion_and_predictions_exact_pins": null,
+    "base251_solver_and_image97_judge_exact_pins": null,
+    "zero_tunable_exact_v1_1_decision_import": null,
+    "baseline_selected_rows_copy_raw_base251_bytes": null,
+    "generic_selected_rows_copy_raw_v1_1_bytes": null,
+    "two_generic_switches_outside_image97": null,
+    "all_97_image_rows_objects_and_candidate_text_utf8_exact": null,
+    "selector_identity_free_and_identity_alignment_only": null,
+    "no_gold_outcome_or_judge_verdict_read_by_compositor": null,
+    "postscore_builder_exposure_and_v1_2_withhold_disclosed": null,
+    "scorer_recomputes_exact_payload_and_validates_completion": null,
+    "private_scorer_fixed_paths_provenance_and_threshold_250": null,
+    "hostile_deterministic_and_implementation_mutations_rejected": null,
+    "tests_pass": null
+  },
+  "guards": {
+    "api_called": false,
+    "private_score_executed": false,
+    "judge_verdict_content_opened": false,
+    "gold_opened": false
+  }
+}

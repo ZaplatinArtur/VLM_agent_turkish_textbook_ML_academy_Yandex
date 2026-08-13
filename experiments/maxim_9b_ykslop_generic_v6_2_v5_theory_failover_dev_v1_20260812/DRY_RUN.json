@@ -1,0 +1,1 @@
+{"all_answers_valid":true,"benchmark_opened":false,"expected_first_four_predictions":["C","B","B","B"],"first_four_predictions":["C","B","B","B"],"gold_opened":false,"rows":185,"schema_version":"generic-failover-synthetic-dry-run-v1","selection_counts":{"v5_theory_fallback":184,"v6_2_strict_success":1},"synthetic_only":true,"v6_outputs_opened":false}

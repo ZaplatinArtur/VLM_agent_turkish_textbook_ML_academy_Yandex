@@ -21,11 +21,21 @@ _pipeline_lock = threading.Lock()
 if TYPE_CHECKING:
     from .gate import SemanticGate
 
+# Значение RETRIEVE_PROFILE, уводящее на графовый пайплайн вместо профиля.
+ADVANCED_PIPELINE = "advanced"
+
 
 def active_profile(profile: str | None = None) -> str | None:
-    """Return a selected named profile without changing the advanced default."""
+    """Профиль по умолчанию — DEFAULT_PROFILE; None означает графовый пайплайн.
+
+    RETRIEVE_PROFILE=advanced возвращает сборку с графом знаний, BGE-M3 и
+    KnowledgeReranker — на ней получены прежние прогоны команды.
+    """
+    from .pipelines import DEFAULT_PROFILE
+
     selected = profile if profile is not None else os.environ.get("RETRIEVE_PROFILE", "")
-    return selected.strip() or None
+    selected = selected.strip() or DEFAULT_PROFILE
+    return None if selected == ADVANCED_PIPELINE else selected
 
 
 @cache

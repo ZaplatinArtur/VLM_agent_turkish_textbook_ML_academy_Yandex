@@ -118,3 +118,22 @@ def test_original_chunk_scores_not_mutated():
     original = corpus()
     BM25Ranker(index=StubIndex(original)).rank("üçgen alan")
     assert all(c.score == 0.0 for c in original)
+
+
+@pytest.mark.parametrize("word", ["ışık", "ısı", "sıfır", "yıl", "kısım", "açı"])
+def test_dotless_i_survives_tokenization(word):
+    """Слова с ı должны давать токены: NFKD их не раскладывает, и токенизатор
+    по [a-z0-9] выбрасывал их целиком."""
+    from retrieve.rankers.bm25 import BM25Ranker as Stemmed
+
+    ranker = Stemmed(index=StubIndex([]))
+    ranker.build()
+    assert ranker._query_tokens(word), f"{word} потерялось при токенизации"
+
+
+def test_production_bm25_is_the_stemmed_one():
+    """rankers.BM25Ranker — тот, что умеет турецкий регистр, а не lexical."""
+    from retrieve import rankers
+
+    assert rankers.BM25Ranker is BM25Ranker
+    assert rankers.LegacyBM25Ranker is not BM25Ranker

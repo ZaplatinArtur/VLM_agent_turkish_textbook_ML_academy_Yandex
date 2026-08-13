@@ -1,0 +1,1 @@
+{"abstained_to_generic":185,"abstention_rate":1.0,"accepted_runtime_alignment_ids":[],"certified_accepted":0,"certified_coverage":0.0,"eval_set":"ykslop_dev185","family_counts":{"abstain":185},"freeze_sha256":"c904f1ea7151513cb83757cc80e21e8dd1cdbd8c7eb4fbf47a40ee40e35ac177","rows":185,"schema_version":"strict-noid-db-generic-coverage-v1","score_gold_or_outcomes_used":false}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "maxim-noid-content-source-pairwise-regression-audit-v1",
+  "status": "pass",
+  "comparison_field": "task_outcomes[].new_correct",
+  "note": "The scorer's top-level fixed/regressed fields compare to the ancient frozen page-RAG baseline. This audit compares each arm to its actual declared base.",
+  "artifact_a_over_archived249": {
+    "base_metrics_sha256": "969cece754bcf3eadd2fded4b519d9974e69a64c27e906e54e5ab9ecae470d8e",
+    "new_metrics_sha256": "a175f4a72b0b88304c6574d5d8e99a77d52c7402a651431d0c42455e46056c1d",
+    "base_correct": 249,
+    "new_correct": 251,
+    "fixes": ["val_0213", "val_0216"],
+    "regressions": []
+  },
+  "strict_b_over_base240": {
+    "base_metrics_sha256": "eb89ef624e99df8b26559d2d21f8fddda2b14852305395e388fed35307a0d4a6",
+    "new_metrics_sha256": "8d55d663850873b8a493fc2507097ee9c94e3807e071b041c27344125861d674",
+    "base_correct": 240,
+    "new_correct": 251,
+    "fixes": [
+      "val_0048", "val_0050", "val_0051", "val_0054", "val_0055",
+      "val_0056", "val_0057", "val_0058", "val_0182", "val_0213",
+      "val_0216"
+    ],
+    "regressions": []
+  }
+}

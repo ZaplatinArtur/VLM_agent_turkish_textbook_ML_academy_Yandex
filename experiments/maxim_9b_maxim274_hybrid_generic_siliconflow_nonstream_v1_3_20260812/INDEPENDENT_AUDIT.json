@@ -1,0 +1,53 @@
+{
+  "schema_version": "maxim256-generic-independent-audit-v1",
+  "status": "PASS",
+  "auditor": "Codex independent agent /root/hybrid_protocol",
+  "created_utc": "2026-08-12T06:53:04Z",
+  "freeze_sha256": "7096b70b25281da114d70956fd8f7a468372eb315c955584fe83217b30bc630d",
+  "authorization_sha256": "88f6be14a53ce1ab39b1e9b0dce32306d0f4501e4e7919234f15bd1c5f664a9e",
+  "private_score_freeze_sha256": "c07f46ac80e6accd353ef2eda095fe37e6e117eac85c8784024510d3c33dde9c",
+  "checks": {
+    "dry_run_256": true,
+    "error_redaction": true,
+    "exact_hybrid_composition": true,
+    "freeze_closure": true,
+    "hostile_unrelated_score_rejected": true,
+    "hybrid_v3_1_queue_ancestry": true,
+    "id_hash_free_wire": true,
+    "image_capability_fail_closed": true,
+    "journal_cache_closure": true,
+    "no_gold_final_outcomes": true,
+    "nonstream_response_closure": true,
+    "pre_outcome_contract": true,
+    "private_score_exact_solver_and_judge_provenance": true,
+    "provider_and_zdr_pins": true,
+    "rejected_v1_not_runnable": true,
+    "retry_allowlist": true,
+    "tests_pass": true
+  },
+  "evidence": {
+    "tests": "8 passed",
+    "dry_run_rows": 256,
+    "dry_run_unique_requests": 255,
+    "source_text_only": 70,
+    "source_multimodal_degraded_to_ocr_only": 186,
+    "image_bytes_sent": false,
+    "provider_calls_made": 0,
+    "queue_sha256": "c8e16e97a32ebea4a1a43a4273ea0109d44ce1da5e067d32223872cd53dd0bb2",
+    "outer_alignment_sha256": "205b627f8eddf7376068787e12b7f5ffda7cf13f610d9240cbc1077e99b8f0b8",
+    "hybrid_v3_1_freeze_sha256": "c904f1ea7151513cb83757cc80e21e8dd1cdbd8c7eb4fbf47a40ee40e35ac177",
+    "endpoint_evidence_source_sha256": "cb5746185b6c1b1d34ca4ac2a50a88e61d99033aa140cef7e2740d3262266744",
+    "superseded_unexecuted_freezes": [
+      "4a917b6442c8fcec81a37ec0ae99c7f8dbf9f4e57e7efbdb36ab420a8bdf1b6c",
+      "a3c43ae320f0a25cbc0030ee788e17accbeee1f3576af943fea05a01e288789f",
+      "8659377d0f93cc9110646d677734debe92fcaf37ffc46d1b80417883561df5d4"
+    ]
+  },
+  "scope_note": "PASS authorizes the frozen model candidate, exact Hybrid V3.1 recomposition, and exact solver/image-judge hash checks in the private wrapper. It does not by itself attest how future image-judge verdict content is generated; an official metric must additionally use a separately frozen pre-outcome judge process or a preselected fixed judge artifact, then bind its exact SHA before scoring.",
+  "guards": {
+    "api_called": false,
+    "final_opened": false,
+    "gold_opened": false,
+    "outcomes_opened": false
+  }
+}

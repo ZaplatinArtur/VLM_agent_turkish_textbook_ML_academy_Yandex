@@ -285,7 +285,9 @@ def _conflict_check(*chunk_ids: str) -> AIMessage:
     assert result.exit_reason == "forced_final_after_rewrite"
 
 
-def test_agent_rejects_second_search_after_confident_retrieval() -> None:
+def test_agent_may_search_again_after_confident_retrieval() -> None:
+    """Порог отсеивает выдачу не по теме, но не страницу по теме без нужного
+    содержания — второй заход разрешён, потолок держит retrieval_max_calls."""
     llm = FakeLlm(
         [
             _tool_call("dikdörtgen alan", call_id="call-1"),
@@ -299,9 +301,9 @@ def test_agent_rejects_second_search_after_confident_retrieval() -> None:
     result = solver.solve(_task())
 
     assert result.error is None
-    assert len(search_client.calls) == 1
-    assert "rewrite is allowed only after weak" in (result.tool_calls[1].error or "")
-    assert result.exit_reason == "tool_call_rejected"
+    assert len(search_client.calls) == 2
+    assert result.tool_calls[1].error is None
+    assert result.exit_reason == "forced_final_after_rewrite"
 
 
 def test_agent_uses_configured_retrieval_top_k() -> None:

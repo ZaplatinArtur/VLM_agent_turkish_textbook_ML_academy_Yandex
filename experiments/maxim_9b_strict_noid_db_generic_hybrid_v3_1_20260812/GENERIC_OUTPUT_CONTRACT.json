@@ -1,0 +1,36 @@
+{
+  "schema_version": "qwen35-9b-generic-output-contract-v1",
+  "model_exact": "Qwen/Qwen3.5-9B",
+  "purpose": "transport-neutral fallback contract for rows rejected by the certified content database gate",
+  "transport_is_not_a_selector_input": true,
+  "allowed_transports": [
+    "openrouter_chat_completions_nonstream",
+    "openrouter_chat_completions_sse"
+  ],
+  "provider_and_quantization_must_be_pinned_by_external_preexecution_freeze": true,
+  "silent_provider_model_or_quantization_fallback_forbidden": true,
+  "candidate_freeze_must_predate_prediction_output": true,
+  "candidate_freeze_requires_independent_pass_audit": true,
+  "privacy_requirements": {
+    "data_collection": "deny",
+    "zdr": true
+  },
+  "prediction_row": {
+    "alignment_id_one_of": [
+      "runtime_alignment_id",
+      "controller_id",
+      "task_id",
+      "content_sha256"
+    ],
+    "answer_one_of": [
+      "final_answer",
+      "answer"
+    ],
+    "alignment_id_is_outer_join_metadata_only": true
+  },
+  "hosted_reproducibility": {
+    "bitwise_determinism_claimed": false,
+    "seed_may_be_unsupported_by_provider": true,
+    "score_must_name_exact_provider_quantization_and_candidate_freeze": true
+  }
+}

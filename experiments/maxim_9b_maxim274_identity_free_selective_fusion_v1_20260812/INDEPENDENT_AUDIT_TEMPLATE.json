@@ -1,0 +1,35 @@
+{
+  "schema_version": "maxim274-identity-free-selective-fusion-independent-audit-v1.1",
+  "status": "PENDING_INDEPENDENT_AUDITOR",
+  "auditor": null,
+  "created_utc": null,
+  "freeze_sha256": null,
+  "checks": {
+    "freeze_closure": null,
+    "candidate_atomic_outputs_absent_at_freeze": null,
+    "partial_generic_cache_not_opened": null,
+    "no_gold_outcomes_score": null,
+    "selector_signature_has_no_identity": null,
+    "generic_projection_removes_identity_before_selector": null,
+    "all_outer_identity_used_for_alignment_only": null,
+    "invalid_generic_always_preserves_base251": null,
+    "parseable_baseline_always_preserved": null,
+    "generic_switch_requires_valid_contract_and_unparseable_baseline": null,
+    "precompletion_census_246_hold_10_exposed": null,
+    "valid_but_wrong_semantic_risk_disclosed": null,
+    "no_nonregression_or_improvement_guarantee_claimed": null,
+    "binary_exclusive_output_and_postwrite_verification": null,
+    "full_denominator_274": null,
+    "tests_pass": null,
+    "invalid_v1_lineage_preserved_and_disclosed": null
+  },
+  "guards": {
+    "api_called": false,
+    "candidate_completion_opened": false,
+    "candidate_predictions_opened": false,
+    "partial_generic_cache_opened": false,
+    "gold_opened": false,
+    "outcomes_opened": false,
+    "score_opened": false
+  }
+}

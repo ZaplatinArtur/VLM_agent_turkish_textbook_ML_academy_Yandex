@@ -1,3 +1,5 @@
+import pytest
+
 from schemas.retrieve import RetrievedChunk
 
 from retrieve.index import Index
@@ -203,3 +205,11 @@ def test_short_theory_filter_is_scoped_to_graph_nodes() -> None:
         "page-theory",
         "graph-example",
     }
+
+
+@pytest.mark.parametrize("word", ["ışık", "ısı", "sıfır", "yıl", "kısım", "açı"])
+def test_tokenize_keeps_words_with_dotless_i(word):
+    """ı не раскладывается NFKD: без явного перевода фильтр [a-z0-9] съедал слово."""
+    from retrieve.rankers.lexical import tokenize
+
+    assert tokenize(word), f"{word} потерялось при токенизации"

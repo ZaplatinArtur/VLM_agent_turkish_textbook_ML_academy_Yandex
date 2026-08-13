@@ -1,0 +1,37 @@
+{
+  "schema_version": "maxim-invalid-generic-fallback-independent-audit-v1.5",
+  "status": "PASS",
+  "auditor": "hybrid_protocol_independent_agent",
+  "created_utc": "2026-08-12T10:34:49.8451465Z",
+  "freeze_sha256": "54ab5b13178643538add598ca202ecc49d7cba41d8492b2af29e73b741e6ece5",
+  "checks": {
+    "all_274_decision_ids_unique_string_exact_base_order": true,
+    "base240_exact_raw_fallback": true,
+    "binary_exact_writes_and_postwrite_hash": true,
+    "candidate_outputs_absent_at_freeze": true,
+    "choice_outputs_exact_option_label": true,
+    "freeze_closure": true,
+    "full_denominator_274": true,
+    "generic_decision_alignment_set_exact": true,
+    "hostile_choice_labels_rejected": true,
+    "hostile_duplicate_missing_ids_abort": true,
+    "hostile_windows_newline_regression": true,
+    "identity_mismatch_aborts": true,
+    "invalid_contract_complete": true,
+    "no_gold_outcomes_score": true,
+    "nonchoice_outputs_final_answer": true,
+    "pre_outcome_rule": true,
+    "runtime_self_implementation_sha": true,
+    "tests_pass": true,
+    "v1_4_pass_but_superseded_preuse_windows_defect_truthful": true,
+    "valid_generic_semantic_risk_disclosed": true
+  },
+  "guards": {
+    "api_called": false,
+    "candidate_completion_opened": false,
+    "candidate_predictions_opened": false,
+    "gold_opened": false,
+    "outcomes_opened": false,
+    "score_opened": false
+  }
+}
