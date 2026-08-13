@@ -476,14 +476,10 @@ class AgentRag(B0NoTools):
                         output = self._error_tool_output(
                             "tool call limit reached; answer using available evidence"
                         )
-                    elif (
-                        executed_calls > 0
-                        and last_relevance not in {"weak", "empty", "error", "conflict"}
-                    ):
-                        output = self._error_tool_output(
-                            "rewrite is allowed only after weak or empty retrieval"
-                        )
                     else:
+                        # Повтор разрешён и после confident: порог отсеивает выдачу
+                        # не по теме, но не страницу по теме без нужного содержания.
+                        # Потолок держит retrieval_max_calls.
                         seen_queries.add(normalized_query)
                         if executed_calls > 0:
                             rewrite_used = True
