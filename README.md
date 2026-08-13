@@ -20,8 +20,8 @@
 </p>
 
 VLM-агент для решения школьных заданий на турецком языке с поиском по корпусу
-учебников. Репозиторий объединяет три сравниваемых режима агента, retrieval,
-LLM-as-a-Judge и приложение для анализа экспериментов.
+учебников. Репозиторий объединяет сравниваемые solver-режимы, source-aware
+каскад, retrieval, LLM-as-a-Judge и приложение для анализа экспериментов.
 
 Исследовательский вопрос проекта: **повышает ли поиск по учебникам качество
 ответов по сравнению с той же моделью без инструментов и с веб-поиском?**
@@ -42,6 +42,7 @@ LLM-as-a-Judge и приложение для анализа экспериме�
 | 🧠 Без инструментов | `b0_no_tools` | исходный текст или изображение задачи |
 | 🌐 Веб-поиск | `b1_search` | задача и инструмент веб-поиска |
 | 📚 Textbook RAG | `agent_rag` | задача и ограниченный инструмент поиска по учебникам |
+| 🔎 Source-aware RAG | `agent_rag_sourced` | fail-closed роутер по официальным источникам, затем fallback в `agent_rag` |
 
 Все режимы возвращают единый `SolveResult`, поэтому их можно оценивать одним
 judge и сравнивать попарно на одинаковых `task_id`.
@@ -72,20 +73,22 @@ python -m venv .venv
 ## Как работает система
 
 <p align="center">
-  <img src="docs/assets/pipeline-overview-v3.svg" alt="Verified task, solver, retrieval, judge and analytics pipeline" width="100%">
+  <img src="docs/assets/pipeline-overview-v4.svg" alt="Source-aware agent, retrieval profiles, checked relevance and evaluation pipeline" width="100%">
 </p>
 
-Runner выбирает один solver: B0 делает одиночный мультимодальный вызов, B1
-работает в ограниченном ReAct-цикле с веб-поиском, а AgentRag выполняет
-image-first поиск по учебникам. Все три ветки сохраняют единый `SolveResult` с
-ответом, trace, usage и ошибками.
+Runner выбирает solver. В текущем source-aware режиме `agent_rag_sourced`
+сначала передаёт только наблюдаемый текст задачи fail-closed роутеру. Уверенная
+привязка к официальному источнику даёт ответ из ключа без вызова модели. При
+`abstain` задача переходит в image-first `AgentRag`.
 
-В RAG-режиме изображение остаётся главным источником фактов. Агент получает не
-более двух попыток поиска, не передаёт слабые или конфликтующие чанки в финальный
-контекст и повторно проверяет ответ по screenshot. Эталон не передаётся solver:
-он присоединяется только в judge adapter. После blind judge система проверяет
-полноту task IDs, считает paired fixed/regressed и импортирует результаты в
-reports и VLM Analytics.
+`textbook_search` вызывает checked retrieval напрямую. По умолчанию работает
+`rrf_e5-small_bm25_cross-encoder`: Turkish BM25 и multilingual E5-small
+объединяются RRF, затем результат переранжирует зафиксированный BGE
+cross-encoder с дообученным LoRA-адаптером. Доступны также special-профиль
+`advanced` и всего 19 именованных профилей. Слабая выдача скрывается; агент может сделать
+не более двух различных поисков, после чего проверяет ответ по исходному
+изображению. Все ветки сохраняют единый `SolveResult`; эталон присоединяется только
+в judge adapter.
 
 ## Структура репозитория
 
@@ -136,7 +139,7 @@ latency, usage, tool traces и отдельные ответы. Запуск и 
 # Проверить сборку агента с прямым textbook retrieval без вызова модели.
 .\.venv\Scripts\python.exe -m mla_baseline.runner `
   --tasks data/eval/tasks.sample.jsonl `
-  --condition agent_rag `
+  --condition agent_rag_sourced `
   --dry-run
 
 # Запустить основное desktop-приложение аналитики.
@@ -159,7 +162,8 @@ latency, usage, tool traces и отдельные ответы. Запуск и 
 Экспериментальные retrieval-профили Даниила Теслова выбираются через
 `RETRIEVE_PROFILE` (например, `rrf_e5-small_bm25_cross-encoder`). Их код и
 измерения сохранены в `src/retrieve/pipelines.py` и `reports/measurements/`;
-без переменной окружения остаётся активным современный основной pipeline.
+без переменной окружения активен
+`rrf_e5-small_bm25_cross-encoder`.
 
 ## Документация
 

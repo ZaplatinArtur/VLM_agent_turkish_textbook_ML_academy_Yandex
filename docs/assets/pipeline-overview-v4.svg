@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1300" viewBox="0 0 1800 1300" role="img" aria-labelledby="title desc">
+  <title id="title">Source-aware Turkish textbook VLM pipeline</title>
+  <desc id="desc">A task enters agent_rag_sourced. A fail-closed official-source router either returns a certified answer without a model call or abstains into the image-first RAG agent. Textbook search selects the default, advanced, or another named retrieval profile, applies checked relevance, and exposes only confident chunks. Solve results are evaluated by a blind shared judge.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07131f"/>
+      <stop offset="1" stop-color="#0d2130"/>
+    </linearGradient>
+    <linearGradient id="primary" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#103b45"/>
+      <stop offset="1" stop-color="#102b3c"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%">
+      <feDropShadow dx="0" dy="9" stdDeviation="11" flood-color="#000814" flood-opacity="0.42"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#7593a5"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#55e6c1"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#6fb5ff"/>
+    </marker>
+  </defs>
+
+  <rect width="1800" height="1300" rx="30" fill="url(#bg)"/>
+  <g font-family="Inter, Segoe UI, Arial, sans-serif">
+    <text x="60" y="58" fill="#f2f7fa" font-size="30" font-weight="800">Current source-aware system flow</text>
+    <text x="60" y="90" fill="#87a4b5" font-size="16">official source first · checked textbook retrieval · image-first answer · shared blind evaluation</text>
+
+    <!-- input and source-aware cascade -->
+    <g transform="translate(60 130)" filter="url(#shadow)">
+      <rect width="210" height="138" rx="21" fill="#0e2635" stroke="#426479"/>
+      <rect x="26" y="22" width="55" height="65" rx="8" fill="#173a4c" stroke="#6fb5ff"/>
+      <path d="M38 40 H70 M38 53 H66 M38 66 H70" stroke="#8fc8ff" stroke-width="4" stroke-linecap="round"/>
+      <text x="25" y="112" fill="#f0f6f9" font-size="19" font-weight="760">TASK JSONL</text>
+      <text x="25" y="132" fill="#88a4b5" font-size="12">text / screenshot / metadata</text>
+    </g>
+
+    <g transform="translate(320 130)" filter="url(#shadow)">
+      <rect width="220" height="138" rx="21" fill="url(#primary)" stroke="#55e6c1" stroke-width="2"/>
+      <circle cx="35" cy="35" r="16" fill="#55e6c1" opacity="0.16"/>
+      <path d="M27 35 L33 41 L44 28" fill="none" stroke="#65edce" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="24" y="91" fill="#f0f6f9" font-size="19" font-weight="760">BATCH RUNNER</text>
+      <text x="24" y="116" fill="#9ff3df" font-size="13">selects one Solver condition</text>
+    </g>
+
+    <g transform="translate(590 130)" filter="url(#shadow)">
+      <rect width="280" height="138" rx="21" fill="#13273b" stroke="#6fb5ff" stroke-width="2"/>
+      <text x="25" y="46" fill="#f0f6f9" font-size="18" font-weight="780">agent_rag_sourced</text>
+      <text x="25" y="76" fill="#a8d4ff" font-size="14">source router → AgentRag fallback</text>
+      <text x="25" y="103" fill="#7e9caf" font-size="13">reference answer is never visible</text>
+    </g>
+
+    <g transform="translate(920 112)" filter="url(#shadow)">
+      <rect width="355" height="176" rx="22" fill="#27243a" stroke="#b28cff" stroke-width="2"/>
+      <circle cx="37" cy="38" r="17" fill="#b28cff" opacity="0.17"/>
+      <path d="M29 38 H45 M37 30 V46" stroke="#cbb7ff" stroke-width="3" stroke-linecap="round"/>
+      <text x="68" y="44" fill="#f0f6f9" font-size="19" font-weight="770">OFFICIAL-SOURCE ROUTER</text>
+      <text x="28" y="80" fill="#d5c6ff" font-size="14">observable task text only</text>
+      <text x="28" y="106" fill="#aa9cc6" font-size="13">17 records · 3 official textbooks</text>
+      <text x="28" y="132" fill="#aa9cc6" font-size="13">score + margin / marker + anchors</text>
+      <text x="28" y="157" fill="#aa9cc6" font-size="13">fail closed: exact binding or abstain</text>
+    </g>
+
+    <g transform="translate(1330 112)" filter="url(#shadow)">
+      <rect width="410" height="176" rx="22" fill="#1f3038" stroke="#6fb5ff"/>
+      <text x="26" y="42" fill="#f0f6f9" font-size="19" font-weight="770">OFFICIAL ANSWER</text>
+      <text x="26" y="76" fill="#a8d4ff" font-size="14">answer comes from the bound key</text>
+      <text x="26" y="103" fill="#8ca8b9" font-size="13">no LLM call · no textbook_search</text>
+      <text x="26" y="130" fill="#8ca8b9" font-size="13">answer_source = official_source</text>
+      <rect x="26" y="143" width="340" height="20" rx="10" fill="#6fb5ff" opacity="0.12"/>
+      <text x="196" y="157" text-anchor="middle" fill="#8fc8ff" font-size="11">dev replay coverage ≈ 6.6%, not a universal rate</text>
+    </g>
+
+    <g fill="none" stroke="#7593a5" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M270 199 H320"/>
+      <path d="M540 199 H590"/>
+      <path d="M870 199 H920"/>
+    </g>
+    <path d="M1275 170 H1330" fill="none" stroke="#6fb5ff" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    <text x="1295" y="157" fill="#8fc8ff" font-size="13" font-weight="700">MATCH</text>
+
+    <!-- agent fallback -->
+    <path d="M1097 288 V338" fill="none" stroke="#55e6c1" stroke-width="3" marker-end="url(#arrow-green)"/>
+    <text x="1114" y="320" fill="#9ff3df" font-size="13" font-weight="700">ABSTAIN ≈ 93.4% ON DEV REPLAY</text>
+
+    <g transform="translate(850 340)" filter="url(#shadow)">
+      <rect width="570" height="224" rx="23" fill="#0d2d32" stroke="#55e6c1" stroke-width="2"/>
+      <circle cx="38" cy="39" r="17" fill="#55e6c1" opacity="0.17"/>
+      <path d="M29 39 L36 46 L49 30" fill="none" stroke="#65edce" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="70" y="45" fill="#f0f6f9" font-size="20" font-weight="780">AGENT RAG · IMAGE-FIRST</text>
+      <text x="30" y="84" fill="#9ff3df" font-size="14" font-weight="700">1 · image evidence → topic + unknown concepts</text>
+      <text x="30" y="116" fill="#9ff3df" font-size="14" font-weight="700">2 · answer directly or call textbook_search</text>
+      <text x="30" y="148" fill="#9ff3df" font-size="14" font-weight="700">3 · at most 2 distinct searches; one rewrite after any first call</text>
+      <text x="30" y="180" fill="#9ff3df" font-size="14" font-weight="700">4 · conflict filter → structured answer → image recheck</text>
+      <text x="30" y="207" fill="#78a5a7" font-size="13">tool-disabled forced finish when the call budget is exhausted</text>
+    </g>
+
+    <g transform="translate(1490 365)" filter="url(#shadow)">
+      <rect width="250" height="174" rx="22" fill="#2d2631" stroke="#ffbd73"/>
+      <circle cx="35" cy="36" r="16" fill="#ffbd73" opacity="0.17"/>
+      <circle cx="32" cy="33" r="7" fill="none" stroke="#ffbd73" stroke-width="3"/>
+      <path d="M38 39 L46 47" stroke="#ffbd73" stroke-width="3" stroke-linecap="round"/>
+      <text x="62" y="42" fill="#f0f6f9" font-size="18" font-weight="760">textbook_search</text>
+      <text x="25" y="79" fill="#ffd29f" font-size="13">direct in-process call</text>
+      <text x="25" y="104" fill="#aa967d" font-size="13">fixed top_k = 5</text>
+      <text x="25" y="129" fill="#aa967d" font-size="13">subject / grade filters</text>
+      <text x="25" y="154" fill="#aa967d" font-size="13">full trace + relevance verdict</text>
+    </g>
+    <path d="M1420 448 H1490" fill="none" stroke="#ffbd73" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <g transform="translate(60 350)" opacity="0.92">
+      <rect width="690" height="150" rx="20" fill="#112331" stroke="#36576a"/>
+      <text x="25" y="38" fill="#dce8ee" font-size="17" font-weight="740">COMPARISON ARMS REMAIN AVAILABLE</text>
+      <text x="25" y="70" fill="#9eb2be" font-size="14">b0_no_tools · one multimodal model call</text>
+      <text x="25" y="98" fill="#9eb2be" font-size="14">b1_search · bounded web-search ReAct loop</text>
+      <text x="25" y="126" fill="#9eb2be" font-size="14">agent_rag · checked RAG without the source-router prefix</text>
+    </g>
+
+    <g transform="translate(60 520)" filter="url(#shadow)">
+      <rect width="690" height="85" rx="19" fill="#152b41" stroke="#6fb5ff" stroke-width="2"/>
+      <text x="26" y="36" fill="#f0f6f9" font-size="18" font-weight="780">SOLVE RESULT · common output contract</text>
+      <text x="26" y="64" fill="#a8d4ff" font-size="13">answer · source · trace · usage · relevance · exit reason · error</text>
+    </g>
+    <path d="M850 530 H750" fill="none" stroke="#7593a5" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+    <path d="M1535 288 V296 H790 V562 H750" fill="none" stroke="#6fb5ff" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow-blue)"/>
+
+    <!-- retrieval profile selector -->
+    <path d="M1615 539 V625" fill="none" stroke="#ffbd73" stroke-width="3" marker-end="url(#arrow)"/>
+    <g transform="translate(60 625)" filter="url(#shadow)">
+      <rect width="1680" height="68" rx="19" fill="#172936" stroke="#7892a3"/>
+      <text x="28" y="42" fill="#f0f6f9" font-size="20" font-weight="780">RETRIEVE_PROFILE · selects the pipeline inside the tool</text>
+      <text x="1625" y="42" text-anchor="end" fill="#8da8b8" font-size="13">special advanced + 19 named profiles</text>
+    </g>
+
+    <g transform="translate(60 730)" filter="url(#shadow)">
+      <rect width="520" height="220" rx="22" fill="#0d2d32" stroke="#55e6c1" stroke-width="2"/>
+      <rect width="520" height="50" rx="22" fill="#154047"/>
+      <path d="M0 50 H520" stroke="#55e6c1" opacity="0.45"/>
+      <text x="25" y="33" fill="#f0f6f9" font-size="17" font-weight="780">DEFAULT · rrf_e5-small_bm25_cross-encoder</text>
+      <text x="26" y="82" fill="#9ff3df" font-size="14">Stemmed BM25 (Turkish) + multilingual E5-small</text>
+      <text x="26" y="112" fill="#9ff3df" font-size="14">→ reciprocal rank fusion, k = 60</text>
+      <text x="26" y="142" fill="#9ff3df" font-size="14">→ BAAI/bge-reranker-v2-m3, pinned revision</text>
+      <text x="26" y="172" fill="#9ff3df" font-size="14">→ selected repository LoRA adapter, merged at load</text>
+      <text x="26" y="202" fill="#759fa2" font-size="12">measured fp16 median: 382 ms · hardware-dependent</text>
+    </g>
+
+    <g transform="translate(640 730)" filter="url(#shadow)">
+      <rect width="520" height="220" rx="22" fill="#26243a" stroke="#b28cff"/>
+      <rect width="520" height="50" rx="22" fill="#332d50"/>
+      <path d="M0 50 H520" stroke="#b28cff" opacity="0.45"/>
+      <text x="25" y="33" fill="#f0f6f9" font-size="18" font-weight="780">SPECIAL · RETRIEVE_PROFILE=advanced</text>
+      <text x="26" y="82" fill="#d5c6ff" font-size="14">Turkish BM25 + optional BGE-M3 candidates</text>
+      <text x="26" y="112" fill="#d5c6ff" font-size="14">→ PrimaryCandidateUnion / legacy weighted RRF</text>
+      <text x="26" y="142" fill="#d5c6ff" font-size="14">→ KnowledgeReranker</text>
+      <text x="26" y="172" fill="#d5c6ff" font-size="14">→ optional KnowledgeGraph expansion</text>
+      <text x="26" y="202" fill="#9e91ba" font-size="12">kept for advanced graph and previous team runs</text>
+    </g>
+
+    <g transform="translate(1220 730)" filter="url(#shadow)">
+      <rect width="520" height="220" rx="22" fill="#2d2631" stroke="#ffbd73"/>
+      <rect width="520" height="50" rx="22" fill="#443227"/>
+      <path d="M0 50 H520" stroke="#ffbd73" opacity="0.45"/>
+      <text x="25" y="33" fill="#f0f6f9" font-size="18" font-weight="780">NAMED EXPERIMENT PROFILES</text>
+      <text x="26" y="82" fill="#ffd29f" font-size="14">19 reproducible profiles in the registry</text>
+      <text x="26" y="112" fill="#ffd29f" font-size="14">BM25 · MiniLM · E5-small/base · BGE-M3 · Qwen3</text>
+      <text x="26" y="142" fill="#ffd29f" font-size="14">dense / RRF / cross-encoder / optional LLM gate</text>
+      <text x="26" y="172" fill="#ffd29f" font-size="14">one profile is built lazily per run</text>
+      <text x="26" y="202" fill="#aa967d" font-size="12">default is included in the 19-profile registry</text>
+    </g>
+
+    <g fill="none" stroke="#7593a5" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M320 693 V730"/>
+      <path d="M900 693 V730"/>
+      <path d="M1480 693 V730"/>
+      <path d="M320 950 V985 H650"/>
+      <path d="M900 950 V985"/>
+      <path d="M1480 950 V985 H1150"/>
+    </g>
+
+    <!-- checked relevance and outcomes -->
+    <g transform="translate(600 970)" filter="url(#shadow)">
+      <rect width="600" height="128" rx="22" fill="#13273b" stroke="#6fb5ff" stroke-width="2"/>
+      <text x="300" y="38" text-anchor="middle" fill="#f0f6f9" font-size="20" font-weight="780">CHECKED RELEVANCE VERDICT</text>
+      <text x="300" y="70" text-anchor="middle" fill="#a8d4ff" font-size="14">profile-aware score threshold · default profile threshold = 0.50</text>
+      <text x="300" y="97" text-anchor="middle" fill="#829fb1" font-size="13">optional semantic gate can replace the numeric decision</text>
+    </g>
+
+    <g transform="translate(60 985)" filter="url(#shadow)">
+      <rect width="470" height="100" rx="20" fill="#38272c" stroke="#ff8f9b"/>
+      <text x="24" y="37" fill="#ffd0d5" font-size="17" font-weight="760">WEAK / EMPTY / ERROR</text>
+      <text x="24" y="66" fill="#c79aa0" font-size="13">hits = [] · weak context is hidden</text>
+      <text x="24" y="87" fill="#c79aa0" font-size="13">one distinct rewrite if the 2-call budget remains</text>
+    </g>
+
+    <g transform="translate(1270 985)" filter="url(#shadow)">
+      <rect width="470" height="100" rx="20" fill="#11352f" stroke="#55e6c1"/>
+      <text x="24" y="37" fill="#b8f7e8" font-size="17" font-weight="760">CONFIDENT</text>
+      <text x="24" y="66" fill="#91cdbc" font-size="13">up to 5 chunks are exposed to the agent</text>
+      <text x="24" y="87" fill="#91cdbc" font-size="13">the agent may still issue one distinct rewrite</text>
+    </g>
+
+    <path d="M600 1034 H530" fill="none" stroke="#ff8f9b" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M1200 1034 H1270" fill="none" stroke="#55e6c1" stroke-width="3" marker-end="url(#arrow-green)"/>
+    <path d="M1740 1034 H1770 V452 H1740" fill="none" stroke="#55e6c1" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow-green)"/>
+    <text x="1760" y="720" transform="rotate(-90 1760 720)" text-anchor="middle" fill="#86c8b8" font-size="12">confident context returns to AgentRag</text>
+
+    <!-- evaluation -->
+    <path d="M60 1138 H1100" stroke="#2c4a5d" stroke-width="2"/>
+    <text x="60" y="1172" fill="#f2f7fa" font-size="21" font-weight="760">Shared evaluation</text>
+    <text x="60" y="1197" fill="#829eaf" font-size="13">The trusted reference enters only after solving.</text>
+
+    <g transform="translate(60 1215)">
+      <rect width="240" height="62" rx="16" fill="#2b2436" stroke="#b28cff"/>
+      <text x="120" y="38" text-anchor="middle" fill="#e5d9ff" font-size="14" font-weight="720">TRUSTED REFERENCE</text>
+    </g>
+    <g transform="translate(350 1215)">
+      <rect width="240" height="62" rx="16" fill="#1c2838" stroke="#7892a3"/>
+      <text x="120" y="38" text-anchor="middle" fill="#f0f6f9" font-size="14" font-weight="720">JUDGE ADAPTER</text>
+    </g>
+    <g transform="translate(640 1215)">
+      <rect width="220" height="62" rx="16" fill="#251f3e" stroke="#b28cff"/>
+      <text x="110" y="38" text-anchor="middle" fill="#f0f6f9" font-size="14" font-weight="720">BLIND LLM JUDGE</text>
+    </g>
+    <g transform="translate(910 1215)">
+      <rect width="220" height="62" rx="16" fill="#172a35" stroke="#55e6c1"/>
+      <text x="110" y="38" text-anchor="middle" fill="#f0f6f9" font-size="14" font-weight="720">COMPLETION AUDIT</text>
+    </g>
+    <g transform="translate(1180 1215)">
+      <rect width="230" height="62" rx="16" fill="#332a20" stroke="#ffbd73"/>
+      <text x="115" y="38" text-anchor="middle" fill="#f0f6f9" font-size="14" font-weight="720">PAIRED EVALUATION</text>
+    </g>
+    <g transform="translate(1460 1215)">
+      <rect width="280" height="62" rx="16" fill="#122d32" stroke="#55e6c1"/>
+      <text x="140" y="38" text-anchor="middle" fill="#f0f6f9" font-size="14" font-weight="720">REPORTS + ANALYTICS</text>
+    </g>
+    <g fill="none" stroke="#7593a5" stroke-width="2.5" marker-end="url(#arrow)">
+      <path d="M300 1246 H350"/>
+      <path d="M590 1246 H640"/>
+      <path d="M860 1246 H910"/>
+      <path d="M1130 1246 H1180"/>
+      <path d="M1410 1246 H1460"/>
+    </g>
+    <path d="M60 562 H25 V1204 H470 V1215" fill="none" stroke="#6fb5ff" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow-blue)"/>
+  </g>
+</svg>
