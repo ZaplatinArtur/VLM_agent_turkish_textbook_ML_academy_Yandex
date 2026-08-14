@@ -8,13 +8,19 @@ const approachPanels = [...document.querySelectorAll(".approach-panel")];
 
 function setTheme(theme) {
   root.dataset.theme = theme;
-  themeIcon.textContent = theme === "dark" ? "☾" : "☀";
-  themeToggle.setAttribute(
-    "aria-label",
-    theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему",
-  );
-  document.querySelector('meta[name="theme-color"]').content =
-    theme === "dark" ? "#171716" : "#fbf7ee";
+  if (themeIcon) {
+    themeIcon.textContent = theme === "dark" ? "☾" : "☀";
+  }
+  if (themeToggle) {
+    themeToggle.setAttribute(
+      "aria-label",
+      theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему",
+    );
+  }
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) {
+    themeColor.content = theme === "dark" ? "#171716" : "#fbf7ee";
+  }
 }
 
 const storedTheme = localStorage.getItem("textbook-vlm-theme");
@@ -23,23 +29,27 @@ const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
   : "light";
 setTheme(storedTheme || preferredTheme);
 
-themeToggle.addEventListener("click", () => {
-  const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-  setTheme(nextTheme);
-  localStorage.setItem("textbook-vlm-theme", nextTheme);
-});
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    localStorage.setItem("textbook-vlm-theme", nextTheme);
+  });
+}
 
-menuToggle.addEventListener("click", () => {
-  const isOpen = siteNav.classList.toggle("is-open");
-  menuToggle.setAttribute("aria-expanded", String(isOpen));
-});
+if (menuToggle && siteNav) {
+  menuToggle.addEventListener("click", () => {
+    const isOpen = siteNav.classList.toggle("is-open");
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+  });
 
-siteNav.addEventListener("click", (event) => {
-  if (event.target.closest("a")) {
-    siteNav.classList.remove("is-open");
-    menuToggle.setAttribute("aria-expanded", "false");
-  }
-});
+  siteNav.addEventListener("click", (event) => {
+    if (event.target.closest("a")) {
+      siteNav.classList.remove("is-open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    }
+  });
+}
 
 function selectApproach(selectedTab) {
   const selectedApproach = selectedTab.dataset.approach;
@@ -107,4 +117,7 @@ const barObserver = new IntersectionObserver(
 
 document.querySelectorAll(".bar").forEach((bar) => barObserver.observe(bar));
 
-document.getElementById("year").textContent = String(new Date().getFullYear());
+const year = document.getElementById("year");
+if (year) {
+  year.textContent = String(new Date().getFullYear());
+}

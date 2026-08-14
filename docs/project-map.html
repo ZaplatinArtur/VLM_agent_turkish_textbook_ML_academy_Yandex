@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Карта компонентов и потоков данных проекта Textbook VLM.">
+  <meta name="theme-color" content="#fbf7ee">
+  <title>Карта проекта — Textbook VLM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="detail.css">
+  <script src="site.js" defer></script>
+</head>
+<body class="detail-page">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <header class="topbar" aria-label="Основная навигация">
+    <a class="brand" href="index.html" aria-label="Textbook VLM — на главную"><span class="brand-mark" aria-hidden="true">✣</span><span>TEXTBOOK VLM</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span class="sr-only">Открыть меню</span></button>
+    <nav id="site-nav" class="site-nav">
+      <a href="index.html#research">задача</a><a href="index.html#approaches">подходы</a><a href="index.html#results">результаты</a><a href="retrieval-tool.html">поиск</a><a href="evaluation.html">оценка</a>
+    </nav>
+    <div class="topbar-actions"><button class="theme-toggle" type="button" aria-label="Переключить тему"><span class="theme-icon" aria-hidden="true">☀</span></button><a class="nav-cta" href="https://github.com/ZaplatinArtur/VLM_agent_turkish_textbook_ML_academy_Yandex">GitHub ↗</a></div>
+  </header>
+
+  <main id="main">
+    <section class="detail-hero">
+      <div class="section-shell">
+        <span class="detail-kicker">документация · устройство системы</span>
+        <h1 class="detail-title">КАРТА<br><em>ПРОЕКТА</em></h1>
+        <div class="detail-intro">
+          <a class="detail-back" href="index.html">← На главную</a>
+          <p>Как задание проходит от входного изображения через маршрутизацию, решение и поиск до единой оценки.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ЧЕТЫРЕ<br><em>КОНТУРА.</em></h2><p>Компоненты разделены так, чтобы один и тот же набор заданий честно проходил через разные режимы.</p></div>
+        <div class="doc-grid">
+          <article class="doc-card accent-purple"><span class="doc-number">01 · АГЕНТ</span><h3>Единый запуск</h3><p>Загружает задачи, выбирает режим, сохраняет ответ, шаги решения, вызовы инструментов и ошибки.</p></article>
+          <article class="doc-card accent-green"><span class="doc-number">02 · ПОИСК</span><h3>Корпус учебников</h3><p>Находит кандидатов, объединяет сигналы и повторно ранжирует фрагменты перед передачей агенту.</p></article>
+          <article class="doc-card accent-yellow"><span class="doc-number">03 · ОЦЕНКА</span><h3>Слепая проверка</h3><p>Сравнивает ответ агента с эталоном по одинаковому протоколу и считает строгую точность.</p></article>
+          <article class="doc-card accent-blue"><span class="doc-number">04 · АНАЛИТИКА</span><h3>Разбор результата</h3><p>Собирает предметные срезы, ошибки, историю поиска и сравнение экспериментальных режимов.</p></article>
+          <article class="doc-card"><span class="doc-number">05 · ДАННЫЕ</span><h3>Общие контракты</h3><p>Задание, изображение, найденный чанк и результат описаны строгими Pydantic-схемами.</p></article>
+          <article class="doc-card"><span class="doc-number">06 · ИСТОЧНИКИ</span><h3>Официальный ответ</h3><p>При надёжном точном совпадении система возвращает ключ без вызова модели.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section doc-section-dark">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ПУТЬ<br><em>ОДНОЙ ЗАДАЧИ.</em></h2><p>Главная точка сравнения — режим решения; формат входа и оценки остаётся одинаковым.</p></div>
+        <div class="doc-flow">
+          <div class="flow-step"><span>01</span><strong>Прочитать JSONL</strong></div>
+          <div class="flow-step"><span>02</span><strong>Проверить официальный источник</strong></div>
+          <div class="flow-step"><span>03</span><strong>Выбрать режим агента</strong></div>
+          <div class="flow-step"><span>04</span><strong>Решить или вызвать поиск</strong></div>
+          <div class="flow-step"><span>05</span><strong>Сохранить полный след</strong></div>
+          <div class="flow-step"><span>06</span><strong>Передать ответ судье</strong></div>
+          <div class="flow-step"><span>07</span><strong>Построить отчёт</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ГДЕ ЧТО<br><em>ЖИВЁТ.</em></h2><p>Минимальная навигация для изменения отдельной части без затрагивания всего проекта.</p></div>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Задача</th><th>Основное место</th><th>Что находится внутри</th></tr></thead>
+            <tbody>
+              <tr><td>Запуск эксперимента</td><td><code>src/mla_baseline/runner.py</code></td><td>Выбор режима, параллельный прогон, возобновление и запись JSONL.</td></tr>
+              <tr><td>Поведение агента</td><td><code>src/mla_baseline/solvers/</code></td><td>Базовый режим, веб-поиск и агент с поиском по учебникам.</td></tr>
+              <tr><td>Поиск по корпусу</td><td><code>src/retrieve/</code></td><td>Эмбеддеры, индексы, объединение результатов и повторное ранжирование.</td></tr>
+              <tr><td>Форматы данных</td><td><code>src/schemas/</code></td><td>Задание, изображение, чанк и результат.</td></tr>
+              <tr><td>Оценка</td><td><code>src/judge/</code></td><td>Подготовка входа, проверка модели-судьи и метрики.</td></tr>
+              <tr><td>Интерфейс анализа</td><td><code>apps/vlm-analytics/</code></td><td>Просмотр ответов, ошибок, поиска и агрегированных результатов.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="doc-callout"><span>!</span><div><h3>Инвариант эксперимента</h3><p>Меняется только исследуемая часть пайплайна. Задания, модель, формат ответа и протокол оценки фиксируются между сравниваемыми режимами.</p></div></div>
+      </div>
+    </section>
+
+    <section class="source-strip section-shell"><p>Нужны точные пути и команды?</p><a class="button button-dark" href="project-map.md">Открыть исходную карту →</a></section>
+  </main>
+
+  <footer class="footer"><div class="section-shell footer-inner"><div><strong>TEXTBOOK VLM</strong><p>Карта компонентов исследовательской системы.</p></div><div class="footer-meta"><a href="retrieval-tool.html">Поиск</a><a href="evaluation.html">Оценка</a><span>© <span id="year">2026</span></span></div></div></footer>
+</body>
+</html>

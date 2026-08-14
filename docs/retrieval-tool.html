@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Контракт и логика инструмента поиска по турецким учебникам в проекте Textbook VLM.">
+  <meta name="theme-color" content="#fbf7ee">
+  <title>Устройство поиска — Textbook VLM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="detail.css">
+  <script src="site.js" defer></script>
+</head>
+<body class="detail-page">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <header class="topbar" aria-label="Основная навигация">
+    <a class="brand" href="index.html" aria-label="Textbook VLM — на главную"><span class="brand-mark" aria-hidden="true">✣</span><span>TEXTBOOK VLM</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span class="sr-only">Открыть меню</span></button>
+    <nav id="site-nav" class="site-nav">
+      <a href="index.html#research">задача</a><a href="project-map.html">карта</a><a href="index.html#results">результаты</a><a href="evaluation.html">оценка</a><a href="index.html#team">команда</a>
+    </nav>
+    <div class="topbar-actions"><button class="theme-toggle" type="button" aria-label="Переключить тему"><span class="theme-icon" aria-hidden="true">☀</span></button><a class="nav-cta" href="https://github.com/ZaplatinArtur/VLM_agent_turkish_textbook_ML_academy_Yandex">GitHub ↗</a></div>
+  </header>
+
+  <main id="main">
+    <section class="detail-hero">
+      <div class="section-shell">
+        <span class="detail-kicker">документация · инструмент агента</span>
+        <h1 class="detail-title">ПОИСК ПО<br><em>УЧЕБНИКАМ</em></h1>
+        <div class="detail-intro"><a class="detail-back" href="index.html">← На главную</a><p>Как агент превращает тему задания в проверяемый запрос, получает пять фрагментов и решает, можно ли им доверять.</p></div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ОДИН<br><em>КОНТРАКТ.</em></h2><p>Способ вызова можно менять, но вход и ответ инструмента остаются стабильными для агента.</p></div>
+        <div class="doc-grid two">
+          <article class="doc-card accent-purple"><span class="doc-number">ВХОД</span><h3>Что передаёт агент</h3><ul><li><code>query</code> — компактный поисковый запрос</li><li><code>top_k</code> — число фрагментов</li><li><code>subject</code> — предмет</li><li><code>grade</code> — класс, если известен</li></ul></article>
+          <article class="doc-card accent-green"><span class="doc-number">ВЫХОД</span><h3>Что получает агент</h3><ul><li>текст фрагмента и связанные изображения</li><li>оценка релевантности</li><li>учебник, предмет, класс и страница</li><li>устойчивый идентификатор чанка</li></ul></article>
+        </div>
+        <div class="doc-callout"><span>i</span><div><h3>Прямой вызов — основной путь</h3><p>Агент вызывает поиск внутри процесса. HTTP-интерфейс остаётся дополнительным способом интеграции и не нужен для локального эксперимента.</p></div></div>
+      </div>
+    </section>
+
+    <section class="doc-section doc-section-dark">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ЧТО ПРОИСХОДИТ<br><em>ВНУТРИ.</em></h2><p>Текущий режим объединяет лексический и векторный поиск, затем уточняет порядок кандидатов.</p></div>
+        <div class="doc-flow">
+          <div class="flow-step"><span>01</span><strong>Запрос на турецком</strong></div>
+          <div class="flow-step"><span>02</span><strong>BM25 по словам</strong></div>
+          <div class="flow-step"><span>03</span><strong>E5 по смыслу</strong></div>
+          <div class="flow-step"><span>04</span><strong>Объединение списков</strong></div>
+          <div class="flow-step"><span>05</span><strong>Повторное ранжирование BGE</strong></div>
+          <div class="flow-step"><span>06</span><strong>Порог релевантности</strong></div>
+          <div class="flow-step"><span>07</span><strong>Пять лучших фрагментов</strong></div>
+        </div>
+        <div class="doc-callout"><span>↗</span><div><h3>Профили поиска</h3><p>Базовый профиль — гибридный поиск с повторным ранжированием. Для сравнительных экспериментов доступны дополнительные профили, включая лексический контрольный режим.</p></div></div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ПРАВИЛА<br><em>АГЕНТА.</em></h2><p>Контекст не подменяет исходное изображение: он допускается в решение только после проверки.</p></div>
+        <div class="doc-grid">
+          <article class="doc-card"><span class="doc-number">01</span><h3>Сначала изображение</h3><p>Извлечь числа, формулы, объекты и точный вопрос из исходного задания.</p></article>
+          <article class="doc-card"><span class="doc-number">02</span><h3>Короткий запрос</h3><p>Искать тему и неизвестные понятия, не копируя в запрос всё условие.</p></article>
+          <article class="doc-card"><span class="doc-number">03</span><h3>До двух попыток</h3><p>Один исходный запрос и одна переформулировка только после слабого результата.</p></article>
+          <article class="doc-card"><span class="doc-number">04</span><h3>Проверка конфликта</h3><p>Сопоставить найденный фрагмент с числами и смыслом исходного задания.</p></article>
+          <article class="doc-card"><span class="doc-number">05</span><h3>Отказ от шума</h3><p>Слабые, пустые и противоречивые результаты не передаются в решение.</p></article>
+          <article class="doc-card"><span class="doc-number">06</span><h3>Финальная сверка</h3><p>Перед ответом заново проверить вопрос, единицы и числа по изображению.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>КОНТРОЛЬНАЯ<br><em>ТОЧКА.</em></h2><p>Показатели лексического индекса фиксируют масштаб и дают воспроизводимый контроль для следующих поисковых систем.</p></div>
+        <div class="stat-grid">
+          <article class="doc-stat"><span class="doc-number">ИСХОДНЫЕ ЧАНКИ</span><strong>280 822</strong><p>фрагмента в исходном корпусе</p></article>
+          <article class="doc-stat"><span class="doc-number">ТЕКСТ</span><strong>103 070</strong><p>текстовых чанков в контрольном индексе</p></article>
+          <article class="doc-stat"><span class="doc-number">ИЗОБРАЖЕНИЯ</span><strong>177 752</strong><p>фрагмента без текста пропущено</p></article>
+          <article class="doc-stat"><span class="doc-number">ЗАДЕРЖКА</span><strong>≈32 мс</strong><p>контрольное время одного запроса</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="source-strip section-shell"><p>Полная схема полей, ограничений и режимов.</p><a class="button button-dark" href="retrieval_tool_contract.md">Открыть технический контракт →</a></section>
+  </main>
+
+  <footer class="footer"><div class="section-shell footer-inner"><div><strong>TEXTBOOK VLM</strong><p>Проверяемый поиск по турецким учебникам.</p></div><div class="footer-meta"><a href="project-map.html">Карта</a><a href="evaluation.html">Оценка</a><span>© <span id="year">2026</span></span></div></div></footer>
+</body>
+</html>

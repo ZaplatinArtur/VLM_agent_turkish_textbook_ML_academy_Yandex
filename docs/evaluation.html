@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Единый протокол оценки режимов Textbook VLM.">
+  <meta name="theme-color" content="#fbf7ee">
+  <title>Протокол оценки — Textbook VLM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="detail.css">
+  <script src="site.js" defer></script>
+</head>
+<body class="detail-page">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <header class="topbar" aria-label="Основная навигация">
+    <a class="brand" href="index.html" aria-label="Textbook VLM — на главную"><span class="brand-mark" aria-hidden="true">✣</span><span>TEXTBOOK VLM</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span class="sr-only">Открыть меню</span></button>
+    <nav id="site-nav" class="site-nav">
+      <a href="index.html#research">задача</a><a href="project-map.html">карта</a><a href="retrieval-tool.html">поиск</a><a href="index.html#results">результаты</a><a href="index.html#team">команда</a>
+    </nav>
+    <div class="topbar-actions"><button class="theme-toggle" type="button" aria-label="Переключить тему"><span class="theme-icon" aria-hidden="true">☀</span></button><a class="nav-cta" href="https://github.com/ZaplatinArtur/VLM_agent_turkish_textbook_ML_academy_Yandex">GitHub ↗</a></div>
+  </header>
+
+  <main id="main">
+    <section class="detail-hero">
+      <div class="section-shell">
+        <span class="detail-kicker">документация · честное сравнение</span>
+        <h1 class="detail-title">ЕДИНАЯ<br><em>ОЦЕНКА</em></h1>
+        <div class="detail-intro"><a class="detail-back" href="index.html">← На главную</a><p>Одинаковые задания, фиксированная модель и слепая проверка: меняется только доступный агенту источник знаний.</p></div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ЧТО МЫ<br><em>СРАВНИВАЕМ.</em></h2><p>Основной вопрос — улучшает ли поиск по учебникам качество относительно той же модели без инструментов и с веб-поиском.</p></div>
+        <div class="doc-grid">
+          <article class="doc-card accent-blue"><span class="doc-number">B0</span><h3>Без инструментов</h3><p>Модель видит только задание и решает его самостоятельно.</p></article>
+          <article class="doc-card accent-purple"><span class="doc-number">WEB</span><h3>Веб-поиск</h3><p>Агент может обратиться к открытому интернету за внешними фактами.</p></article>
+          <article class="doc-card accent-green"><span class="doc-number">RAG</span><h3>Поиск по учебникам</h3><p>Агент получает релевантные фрагменты из фиксированного корпуса.</p></article>
+        </div>
+        <div class="doc-callout"><span>=</span><div><h3>Фиксируем условия</h3><p>Для сравниваемых режимов одинаковы набор заданий, версия модели, параметры генерации, формат ответа и судья.</p></div></div>
+      </div>
+    </section>
+
+    <section class="doc-section doc-section-dark">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>МЕТРИКИ<br><em>ОТВЕТА.</em></h2><p>Одна цифра не объясняет изменение: вместе с точностью считаются направление эффекта, ошибки и стоимость.</p></div>
+        <div class="doc-grid">
+          <article class="doc-card"><span class="doc-number">01</span><h3>Строгая точность</h3><p>Доля полностью правильных ответов среди всех заданий, включая ошибки запуска.</p></article>
+          <article class="doc-card"><span class="doc-number">02</span><h3>Точная проверка</h3><p>Числовые и короткие ответы дополнительно сверяются детерминированно после нормализации.</p></article>
+          <article class="doc-card"><span class="doc-number">03</span><h3>Оценка судьёй</h3><p>Слепая модель-судья видит вопрос, эталон и ответ, но не знает режим агента.</p></article>
+          <article class="doc-card"><span class="doc-number">04</span><h3>Парная разница</h3><p>Для каждого задания фиксируется победа, проигрыш или ничья нового режима.</p></article>
+          <article class="doc-card"><span class="doc-number">05</span><h3>Предметные срезы</h3><p>Результаты отдельно считаются по предметам и покрываемой корпусом части.</p></article>
+          <article class="doc-card"><span class="doc-number">06</span><h3>Надёжность</h3><p>Ошибки агента, задержка, число вызовов поиска и расход токенов входят в отчёт.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>КАК ПРОХОДИТ<br><em>ПРОВЕРКА.</em></h2><p>Судья калибруется после завершения прогонов, а спорные случаи отправляются на отдельный разбор.</p></div>
+        <div class="doc-flow">
+          <div class="flow-step"><span>01</span><strong>Зафиксировать план</strong></div>
+          <div class="flow-step"><span>02</span><strong>Прогнать три режима</strong></div>
+          <div class="flow-step"><span>03</span><strong>Скрыть название режима</strong></div>
+          <div class="flow-step"><span>04</span><strong>Проверить формат ответа</strong></div>
+          <div class="flow-step"><span>05</span><strong>Получить вердикт судьи</strong></div>
+          <div class="flow-step"><span>06</span><strong>Разобрать расхождения</strong></div>
+          <div class="flow-step"><span>07</span><strong>Построить общий отчёт</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ЗАЩИТА ОТ<br><em>СМЕЩЕНИЙ.</em></h2><p>Протокол отделяет реальный рост качества от случайной вариации и удобной фильтрации ошибок.</p></div>
+        <div class="doc-grid two">
+          <article class="doc-card accent-yellow"><span class="doc-number">ЗНАМЕНАТЕЛЬ</span><h3>Ошибки считаются неправильными</h3><p>Пустой ответ, ошибка агента и ошибка формата не исчезают из метрики. Нечитаемые эталоны отмечаются отдельно.</p></article>
+          <article class="doc-card accent-blue"><span class="doc-number">СЛЕПОТА</span><h3>Судья не знает режим</h3><p>Из входа удаляются названия инструментов и служебные признаки, которые могут подсказать происхождение ответа.</p></article>
+          <article class="doc-card"><span class="doc-number">КАЛИБРОВКА</span><h3>120 ответов</h3><p>После завершения всех режимов собирается стратифицированная выборка для проверки согласия судьи с человеком.</p></article>
+          <article class="doc-card"><span class="doc-number">НЕОПРЕДЕЛЁННОСТЬ</span><h3>95% доверительный интервал</h3><p>Парная разница точности сопровождается бутстреп-интервалом, а не только одной итоговой цифрой.</p></article>
+        </div>
+        <div class="doc-callout"><span>!</span><div><h3>Ручной разбор нужен точечно</h3><p>Проверяются расхождения автоматических метрик, ошибки судьи, низкая уверенность, сомнительный эталон и случайная доля согласованных примеров.</p></div></div>
+      </div>
+    </section>
+
+    <section class="source-strip section-shell"><p>Полные правила калибровки, слепой оценки и отчётности.</p><a class="button button-dark" href="evaluation_protocol.md">Открыть исходный протокол →</a></section>
+  </main>
+
+  <footer class="footer"><div class="section-shell footer-inner"><div><strong>TEXTBOOK VLM</strong><p>Единый протокол оценки агентных режимов.</p></div><div class="footer-meta"><a href="project-map.html">Карта</a><a href="retrieval-tool.html">Поиск</a><span>© <span id="year">2026</span></span></div></div></footer>
+</body>
+</html>
