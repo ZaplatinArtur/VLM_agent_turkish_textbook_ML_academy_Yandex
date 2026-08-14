@@ -35,6 +35,14 @@ def test_normalizes_turkish_and_validation_subject_names() -> None:
     )
 
 
+def test_normalizes_tumlu_subject_aliases_to_corpus_names() -> None:
+    assert canonical_subject("Maths") == "math"
+    assert canonical_subject("Native L&L") == "turkish language and literature"
+    assert canonical_subject("Religion and Ethics") == (
+        "religious culture and ethics"
+    )
+
+
 def test_enriched_chunks_support_english_subject_filter() -> None:
     math = enrich_chunk_metadata(
         _chunk("6-sinif-matematik-ders-kitabi-cevaplari-meb-yayinlari")

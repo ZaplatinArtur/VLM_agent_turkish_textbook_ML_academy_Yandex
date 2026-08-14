@@ -6,6 +6,7 @@ from retrieve.confidence import (
     assess_relevance,
     min_score_for,
 )
+from retrieve.pipelines import PROFILES
 from schemas.retrieve import RetrievedChunk
 
 
@@ -60,3 +61,9 @@ def test_cross_encoder_profiles_share_one_threshold():
         == min_score_for("rrf_e5-base_m3_bm25_cross-encoder")
         == CROSS_ENCODER_MIN_SCORE
     )
+
+
+def test_every_cross_encoder_ended_profile_uses_cross_encoder_threshold():
+    profiles = [profile for profile in PROFILES if profile.endswith("_cross-encoder")]
+    assert profiles
+    assert all(min_score_for(profile) == CROSS_ENCODER_MIN_SCORE for profile in profiles)

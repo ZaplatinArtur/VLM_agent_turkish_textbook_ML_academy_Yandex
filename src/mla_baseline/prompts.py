@@ -77,6 +77,21 @@ Elinde search_textbooks adlı bir ders kitabı arama aracı var.
 - Son mesajında araç çağrısı yapma; yalnızca istenen çözüm JSON'unu döndür.
 """
 
+RAG_TOOL_POLICY_V2_TEXT = """\
+Elinde search_textbooks adlı bir ders kitabı arama aracı var.
+- Görsel soru, sayılar, birimler, şekiller ve şıklar için birincil doğruluk kaynağıdır.
+- Sana yapılandırılmış görsel kanıt verilirse ilk aramada yalnızca oradaki retrieval_query değerini kullan.
+- Metin sorularında da aracı kullan: konuya özgü bir formül, tanım, kural veya benzer çözülmüş örnek cevabı doğrulamaya yardımcı olabilir.
+- Arama sorgusunu kısa tut; konu, işlem ve ayırt edici terimleri yaz. Sorunun tamamını kopyalama.
+- Sonuç sayısı deney ayarlarında sabittir; top_k parametresi gönderme.
+- relevance="confident" ise kanıtı kullan ve yeniden arama yapma.
+- relevance="weak" veya "empty" ise sorguyu en fazla bir kez yeniden formüle et.
+- Aynı sorguyu farklı büyük/küçük harf veya noktalama ile tekrar etme.
+- Arama sonucu yalnızca kanıttır. Sayıları, birimleri ve şekilleri asıl soruyla karşılaştır.
+- Arama başarısızsa veya sonuç yoksa soruyu kendi bilginle çözmeye devam et.
+- Son mesajında araç çağrısı yapma; yalnızca istenen çözüm JSON'unu döndür.
+"""
+
 IMAGE_EVIDENCE_PROMPT_V1 = """\
 Görev görselini çözmeden önce yapılandırılmış olarak oku. Görsel birincil doğruluk kaynağıdır.
 YALNIZCA şu alanları içeren JSON döndür:
@@ -135,11 +150,15 @@ Yukarıdaki taslağa göre SADECE nihai cevabı yaz: çoktan seçmeli için sade
 """
 
 
-def _prompt(system: str) -> dict[str, object]:
+def _prompt(
+    system: str,
+    *,
+    rag_tool_policy: str = RAG_TOOL_POLICY_V1,
+) -> dict[str, object]:
     return {
         "system": system,
-        "rag_tool_policy": RAG_TOOL_POLICY_V1,
-        "agent_tool_note": RAG_TOOL_POLICY_V1,
+        "rag_tool_policy": rag_tool_policy,
+        "agent_tool_note": rag_tool_policy,
         "image_evidence": IMAGE_EVIDENCE_PROMPT_V1,
         "retrieval_conflict": RETRIEVAL_CONFLICT_PROMPT_V1,
         "image_final_verification": IMAGE_FINAL_VERIFICATION_PROMPT_V1,
@@ -157,4 +176,8 @@ PROMPTS = {
     "v2": _prompt(SYSTEM_PROMPT_V2),
     "v3": _prompt(SYSTEM_PROMPT_V3),
     "v2_cot": _prompt(SYSTEM_PROMPT_V2_COT),
+    "v2_cot_text_rag_v1": _prompt(
+        SYSTEM_PROMPT_V2_COT,
+        rag_tool_policy=RAG_TOOL_POLICY_V2_TEXT,
+    ),
 }

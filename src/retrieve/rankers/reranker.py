@@ -73,6 +73,7 @@ class CrossEncoderRanker(Ranker):
         self.adapter_path = _resolve_adapter(adapter_path)
         self._model = cross_encoder
         self._load_lock = threading.Lock()
+        self._predict_lock = threading.Lock()
 
     @property
     def model(self) -> CrossEncoderLike:
@@ -123,7 +124,8 @@ class CrossEncoderRanker(Ranker):
         if not pairs:
             return []
         model = self.model
-        raw_scores = model.predict(pairs, batch_size=self.batch_size)
+        with self._predict_lock:
+            raw_scores = model.predict(pairs, batch_size=self.batch_size)
         squash = _sigmoid if self.activation == "sigmoid" or (
             self.activation == "auto" and _needs_sigmoid(model)
         ) else float

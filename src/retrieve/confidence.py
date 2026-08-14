@@ -23,6 +23,8 @@ PROFILE_MIN_SCORE = {
     "rrf_e5-small_bm25_cross-encoder": CROSS_ENCODER_MIN_SCORE,
     "rrf_e5-small_bm25_qwen3-reranker": CROSS_ENCODER_MIN_SCORE,
     "rrf_e5-base_m3_bm25_cross-encoder": CROSS_ENCODER_MIN_SCORE,
+    "rrf_e5-small_m3_bm25_cross-encoder": CROSS_ENCODER_MIN_SCORE,
+    "rrf_m3_bm25_cross-encoder": CROSS_ENCODER_MIN_SCORE,
 }
 
 
