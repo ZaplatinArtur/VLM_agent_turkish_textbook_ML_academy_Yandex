@@ -1206,8 +1206,9 @@ img {
 }
 
 .member-card {
-  position: relative;
-  min-height: 470px;
+  display: flex;
+  min-height: 590px;
+  flex-direction: column;
   padding: 28px;
   background: var(--white);
   border-right: 2px solid var(--ink);
@@ -1216,13 +1217,14 @@ img {
 
 .member-photo {
   display: grid;
-  width: 118px;
-  height: 118px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   place-items: center;
+  overflow: hidden;
   color: #0e0e0e;
   background: var(--purple);
   border: 2px solid var(--ink);
-  border-radius: 50%;
+  border-radius: 22px;
   box-shadow: 4px 5px 0 var(--ink);
 }
 
@@ -1245,14 +1247,15 @@ img {
 }
 
 .member-photo span {
+  place-self: center;
   font-family: var(--display);
-  font-size: 1.6rem;
+  font-size: 2.35rem;
   font-weight: 800;
 }
 
 .member-photo small {
-  align-self: end;
-  margin-bottom: 13px;
+  place-self: end start;
+  margin: 0 0 15px 17px;
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1282,13 +1285,12 @@ img {
 }
 
 .member-contacts {
-  position: absolute;
-  right: 28px;
-  bottom: 25px;
-  left: 28px;
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
 }
 
 .member-contacts span {
@@ -1695,7 +1697,7 @@ img {
   }
 
   .member-card {
-    min-height: 430px;
+    min-height: 560px;
   }
 
   .timeline {
