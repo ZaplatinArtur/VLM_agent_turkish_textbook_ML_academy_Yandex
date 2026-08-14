@@ -1,0 +1,27 @@
+{
+  "schema_version": "maxim274-theory-only-independent-prerun-audit-v1",
+  "status": "PENDING",
+  "freeze_sha256": "FILL_AFTER_FREEZE",
+  "auditor": "FILL_IN",
+  "checks": {
+    "exact_274_public_rows": false,
+    "strict_theory_corpus_hash_and_75_rows": false,
+    "coverage_report_is_aggregate_only": false,
+    "no_gold_outcomes_or_previous_predictions": false,
+    "no_task_example_database": false,
+    "no_source_or_noid_router": false,
+    "no_task_id_in_route_seed_or_wire": false,
+    "v6_2_primary_and_v5_generic_failover_only": false,
+    "local_qwen35_9b_vllm_transport": false,
+    "append_only_resume_and_failure_wrong": false,
+    "standard_274_solver_schema": false,
+    "post_run_177_plus_97_score_contract": false,
+    "tests_and_zero_call_dry_run_pass": false
+  },
+  "guards": {
+    "model_calls_before_audit": false,
+    "gold_opened": false,
+    "outcomes_opened": false,
+    "score_executed": false
+  }
+}

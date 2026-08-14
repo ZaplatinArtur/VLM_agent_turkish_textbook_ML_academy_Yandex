@@ -1,0 +1,149 @@
+{
+  "schema_version": "maxim274-theory-only-independent-prerun-audit-v1",
+  "status": "PASS",
+  "auditor": "Codex independent agent /root/maxim274_theory_freeze_audit",
+  "created_utc": "2026-08-14T12:57:28Z",
+  "freeze_sha256": "668abf732b345878e5a910c214d62753aa84171a0c4d1d6fce09fe3276222e8d",
+  "scope": "Frozen Maxim-274 public OCR plus strict-theory execution protocol before any model call or scoring",
+  "checks": {
+    "freeze_sidecar_and_raw_bytes_match": true,
+    "all_implementation_descriptors_match_hash_and_size": true,
+    "all_frozen_artifact_descriptors_match_hash_size_and_rows": true,
+    "exact_274_public_rows": true,
+    "exact_274_unique_outer_alignment_ids": true,
+    "exact_273_unique_content_and_primary_request_hashes": true,
+    "duplicate_content_pair_closes_to_one_identical_request": true,
+    "public_projection_matches_pinned_source_sequence": true,
+    "strict_theory_corpus_hash_and_75_rows": true,
+    "strict_theory_corpus_is_exact_byte_copy_of_audited_v6_corpus": true,
+    "all_frozen_retrievals_reproduce_from_subject_filtered_bm25": true,
+    "coverage_report_is_aggregate_only": true,
+    "no_gold_outcomes_or_previous_predictions": true,
+    "no_task_example_database": true,
+    "no_source_or_noid_router": true,
+    "no_image_payload_or_image_bytes": true,
+    "no_task_id_in_route_seed_or_wire": true,
+    "v6_2_primary_and_v5_generic_failover_only": true,
+    "fallback_activates_only_after_primary_transport_schema_or_length_failure": true,
+    "local_qwen35_9b_vllm_transport": true,
+    "append_only_resume_and_failure_wrong": true,
+    "standard_274_solver_schema": true,
+    "post_run_177_plus_97_score_contract": true,
+    "utf8_lf_raw_byte_contract_is_windows_linux_stable": true,
+    "tests_and_zero_call_dry_run_pass": true,
+    "planned_outputs_absent_at_audit": true
+  },
+  "evidence": {
+    "queue": {
+      "path": "frozen/queue_content_theory_274.jsonl",
+      "rows": 274,
+      "sha256": "b450b320e01672f4dc09e7290f3209a10d26e09712099e41628d857b53ec8ca6",
+      "unique_content_hashes": 273,
+      "unique_primary_request_hashes": 273,
+      "duplicate_content_groups": 1,
+      "maximum_duplicate_multiplicity": 2
+    },
+    "alignment": {
+      "path": "frozen/outer_alignment_274.jsonl",
+      "rows": 274,
+      "unique_task_ids": 274,
+      "sha256": "73c0e255dfd511c80df34dd01c5dbdf98d3fbd4d89ccdf14863fd45789ee3913",
+      "sequence_matches_pinned_public_source": true,
+      "kept_outside_request_queue": true
+    },
+    "strict_theory": {
+      "path": "frozen/strict_theory_corpus.jsonl",
+      "rows": 75,
+      "unique_chunk_ids": 75,
+      "sha256": "cc7d236bdff91eba94022795d5bae0aeb5e32196581e88181033147c7a4edb75",
+      "all_rows_unit_kind_theory": true,
+      "all_rows_reject_exercise_condition_solution_example": true,
+      "retrieval_top_k": 2,
+      "rows_with_hits": 223,
+      "zero_hit_rows": 51,
+      "total_hits": 410,
+      "unique_retrieved_chunks": 30,
+      "all_hits_match_public_subject": true
+    },
+    "wire_audit": {
+      "offline_requests_constructed": 1370,
+      "requests_per_row_checked": 5,
+      "stages_checked": [
+        "v6.2-primary",
+        "v5-derive",
+        "v5-falsify",
+        "v5-crosscheck",
+        "v5-blind-arbiter"
+      ],
+      "task_or_controller_id_present": false,
+      "image_url_data_uri_or_base64_present": false,
+      "network_calls": 0
+    },
+    "fallback_control_flow_offline_stubs": {
+      "primary_success_calls": 1,
+      "primary_failure_with_v5_consensus_calls": 4,
+      "primary_failure_with_v5_arbiter_calls": 5,
+      "non_generic_answer_source_present": false,
+      "network_calls": 0
+    },
+    "resume_control_flow_offline_stubs": {
+      "completed_result_reused_without_call": true,
+      "ambiguous_intent_becomes_empty_wrong_result_without_replay": true,
+      "existing_result_overwrite_refused": true,
+      "network_calls": 0
+    },
+    "tests": {
+      "command": "python -m unittest -v test_protocol.py",
+      "passed": 10,
+      "failed": 0
+    },
+    "dry_run": {
+      "status": "ready_no_model_calls",
+      "rows": 274,
+      "alignment_rows": 274,
+      "unique_content_requests": 273,
+      "model_calls": 0
+    },
+    "scoring": {
+      "standard_scorer_sha256": "bca10e6546b68f8a66eb4d68aa13316429e4689789be1bef14cd592955e4eacf",
+      "deterministic_rows": 177,
+      "image_judge_rows": 97,
+      "errors_remain_wrong": true,
+      "score_phase": "post-run-only"
+    },
+    "byte_contract": {
+      "encoding": "UTF-8 without BOM",
+      "line_endings": "LF",
+      "canonical_json_newline_is_explicit": true,
+      "hashing_uses_raw_bytes": true,
+      "exclusive_create_uses_os_O_EXCL": true
+    }
+  },
+  "chronology": {
+    "execution_freeze_last_write_utc": "2026-08-14T12:28:48.1137174Z",
+    "audit_utc": "2026-08-14T12:57:28Z",
+    "attempt_absent": true,
+    "completion_absent": true,
+    "solver_absent": true,
+    "journal_absent": true
+  },
+  "runtime_preconditions": [
+    "Pass the exact freeze SHA with --expected-freeze-sha256.",
+    "Each local endpoint must advertise Qwen/Qwen3.5-9B; the server launch must pin model revision c202236235762e1c871ad0ccb60c8ee5ba337b9a because the OpenAI /models response attests the served name, not weight bytes.",
+    "The vLLM server effective context must admit each prompt plus the requested 32768 primary output-token ceiling; otherwise the primary correctly fails closed into the generic V5 path.",
+    "Use --resume only with the exact base-URL sequence from ATTEMPT.json."
+  ],
+  "claims_not_supported_before_execution_and_scoring": [
+    "Maxim-274 accuracy",
+    "image-judge score",
+    "causal quality gain from strict-theory retrieval"
+  ],
+  "guards": {
+    "model_calls_before_audit": false,
+    "gold_opened": false,
+    "outcomes_opened": false,
+    "score_executed": false,
+    "frozen_files_modified_by_auditor": false,
+    "only_new_file": "INDEPENDENT_AUDIT.json"
+  }
+}
