@@ -1,3 +1,6 @@
+from concurrent.futures import ThreadPoolExecutor
+import threading
+
 from retrieve.rankers.reranker import CrossEncoderRanker
 from schemas.retrieve import RetrievedChunk
 
@@ -72,3 +75,53 @@ def test_empty_candidates_return_empty():
     ranker = CrossEncoderRanker(cross_encoder=StubCrossEncoder({}))
     assert ranker.rank("q", []) == []
     assert ranker.rank("q", None) == []
+
+
+class BlockingCrossEncoder:
+    def __init__(self) -> None:
+        self._state_lock = threading.Lock()
+        self.active_calls = 0
+        self.max_active_calls = 0
+        self.call_count = 0
+        self.first_entered = threading.Event()
+        self.second_entered = threading.Event()
+        self.release_first = threading.Event()
+
+    def predict(self, pairs, batch_size=None):
+        with self._state_lock:
+            self.call_count += 1
+            call_number = self.call_count
+            self.active_calls += 1
+            self.max_active_calls = max(self.max_active_calls, self.active_calls)
+        if call_number == 1:
+            self.first_entered.set()
+            if not self.release_first.wait(timeout=2):
+                raise TimeoutError("test did not release the first predict call")
+        else:
+            self.second_entered.set()
+        with self._state_lock:
+            self.active_calls -= 1
+        return [0.0 for _pair in pairs]
+
+
+def test_predict_calls_are_serialized_across_concurrent_requests():
+    model = BlockingCrossEncoder()
+    ranker = CrossEncoderRanker(cross_encoder=model)
+    second_started = threading.Event()
+
+    def second_call():
+        second_started.set()
+        return ranker.score_pairs([["q2", "b"]])
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first = executor.submit(ranker.score_pairs, [["q1", "a"]])
+        assert model.first_entered.wait(timeout=1)
+        second = executor.submit(second_call)
+        assert second_started.wait(timeout=1)
+        assert not model.second_entered.wait(timeout=0.1)
+        model.release_first.set()
+        assert first.result(timeout=1) == [0.5]
+        assert second.result(timeout=1) == [0.5]
+
+    assert model.second_entered.is_set()
+    assert model.max_active_calls == 1

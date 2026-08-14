@@ -17,6 +17,7 @@ dependencies = [
     "faiss-cpu>=1.8",
     "numpy>=1.26",
     "packaging>=23",
+    "peft==0.20.0",
     "Pillow>=10.0",
     "pydantic>=2.7,<3",
     "pydantic-settings>=2.2",
