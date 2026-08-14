@@ -82,6 +82,15 @@ LoRA-адаптером. Слабая выдача скрывается от а�
 
 </details>
 
+## Multilingual benchmark framework
+
+The repository includes a deterministic evaluation harness for TUMLU (9 Turkic
+languages), EXAMS-V (13 languages with exam screenshots), and MGSM (11
+languages with open numeric answers). See
+[`docs/mlbench_framework.md`](docs/mlbench_framework.md), the frozen slices in
+`data/mlbench/bench300/`, and the baseline report in
+`reports/mlbench300_summary.md`.
+
 ## Что сравниваем
 
 | Режим | Условие runner | Доступные данные и инструменты |

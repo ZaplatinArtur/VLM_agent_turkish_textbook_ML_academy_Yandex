@@ -48,6 +48,15 @@ REGISTRY = {
         "note": "вопрос = скриншот экзаменационного задания (как наши задачи); "
                 "20 дисциплин, Apache 2.0",
     },
+    "mgsm": {
+        "hf": "juletxara/mgsm",
+        "multimodal": False,
+        "languages": ["en", "es", "fr", "de", "ru", "zh", "ja", "th", "sw",
+                      "bn", "te"],
+        "note": "открытые числовые ответы (не multiple choice): 250 школьных "
+                "матзадач, вручную переведённых на 10 языков; exact-match "
+                "без судьи — закрывает дыру открытых вопросов",
+    },
     "kaleidoscope": {
         "hf": "CohereLabs/kaleidoscope",
         "multimodal": True,
@@ -75,14 +84,23 @@ def write_rows(rows, bench: str, lang: str) -> Path:
     return path
 
 
+MAX_IMAGE_SIDE = 1600  # исходники EXAMS-V до 62 Мп — кодировщик V100 на таких
+                       # уходит в таймауты 900с+; 1600px = масштаб наших
+                       # валидационных скриншотов, текст читается уверенно
+
+
 def save_image(img, bench: str, lang: str, task_id: str) -> dict:
     img_dir = OUT_ROOT / bench / "images"
     img_dir.mkdir(parents=True, exist_ok=True)
     name = f"{task_id}.png"
+    if max(img.size) > MAX_IMAGE_SIDE:
+        img.thumbnail((MAX_IMAGE_SIDE, MAX_IMAGE_SIDE))
     if img.mode not in ("RGB", "L"):
         img = img.convert("RGB")
     img.save(img_dir / name, format="PNG")
-    rel = f"data/mlbench/{bench}/images/{name}"
+    # путь ОТНОСИТЕЛЬНО data_root (settings.data_root="data"), как в валидации:
+    # солвер сам добавит префикс data/, писать его здесь нельзя
+    rel = f"mlbench/{bench}/images/{name}"
     return {"image_id": f"{task_id}_img1", "format": "file_path",
             "data": rel, "mime_type": "image/png", "caption": None}
 
@@ -135,19 +153,49 @@ def fetch_exams_v(langs, limit):
         counts[lang] = i + 1
         tid = f"examsv_{slug(lang)}_{i:04d}"
         img_ref = save_image(r["image"], "exams-v", lang, tid)
+        # grade в источнике — строка вида "[Grade: 12]" или "[Grade: 10-11]";
+        # берём первое число, иначе метка класса теряется (а это единственный
+        # прокси сложности в наборе)
+        grade_digits = re.findall(r"\d+", str(r.get("grade") or ""))
         buckets.setdefault(lang, []).append({
             "task_id": tid,
-            "subject": r.get("subject_grouped") or r.get("subject") or "unknown",
-            "grade": int(r["grade"]) if str(r.get("grade") or "").isdigit() else None,
+            # мелкий subject (20 дисциплин), а не subject_grouped (3 корзины):
+            # стратификация по трём корзинам почти ничего не гарантирует
+            "subject": r.get("subject") or r.get("subject_grouped") or "unknown",
+            "grade": int(grade_digits[0]) if grade_digits else None,
             "question": "(question in the image)",
             "question_images": [img_ref],
             "reference_answer": str(r["answer_key"]).strip(),
             "answer_type": "choice",
             "reference_solution": None,
+            # для стратификации и срезов: текстовый лист или с рисунком/таблицей
+            "_modality": r.get("type") or "text",
         })
     for lang, rows in buckets.items():
         path = write_rows(rows, "exams-v", lang)
         print(f"exams-v/{lang}: {len(rows)} задач -> {path.relative_to(ROOT)}")
+
+
+def fetch_mgsm(langs, limit):
+    from datasets import load_dataset
+    for lang in langs:
+        ds = load_dataset(REGISTRY["mgsm"]["hf"], lang, split="test")
+        rows = []
+        for i, r in enumerate(ds):
+            if limit and i >= limit:
+                break
+            rows.append({
+                "task_id": f"mgsm_{lang}_{i:04d}",
+                "subject": "Maths",
+                "grade": None,
+                "question": r["question"],
+                "question_images": [],
+                "reference_answer": str(r["answer_number"]),
+                "answer_type": "numeric",
+                "reference_solution": r.get("answer") or None,
+            })
+        path = write_rows(rows, "mgsm", lang)
+        print(f"mgsm/{lang}: {len(rows)} задач -> {path.relative_to(ROOT)}")
 
 
 def fetch_kaleidoscope(langs, limit):
@@ -213,6 +261,8 @@ def main() -> int:
         or REGISTRY[args.bench]["languages"]
     if args.bench == "tumlu":
         fetch_tumlu(langs, args.limit)
+    elif args.bench == "mgsm":
+        fetch_mgsm(langs, args.limit)
     elif args.bench == "exams-v":
         fetch_exams_v(langs, args.limit)
     elif args.bench == "kaleidoscope":
