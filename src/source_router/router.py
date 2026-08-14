@@ -30,6 +30,26 @@ SOURCE_DB_PATH = Path(__file__).resolve().parent / "source_db.json"
 
 # Первая ступень для meb7 — только отсев: страница учебника длиннее, чем OCR
 # одного упражнения, поэтому дальше требуются номер вопроса и якоря.
+# Токенайзер читает только латиницу: на кириллице и арабице множество токенов
+# вырождается, и оценка по IDF перестаёт что-либо значить.
+MIN_QUERY_TOKENS = 4
+
+# Запись может отвечать только на тот тип ответа, под который её формат годится.
+# В базе нет ответов-букв, поэтому задачам с вариантами она ответить не может.
+ANSWER_FORMATS_BY_TYPE: dict[str, frozenset[str]] = {
+    "choice": frozenset({"choice", "single_letter"}),
+    "short_text": frozenset({"short_text"}),
+    "numeric": frozenset({"short_text", "numeric"}),
+}
+
+
+def _format_fits(record: Mapping[str, Any], answer_type: str | None) -> bool:
+    if not answer_type:
+        return True
+    allowed = ANSWER_FORMATS_BY_TYPE.get(answer_type)
+    if allowed is None:
+        return True
+    return str(record.get("answer_format") or "") in allowed
 MEB_MIN_SCORE = 0.18
 PAGE_MIN_SCORE = 0.65
 PAGE_MIN_MARGIN = 0.50
@@ -109,9 +129,20 @@ def load_source_db(path: Path = SOURCE_DB_PATH) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def source_route(ocr_text: str, source_db: Mapping[str, Any] | None = None) -> Route | None:
+def source_route(
+        ocr_text: str,
+        source_db: Mapping[str, Any] | None = None,
+        answer_type: str | None = None,
+) -> Route | None:
     """Ищет запись по тексту задачи. None — ничего не подошло."""
-    records = list((source_db or load_source_db())["records"])
+    if len(token_set(ocr_text)) < MIN_QUERY_TOKENS:
+        return None
+    records = [
+        record for record in (source_db or load_source_db())["records"]
+        if _format_fits(record, answer_type)
+    ]
+    if not records:
+        return None
     marker_match = _MARKER.search(ocr_text)
     marker = int(marker_match.group(1)) if marker_match else None
     normalized = normalized_text(ocr_text)
@@ -172,8 +203,14 @@ def route_observable(observable: Mapping[str, Any]) -> Route | None:
     extra = set(observable) - OBSERVABLE_FIELDS
     if extra:
         raise ObservableError(f"роутеру передали ненаблюдаемые поля: {sorted(extra)}")
-    return source_route(str(observable.get("ocr_text") or ""))
+    return source_route(
+        str(observable.get("ocr_text") or ""),
+        answer_type=observable.get("answer_type"),
+    )
 
 
-def route(ocr_text: str) -> Route | None:
-    return route_observable({"ocr_text": ocr_text})
+def route(ocr_text: str, answer_type: str | None = None) -> Route | None:
+    observable: dict[str, Any] = {"ocr_text": ocr_text}
+    if answer_type is not None:
+        observable["answer_type"] = answer_type
+    return route_observable(observable)

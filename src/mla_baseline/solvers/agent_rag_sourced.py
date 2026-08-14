@@ -35,8 +35,8 @@ class AgentRagSourced(AgentRag):
         self._route = router or route_source
 
     def _route_task(self, task: Task) -> Route | None:
-        """Роутеру уходит только текст задачи: эталонный ответ ему не положен."""
-        return self._route(task.question)
+        """Роутеру уходят только наблюдаемые поля: эталонный ответ ему не положен."""
+        return self._route(task.question, answer_type=task.answer_type)
 
     def _from_source(self, task: Task, route: Route) -> SolveResult:
         return SolveResult(
