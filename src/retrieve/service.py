@@ -45,6 +45,31 @@ def get_gate() -> "SemanticGate | None":
     return gate_from_env()
 
 
+def _build_reranker(model_name: str | None, top_n: int):
+    """Ступень переранжирования графового пайплайна: MLA_RERANK_BACKEND.
+
+    cross-encoder (по умолчанию) — дообученный bge-reranker-v2-m3, тот же класс,
+    что в профилях: +9.6 пп hit@1 на реальном эталоне и +10.7 на синтетике при
+    неизменных hit@5 и hit@10, ценой 34 → 293 мс на запрос;
+    knowledge — прежняя эвристика, на ней получены старые прогоны команды.
+    """
+    backend = (os.environ.get("MLA_RERANK_BACKEND", "cross-encoder").strip().casefold()
+               or "cross-encoder")
+    if backend == "cross-encoder":
+        from .rankers import CrossEncoderRanker
+
+        return CrossEncoderRanker(top_n=top_n)
+    if backend != "knowledge":
+        raise ValueError("MLA_RERANK_BACKEND must be 'knowledge' or 'cross-encoder'")
+    from .rankers import KnowledgeReranker
+
+    return KnowledgeReranker(
+        model_name=model_name,
+        top_n=top_n,
+        min_graph_theory_chars=int(os.environ.get("MLA_GRAPH_MIN_THEORY_CHARS", "70")),
+    )
+
+
 def build_pipeline(
         chunks: list[RetrievedChunk] | None = None,
         profile: str | None = None,
@@ -254,16 +279,7 @@ def build_pipeline(
                 f"window ({required_rerank_top_n})"
             )
         rerank_top_n = max(rerank_top_n, required_rerank_top_n)
-    rankers = [
-        fused,
-        KnowledgeReranker(
-            model_name=rerank_model,
-            top_n=rerank_top_n,
-            min_graph_theory_chars=int(
-                os.environ.get("MLA_GRAPH_MIN_THEORY_CHARS", "70")
-            ),
-        ),
-    ]
+    rankers = [fused, _build_reranker(rerank_model, rerank_top_n)]
     if graph is not None:
         rankers.append(
             GraphExpansionRanker(

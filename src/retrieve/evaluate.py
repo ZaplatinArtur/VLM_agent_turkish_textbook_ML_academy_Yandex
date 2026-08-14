@@ -30,6 +30,7 @@ from schemas.retrieve import RetrievedChunk
 
 from .index import Index
 from .pipelines import PROFILES, build_profile
+from .service import ADVANCED_PIPELINE
 
 
 def _read_qrels(path: Path) -> list[dict[str, Any]]:
@@ -60,6 +61,15 @@ def _read_qrels(path: Path) -> list[dict[str, Any]]:
     if not rows:
         raise ValueError("qrels file is empty")
     return rows
+
+
+DEDUP_OVERFETCH = 5
+
+
+def _canonical_id(chunk: RetrievedChunk) -> str:
+    """Единица чанкера засчитывается за свою страницу: эталон постраничный."""
+    metadata = chunk.metadata or {}
+    return str(metadata.get("parent_chunk_id") or chunk.chunk_id)
 
 
 def _page_id(chunk: RetrievedChunk) -> str:
@@ -108,7 +118,9 @@ def evaluate_pipeline(
 ) -> dict[str, Any]:
     """Прогоняет пайплайн по qrels и усредняет метрики по запросам."""
     cutoffs = sorted(set(int(k) for k in ks))
-    depth = cutoffs[-1]
+    # Единицы чанкера приходят пачками с одной страницы, поэтому берём запас и
+    # схлопываем до уникальных страниц — иначе top-k окажется короче заявленного.
+    depth = cutoffs[-1] * DEDUP_OVERFETCH
     per_query: list[dict[str, Any]] = []
     for qrel in qrels:
         query = str(qrel["query"]).strip()
@@ -126,10 +138,11 @@ def evaluate_pipeline(
         results = pipeline.run(query, k=depth, subject=subject)
         latency_ms = (time.perf_counter() - started) * 1000
 
-        ranked = [
-            chunk.chunk_id if target == "chunk_id" else _page_id(chunk)
+        raw_ranked = [
+            _canonical_id(chunk) if target == "chunk_id" else _page_id(chunk)
             for chunk in results
         ]
+        ranked = list(dict.fromkeys(raw_ranked))[: cutoffs[-1]]
         first_hit = next(
             (rank for rank, tid in enumerate(ranked, start=1) if tid in relevant),
             None,
@@ -219,7 +232,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Сравнить профили ретрива на qrels")
     parser.add_argument("--qrels", required=True, type=Path)
     parser.add_argument("--systems", nargs="+", default=["bm25", "e5-small", "rrf_e5-small_bm25"],
-                        choices=PROFILES, help="первый — бейзлайн для дельт")
+                        choices=(*PROFILES, ADVANCED_PIPELINE),
+                        help="первый — бейзлайн для дельт; advanced — графовый пайплайн")
     parser.add_argument("--k", nargs="+", type=int, default=[1, 5, 10], dest="ks")
     parser.add_argument("--book", default=None, help="прогон на одной книге (иначе весь корпус)")
     parser.add_argument("--index-root", default=None, type=Path,
@@ -245,8 +259,14 @@ def main(argv: list[str] | None = None) -> int:
     results: dict[str, dict] = {}
     for system in args.systems:
         started = time.perf_counter()
-        pipeline = build_profile(system, index, index_root=args.index_root,
-                                 fetch_k=args.fetch_k, rerank_top_n=args.rerank_top_n)
+        if system == ADVANCED_PIPELINE:
+            # Графовый пайплайн собирается своим путём: ему нужен корпус, а не Index.
+            from .service import build_pipeline
+
+            pipeline = build_pipeline(corpus, profile=ADVANCED_PIPELINE)
+        else:
+            pipeline = build_profile(system, index, index_root=args.index_root,
+                                     fetch_k=args.fetch_k, rerank_top_n=args.rerank_top_n)
         for ranker in pipeline.rankers:
             if args.rerank_batch_size and hasattr(ranker, "batch_size"):
                 ranker.batch_size = args.rerank_batch_size

@@ -108,7 +108,10 @@ def _env_int(
 class BgeM3Config:
     """Fail-closed runtime contract for the optional BGE-M3 candidate arm."""
 
-    enabled: bool = False
+    # Включён по умолчанию: с кросс-энкодером даёт +6.4 пп hit@1 на реальном
+    # эталоне и +12.7 на синтетике против MiniLM. Модель должна лежать локально
+    # (allow_download остаётся False) — иначе загрузка падает с понятной ошибкой.
+    enabled: bool = True
     model_id: str = BGE_M3_MODEL_ID
     revision: str = BGE_M3_REVISION
     license: str = BGE_M3_LICENSE
@@ -123,7 +126,7 @@ class BgeM3Config:
     allow_download: bool = False
     cache_dir: Path | None = None
     index_dir: Path | None = None
-    device: str = "cpu"
+    device: str = "cuda"
     faiss_index_kind: str = "auto"
 
     def __post_init__(self) -> None:
@@ -199,7 +202,7 @@ class BgeM3Config:
         environ: Mapping[str, str] | None = None,
     ) -> "BgeM3Config":
         values = os.environ if environ is None else environ
-        enabled = _env_bool(values, "MLA_BGE_M3_ENABLED", False)
+        enabled = _env_bool(values, "MLA_BGE_M3_ENABLED", True)
         if not enabled:
             # Disabled means a genuinely inert optional arm: stale BGE-only
             # settings must not break or alter the legacy retrieval path.
@@ -219,7 +222,7 @@ class BgeM3Config:
         ).casefold()
         cache_dir_value = _env_value(values, "MLA_BGE_M3_CACHE_DIR", "")
         index_dir_value = _env_value(values, "MLA_BGE_M3_INDEX_DIR", "")
-        device_value = _env_value(values, "MLA_BGE_M3_DEVICE", "cpu") or "cpu"
+        device_value = _env_value(values, "MLA_BGE_M3_DEVICE", "cuda") or "cuda"
         faiss_index_kind = _env_value(
             values,
             "MLA_FAISS_INDEX_KIND",

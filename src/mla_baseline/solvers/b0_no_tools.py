@@ -52,8 +52,11 @@ class B0NoTools(Solver):
         )
         body: dict[str, Any] = {
             "max_tokens": max_tokens or self.settings.max_tokens,
-            "top_k": self.settings.top_k,
         }
+        # transformers serve отвергает незнакомые поля с 422; vLLM top_k принимает.
+        # MLA_TOP_K=0 убирает его из запроса.
+        if self.settings.top_k > 0:
+            body["top_k"] = self.settings.top_k
         if self.settings.llm_provider == "openrouter":
             body["reasoning"] = (
                 {"enabled": True} if enabled else {"effort": "none"}
