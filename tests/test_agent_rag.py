@@ -343,8 +343,10 @@ def test_agent_enforces_tool_call_limit_and_still_accepts_final_answer() -> None
     assert len(result.tool_calls) == 1
     assert result.forced_answer is True
     assert result.exit_reason == "tool_call_limit"
+    # Финал требует рассуждения: без него ответ теряет качество голой модели.
     response_format = llm.invoke_kwargs[-1]["response_format"]["json_schema"]
     assert set(response_format["schema"]["properties"]) == {
+        "reasoning",
         "solution_steps",
         "final_answer",
     }
@@ -378,6 +380,7 @@ def test_agent_falls_back_to_answer_only_after_compact_length_limit() -> None:
     llm = FakeLlm(
         [
             _tool_call("dikdörtgen alan", call_id="call-1"),
+            LengthFinishReasonError("reasoned response reached its limit"),
             LengthFinishReasonError("compact response reached its limit"),
             AIMessage(content='{"final_answer":"24 cm²"}'),
         ]

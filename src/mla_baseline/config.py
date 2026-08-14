@@ -36,10 +36,17 @@ class Settings(BaseSettings):
         ),
     )
 
-    max_tokens: int = 3072
-    temperature: float = 0.0
+    # 16384, а не 3072: при меньшем бюджете модель обрывается посреди <think>,
+    # не успевает написать JSON и уходит в аварийную финализацию — точность
+    # падает вдвое. Значение из прогонов Дениса на V100.
+    max_tokens: int = 16384
+    # Qwen для thinking-моделей не рекомендует greedy (temp=0): вырождается
+    # в бесконечные повторы. Рекомендация вендора: temp 0.6, top_p 0.95,
+    # top_k 20, против повторов — presence_penalty 1.5. Значение вернулось
+    # из прогонов Дениса на V100: при переносе в src/ правка потерялась.
+    temperature: float = 0.6
     top_p: float = 0.95
-    top_k: int = 20
+    top_k: int = 20          # 0 — не отправлять (сервер без поддержки)
     presence_penalty: float = 1.5
     request_timeout_s: float = 300.0
     enable_thinking: bool = False
@@ -48,7 +55,7 @@ class Settings(BaseSettings):
     # (chat_template_kwargs.enable_thinking=false), бюджеты не меняются
     disable_thinking: bool = False
 
-    prompt_version: str = "v1"
+    prompt_version: str = "v2_cot"
 
     # Как выбивать строгий JSON из модели:
     #   response_format — OpenAI json_schema (новые vLLM)
@@ -63,7 +70,7 @@ class Settings(BaseSettings):
 
     data_root: Path = Path("data")
     results_dir: Path = Path("results")
-    concurrency: int = 1
+    concurrency: int = 4          # с батчёвкой vLLM; без неё ставить 1
 
     # Optional HTTP retrieval adapter. AgentRag uses direct local retrieval by default.
     retrieval_base_url: str = "http://127.0.0.1:8770"

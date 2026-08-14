@@ -28,10 +28,11 @@ RUNTIME_VERSIONS = {
 }
 
 
-def test_bge_m3_is_disabled_by_default_but_identity_is_immutable():
+def test_bge_m3_is_enabled_by_default_but_identity_is_immutable():
+    """Включён по умолчанию, но веса по-прежнему только локальные."""
     config = BgeM3Config.from_env({})
 
-    assert config.enabled is False
+    assert config.enabled is True
     assert config.model_id == BGE_M3_MODEL_ID
     assert config.revision == BGE_M3_REVISION
     assert config.license == BGE_M3_LICENSE
@@ -39,8 +40,12 @@ def test_bge_m3_is_disabled_by_default_but_identity_is_immutable():
     assert config.embedding_dimension == BGE_M3_EMBEDDING_DIMENSION
     assert config.local_files_only is True
     assert config.candidate_mode == "union"
-    assert config.device == "cpu"
+    assert config.device == "cuda"
     assert config.faiss_index_kind == "auto"
+
+
+def test_bge_m3_can_be_disabled_by_env():
+    assert BgeM3Config.from_env({"MLA_BGE_M3_ENABLED": "false"}).enabled is False
 
 
 def test_bge_m3_env_contract_is_explicit_and_typed(tmp_path):
@@ -122,7 +127,7 @@ def test_bge_m3_provenance_contains_every_embedding_identity_field():
     assert config.embedder_provenance(RUNTIME_VERSIONS) == {
         "backend": "sentence-transformers",
         "batch_size": 2,
-        "device": "cpu",
+        "device": "cuda",
         "embedding_dimension": BGE_M3_EMBEDDING_DIMENSION,
         "encode_normalize_embeddings": False,
         "faiss_index_kind": "auto",

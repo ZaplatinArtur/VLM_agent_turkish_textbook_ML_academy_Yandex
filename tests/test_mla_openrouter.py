@@ -53,7 +53,7 @@ def test_openrouter_uses_reasoning_parameter() -> None:
     solver = B0NoTools(_settings(enable_thinking=True), llm=object())
 
     assert solver._generation_extra_body(think=True) == {
-        "max_tokens": 3072,
+        "max_tokens": 16384,
         "top_k": 20,
         "reasoning": {"enabled": True},
     }
@@ -69,7 +69,7 @@ def test_vllm_keeps_chat_template_thinking_parameter() -> None:
     solver = B0NoTools(settings, llm=object())
 
     assert solver._generation_extra_body() == {
-        "max_tokens": 3072,
+        "max_tokens": 16384,
         "top_k": 20,
         "chat_template_kwargs": {"enable_thinking": False},
     }

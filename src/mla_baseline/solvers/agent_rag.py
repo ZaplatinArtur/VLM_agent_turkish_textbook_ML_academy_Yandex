@@ -15,6 +15,7 @@ from ..parsing import parse_solve_output
 from ..schemas import (
     CompactSolveOutput,
     FinalAnswerOnly,
+    SolveOutput,
     ImageTaskEvidence,
     RetrievalConflictCheck,
     SolveResult,
@@ -326,6 +327,29 @@ class AgentRag(B0NoTools):
         usage: Usage,
     ) -> str:
         """Disable tools and require one schema-constrained final response."""
+        # Полный разбор с рассуждением: без него ответ теряет качество голой
+        # модели, потому что цепочку рассуждений задавала именно схема ответа.
+        reasoned_messages = [
+            *messages,
+            HumanMessage(
+                content=(
+                    "Artık araç çağırma. Mevcut soru ve arama sonuçlarıyla karar ver. "
+                    "Adım adım düşün ve reasoning, solution_steps, final_answer "
+                    "alanlarını içeren JSON nesnesini döndür."
+                )
+            ),
+        ]
+        try:
+            return self._invoke(
+                reasoned_messages,
+                task,
+                usage,
+                response_schema=SolveOutput.model_json_schema(),
+            )
+        except Exception as exc:
+            if "LengthFinishReason" not in type(exc).__name__:
+                raise
+
         final_messages = [
             *messages,
             HumanMessage(

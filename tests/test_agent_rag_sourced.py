@@ -70,7 +70,7 @@ def _solver(route_result: Route | None, llm: FakeLlm, search: FakeSearchClient):
         _settings(),
         llm=llm,
         search_client=search,
-        router=lambda _text: route_result,
+        router=lambda _text, answer_type=None: route_result,
     )
 
 
@@ -108,16 +108,16 @@ def test_abstain_falls_through_to_the_agent():
     assert result.answer_source != "official_source"
 
 
-def test_router_sees_only_the_question():
-    seen: list[str] = []
+def test_router_sees_only_the_question_and_answer_type():
+    seen: list[tuple[str, str | None]] = []
     solver = AgentRagSourced(
         _settings(),
         llm=FakeLlm(),
         search_client=FakeSearchClient(),
-        router=lambda text: seen.append(text) or None,
+        router=lambda text, answer_type=None: seen.append((text, answer_type)) or None,
     )
     task = _task()
     solver.solve(task)
 
-    assert seen == [task.question]
-    assert task.reference_answer not in seen
+    assert seen == [(task.question, task.answer_type)]
+    assert task.reference_answer not in [text for text, _ in seen]
