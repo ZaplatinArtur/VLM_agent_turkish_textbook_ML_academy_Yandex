@@ -36,6 +36,7 @@ _SUBJECT_BY_SLUG = {
 
 _ALIASES = {
     "math": "math",
+    "maths": "math",
     "mathematics": "math",
     "matematik": "math",
     "science": "science",
@@ -43,6 +44,7 @@ _ALIASES = {
     "english": "english",
     "ingilizce": "english",
     "turkish": "turkish language and literature",
+    "native l l": "turkish language and literature",
     "turkce": "turkish language and literature",
     "turkish language and literature": "turkish language and literature",
     "turk dili ve edebiyati": "turkish language and literature",
@@ -52,6 +54,7 @@ _ALIASES = {
     "social studies": "social studies",
     "sosyal bilgiler": "social studies",
     "religious culture and ethics": "religious culture and ethics",
+    "religion and ethics": "religious culture and ethics",
     "din kulturu ve ahlak bilgisi": "religious culture and ethics",
     "history": "history",
     "tarih": "history",
