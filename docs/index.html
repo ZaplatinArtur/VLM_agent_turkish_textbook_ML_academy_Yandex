@@ -27,9 +27,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260815-20">
-  <link rel="stylesheet" href="engraving.css?v=20260815-9">
-  <script src="site.js?v=20260815-12" defer></script>
+  <link rel="stylesheet" href="site.css?v=20260815-21">
+  <link rel="stylesheet" href="engraving.css?v=20260815-10">
+  <script src="site.js?v=20260815-13" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -93,23 +93,23 @@
     <section class="metric-band" aria-label="Ключевые результаты">
       <article class="metric-card metric-dark reveal">
         <span class="metric-label">единый срез</span>
-        <strong data-count-to="8300" data-count-decimals="0">8 300</strong>
-        <p>школьных заданий в сравнении без инструментов и с веб-поиском</p>
+        <strong data-result-key="benchmarks.visual_validation.tasks" data-count-to="198" data-count-decimals="0">198</strong>
+        <p>визуальных заданий в сравнении трёх режимов моделью-судьёй</p>
       </article>
       <article class="metric-card metric-green reveal">
         <span class="metric-label">без инструментов</span>
-        <strong data-count-to="84.1" data-count-decimals="1" data-count-suffix="%">84,1%</strong>
-        <p>точность базовой модели на сопоставимых заданиях</p>
+        <strong data-result-key="benchmarks.visual_validation.scores.b0" data-count-to="57.1" data-count-decimals="1" data-count-suffix="%">57,1%</strong>
+        <p>модель решает задачу только по исходному изображению</p>
       </article>
       <article class="metric-card metric-red reveal">
         <span class="metric-label">с веб-поиском</span>
-        <strong data-count-to="81.8" data-count-decimals="1" data-count-suffix="%">81,8%</strong>
-        <p>поиск вызывался в 53% заданий, но не дал общего роста</p>
+        <strong data-result-key="benchmarks.visual_validation.scores.web" data-count-to="70.7" data-count-decimals="1" data-count-suffix="%">70,7%</strong>
+        <p>открытый веб помогает на общем валидационном срезе</p>
       </article>
       <article class="metric-card metric-purple reveal">
-        <span class="metric-label">главный вопрос</span>
-        <strong>КОГДА?</strong>
-        <p>важно выбрать источник и момент вызова, а не просто добавить инструмент</p>
+        <span class="metric-label">Textbook RAG</span>
+        <strong data-result-key="benchmarks.visual_validation.scores.rag" data-count-to="54.5" data-count-decimals="1" data-count-suffix="%">54,5%</strong>
+        <p>поиск по учебникам требует более точной маршрутизации и фильтрации</p>
       </article>
     </section>
 
@@ -231,32 +231,32 @@
         <div class="section-index">03 · ДАННЫЕ</div>
         <div class="section-heading reveal">
           <h2>8 300 ЗАДАЧ.<br><em>ОДИН ЧЕСТНЫЙ СРЕЗ.</em></h2>
-          <p>Объединяем три многоязычных бенчмарка и сравниваем все режимы на одних и тех же заданиях — от текста до экзаменационных скриншотов.</p>
+          <p>Объединяем три многоязычных бенчмарка и фиксируем сопоставимые срезы для разных режимов — от текста до экзаменационных скриншотов.</p>
         </div>
 
         <div class="data-summary reveal" aria-label="Состав экспериментальной выборки">
-          <article><span>задач</span><strong data-count-to="8300" data-count-decimals="0">8 300</strong><p>в итоговой сводке</p></article>
-          <article><span>языки</span><strong data-count-to="33" data-count-decimals="0">33</strong><p>языковых среза</p></article>
-          <article><span>предметы</span><strong data-count-to="16" data-count-decimals="0">16</strong><p>школьных направлений</p></article>
-          <article><span>форматы</span><strong data-count-to="2" data-count-decimals="0">2</strong><p>текст и скриншот</p></article>
+          <article><span>задач</span><strong data-result-key="dataset.tasks" data-count-to="8300" data-count-decimals="0">8 300</strong><p>в итоговой сводке</p></article>
+          <article><span>языки</span><strong data-result-key="dataset.languages" data-count-to="33" data-count-decimals="0">33</strong><p>языковых среза</p></article>
+          <article><span>предметы</span><strong data-result-key="dataset.subjects" data-count-to="16" data-count-decimals="0">16</strong><p>школьных направлений</p></article>
+          <article><span>форматы</span><strong data-result-key="dataset.formats" data-count-to="2" data-count-decimals="0">2</strong><p>текст и скриншот</p></article>
         </div>
 
         <div class="data-source-grid reveal">
           <article class="data-source data-source-purple">
             <div class="data-source-head"><span>01 · TUMLU</span><span class="data-tag">текст · выбор ответа</span></div>
-            <strong data-count-to="2583" data-count-decimals="0">2 583</strong>
+            <strong data-result-key="dataset.sources.tumlu" data-count-to="2583" data-count-decimals="0">2 583</strong>
             <h3>Многоязычные школьные вопросы</h3>
             <p>Закрытые задания по школьным предметам с вариантами ответа.</p>
           </article>
           <article class="data-source data-source-green">
             <div class="data-source-head"><span>02 · EXAMS-V</span><span class="data-tag">скриншот · выбор ответа</span></div>
-            <strong data-count-to="2977" data-count-decimals="0">2 977</strong>
+            <strong data-result-key="dataset.sources.exams_v" data-count-to="2977" data-count-decimals="0">2 977</strong>
             <h3>Визуальные экзаменационные задания</h3>
             <p>Закрытые вопросы, где модель получает исходный скриншот задания.</p>
           </article>
           <article class="data-source data-source-yellow">
             <div class="data-source-head"><span>03 · MGSM</span><span class="data-tag">текст · открытый ответ</span></div>
-            <strong data-count-to="2740" data-count-decimals="0">2 740</strong>
+            <strong data-result-key="dataset.sources.mgsm" data-count-to="2740" data-count-decimals="0">2 740</strong>
             <h3>Многошаговые задачи по математике</h3>
             <p>Открытые задания с числовым ответом, который нужно получить рассуждением.</p>
           </article>
@@ -268,10 +268,10 @@
             <p>Каноническая выборка зафиксирована с сидом 47 и стратифицирована по предмету. В итог вошли только задания, которые оба сравниваемых режима завершили без ошибки.</p>
           </div>
           <ul aria-label="Распределение заданий">
-            <li><b>5 560</b><span>закрытых вопросов</span></li>
-            <li><b>2 740</b><span>открытых вопросов</span></li>
-            <li><b>5 323</b><span>текстовых заданий</span></li>
-            <li><b>2 977</b><span>скриншотов</span></li>
+            <li><b data-result-key="dataset.composition.closed_questions" data-result-decimals="0">5 560</b><span>закрытых вопросов</span></li>
+            <li><b data-result-key="dataset.composition.open_questions" data-result-decimals="0">2 740</b><span>открытых вопросов</span></li>
+            <li><b data-result-key="dataset.composition.text_tasks" data-result-decimals="0">5 323</b><span>текстовых заданий</span></li>
+            <li><b data-result-key="dataset.composition.image_tasks" data-result-decimals="0">2 977</b><span>скриншотов</span></li>
           </ul>
           <a class="data-report-link" href="https://claude.ai/code/artifact/cefe767d-3f81-459e-b90a-d388b3e4e039">Полный отчёт о данных ↗</a>
         </div>
@@ -282,35 +282,39 @@
       <div class="section-index">04 · РЕЗУЛЬТАТЫ</div>
       <div class="section-heading reveal">
         <h2>ПОИСК — НЕ<br><em>АВТОМАТИЧЕСКИЙ РОСТ.</em></h2>
-        <p>Первый большой эксперимент показывает цену неправильного вызова инструмента.</p>
+        <p>На одном валидационном срезе напрямую сравниваются самостоятельное решение, открытый веб и поиск по учебникам.</p>
       </div>
 
       <div class="result-layout">
-        <div class="chart-card reveal" aria-label="Сравнение точности без инструментов и с веб-поиском">
+        <div class="chart-card reveal" aria-label="Сравнение точности без инструментов, с веб-поиском и Textbook RAG">
           <div class="chart-head">
-            <span>Exact Match · N = 8 300</span>
-            <span>одинаковые задания</span>
+            <span>LLM-as-a-judge · N = <b data-result-key="benchmarks.visual_validation.tasks" data-result-decimals="0">198</b></span>
+            <span>один валидационный срез</span>
           </div>
           <div class="bar-row">
-            <div class="bar-meta"><span>Без инструментов</span><strong data-count-to="84.1" data-count-decimals="1" data-count-suffix="%">84,1%</strong></div>
-            <div class="bar-track"><div class="bar bar-green" data-width="84.1"></div></div>
+            <div class="bar-meta"><span>Без инструментов</span><strong data-result-key="benchmarks.visual_validation.scores.b0" data-count-to="57.1" data-count-decimals="1" data-count-suffix="%">57,1%</strong></div>
+            <div class="bar-track"><div class="bar bar-green" data-result-width-key="benchmarks.visual_validation.scores.b0" data-width="57.1"></div></div>
           </div>
           <div class="bar-row">
-            <div class="bar-meta"><span>С веб-поиском</span><strong data-count-to="81.8" data-count-decimals="1" data-count-suffix="%">81,8%</strong></div>
-            <div class="bar-track"><div class="bar bar-red" data-width="81.8"></div></div>
+            <div class="bar-meta"><span>С веб-поиском</span><strong data-result-key="benchmarks.visual_validation.scores.web" data-count-to="70.7" data-count-decimals="1" data-count-suffix="%">70,7%</strong></div>
+            <div class="bar-track"><div class="bar bar-red" data-result-width-key="benchmarks.visual_validation.scores.web" data-width="70.7"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-meta"><span>Textbook RAG</span><strong data-result-key="benchmarks.visual_validation.scores.rag" data-count-to="54.5" data-count-decimals="1" data-count-suffix="%">54,5%</strong></div>
+            <div class="bar-track"><div class="bar bar-rag" data-result-width-key="benchmarks.visual_validation.scores.rag" data-width="54.5"></div></div>
           </div>
           <div class="chart-delta">
             <span>Δ</span>
-            <strong>−2,4 п.п.</strong>
-            <p>на сопоставимой части выборки</p>
+            <strong data-result-key="benchmarks.visual_validation.rag_vs_b0_delta_pp" data-result-decimals="1" data-result-suffix=" п.п.">−2,6 п.п.</strong>
+            <p>Textbook RAG относительно режима без инструментов</p>
           </div>
         </div>
 
         <div class="result-notes">
           <article class="note-card note-red reveal">
-            <span class="card-eyebrow">открытые задания</span>
-            <strong>−6,0 п.п.</strong>
-            <p>На задачах, где ответ нужно вывести рассуждением, веб-контекст чаще мешал.</p>
+            <span class="card-eyebrow">крупный срез · EM · N = <span data-result-key="benchmarks.multilingual.tasks" data-result-decimals="0">8 300</span></span>
+            <strong><span data-result-key="benchmarks.multilingual.scores.b0" data-result-decimals="1" data-result-suffix="%">84,1%</span> / <span data-result-key="benchmarks.multilingual.scores.web" data-result-decimals="1" data-result-suffix="%">81,8%</span></strong>
+            <p>Без инструментов / веб-поиск. На открытых заданиях разница достигла <span data-result-key="benchmarks.multilingual.open_questions_delta_pp" data-result-decimals="1" data-result-suffix=" п.п.">−6,0 п.п.</span></p>
           </article>
           <article class="note-card note-yellow reveal">
             <span class="card-eyebrow">интерпретация</span>
@@ -322,7 +326,7 @@
       <div class="subject-explorer reveal" aria-labelledby="subject-explorer-title">
         <div class="subject-explorer-head">
           <div>
-            <span class="card-eyebrow">валидационный срез · N = 198 · модель-судья</span>
+            <span class="card-eyebrow">валидационный срез · N = <span data-result-key="benchmarks.visual_validation.tasks" data-result-decimals="0">198</span> · модель-судья</span>
             <h3 id="subject-explorer-title">Где помогает каждый источник</h3>
           </div>
           <div class="subject-picker" data-subject-picker>

@@ -1,0 +1,58 @@
+{
+  "updated_at": "2026-08-15",
+  "benchmarks": {
+    "multilingual": {
+      "tasks": 8300,
+      "metric": "Exact Match",
+      "scores": {
+        "b0": 84.1,
+        "web": 81.8
+      },
+      "web_vs_b0_delta_pp": -2.4,
+      "open_questions_delta_pp": -6.0,
+      "web_search_call_rate": 53
+    },
+    "visual_validation": {
+      "tasks": 198,
+      "metric": "LLM-as-a-judge",
+      "scores": {
+        "b0": 57.1,
+        "web": 70.7,
+        "rag": 54.5
+      },
+      "rag_vs_b0_delta_pp": -2.6
+    }
+  },
+  "dataset": {
+    "tasks": 8300,
+    "languages": 33,
+    "subjects": 16,
+    "formats": 2,
+    "sources": {
+      "tumlu": 2583,
+      "exams_v": 2977,
+      "mgsm": 2740
+    },
+    "composition": {
+      "closed_questions": 5560,
+      "open_questions": 2740,
+      "text_tasks": 5323,
+      "image_tasks": 2977
+    }
+  },
+  "subjects": {
+    "all": { "name": "Все предметы", "count": 198, "b0": 57.1, "web": 70.7, "rag": 54.5 },
+    "ataturk": { "name": "Ататюркизм", "count": 1, "b0": 0, "web": 100, "rag": 100 },
+    "biology": { "name": "Биология", "count": 18, "b0": 44.4, "web": 61.1, "rag": 44.4 },
+    "chemistry": { "name": "Химия", "count": 32, "b0": 62.5, "web": 81.2, "rag": 59.4 },
+    "english": { "name": "Английский", "count": 9, "b0": 88.9, "web": 88.9, "rag": 77.8 },
+    "geography": { "name": "География", "count": 14, "b0": 57.1, "web": 71.4, "rag": 78.6 },
+    "history": { "name": "История", "count": 10, "b0": 50, "web": 70, "rag": 60 },
+    "math": { "name": "Математика", "count": 64, "b0": 51.6, "web": 73.4, "rag": 46.9 },
+    "philosophy": { "name": "Философия", "count": 2, "b0": 50, "web": 50, "rag": 100 },
+    "physics": { "name": "Физика", "count": 19, "b0": 73.7, "web": 73.7, "rag": 57.9 },
+    "science": { "name": "Естествознание", "count": 5, "b0": 40, "web": 20, "rag": 40 },
+    "sociology": { "name": "Социология", "count": 3, "b0": 66.7, "web": 66.7, "rag": 66.7 },
+    "turkish": { "name": "Турецкий язык и литература", "count": 21, "b0": 57.1, "web": 57.1, "rag": 42.9 }
+  }
+}

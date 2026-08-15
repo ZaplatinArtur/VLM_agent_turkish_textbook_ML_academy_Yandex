@@ -592,6 +592,13 @@ select {
   background-image: repeating-linear-gradient(135deg, var(--paper) 0 2px, transparent 2px 8px);
 }
 
+.bar-rag {
+  background-color: var(--ink);
+  background-image:
+    repeating-linear-gradient(45deg, var(--paper) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(-45deg, var(--paper) 0 1px, transparent 1px 7px);
+}
+
 .subject-b0 [data-subject-bar] {
   background-color: var(--ink);
   background-image: repeating-linear-gradient(90deg, var(--paper) 0 1px, transparent 1px 7px);

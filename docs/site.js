@@ -301,21 +301,7 @@ if (prefersReducedMotion) {
   revealElements.forEach((element) => revealObserver.observe(element));
 }
 
-const subjectResults = {
-  all: { name: "Все предметы", count: 198, b0: 57.1, web: 70.7, rag: 54.5 },
-  ataturk: { name: "Ататюркизм", count: 1, b0: 0, web: 100, rag: 100 },
-  biology: { name: "Биология", count: 18, b0: 44.4, web: 61.1, rag: 44.4 },
-  chemistry: { name: "Химия", count: 32, b0: 62.5, web: 81.2, rag: 59.4 },
-  english: { name: "Английский", count: 9, b0: 88.9, web: 88.9, rag: 77.8 },
-  geography: { name: "География", count: 14, b0: 57.1, web: 71.4, rag: 78.6 },
-  history: { name: "История", count: 10, b0: 50, web: 70, rag: 60 },
-  math: { name: "Математика", count: 64, b0: 51.6, web: 73.4, rag: 46.9 },
-  philosophy: { name: "Философия", count: 2, b0: 50, web: 50, rag: 100 },
-  physics: { name: "Физика", count: 19, b0: 73.7, web: 73.7, rag: 57.9 },
-  science: { name: "Естествознание", count: 5, b0: 40, web: 20, rag: 40 },
-  sociology: { name: "Социология", count: 3, b0: 66.7, web: 66.7, rag: 66.7 },
-  turkish: { name: "Турецкий язык и литература", count: 21, b0: 57.1, web: 57.1, rag: 42.9 },
-};
+let subjectResults = null;
 
 const subjectPicker = document.querySelector("[data-subject-picker]");
 const subjectPickerTrigger = subjectPicker?.querySelector(".subject-picker-trigger");
@@ -325,7 +311,7 @@ const subjectRows = [...document.querySelectorAll("[data-result-mode]")];
 const subjectCount = document.getElementById("subject-result-count");
 const subjectVerdict = document.getElementById("subject-result-verdict");
 const subjectAnimationFrames = new WeakMap();
-let currentSubjectResult = subjectResults.all;
+let currentSubjectResult = null;
 const numberFormatters = new Map();
 
 function getNumberFormatter(decimals) {
@@ -393,6 +379,10 @@ function describeSubjectResult(result) {
 }
 
 function updateSubjectResult(key, animate = true) {
+  if (!subjectResults?.all) {
+    return;
+  }
+
   const result = subjectResults[key] || subjectResults.all;
   const modes = ["b0", "web", "rag"];
   const bestScore = Math.max(...modes.map((mode) => result[mode]));
@@ -454,7 +444,13 @@ function chooseSubject(option) {
   subjectPickerTrigger?.focus();
 }
 
-if (subjectPicker && subjectPickerTrigger && subjectPickerOptions.length && subjectRows.length) {
+function initializeSubjectExplorer(results) {
+  if (!results?.all || !subjectPicker || !subjectPickerTrigger || !subjectPickerOptions.length || !subjectRows.length) {
+    return;
+  }
+
+  subjectResults = results;
+  currentSubjectResult = subjectResults.all;
   updateSubjectResult("all", false);
   subjectPickerTrigger.addEventListener("click", () => {
     const willOpen = subjectPickerTrigger.getAttribute("aria-expanded") !== "true";
@@ -506,71 +502,48 @@ function formatCount(value, decimals, suffix) {
   return `${getNumberFormatter(decimals).format(value)}${suffix}`;
 }
 
-const counterAnimationFrames = new WeakMap();
+const visibleCounters = new WeakSet();
+
+function prepareCounter(element) {
+  element.classList.add("counter-animated");
+  element.setAttribute("aria-label", element.textContent.trim());
+}
+
+function setCounterSemanticValue(element, formattedValue) {
+  prepareCounter(element);
+  element.textContent = formattedValue;
+  element.setAttribute("aria-label", formattedValue);
+}
 
 function resetCount(element) {
-  const animationFrame = counterAnimationFrames.get(element);
-  if (animationFrame) {
-    window.cancelAnimationFrame(animationFrame);
-    counterAnimationFrames.delete(element);
-  }
-
-  element.textContent = formatCount(
-    0,
-    Number(element.dataset.countDecimals || 0),
-    element.dataset.countSuffix || "",
-  );
+  element.classList.remove("is-count-visible");
 }
 
 function animateCount(element) {
-  const target = Number(element.dataset.countTo);
-  const decimals = Number(element.dataset.countDecimals || 0);
-  const suffix = element.dataset.countSuffix || "";
-  const startedAt = performance.now();
-  const duration = 1400;
-  let lastPaint = 0;
-
-  const previousAnimationFrame = counterAnimationFrames.get(element);
-  if (previousAnimationFrame) {
-    window.cancelAnimationFrame(previousAnimationFrame);
-  }
-
-  function draw(now) {
-    const elapsed = Math.min((now - startedAt) / duration, 1);
-    const eased = 1 - Math.pow(1 - elapsed, 3);
-    if (now - lastPaint >= 32 || elapsed === 1) {
-      element.textContent = formatCount(target * eased, decimals, suffix);
-      lastPaint = now;
-    }
-
-    if (elapsed < 1) {
-      counterAnimationFrames.set(element, window.requestAnimationFrame(draw));
-    } else {
-      element.textContent = formatCount(target, decimals, suffix);
-      counterAnimationFrames.delete(element);
-    }
-  }
-
-  counterAnimationFrames.set(element, window.requestAnimationFrame(draw));
+  element.classList.remove("is-count-visible");
+  void element.offsetWidth;
+  element.classList.add("is-count-visible");
 }
 
 const counters = [...document.querySelectorAll("[data-count-to]")];
 
 if (prefersReducedMotion) {
   counters.forEach((counter) => {
-    counter.textContent = formatCount(
+    setCounterSemanticValue(counter, formatCount(
       Number(counter.dataset.countTo),
       Number(counter.dataset.countDecimals || 0),
       counter.dataset.countSuffix || "",
-    );
+    ));
   });
 } else if (counters.length) {
   const counterObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
+          visibleCounters.add(entry.target);
           animateCount(entry.target);
         } else {
+          visibleCounters.delete(entry.target);
           resetCount(entry.target);
         }
       });
@@ -579,11 +552,63 @@ if (prefersReducedMotion) {
   );
 
   counters.forEach((counter) => {
-    counter.setAttribute("aria-label", counter.textContent.trim());
-    resetCount(counter);
+    prepareCounter(counter);
     counterObserver.observe(counter);
   });
 }
+
+function getResultValue(summary, path) {
+  return path.split(".").reduce((value, key) => value?.[key], summary);
+}
+
+function formatResultValue(element, value) {
+  const decimals = Number(element.dataset.resultDecimals ?? element.dataset.countDecimals ?? 0);
+  const prefix = element.dataset.resultPrefix || "";
+  const suffix = element.dataset.resultSuffix ?? element.dataset.countSuffix ?? "";
+  const number = element.hasAttribute("data-result-absolute") ? Math.abs(Number(value)) : Number(value);
+  return `${prefix}${formatCount(number, decimals, suffix)}`;
+}
+
+function hydrateResults(summary) {
+  document.querySelectorAll("[data-result-key]").forEach((element) => {
+    const value = getResultValue(summary, element.dataset.resultKey);
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      return;
+    }
+
+    const formattedValue = formatResultValue(element, value);
+    if (element.hasAttribute("data-count-to")) {
+      element.dataset.countTo = String(value);
+      setCounterSemanticValue(element, formattedValue);
+      if (visibleCounters.has(element)) {
+        animateCount(element);
+      }
+    } else {
+      element.textContent = formattedValue;
+    }
+  });
+
+  document.querySelectorAll("[data-result-width-key]").forEach((element) => {
+    const value = getResultValue(summary, element.dataset.resultWidthKey);
+    if (typeof value === "number" && Number.isFinite(value)) {
+      element.dataset.width = String(value);
+    }
+  });
+
+  initializeSubjectExplorer(summary.subjects);
+}
+
+fetch("data/results-summary.json", { cache: "no-cache" })
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(hydrateResults)
+  .catch((error) => {
+    console.warn("Не удалось загрузить сводку результатов; показаны значения из HTML.", error);
+  });
 
 const chartCards = [...document.querySelectorAll(".chart-card")];
 
