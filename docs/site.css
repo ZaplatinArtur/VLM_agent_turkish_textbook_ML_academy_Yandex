@@ -1558,6 +1558,13 @@ img {
   box-shadow: 4px 5px 0 var(--ink);
 }
 
+.member-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .member-card:nth-child(2) .member-photo,
 .member-card:nth-child(5) .member-photo {
   background: var(--green);
