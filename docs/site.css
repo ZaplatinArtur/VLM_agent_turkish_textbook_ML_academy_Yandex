@@ -33,7 +33,6 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 112px;
-  scroll-snap-type: y proximity;
 }
 
 body {
@@ -101,13 +100,6 @@ img {
 
 .section {
   padding: 120px 0;
-}
-
-body:not(.detail-page) main > section {
-  min-height: 100vh;
-  min-height: 100svh;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
 }
 
 .section-index,
@@ -467,10 +459,7 @@ body:not(.detail-page) main > section {
 }
 
 .metric-card {
-  display: flex;
   min-height: 300px;
-  flex-direction: column;
-  justify-content: center;
   padding: 34px;
   border-right: 2px solid #0e0e0e;
 }
