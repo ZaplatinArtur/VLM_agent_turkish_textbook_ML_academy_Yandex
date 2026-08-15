@@ -311,12 +311,22 @@ img {
 }
 
 .hero {
+  --hero-glow-alpha: 0.14;
   position: relative;
   overflow: hidden;
   min-height: 100vh;
   min-height: 100svh;
   padding-top: 165px;
   padding-bottom: 50px;
+  background: radial-gradient(
+    circle at 76% 48%,
+    rgba(155, 124, 255, var(--hero-glow-alpha)),
+    transparent 30rem
+  );
+}
+
+[data-theme="dark"] .hero {
+  --hero-glow-alpha: 0.24;
 }
 
 .hero-kicker {
@@ -1905,6 +1915,11 @@ img {
     min-height: 100vh;
     min-height: 100svh;
     padding-top: 130px;
+    background: radial-gradient(
+      circle at 72% 54%,
+      rgba(155, 124, 255, var(--hero-glow-alpha)),
+      transparent 18rem
+    );
   }
 
   .hero-kicker {
@@ -1934,16 +1949,16 @@ img {
 
   .orbit-green {
     top: 335px;
-    right: 14px;
-    width: 130px;
-    height: 130px;
+    right: 24px;
+    width: clamp(118px, 30vw, 150px);
+    height: clamp(118px, 30vw, 150px);
   }
 
   .orbit-purple {
-    bottom: 140px;
-    left: 16px;
-    width: 86px;
-    height: 86px;
+    bottom: 150px;
+    left: 36px;
+    width: clamp(82px, 20vw, 106px);
+    height: clamp(82px, 20vw, 106px);
   }
 
   .orbit-red {
