@@ -1,0 +1,1167 @@
+/*
+ * Engraving skin for the public research site.
+ * Layout and interaction stay in site.css/detail.css; this layer replaces the
+ * visual language with paper, ink, hatching and print-like borders.
+ */
+
+:root {
+  --paper: #efe8d8;
+  --paper-strong: #e3dac6;
+  --white: #f8f2e6;
+  --ink: #171511;
+  --muted: #5c5549;
+  --line: rgba(23, 21, 17, 0.34);
+  --green: #171511;
+  --purple: #171511;
+  --red: #171511;
+  --yellow: #efe8d8;
+  --blue: #e3dac6;
+  --radius: 2px;
+  --shadow: 7px 7px 0 var(--ink);
+  --print-hatch: repeating-linear-gradient(
+    132deg,
+    transparent 0 7px,
+    color-mix(in srgb, var(--ink), transparent 76%) 7px 8px
+  );
+  --print-crosshatch:
+    repeating-linear-gradient(
+      42deg,
+      transparent 0 9px,
+      color-mix(in srgb, var(--ink), transparent 80%) 9px 10px
+    ),
+    repeating-linear-gradient(
+      138deg,
+      transparent 0 12px,
+      color-mix(in srgb, var(--ink), transparent 84%) 12px 13px
+    );
+  --print-lines: repeating-linear-gradient(
+    0deg,
+    transparent 0 5px,
+    color-mix(in srgb, var(--ink), transparent 82%) 5px 6px
+  );
+  --display: "Unbounded", "Arial Black", Arial, sans-serif;
+  --body: Georgia, "Times New Roman", serif;
+}
+
+[data-theme="dark"] {
+  --paper: #15130f;
+  --paper-strong: #201d17;
+  --white: #1a1813;
+  --ink: #f1e9d9;
+  --muted: #c4baa8;
+  --line: rgba(241, 233, 217, 0.34);
+  --green: #f1e9d9;
+  --purple: #f1e9d9;
+  --red: #f1e9d9;
+  --yellow: #15130f;
+  --blue: #201d17;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle at 14% 17%, color-mix(in srgb, var(--ink), transparent 93%) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 77% 63%, color-mix(in srgb, var(--ink), transparent 95%) 0 1px, transparent 1.5px);
+  background-size: 17px 19px, 23px 29px;
+  font-family: var(--body);
+}
+
+body::after {
+  opacity: 0.09;
+  mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] body::after {
+  mix-blend-mode: screen;
+}
+
+::selection {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+a,
+button,
+select {
+  font-family: var(--body);
+}
+
+.section-shell {
+  width: min(1160px, calc(100% - 48px));
+}
+
+.section {
+  position: relative;
+  border-top: 2px solid var(--ink);
+}
+
+.section::after {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  width: 64px;
+  height: 18px;
+  content: "";
+  background: var(--print-lines);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.section-index,
+.card-eyebrow,
+.metric-label,
+.chart-head,
+.timeline-status,
+.member-role,
+.doc-number,
+.detail-kicker {
+  font-family: var(--display);
+  letter-spacing: 0.13em;
+}
+
+.section-index::before,
+.status-dot,
+.detail-kicker::before {
+  width: 11px;
+  height: 11px;
+  background: var(--ink) !important;
+  border: 1px solid var(--paper);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 var(--ink);
+  transform: rotate(45deg);
+}
+
+.section-heading h2,
+.detail-title,
+.doc-heading h2,
+.final-cta h2 {
+  text-wrap: balance;
+}
+
+.section-heading h2 em,
+.detail-title em,
+.doc-heading h2 em,
+.hero-title .outline-word {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ink);
+}
+
+.section-heading p,
+.doc-heading p,
+.detail-intro p {
+  color: var(--muted);
+  font-family: var(--body);
+}
+
+/* Navigation — a printer's label instead of a floating app pill. */
+.topbar {
+  top: 16px;
+  min-height: 66px;
+  padding: 8px 10px 8px 16px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.brand,
+.site-nav a {
+  color: var(--ink);
+}
+
+.brand-mark {
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+}
+
+.site-nav a::after {
+  height: 5px;
+  background: var(--print-lines);
+  border-top: 1px solid var(--ink);
+}
+
+.site-nav a.is-active {
+  color: var(--ink);
+}
+
+.theme-toggle,
+.nav-cta {
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible,
+.nav-cta:hover,
+.nav-cta:focus-visible {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.menu-toggle span:not(.sr-only) {
+  background: var(--ink);
+}
+
+.reading-progress {
+  right: 0;
+  bottom: -7px;
+  left: 0;
+  height: 3px;
+  border-radius: 0;
+}
+
+.reading-progress span {
+  background: var(--ink);
+}
+
+/* Hero — type and radial cuts, without a literal central illustration. */
+.hero {
+  display: grid;
+  overflow: hidden;
+  min-height: 100svh;
+  align-content: center;
+  padding-top: 145px;
+  padding-bottom: 105px;
+}
+
+.hero::before {
+  top: 50%;
+  bottom: auto;
+  left: 50%;
+  width: min(88vw, 980px);
+  aspect-ratio: 1;
+  opacity: 0.2;
+  background: repeating-conic-gradient(
+    from -2deg,
+    var(--ink) 0 0.45deg,
+    transparent 0.45deg 3deg
+  );
+  border-radius: 50%;
+  -webkit-mask: radial-gradient(circle, transparent 0 23%, #000 23.5% 52%, transparent 52.5%);
+  mask: radial-gradient(circle, transparent 0 23%, #000 23.5% 52%, transparent 52.5%);
+  transform: translate(-50%, -50%);
+}
+
+.hero::after {
+  position: absolute;
+  z-index: 1;
+  inset: 112px 0 64px;
+  content: "";
+  border: 2px solid var(--ink);
+  box-shadow: inset 0 0 0 7px var(--paper), inset 0 0 0 9px var(--ink);
+  pointer-events: none;
+}
+
+.hero-orbit {
+  display: none;
+}
+
+.hero-kicker {
+  justify-content: flex-start;
+  width: fit-content;
+  margin: 0 auto 42px;
+  padding: 8px 12px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.hero-title {
+  font-size: clamp(4rem, 10vw, 9.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.075em;
+  text-shadow: 3px 3px 0 var(--paper), 4px 4px 0 var(--ink);
+}
+
+.hero-title .outline-word {
+  margin-top: 0.1em;
+  -webkit-text-stroke: 2.5px var(--ink);
+  text-shadow: none;
+}
+
+.hero-strip {
+  bottom: 24px;
+  color: var(--paper);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 var(--paper), 6px 6px 0 var(--ink);
+}
+
+.hero-strip i {
+  width: 12px;
+  height: 1px;
+  background: var(--paper);
+  border-radius: 0;
+}
+
+/* Key metrics use four print plates rather than four colors. */
+.metric-band {
+  border-color: var(--ink);
+}
+
+.metric-card {
+  color: var(--ink);
+  background-color: var(--paper);
+  border-color: var(--ink);
+}
+
+.metric-card:nth-child(1) {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.metric-card:nth-child(2) {
+  background-color: var(--paper);
+  background-image: var(--print-hatch);
+}
+
+.metric-card:nth-child(3) {
+  background-color: var(--paper);
+  background-image: var(--print-crosshatch);
+}
+
+.metric-card:nth-child(4) {
+  color: var(--paper);
+  background-color: var(--ink);
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--paper), transparent 55%) 0 1px, transparent 1.4px);
+  background-size: 7px 7px;
+}
+
+.metric-card strong {
+  letter-spacing: -0.055em;
+}
+
+/* Research cards. */
+.question-card,
+.hypothesis,
+.data-method,
+.case-lab,
+.chart-card,
+.note-card,
+.main-conclusion,
+.subject-explorer,
+.system-map,
+.doc-table-wrap,
+.doc-callout {
+  border-radius: 2px;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.question-card {
+  color: var(--ink);
+  background-color: var(--paper-strong);
+  background-image: var(--print-hatch);
+  border-color: var(--ink);
+}
+
+.question-arrow {
+  color: var(--ink);
+}
+
+.hypothesis {
+  background: var(--white);
+  border-color: var(--ink);
+}
+
+.hypothesis:nth-child(2n) {
+  background-image: var(--print-lines);
+}
+
+.hypothesis span,
+.pipeline-steps span,
+.conclusion-symbol,
+.contact-icon {
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  transform: rotate(-2deg);
+}
+
+.hypothesis span {
+  border-radius: 50%;
+}
+
+/* Inverted printing plate. */
+.section-ink,
+.stack-section,
+.footer,
+.doc-section-dark {
+  color: var(--paper);
+  background-color: var(--ink);
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--paper), transparent 82%) 0 0.65px, transparent 0.9px);
+  background-size: 8px 8px;
+}
+
+.section-ink .section-heading p,
+.stack-section p,
+.footer p,
+.doc-section-dark .doc-heading p {
+  color: color-mix(in srgb, var(--paper), transparent 27%);
+}
+
+.section-ink .section-index::before,
+.stack-section .section-index::before {
+  background: var(--paper) !important;
+  border-color: var(--ink);
+  box-shadow: 2px 2px 0 var(--paper);
+}
+
+.section-ink .section-heading h2 em,
+.doc-section-dark .doc-heading h2 em {
+  -webkit-text-stroke-color: var(--paper);
+}
+
+.approach-switcher {
+  border: 2px solid var(--paper);
+  border-radius: 2px;
+  box-shadow: 7px 7px 0 color-mix(in srgb, var(--paper), transparent 60%);
+}
+
+.approach-tabs {
+  border-color: var(--paper);
+}
+
+.approach-tab {
+  color: var(--paper);
+  border-color: color-mix(in srgb, var(--paper), transparent 55%);
+  font-family: var(--body);
+}
+
+.approach-tab.is-active {
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: var(--print-hatch);
+}
+
+.panel-number {
+  color: var(--paper);
+}
+
+.approach-panel p,
+.approach-panel li {
+  color: color-mix(in srgb, var(--paper), transparent 24%);
+}
+
+.approach-panel li {
+  border-color: color-mix(in srgb, var(--paper), transparent 60%);
+}
+
+/* Data section. */
+.data-summary {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+  border-radius: 2px;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.data-summary article {
+  border-color: color-mix(in srgb, var(--paper), transparent 58%);
+}
+
+.data-summary p {
+  color: color-mix(in srgb, var(--paper), transparent 27%);
+}
+
+.data-source {
+  color: var(--ink);
+  background-color: var(--paper);
+  border-color: var(--ink);
+  border-radius: 2px;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.data-source-purple {
+  background-image: var(--print-hatch);
+}
+
+.data-source-green {
+  background-image: var(--print-lines);
+}
+
+.data-source-yellow {
+  background-image: var(--print-crosshatch);
+}
+
+.data-tag,
+.timeline-status,
+.subject-verdict span {
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+}
+
+.data-method {
+  background: var(--white);
+  border-color: var(--ink);
+}
+
+.data-report-link,
+.button,
+.detail-back {
+  color: var(--paper);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  box-shadow: 3px 3px 0 var(--paper), 5px 5px 0 var(--ink);
+}
+
+.data-report-link:hover,
+.data-report-link:focus-visible,
+.button:hover,
+.button:focus-visible,
+.detail-back:hover,
+.detail-back:focus-visible {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/* Worked example. */
+.case-section {
+  background-color: var(--paper-strong);
+  background-image: var(--print-lines);
+}
+
+.case-lab {
+  background: var(--white);
+  border-color: var(--ink);
+}
+
+.case-task {
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: var(--print-crosshatch);
+  border-color: var(--ink);
+}
+
+.case-tab {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--ink);
+  border-radius: 0;
+}
+
+.case-tab.is-active {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.case-panel,
+.case-context,
+.case-panel blockquote,
+.case-answer,
+.case-trace span {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--ink);
+  border-radius: 0;
+}
+
+.case-panel {
+  border-width: 2px;
+}
+
+.case-context,
+.case-panel blockquote,
+.case-answer {
+  border: 1px solid var(--ink);
+}
+
+.case-answer {
+  background-image: var(--print-hatch);
+}
+
+.case-trace i {
+  color: var(--ink);
+}
+
+/* Results as monochrome editorial charts. */
+.chart-card {
+  background: var(--white);
+  border-color: var(--ink);
+}
+
+.bar-track,
+.subject-bar .bar-track {
+  background: var(--paper);
+  border-color: currentColor;
+  border-radius: 0;
+}
+
+.bar,
+.subject-bar [data-subject-bar] {
+  border-color: currentColor;
+  border-radius: 0;
+}
+
+.bar-green,
+.subject-rag [data-subject-bar] {
+  background: var(--ink);
+}
+
+.bar-red,
+.subject-web [data-subject-bar] {
+  background-color: var(--ink);
+  background-image: repeating-linear-gradient(135deg, var(--paper) 0 2px, transparent 2px 8px);
+}
+
+.subject-b0 [data-subject-bar] {
+  background-color: var(--ink);
+  background-image: repeating-linear-gradient(90deg, var(--paper) 0 1px, transparent 1px 7px);
+}
+
+.chart-delta span {
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+}
+
+.note-card {
+  color: var(--ink);
+  background-color: var(--paper);
+  border-color: var(--ink);
+}
+
+.note-red {
+  background-image: var(--print-hatch);
+}
+
+.note-yellow {
+  background-image: var(--print-crosshatch);
+}
+
+.main-conclusion,
+.subject-explorer {
+  color: var(--paper);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.main-conclusion p,
+.subject-verdict p {
+  color: color-mix(in srgb, var(--paper), transparent 22%);
+}
+
+.subject-explorer select {
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--paper);
+  border-radius: 0;
+}
+
+.subject-explorer option {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.subject-bar.is-best strong {
+  color: var(--paper);
+  text-decoration: underline double;
+  text-underline-offset: 5px;
+}
+
+/* Pipeline and architecture. */
+.section-blue {
+  color: var(--ink);
+  background-color: var(--paper-strong);
+  background-image: var(--print-hatch);
+}
+
+.section-blue .section-heading h2 em {
+  -webkit-text-stroke-color: var(--ink);
+}
+
+.section-blue .section-heading p {
+  color: var(--muted);
+}
+
+.pipeline-steps li {
+  border-color: var(--ink);
+}
+
+.system-map {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+  box-shadow: 7px 7px 0 color-mix(in srgb, var(--ink), transparent 40%);
+}
+
+.system-map-head,
+.system-node,
+.system-branch {
+  border-color: color-mix(in srgb, var(--paper), transparent 36%);
+  border-radius: 0;
+}
+
+.system-map-head span,
+.system-node small,
+.branch-note {
+  color: color-mix(in srgb, var(--paper), transparent 27%);
+}
+
+.node-number,
+.branch-label {
+  color: var(--ink);
+  background: var(--paper) !important;
+  border-radius: 0;
+}
+
+.node-router,
+.node-agent,
+.node-search,
+.node-result {
+  background: transparent;
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 7px,
+    color-mix(in srgb, var(--paper), transparent 87%) 7px 8px
+  );
+}
+
+.flow-arrow,
+.flow-arrow.reversible,
+.result-arrow {
+  color: var(--paper);
+}
+
+@keyframes route-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+@keyframes pipeline-step-focus {
+  0% { opacity: 0.4; transform: translateX(-12px); }
+  55% { background-image: var(--print-hatch); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* Timeline, stack and team. */
+.timeline,
+.team-grid {
+  border-color: var(--ink);
+}
+
+.timeline-item,
+.member-card {
+  background: var(--white);
+  border-color: var(--ink);
+}
+
+.timeline-item:nth-child(2n) {
+  background-image: var(--print-lines);
+}
+
+.timeline-status.done,
+.timeline-status.active {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.tech-grid,
+.tech-card {
+  border-color: color-mix(in srgb, var(--paper), transparent 52%);
+}
+
+.tech-card::before {
+  height: 8px;
+  background: repeating-linear-gradient(90deg, var(--paper) 0 1px, transparent 1px 7px) !important;
+  border-bottom: 1px solid var(--paper);
+}
+
+.tech-card li {
+  color: var(--paper);
+  border-color: color-mix(in srgb, var(--paper), transparent 45%);
+  border-radius: 0;
+}
+
+.team-section {
+  background: var(--paper-strong);
+}
+
+.member-card:nth-child(2n) {
+  background-image: var(--print-lines);
+}
+
+.member-photo {
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: var(--print-crosshatch);
+  border-color: var(--ink);
+  border-radius: 0;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.member-card:nth-child(2) .member-photo,
+.member-card:nth-child(3) .member-photo,
+.member-card:nth-child(4) .member-photo,
+.member-card:nth-child(5) .member-photo {
+  background-color: var(--paper);
+}
+
+.member-photo img {
+  filter: grayscale(1) contrast(1.28) sepia(0.08);
+  mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] .member-photo img {
+  filter: grayscale(1) contrast(1.25) invert(1);
+  mix-blend-mode: screen;
+}
+
+.member-contacts > span,
+.member-contacts > a {
+  color: var(--ink);
+  border-color: var(--ink);
+  border-radius: 0;
+}
+
+.member-contacts > a:hover,
+.member-contacts > a:focus-visible {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.mentor-card,
+[data-theme="dark"] .mentor-card {
+  color: var(--paper);
+  background-color: var(--ink);
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--paper), transparent 70%) 0 0.8px, transparent 1.1px);
+  background-size: 7px 7px;
+}
+
+.mentor-card .member-photo,
+[data-theme="dark"] .mentor-card .member-photo {
+  color: var(--paper);
+  background-color: var(--ink);
+  background-image: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--paper), transparent 65%) 6px 7px);
+  border-color: var(--paper);
+  box-shadow: 5px 5px 0 var(--paper);
+}
+
+.mentor-card .member-role,
+.mentor-card p,
+.mentor-card .member-contacts > span,
+.mentor-card .member-contacts > a,
+[data-theme="dark"] .mentor-card .member-role,
+[data-theme="dark"] .mentor-card p,
+[data-theme="dark"] .mentor-card .member-contacts > span,
+[data-theme="dark"] .mentor-card .member-contacts > a {
+  color: color-mix(in srgb, var(--paper), transparent 18%);
+  border-color: color-mix(in srgb, var(--paper), transparent 45%);
+}
+
+.final-cta {
+  position: relative;
+}
+
+.final-cta::before {
+  position: absolute;
+  top: 72px;
+  right: 0;
+  width: min(38vw, 420px);
+  height: 28px;
+  content: "";
+  background: var(--print-crosshatch);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  opacity: 0.75;
+}
+
+.text-link {
+  border-color: var(--ink);
+}
+
+.footer {
+  border-top: 2px solid var(--paper);
+}
+
+.footer-meta a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Documentation pages inherit the same print system. */
+.detail-page {
+  background-color: var(--paper);
+  background-image: var(--print-hatch);
+}
+
+.detail-hero {
+  border-color: var(--ink);
+}
+
+.detail-hero::after {
+  position: absolute;
+  z-index: -1;
+  top: 112px;
+  right: -90px;
+  width: min(46vw, 560px);
+  aspect-ratio: 1;
+  content: "";
+  opacity: 0.28;
+  background: repeating-conic-gradient(var(--ink) 0 0.5deg, transparent 0.5deg 4deg);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.doc-section {
+  background: var(--paper);
+  border-color: var(--ink);
+}
+
+.doc-grid,
+.doc-card,
+.stat-grid,
+.doc-stat {
+  border-color: currentColor;
+}
+
+.doc-card {
+  background: var(--paper);
+}
+
+.doc-card.accent-purple,
+.doc-card.accent-green,
+.doc-card.accent-yellow,
+.doc-card.accent-blue {
+  color: var(--ink);
+  background-color: var(--paper);
+}
+
+.doc-card.accent-purple { background-image: var(--print-hatch); }
+.doc-card.accent-green { background-image: var(--print-lines); }
+.doc-card.accent-yellow { background-image: var(--print-crosshatch); }
+.doc-card.accent-blue {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--ink), transparent 65%) 0 0.8px, transparent 1px);
+  background-size: 7px 7px;
+}
+
+.doc-card p,
+.doc-card li,
+.doc-card.accent-purple p,
+.doc-card.accent-purple li,
+.doc-card.accent-green p,
+.doc-card.accent-green li,
+.doc-card.accent-yellow p,
+.doc-card.accent-yellow li,
+.doc-card.accent-blue p,
+.doc-card.accent-blue li,
+.doc-stat p {
+  color: var(--muted);
+}
+
+.doc-section-dark .doc-card p,
+.doc-section-dark .doc-card li {
+  color: color-mix(in srgb, var(--paper), transparent 24%);
+}
+
+.flow-step {
+  color: var(--paper);
+  background: var(--ink) !important;
+  border-color: var(--paper);
+  border-radius: 0;
+}
+
+.flow-step:nth-child(2n) {
+  background-image: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--paper), transparent 78%) 6px 7px) !important;
+}
+
+.doc-table-wrap {
+  border-color: var(--ink);
+}
+
+.doc-table {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.doc-table th,
+.doc-table td {
+  border-color: var(--line);
+}
+
+.doc-table thead {
+  background-image: var(--print-lines);
+}
+
+.doc-callout {
+  color: var(--ink);
+  background-color: var(--paper-strong);
+  background-image: var(--print-crosshatch);
+  border-color: var(--ink);
+}
+
+.doc-callout > span {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+  border-radius: 0;
+}
+
+/* The reveal feels like ink rolling onto paper. */
+.reveal {
+  opacity: 0;
+  filter: blur(1.5px);
+  transform: translateY(18px) rotate(0.15deg);
+  transition: opacity 700ms ease, filter 850ms ease, transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    color: var(--ink);
+    background: var(--paper);
+  }
+
+  .site-nav {
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image: var(--print-lines);
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+
+  .site-nav a {
+    color: var(--ink) !important;
+    border-color: var(--ink);
+  }
+
+  .site-nav a::before {
+    border-color: var(--ink);
+  }
+}
+
+@media (max-width: 780px) {
+  .section-shell {
+    width: min(100% - 30px, 1160px);
+  }
+
+  .section {
+    padding-top: 82px;
+    padding-bottom: 82px;
+  }
+
+  .hero {
+    min-height: 100svh;
+    padding-top: 125px;
+    padding-bottom: 92px;
+  }
+
+  .hero::after {
+    inset: 104px 0 58px;
+    box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 6px var(--ink);
+  }
+
+  .hero::before {
+    width: 150vw;
+  }
+
+  .hero-kicker {
+    box-sizing: border-box;
+    width: calc(100% - 46px);
+    max-width: none;
+    justify-content: center;
+    margin-bottom: 30px;
+    font-size: 0.56rem;
+    line-height: 1.5;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .hero-title {
+    padding-inline: 14px;
+    font-size: clamp(2.8rem, 13.2vw, 4.4rem);
+    line-height: 0.93;
+  }
+
+  .hero-title .outline-word {
+    max-width: 100%;
+    margin-inline: auto;
+    font-size: 0.53em;
+    line-height: 1.07;
+    letter-spacing: -0.045em;
+  }
+
+  .hero-strip {
+    width: calc(100% - 34px);
+    max-width: none;
+    justify-content: center;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .metric-card,
+  .data-summary article,
+  .data-source,
+  .member-card,
+  .timeline-item,
+  .tech-card {
+    min-height: auto;
+  }
+
+  .question-card,
+  .hypothesis,
+  .data-source,
+  .data-method,
+  .case-lab,
+  .chart-card,
+  .note-card,
+  .main-conclusion,
+  .subject-explorer,
+  .system-map,
+  .member-card,
+  .doc-callout {
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .approach-switcher {
+    box-shadow: 4px 4px 0 color-mix(in srgb, var(--paper), transparent 55%);
+  }
+
+  .final-cta::before {
+    top: 42px;
+    width: 46%;
+  }
+
+  .detail-hero::after {
+    top: 98px;
+    right: -135px;
+    width: 330px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    filter: none;
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  body,
+  .section,
+  .metric-card,
+  .data-source,
+  .doc-card {
+    background-image: none;
+  }
+}

@@ -64,7 +64,7 @@ function setTheme(theme) {
   }
   const themeColor = document.querySelector('meta[name="theme-color"]');
   if (themeColor) {
-    themeColor.content = theme === "dark" ? "#171716" : "#fbf7ee";
+    themeColor.content = theme === "dark" ? "#15130f" : "#efe8d8";
   }
 }
 
