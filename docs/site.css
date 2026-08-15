@@ -207,6 +207,10 @@ img {
   letter-spacing: 0.04em;
 }
 
+.brand-home-label {
+  display: none;
+}
+
 .brand-mark {
   display: grid;
   width: 35px;
@@ -2077,6 +2081,17 @@ img {
   .brand-mark {
     width: 36px;
     height: 36px;
+  }
+
+  .detail-page .brand-mark {
+    display: none;
+  }
+
+  .detail-page .brand-home-label {
+    display: inline;
+    font-size: 0.62rem;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
   }
 
   .menu-toggle {
