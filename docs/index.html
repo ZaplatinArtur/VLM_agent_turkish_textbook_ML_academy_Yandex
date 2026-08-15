@@ -12,8 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260814-2">
-  <script src="site.js?v=20260814-2" defer></script>
+  <link rel="stylesheet" href="site.css?v=20260815-1">
+  <script src="site.js?v=20260815-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -41,6 +41,7 @@
       </button>
       <a class="nav-cta" href="https://github.com/ZaplatinArtur/VLM_agent_turkish_textbook_ML_academy_Yandex">GitHub ↗</a>
     </div>
+    <div class="reading-progress" aria-hidden="true"><span></span></div>
   </header>
 
   <main id="main">
@@ -84,17 +85,17 @@
     <section class="metric-band" aria-label="Ключевые результаты">
       <article class="metric-card metric-dark reveal">
         <span class="metric-label">единый срез</span>
-        <strong>8 300</strong>
+        <strong data-count-to="8300" data-count-decimals="0">8 300</strong>
         <p>школьных заданий в сравнении без инструментов и с веб-поиском</p>
       </article>
       <article class="metric-card metric-green reveal">
         <span class="metric-label">без инструментов</span>
-        <strong>84,1%</strong>
+        <strong data-count-to="84.1" data-count-decimals="1" data-count-suffix="%">84,1%</strong>
         <p>точность базовой модели на сопоставимых заданиях</p>
       </article>
       <article class="metric-card metric-red reveal">
         <span class="metric-label">с веб-поиском</span>
-        <strong>81,8%</strong>
+        <strong data-count-to="81.8" data-count-decimals="1" data-count-suffix="%">81,8%</strong>
         <p>поиск вызывался в 53% заданий, но не дал общего роста</p>
       </article>
       <article class="metric-card metric-purple reveal">
@@ -231,11 +232,11 @@
             <span>одинаковые задания</span>
           </div>
           <div class="bar-row">
-            <div class="bar-meta"><span>Без инструментов</span><strong>84,1%</strong></div>
+            <div class="bar-meta"><span>Без инструментов</span><strong data-count-to="84.1" data-count-decimals="1" data-count-suffix="%">84,1%</strong></div>
             <div class="bar-track"><div class="bar bar-green" data-width="84.1"></div></div>
           </div>
           <div class="bar-row">
-            <div class="bar-meta"><span>С веб-поиском</span><strong>81,8%</strong></div>
+            <div class="bar-meta"><span>С веб-поиском</span><strong data-count-to="81.8" data-count-decimals="1" data-count-suffix="%">81,8%</strong></div>
             <div class="bar-track"><div class="bar bar-red" data-width="81.8"></div></div>
           </div>
           <div class="chart-delta">
@@ -289,19 +290,19 @@
             </div>
 
             <div class="system-map-start">
-              <article class="system-node node-task">
+              <article class="system-node node-task" data-motion-stage="1">
                 <span class="node-number">1</span>
                 <div><b>Задание</b><small>текст · изображение · предмет</small></div>
               </article>
-              <span class="flow-arrow" aria-hidden="true">→</span>
-              <article class="system-node node-router">
+              <span class="flow-arrow" data-motion-stage="2" aria-hidden="true">→</span>
+              <article class="system-node node-router" data-motion-stage="3">
                 <span class="node-number">2</span>
                 <div><b>Проверка источника</b><small>поиск точного официального ответа</small></div>
               </article>
             </div>
 
             <div class="system-branches">
-              <article class="system-branch branch-key">
+              <article class="system-branch branch-key" data-motion-stage="4">
                 <span class="branch-label">точное совпадение</span>
                 <div class="system-node node-key">
                   <span class="node-number">✓</span>
@@ -309,7 +310,7 @@
                 </div>
               </article>
 
-              <article class="system-branch branch-agent">
+              <article class="system-branch branch-agent" data-motion-stage="5">
                 <span class="branch-label">совпадения нет</span>
                 <div class="agent-search-pair">
                   <div class="system-node node-agent">
@@ -326,7 +327,7 @@
               </article>
             </div>
 
-            <div class="system-result">
+            <div class="system-result" data-motion-stage="6">
               <span class="result-arrow" aria-hidden="true">↓</span>
               <article class="system-node node-result">
                 <span class="node-number">4</span>
