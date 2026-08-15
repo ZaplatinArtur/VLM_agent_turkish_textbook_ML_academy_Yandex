@@ -604,6 +604,11 @@ img {
   border-right: 2px solid #fff;
 }
 
+.approach-panels {
+  position: relative;
+  min-width: 0;
+}
+
 .approach-tab {
   flex: 1;
   padding: 24px 28px;
@@ -637,6 +642,43 @@ img {
 
 .approach-panel[hidden] {
   display: none;
+}
+
+.approach-panel.is-entering {
+  animation: approach-panel-enter 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.approach-panel.is-leaving {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  pointer-events: none;
+  animation: approach-panel-leave 200ms ease both;
+}
+
+@keyframes approach-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes approach-panel-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
 }
 
 .panel-number {
@@ -2076,6 +2118,142 @@ img {
   .footer-meta {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@media (max-width: 900px) {
+  .menu-toggle {
+    display: grid;
+    width: auto;
+    height: 42px;
+    grid-template-columns: auto 21px;
+    grid-template-rows: 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 0;
+    padding: 0 12px;
+    color: #fff;
+    background: #242321;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+  }
+
+  .menu-toggle::before {
+    grid-row: 1 / 3;
+    align-self: center;
+    content: "РАЗДЕЛЫ";
+    font-family: var(--display);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .menu-toggle[aria-expanded="true"]::before {
+    content: "ЗАКРЫТЬ";
+  }
+
+  .menu-toggle span:not(.sr-only) {
+    grid-column: 2;
+    transition: transform 180ms ease;
+  }
+
+  .menu-toggle span:first-child {
+    grid-row: 1;
+    align-self: end;
+    margin-bottom: 3px;
+  }
+
+  .menu-toggle span:nth-child(2) {
+    grid-row: 2;
+    align-self: start;
+    margin-top: 3px;
+  }
+
+  .menu-toggle[aria-expanded="true"] span:first-child {
+    transform: translateY(4px) rotate(45deg);
+  }
+
+  .menu-toggle[aria-expanded="true"] span:nth-child(2) {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+
+  .site-nav {
+    gap: 8px;
+    padding: 12px;
+    color: var(--ink);
+    background: var(--paper-strong);
+    border-color: var(--ink);
+    box-shadow: 4px 5px 0 var(--ink);
+  }
+
+  .site-nav.is-open {
+    animation: mobile-nav-enter 180ms ease-out both;
+  }
+
+  .site-nav::before {
+    padding: 3px 7px 5px;
+    content: "ПЕРЕЙТИ К РАЗДЕЛУ";
+    color: var(--muted);
+    font-family: var(--display);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .site-nav a {
+    display: flex;
+    min-height: 50px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 16px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    font-size: 0.9rem;
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+
+  .site-nav a::after {
+    position: static;
+    width: auto;
+    height: auto;
+    content: "›";
+    background: none;
+    font-family: var(--body);
+    font-size: 1.45rem;
+    line-height: 1;
+    transform: none;
+    transition: transform 160ms ease;
+  }
+
+  .site-nav a:hover,
+  .site-nav a:focus-visible {
+    border-color: var(--ink);
+    transform: translateX(3px);
+  }
+
+  .site-nav a:hover::after,
+  .site-nav a:focus-visible::after,
+  .site-nav a.is-active::after {
+    transform: translateX(4px);
+  }
+
+  .site-nav a.is-active {
+    color: #0e0e0e;
+    background: var(--green);
+    border-color: var(--green);
+  }
+}
+
+@keyframes mobile-nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

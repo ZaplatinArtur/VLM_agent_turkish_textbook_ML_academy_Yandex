@@ -26,9 +26,12 @@ function setTheme(theme) {
 }
 
 const storedTheme = localStorage.getItem("textbook-vlm-theme");
-const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isMobileViewport = window.matchMedia("(max-width: 780px)").matches;
+const preferredTheme = isMobileViewport
   ? "dark"
-  : "light";
+  : window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 setTheme(storedTheme || preferredTheme);
 
 if (themeToggle) {
@@ -110,6 +113,14 @@ if (readingProgress || navSections.length) {
 
 function selectApproach(selectedTab) {
   const selectedApproach = selectedTab.dataset.approach;
+  const selectedPanel = approachPanels.find(
+    (panel) => panel.id === `panel-${selectedApproach}`,
+  );
+  const activePanel = approachPanels.find((panel) => panel.classList.contains("is-active"));
+
+  if (!selectedPanel || selectedPanel === activePanel) {
+    return;
+  }
 
   approachTabs.forEach((tab) => {
     const isSelected = tab === selectedTab;
@@ -118,11 +129,54 @@ function selectApproach(selectedTab) {
     tab.tabIndex = isSelected ? 0 : -1;
   });
 
+  if (prefersReducedMotion || !activePanel) {
+    approachPanels.forEach((panel) => {
+      const isSelected = panel === selectedPanel;
+      panel.classList.toggle("is-active", isSelected);
+      panel.classList.remove("is-entering", "is-leaving");
+      panel.hidden = !isSelected;
+      panel.setAttribute("aria-hidden", String(!isSelected));
+    });
+    return;
+  }
+
   approachPanels.forEach((panel) => {
-    const isSelected = panel.id === `panel-${selectedApproach}`;
-    panel.classList.toggle("is-active", isSelected);
-    panel.hidden = !isSelected;
+    if (panel !== activePanel && panel !== selectedPanel) {
+      panel.hidden = true;
+      panel.classList.remove("is-active", "is-entering", "is-leaving");
+      panel.setAttribute("aria-hidden", "true");
+    }
   });
+
+  activePanel.classList.remove("is-active", "is-entering");
+  activePanel.classList.add("is-leaving");
+  activePanel.setAttribute("aria-hidden", "true");
+
+  selectedPanel.hidden = false;
+  selectedPanel.setAttribute("aria-hidden", "false");
+  selectedPanel.classList.remove("is-entering", "is-leaving");
+  void selectedPanel.offsetWidth;
+  selectedPanel.classList.add("is-active", "is-entering");
+
+  let transitionFinished = false;
+  const finishTransition = (event) => {
+    if (event && event.target !== selectedPanel) {
+      return;
+    }
+    if (transitionFinished) {
+      return;
+    }
+
+    transitionFinished = true;
+    if (!activePanel.classList.contains("is-active")) {
+      activePanel.hidden = true;
+    }
+    activePanel.classList.remove("is-leaving");
+    selectedPanel.classList.remove("is-entering");
+  };
+
+  selectedPanel.addEventListener("animationend", finishTransition, { once: true });
+  window.setTimeout(finishTransition, 360);
 }
 
 approachTabs.forEach((tab, index) => {
