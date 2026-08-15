@@ -10,6 +10,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const mobileNavigation = window.matchMedia("(max-width: 900px)");
 let mobileScrollFrame = null;
 let previousScrollBehavior = "";
+let themeTransitionInProgress = false;
 
 function scrollToMobileSection(target) {
   const startY = window.scrollY;
@@ -77,19 +78,38 @@ setTheme(storedTheme || preferredTheme);
 
 if (themeToggle) {
   themeToggle.addEventListener("click", () => {
+    if (themeTransitionInProgress) {
+      return;
+    }
+
     const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+    themeTransitionInProgress = true;
+    themeToggle.setAttribute("aria-busy", "true");
 
     if (document.startViewTransition && !prefersReducedMotion) {
-      document.startViewTransition(() => setTheme(nextTheme));
+      const transition = document.startViewTransition(() => setTheme(nextTheme));
+      transition.finished.finally(() => {
+        themeTransitionInProgress = false;
+        themeToggle.removeAttribute("aria-busy");
+      });
     } else if (!prefersReducedMotion) {
-      root.classList.add("is-theme-fallback", "is-theme-fade-out");
+      root.classList.add("is-theme-fallback");
+      window.requestAnimationFrame(() => {
+        root.classList.add("is-theme-fade-out");
+      });
       window.setTimeout(() => {
         setTheme(nextTheme);
         root.classList.remove("is-theme-fade-out");
-      }, 100);
-      window.setTimeout(() => root.classList.remove("is-theme-fallback"), 260);
+      }, 220);
+      window.setTimeout(() => {
+        root.classList.remove("is-theme-fallback");
+        themeTransitionInProgress = false;
+        themeToggle.removeAttribute("aria-busy");
+      }, 620);
     } else {
       setTheme(nextTheme);
+      themeTransitionInProgress = false;
+      themeToggle.removeAttribute("aria-busy");
     }
 
     localStorage.setItem("textbook-vlm-theme", nextTheme);
