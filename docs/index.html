@@ -27,9 +27,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260815-16">
-  <link rel="stylesheet" href="engraving.css?v=20260815-3">
-  <script src="site.js?v=20260815-8" defer></script>
+  <link rel="stylesheet" href="site.css?v=20260815-17">
+  <link rel="stylesheet" href="engraving.css?v=20260815-5">
+  <script src="site.js?v=20260815-10" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -75,7 +75,8 @@
 
       <h1 class="hero-title reveal">
         <span>УЧЕБНИК</span>
-        <span class="outline-word">КАК<br>ИНСТРУМЕНТ</span>
+        <span class="outline-word">КАК</span>
+        <span class="outline-word instrument-word">ИНСТРУМЕНТ</span>
       </h1>
 
       <div class="hero-strip reveal" aria-label="Ключевые компоненты проекта">
@@ -130,23 +131,23 @@
           <div class="question-arrow" aria-hidden="true">↘</div>
         </article>
 
-        <div class="hypotheses">
-          <article class="hypothesis reveal">
+        <div class="hypotheses reveal">
+          <article class="hypothesis">
             <span>H1</span>
             <h3>Веб для широких фактов</h3>
             <p>Общие и редкие сведения, которых модель могла не видеть во время обучения.</p>
           </article>
-          <article class="hypothesis reveal">
+          <article class="hypothesis">
             <span>H2</span>
             <h3>Учебник для программы</h3>
             <p>Точные определения, формулировки и примеры из конкретного курса.</p>
           </article>
-          <article class="hypothesis reveal">
+          <article class="hypothesis">
             <span>H3</span>
             <h3>Поиск может мешать</h3>
             <p>В самодостаточных задачах лишний контекст отвлекает от исходного условия.</p>
           </article>
-          <article class="hypothesis reveal">
+          <article class="hypothesis">
             <span>H4</span>
             <h3>Нужна маршрутизация</h3>
             <p>Тип задания должен определять: решать самому, искать в вебе или в учебниках.</p>
@@ -240,20 +241,20 @@
           <article><span>форматы</span><strong data-count-to="2" data-count-decimals="0">2</strong><p>текст и скриншот</p></article>
         </div>
 
-        <div class="data-source-grid">
-          <article class="data-source data-source-purple reveal">
+        <div class="data-source-grid reveal">
+          <article class="data-source data-source-purple">
             <div class="data-source-head"><span>01 · TUMLU</span><span class="data-tag">текст · выбор ответа</span></div>
             <strong data-count-to="2583" data-count-decimals="0">2 583</strong>
             <h3>Многоязычные школьные вопросы</h3>
             <p>Закрытые задания по школьным предметам с вариантами ответа.</p>
           </article>
-          <article class="data-source data-source-green reveal">
+          <article class="data-source data-source-green">
             <div class="data-source-head"><span>02 · EXAMS-V</span><span class="data-tag">скриншот · выбор ответа</span></div>
             <strong data-count-to="2977" data-count-decimals="0">2 977</strong>
             <h3>Визуальные экзаменационные задания</h3>
             <p>Закрытые вопросы, где модель получает исходный скриншот задания.</p>
           </article>
-          <article class="data-source data-source-yellow reveal">
+          <article class="data-source data-source-yellow">
             <div class="data-source-head"><span>03 · MGSM</span><span class="data-tag">текст · открытый ответ</span></div>
             <strong data-count-to="2740" data-count-decimals="0">2 740</strong>
             <h3>Многошаговые задачи по математике</h3>
@@ -273,68 +274,6 @@
             <li><b>2 977</b><span>скриншотов</span></li>
           </ul>
           <a class="data-report-link" href="https://claude.ai/code/artifact/cefe767d-3f81-459e-b90a-d388b3e4e039">Полный отчёт о данных ↗</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="case-study" class="section case-section">
-      <div class="section-shell">
-        <div class="section-index">03A · ОДНО ЗАДАНИЕ</div>
-        <div class="section-heading reveal">
-          <h2>ОДИН ВОПРОС.<br><em>ТРИ МАРШРУТА.</em></h2>
-          <p>Интерактивная демонстрация показывает, какой контекст получает агент и почему поиск нужен не в каждом задании.</p>
-        </div>
-
-        <div class="case-lab reveal">
-          <article class="case-task" aria-label="Демонстрационная задача о площади прямоугольника">
-            <div class="case-task-head"><span>демонстрационный пример</span><span>математика · 4 класс</span></div>
-            <div class="rectangle-figure" aria-hidden="true">
-              <span class="rectangle-width">6 cm</span>
-              <span class="rectangle-height">4 cm</span>
-            </div>
-            <p lang="tr">Bir dikdörtgenin uzun kenarı 6 cm, kısa kenarı 4 cm'dir. Bu dikdörtgenin alanı kaç cm²'dir?</p>
-            <small>Найдите площадь прямоугольника со сторонами 6 и 4 см.</small>
-          </article>
-
-          <div class="case-route">
-            <div class="case-tabs" role="tablist" aria-label="Маршруты решения демонстрационной задачи">
-              <button id="case-tab-b0" class="case-tab is-active" role="tab" aria-selected="true" aria-controls="case-panel-b0" data-case="b0">Без инструментов</button>
-              <button id="case-tab-web" class="case-tab" role="tab" aria-selected="false" aria-controls="case-panel-web" data-case="web" tabindex="-1">Веб-поиск</button>
-              <button id="case-tab-rag" class="case-tab" role="tab" aria-selected="false" aria-controls="case-panel-rag" data-case="rag" tabindex="-1">Textbook RAG</button>
-            </div>
-
-            <div class="case-panels">
-              <article id="case-panel-b0" class="case-panel is-active" role="tabpanel" aria-labelledby="case-tab-b0">
-                <div class="case-trace">
-                  <span><i>01</i> прочитать числа на изображении</span>
-                  <span><i>02</i> применить формулу площади</span>
-                  <span><i>03</i> проверить вычисление 6 × 4</span>
-                </div>
-                <div class="case-context"><span>Внешний контекст</span><strong>не требуется</strong><p>Условие самодостаточно: поиск добавил бы шум, но не новое знание.</p></div>
-                <div class="case-answer"><span>ответ</span><strong>24 cm²</strong><small>совпадает с эталоном</small></div>
-              </article>
-
-              <article id="case-panel-web" class="case-panel" role="tabpanel" aria-labelledby="case-tab-web" hidden>
-                <div class="case-trace">
-                  <span><i>01</i> оценить достаточность условия</span>
-                  <span><i>02</i> не вызывать веб без внешнего факта</span>
-                  <span><i>03</i> решить по исходному изображению</span>
-                </div>
-                <div class="case-context"><span>Решение агента</span><strong>поиск пропущен</strong><p>Доступ к инструменту не означает, что им нужно пользоваться.</p></div>
-                <div class="case-answer"><span>ответ</span><strong>24 cm²</strong><small>веб не повлиял на решение</small></div>
-              </article>
-
-              <article id="case-panel-rag" class="case-panel" role="tabpanel" aria-labelledby="case-tab-rag" hidden>
-                <div class="case-trace">
-                  <span><i>01</i> запрос: <b lang="tr">dikdörtgen alanı formülü</b></span>
-                  <span><i>02</i> проверить найденный фрагмент</span>
-                  <span><i>03</i> сверить числа с изображением</span>
-                </div>
-                <blockquote lang="tr">Dikdörtgenin alanı = uzun kenar × kısa kenar.</blockquote>
-                <div class="case-answer"><span>ответ</span><strong>24 cm²</strong><small>учебник только подтверждает формулу</small></div>
-              </article>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -386,23 +325,35 @@
             <span class="card-eyebrow">валидационный срез · N = 198 · модель-судья</span>
             <h3 id="subject-explorer-title">Где помогает каждый источник</h3>
           </div>
-          <label for="subject-result-select">Предмет
-            <select id="subject-result-select">
-              <option value="all">Все предметы</option>
-              <option value="ataturk">Ататюркизм</option>
-              <option value="biology">Биология</option>
-              <option value="chemistry">Химия</option>
-              <option value="english">Английский</option>
-              <option value="geography">География</option>
-              <option value="history">История</option>
-              <option value="math">Математика</option>
-              <option value="philosophy">Философия</option>
-              <option value="physics">Физика</option>
-              <option value="science">Естествознание</option>
-              <option value="sociology">Социология</option>
-              <option value="turkish">Турецкий язык и литература</option>
-            </select>
-          </label>
+          <div class="subject-picker" data-subject-picker>
+            <span class="subject-picker-label" id="subject-picker-label">Предмет</span>
+            <button
+              class="subject-picker-trigger"
+              type="button"
+              aria-labelledby="subject-picker-label subject-picker-value"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="subject-picker-options"
+            >
+              <span id="subject-picker-value" data-subject-picker-value>Все предметы</span>
+              <span class="subject-picker-arrow" aria-hidden="true">↓</span>
+            </button>
+            <div id="subject-picker-options" class="subject-picker-options" role="listbox" aria-labelledby="subject-picker-label" hidden>
+              <button type="button" role="option" aria-selected="true" data-subject-key="all">Все предметы</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="ataturk">Ататюркизм</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="biology">Биология</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="chemistry">Химия</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="english">Английский</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="geography">География</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="history">История</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="math">Математика</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="philosophy">Философия</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="physics">Физика</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="science">Естествознание</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="sociology">Социология</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="turkish">Турецкий язык и литература</button>
+            </div>
+          </div>
         </div>
 
         <div class="subject-bars">
@@ -445,10 +396,10 @@
 
         <div class="pipeline-grid">
           <ol class="pipeline-steps">
-            <li class="reveal"><span>01</span><div><h3>Прочитать задание</h3><p>Извлечь текст, числа, формулы и вопрос из исходного изображения.</p></div></li>
-            <li class="reveal"><span>02</span><div><h3>Выбрать источник</h3><p>Решать самостоятельно либо обратиться к официальному ключу или учебникам.</p></div></li>
-            <li class="reveal"><span>03</span><div><h3>Проверить контекст</h3><p>Отбросить слабые и конфликтующие чанки, разрешить одну переформулировку.</p></div></li>
-            <li class="reveal"><span>04</span><div><h3>Сверить ответ</h3><p>Повторно проверить числа и вопрос по изображению, затем вернуть единый результат.</p></div></li>
+            <li><span>01</span><div><h3>Прочитать задание</h3><p>Извлечь текст, числа, формулы и вопрос из исходного изображения.</p></div></li>
+            <li><span>02</span><div><h3>Выбрать источник</h3><p>Решать самостоятельно либо обратиться к официальному ключу или учебникам.</p></div></li>
+            <li><span>03</span><div><h3>Проверить контекст</h3><p>Отбросить слабые и конфликтующие чанки, разрешить одну переформулировку.</p></div></li>
+            <li><span>04</span><div><h3>Сверить ответ</h3><p>Повторно проверить числа и вопрос по изображению, затем вернуть единый результат.</p></div></li>
           </ol>
           <div class="system-map reveal" aria-label="Схема маршрутизации задания между официальным ответом и агентом с поиском">
             <div class="system-map-head">
@@ -513,28 +464,28 @@
         <p>Каждый следующий этап добавлялся только после воспроизводимой проверки предыдущего.</p>
       </div>
 
-      <div class="timeline">
-        <article class="timeline-item reveal">
+      <div class="timeline reveal">
+        <article class="timeline-item">
           <span class="timeline-number">01</span><span class="timeline-status done">готово</span>
           <h3>Форматы данных</h3><p>Единые схемы задания, изображения, чанка и результата агента.</p>
         </article>
-        <article class="timeline-item reveal">
+        <article class="timeline-item">
           <span class="timeline-number">02</span><span class="timeline-status done">готово</span>
           <h3>Базовая линия</h3><p>Запуск одной модели без инструментов и сохранение полного trace.</p>
         </article>
-        <article class="timeline-item reveal">
+        <article class="timeline-item">
           <span class="timeline-number">03</span><span class="timeline-status done">готово</span>
           <h3>Корпус и индексы</h3><p>Разбор учебников, гибридный retrieval и повторное ранжирование.</p>
         </article>
-        <article class="timeline-item reveal">
+        <article class="timeline-item">
           <span class="timeline-number">04</span><span class="timeline-status done">готово</span>
           <h3>Агентный инструмент</h3><p>Прямой вызов поиска, ограничение запросов и проверка релевантности.</p>
         </article>
-        <article class="timeline-item reveal">
+        <article class="timeline-item">
           <span class="timeline-number">05</span><span class="timeline-status done">готово</span>
           <h3>Единая оценка</h3><p>Точные метрики, мультимодальный судья и предметные срезы.</p>
         </article>
-        <article class="timeline-item reveal">
+        <article class="timeline-item">
           <span class="timeline-number">06</span><span class="timeline-status active">сейчас</span>
           <h3>Маршрутизация</h3><p>Выбор между самостоятельным решением, вебом и учебником.</p>
         </article>
@@ -572,8 +523,8 @@
           <p>Пять направлений разработки и единая исследовательская методология.</p>
         </div>
 
-        <div class="team-grid">
-          <article class="member-card reveal">
+        <div class="team-grid reveal">
+          <article class="member-card">
             <div class="member-photo">
               <img
                 src="assets/dmitry-bykov-engraving.webp"
@@ -589,35 +540,35 @@
             <p>Парсинг учебников, разбиение материала на чанки.</p>
             <div class="member-contacts"><a href="https://github.com/Dentander" target="_blank" rel="noreferrer" aria-label="GitHub Дмитрия Быкова"><span class="contact-icon" aria-hidden="true">GH</span>GitHub ↗</a></div>
           </article>
-          <article class="member-card reveal">
+          <article class="member-card">
             <div class="member-photo" aria-label="Место для фотографии Даниила Теслова"><span>ДТ</span><small>фото</small></div>
             <span class="member-role">Поиск</span>
             <h3>Даниил Теслов</h3>
             <p>Эмбеддер, поиск и поисковый индекс.</p>
             <div class="member-contacts"><span class="contact-pending">контакты уточняются</span></div>
           </article>
-          <article class="member-card reveal">
+          <article class="member-card">
             <div class="member-photo" aria-label="Место для фотографии Максима Кулямина"><span>МК</span><small>фото</small></div>
             <span class="member-role">Оценка</span>
             <h3>Максим Кулямин</h3>
             <p>Модель-судья и аналитика качества.</p>
             <div class="member-contacts"><span class="contact-pending">контакты уточняются</span></div>
           </article>
-          <article class="member-card reveal">
+          <article class="member-card">
             <div class="member-photo" aria-label="Место для фотографии Дениса Шаброва"><span>ДШ</span><small>фото</small></div>
             <span class="member-role">Агент</span>
             <h3>Денис Шабров</h3>
             <p>Базовый агент и экспериментальные прогоны.</p>
             <div class="member-contacts"><span class="contact-pending">контакты уточняются</span></div>
           </article>
-          <article class="member-card reveal">
+          <article class="member-card">
             <div class="member-photo" aria-label="Место для фотографии Артура Заплатина"><span>АЗ</span><small>фото</small></div>
             <span class="member-role">Агент</span>
             <h3>Артур Заплатин</h3>
             <p>Инструмент поиска, агентная стратегия и интеграция.</p>
             <div class="member-contacts"><a href="https://github.com/ZaplatinArtur" target="_blank" rel="noreferrer" aria-label="GitHub Артура Заплатина"><span class="contact-icon" aria-hidden="true">GH</span>GitHub ↗</a></div>
           </article>
-          <article class="member-card mentor-card reveal">
+          <article class="member-card mentor-card">
             <div class="member-photo" aria-label="Место для фотографии Ильи Короткова"><span>ИК</span><small>фото</small></div>
             <span class="member-role">Ментор проекта</span>
             <h3>Илья Коротков</h3>

@@ -6,8 +6,6 @@ const siteNav = document.querySelector(".site-nav");
 const readingProgress = document.querySelector(".reading-progress");
 const approachTabs = [...document.querySelectorAll(".approach-tab")];
 const approachPanels = [...document.querySelectorAll(".approach-panel")];
-const caseTabs = [...document.querySelectorAll(".case-tab")];
-const casePanels = [...document.querySelectorAll(".case-panel")];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const mobileNavigation = window.matchMedia("(max-width: 900px)");
 let mobileScrollFrame = null;
@@ -80,7 +78,20 @@ setTheme(storedTheme || preferredTheme);
 if (themeToggle) {
   themeToggle.addEventListener("click", () => {
     const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
+
+    if (document.startViewTransition && !prefersReducedMotion) {
+      document.startViewTransition(() => setTheme(nextTheme));
+    } else if (!prefersReducedMotion) {
+      root.classList.add("is-theme-fallback", "is-theme-fade-out");
+      window.setTimeout(() => {
+        setTheme(nextTheme);
+        root.classList.remove("is-theme-fade-out");
+      }, 100);
+      window.setTimeout(() => root.classList.remove("is-theme-fallback"), 260);
+    } else {
+      setTheme(nextTheme);
+    }
+
     localStorage.setItem("textbook-vlm-theme", nextTheme);
   });
 }
@@ -123,7 +134,15 @@ const navLinks = siteNav
 const navSections = navLinks
   .map((link) => ({ link, section: document.querySelector(link.getAttribute("href")) }))
   .filter(({ section }) => section);
+let navSectionTops = [];
 let scrollFrameRequested = false;
+
+function cacheNavSectionTops() {
+  navSectionTops = navSections.map(({ link, section }) => ({
+    link,
+    top: section.getBoundingClientRect().top + window.scrollY,
+  }));
+}
 
 function updateScrollState() {
   const scrollRange = document.documentElement.scrollHeight - window.innerHeight;
@@ -133,12 +152,12 @@ function updateScrollState() {
     root.style.setProperty("--scroll-progress", String(progress));
   }
 
-  if (navSections.length) {
+  if (navSectionTops.length) {
     const marker = window.scrollY + window.innerHeight * 0.35;
     let activeLink = null;
 
-    navSections.forEach(({ link, section }) => {
-      if (marker >= section.offsetTop) {
+    navSectionTops.forEach(({ link, top }) => {
+      if (marker >= top) {
         activeLink = link;
       }
     });
@@ -167,8 +186,14 @@ function requestScrollStateUpdate() {
 }
 
 if (readingProgress || navSections.length) {
+  cacheNavSectionTops();
   window.addEventListener("scroll", requestScrollStateUpdate, { passive: true });
-  window.addEventListener("resize", requestScrollStateUpdate);
+  window.addEventListener("resize", () => {
+    cacheNavSectionTops();
+    requestScrollStateUpdate();
+  }, { passive: true });
+  window.addEventListener("load", cacheNavSectionTops, { once: true });
+  document.fonts?.ready.then(cacheNavSectionTops);
   requestScrollStateUpdate();
 }
 
@@ -198,6 +223,8 @@ function selectApproach(selectedTab) {
       panel.hidden = !isSelected;
       panel.setAttribute("aria-hidden", String(!isSelected));
     });
+    cacheNavSectionTops();
+    requestScrollStateUpdate();
     return;
   }
 
@@ -234,6 +261,8 @@ function selectApproach(selectedTab) {
     }
     activePanel.classList.remove("is-leaving");
     selectedPanel.classList.remove("is-entering");
+    cacheNavSectionTops();
+    requestScrollStateUpdate();
   };
 
   selectedPanel.addEventListener("animationend", finishTransition, { once: true });
@@ -255,56 +284,6 @@ approachTabs.forEach((tab, index) => {
   });
 });
 
-function selectCaseRoute(selectedTab) {
-  const selectedPanel = casePanels.find(
-    (panel) => panel.id === `case-panel-${selectedTab.dataset.case}`,
-  );
-
-  if (!selectedPanel || selectedPanel.classList.contains("is-active")) {
-    return;
-  }
-
-  caseTabs.forEach((tab) => {
-    const isSelected = tab === selectedTab;
-    tab.classList.toggle("is-active", isSelected);
-    tab.setAttribute("aria-selected", String(isSelected));
-    tab.tabIndex = isSelected ? 0 : -1;
-  });
-
-  casePanels.forEach((panel) => {
-    const isSelected = panel === selectedPanel;
-    panel.hidden = !isSelected;
-    panel.classList.toggle("is-active", isSelected);
-    panel.classList.remove("is-entering");
-    panel.setAttribute("aria-hidden", String(!isSelected));
-  });
-
-  if (!prefersReducedMotion) {
-    void selectedPanel.offsetWidth;
-    selectedPanel.classList.add("is-entering");
-    selectedPanel.addEventListener(
-      "animationend",
-      () => selectedPanel.classList.remove("is-entering"),
-      { once: true },
-    );
-  }
-}
-
-caseTabs.forEach((tab, index) => {
-  tab.addEventListener("click", () => selectCaseRoute(tab));
-  tab.addEventListener("keydown", (event) => {
-    if (!["ArrowRight", "ArrowLeft"].includes(event.key)) {
-      return;
-    }
-
-    event.preventDefault();
-    const direction = event.key === "ArrowRight" ? 1 : -1;
-    const nextIndex = (index + direction + caseTabs.length) % caseTabs.length;
-    caseTabs[nextIndex].focus();
-    selectCaseRoute(caseTabs[nextIndex]);
-  });
-});
-
 const revealElements = [...document.querySelectorAll(".reveal")];
 
 if (prefersReducedMotion) {
@@ -316,7 +295,7 @@ if (prefersReducedMotion) {
         entry.target.classList.toggle("is-visible", entry.isIntersecting);
       });
     },
-    { threshold: 0.12 },
+    { rootMargin: "0px 0px -6% 0px", threshold: 0.01 },
   );
 
   revealElements.forEach((element) => revealObserver.observe(element));
@@ -338,18 +317,30 @@ const subjectResults = {
   turkish: { name: "Турецкий язык и литература", count: 21, b0: 57.1, web: 57.1, rag: 42.9 },
 };
 
-const subjectSelect = document.getElementById("subject-result-select");
+const subjectPicker = document.querySelector("[data-subject-picker]");
+const subjectPickerTrigger = subjectPicker?.querySelector(".subject-picker-trigger");
+const subjectPickerOptions = [...(subjectPicker?.querySelectorAll("[data-subject-key]") || [])];
+const subjectPickerValue = subjectPicker?.querySelector("[data-subject-picker-value]");
 const subjectRows = [...document.querySelectorAll("[data-result-mode]")];
 const subjectCount = document.getElementById("subject-result-count");
 const subjectVerdict = document.getElementById("subject-result-verdict");
 const subjectAnimationFrames = new WeakMap();
 let currentSubjectResult = subjectResults.all;
+const numberFormatters = new Map();
+
+function getNumberFormatter(decimals) {
+  const key = String(decimals);
+  if (!numberFormatters.has(key)) {
+    numberFormatters.set(key, new Intl.NumberFormat("ru-RU", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }));
+  }
+  return numberFormatters.get(key);
+}
 
 function formatPercent(value) {
-  return `${new Intl.NumberFormat("ru-RU", {
-    minimumFractionDigits: Number.isInteger(value) ? 0 : 1,
-    maximumFractionDigits: 1,
-  }).format(value)}%`;
+  return `${getNumberFormatter(Number.isInteger(value) ? 0 : 1).format(value)}%`;
 }
 
 function animateSubjectValue(element, from, to) {
@@ -358,18 +349,22 @@ function animateSubjectValue(element, from, to) {
     window.cancelAnimationFrame(previousFrame);
   }
 
-  if (prefersReducedMotion) {
+  if (prefersReducedMotion || from === to) {
     element.textContent = formatPercent(to);
     return;
   }
 
   const startedAt = performance.now();
   const duration = 1050;
+  let lastPaint = 0;
 
   function draw(now) {
     const progress = Math.min((now - startedAt) / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3);
-    element.textContent = formatPercent(from + (to - from) * eased);
+    if (now - lastPaint >= 32 || progress === 1) {
+      element.textContent = formatPercent(from + (to - from) * eased);
+      lastPaint = now;
+    }
 
     if (progress < 1) {
       subjectAnimationFrames.set(element, window.requestAnimationFrame(draw));
@@ -433,16 +428,82 @@ function updateSubjectResult(key, animate = true) {
   currentSubjectResult = result;
 }
 
-if (subjectSelect && subjectRows.length) {
-  updateSubjectResult(subjectSelect.value, false);
-  subjectSelect.addEventListener("change", () => updateSubjectResult(subjectSelect.value));
+function setSubjectPickerOpen(isOpen) {
+  if (!subjectPicker || !subjectPickerTrigger) {
+    return;
+  }
+  subjectPicker.classList.toggle("is-open", isOpen);
+  subjectPickerTrigger.setAttribute("aria-expanded", String(isOpen));
+  const options = subjectPicker.querySelector(".subject-picker-options");
+  if (options) {
+    options.hidden = !isOpen;
+  }
+}
+
+function chooseSubject(option) {
+  const key = option.dataset.subjectKey;
+  const result = subjectResults[key] || subjectResults.all;
+  subjectPickerOptions.forEach((item) => {
+    item.setAttribute("aria-selected", String(item === option));
+  });
+  if (subjectPickerValue) {
+    subjectPickerValue.textContent = result.name;
+  }
+  updateSubjectResult(key);
+  setSubjectPickerOpen(false);
+  subjectPickerTrigger?.focus();
+}
+
+if (subjectPicker && subjectPickerTrigger && subjectPickerOptions.length && subjectRows.length) {
+  updateSubjectResult("all", false);
+  subjectPickerTrigger.addEventListener("click", () => {
+    const willOpen = subjectPickerTrigger.getAttribute("aria-expanded") !== "true";
+    setSubjectPickerOpen(willOpen);
+    if (willOpen) {
+      (subjectPickerOptions.find((option) => option.getAttribute("aria-selected") === "true") || subjectPickerOptions[0]).focus();
+    }
+  });
+  subjectPickerTrigger.addEventListener("keydown", (event) => {
+    if (!["ArrowDown", "ArrowUp"].includes(event.key)) {
+      return;
+    }
+    event.preventDefault();
+    setSubjectPickerOpen(true);
+    const selectedIndex = Math.max(0, subjectPickerOptions.findIndex((option) => option.getAttribute("aria-selected") === "true"));
+    const targetIndex = event.key === "ArrowDown"
+      ? selectedIndex
+      : (selectedIndex - 1 + subjectPickerOptions.length) % subjectPickerOptions.length;
+    subjectPickerOptions[targetIndex].focus();
+  });
+  subjectPickerOptions.forEach((option, index) => {
+    option.addEventListener("click", () => chooseSubject(option));
+    option.addEventListener("keydown", (event) => {
+      if (!["ArrowDown", "ArrowUp", "Home", "End", "Escape"].includes(event.key)) {
+        return;
+      }
+      event.preventDefault();
+      if (event.key === "Escape") {
+        setSubjectPickerOpen(false);
+        subjectPickerTrigger.focus();
+        return;
+      }
+      const nextIndex = event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? subjectPickerOptions.length - 1
+          : (index + (event.key === "ArrowDown" ? 1 : -1) + subjectPickerOptions.length) % subjectPickerOptions.length;
+      subjectPickerOptions[nextIndex].focus();
+    });
+  });
+  document.addEventListener("click", (event) => {
+    if (!subjectPicker.contains(event.target)) {
+      setSubjectPickerOpen(false);
+    }
+  });
 }
 
 function formatCount(value, decimals, suffix) {
-  return `${new Intl.NumberFormat("ru-RU", {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(value)}${suffix}`;
+  return `${getNumberFormatter(decimals).format(value)}${suffix}`;
 }
 
 const counterAnimationFrames = new WeakMap();
@@ -467,6 +528,7 @@ function animateCount(element) {
   const suffix = element.dataset.countSuffix || "";
   const startedAt = performance.now();
   const duration = 1400;
+  let lastPaint = 0;
 
   const previousAnimationFrame = counterAnimationFrames.get(element);
   if (previousAnimationFrame) {
@@ -476,7 +538,10 @@ function animateCount(element) {
   function draw(now) {
     const elapsed = Math.min((now - startedAt) / duration, 1);
     const eased = 1 - Math.pow(1 - elapsed, 3);
-    element.textContent = formatCount(target * eased, decimals, suffix);
+    if (now - lastPaint >= 32 || elapsed === 1) {
+      element.textContent = formatCount(target * eased, decimals, suffix);
+      lastPaint = now;
+    }
 
     if (elapsed < 1) {
       counterAnimationFrames.set(element, window.requestAnimationFrame(draw));
@@ -554,7 +619,6 @@ if (prefersReducedMotion) {
 }
 
 const systemMap = document.querySelector(".system-map");
-const pipelineSteps = document.querySelector(".pipeline-steps");
 
 if (systemMap && !prefersReducedMotion) {
   systemMap.classList.add("is-motion-pending");
@@ -562,9 +626,6 @@ if (systemMap && !prefersReducedMotion) {
     (entries) => {
       entries.forEach((entry) => {
         entry.target.classList.toggle("is-animated", entry.isIntersecting);
-        if (pipelineSteps) {
-          pipelineSteps.classList.toggle("is-sequenced", entry.isIntersecting);
-        }
       });
     },
     { threshold: 0.28 },
