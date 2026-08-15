@@ -140,29 +140,44 @@ approachTabs.forEach((tab, index) => {
   });
 });
 
-const revealObserver = new IntersectionObserver(
-  (entries, observer) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) {
-        return;
-      }
+const revealElements = [...document.querySelectorAll(".reveal")];
 
-      entry.target.classList.add("is-visible");
-      observer.unobserve(entry.target);
-    });
-  },
-  { threshold: 0.12 },
-);
+if (prefersReducedMotion) {
+  revealElements.forEach((element) => element.classList.add("is-visible"));
+} else if (revealElements.length) {
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
+      });
+    },
+    { threshold: 0.12 },
+  );
 
-document.querySelectorAll(".reveal").forEach((element) => {
-  revealObserver.observe(element);
-});
+  revealElements.forEach((element) => revealObserver.observe(element));
+}
 
 function formatCount(value, decimals, suffix) {
   return `${new Intl.NumberFormat("ru-RU", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(value)}${suffix}`;
+}
+
+const counterAnimationFrames = new WeakMap();
+
+function resetCount(element) {
+  const animationFrame = counterAnimationFrames.get(element);
+  if (animationFrame) {
+    window.cancelAnimationFrame(animationFrame);
+    counterAnimationFrames.delete(element);
+  }
+
+  element.textContent = formatCount(
+    0,
+    Number(element.dataset.countDecimals || 0),
+    element.dataset.countSuffix || "",
+  );
 }
 
 function animateCount(element) {
@@ -172,19 +187,25 @@ function animateCount(element) {
   const startedAt = performance.now();
   const duration = 950;
 
+  const previousAnimationFrame = counterAnimationFrames.get(element);
+  if (previousAnimationFrame) {
+    window.cancelAnimationFrame(previousAnimationFrame);
+  }
+
   function draw(now) {
     const elapsed = Math.min((now - startedAt) / duration, 1);
     const eased = 1 - Math.pow(1 - elapsed, 3);
     element.textContent = formatCount(target * eased, decimals, suffix);
 
     if (elapsed < 1) {
-      window.requestAnimationFrame(draw);
+      counterAnimationFrames.set(element, window.requestAnimationFrame(draw));
     } else {
       element.textContent = formatCount(target, decimals, suffix);
+      counterAnimationFrames.delete(element);
     }
   }
 
-  window.requestAnimationFrame(draw);
+  counterAnimationFrames.set(element, window.requestAnimationFrame(draw));
 }
 
 const counters = [...document.querySelectorAll("[data-count-to]")];
@@ -199,14 +220,13 @@ if (prefersReducedMotion) {
   });
 } else if (counters.length) {
   const counterObserver = new IntersectionObserver(
-    (entries, observer) => {
+    (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          return;
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+        } else {
+          resetCount(entry.target);
         }
-
-        animateCount(entry.target);
-        observer.unobserve(entry.target);
       });
     },
     { threshold: 0.35 },
@@ -214,11 +234,7 @@ if (prefersReducedMotion) {
 
   counters.forEach((counter) => {
     counter.setAttribute("aria-label", counter.textContent.trim());
-    counter.textContent = formatCount(
-      0,
-      Number(counter.dataset.countDecimals || 0),
-      counter.dataset.countSuffix || "",
-    );
+    resetCount(counter);
     counterObserver.observe(counter);
   });
 }
@@ -231,18 +247,23 @@ function fillChartBars(card) {
   });
 }
 
+function resetChartBars(card) {
+  card.querySelectorAll(".bar").forEach((bar) => {
+    bar.style.width = "0%";
+  });
+}
+
 if (prefersReducedMotion) {
   chartCards.forEach(fillChartBars);
 } else if (chartCards.length) {
   const chartObserver = new IntersectionObserver(
-    (entries, observer) => {
+    (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          return;
+        if (entry.isIntersecting) {
+          fillChartBars(entry.target);
+        } else {
+          resetChartBars(entry.target);
         }
-
-        fillChartBars(entry.target);
-        observer.unobserve(entry.target);
       });
     },
     { threshold: 0.22 },
@@ -256,14 +277,9 @@ const systemMap = document.querySelector(".system-map");
 if (systemMap && !prefersReducedMotion) {
   systemMap.classList.add("is-motion-pending");
   const systemObserver = new IntersectionObserver(
-    (entries, observer) => {
+    (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
-
-        entry.target.classList.add("is-animated");
-        observer.unobserve(entry.target);
+        entry.target.classList.toggle("is-animated", entry.isIntersecting);
       });
     },
     { threshold: 0.28 },
