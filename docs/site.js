@@ -176,7 +176,7 @@ function selectApproach(selectedTab) {
   };
 
   selectedPanel.addEventListener("animationend", finishTransition, { once: true });
-  window.setTimeout(finishTransition, 360);
+  window.setTimeout(finishTransition, 600);
 }
 
 approachTabs.forEach((tab, index) => {
@@ -239,7 +239,7 @@ function animateCount(element) {
   const decimals = Number(element.dataset.countDecimals || 0);
   const suffix = element.dataset.countSuffix || "";
   const startedAt = performance.now();
-  const duration = 950;
+  const duration = 1400;
 
   const previousAnimationFrame = counterAnimationFrames.get(element);
   if (previousAnimationFrame) {
