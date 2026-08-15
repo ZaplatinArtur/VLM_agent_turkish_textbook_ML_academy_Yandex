@@ -6,15 +6,29 @@
   <meta name="description" content="Исследование VLM-агента с проверяемым поиском по турецким школьным учебникам.">
   <meta name="theme-color" content="#fbf7ee">
   <script src="theme-init.js?v=20260815-1"></script>
-  <meta property="og:title" content="Textbook VLM — исследование поиска по учебникам">
-  <meta property="og:description" content="Без инструментов, веб-поиск и проверяемый RAG в едином эксперименте.">
-  <meta property="og:image" content="assets/project-hero-v4.png">
+  <link rel="canonical" href="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Textbook VLM">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:url" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/">
+  <meta property="og:title" content="Textbook VLM — учебник как инструмент">
+  <meta property="og:description" content="Исследование VLM-агента: без инструментов, веб-поиск и проверяемый поиск по учебникам.">
+  <meta property="og:image" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/assets/social-preview.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Учебник как инструмент — Textbook VLM">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Textbook VLM — учебник как инструмент">
+  <meta name="twitter:description" content="VLM-агент с проверяемым поиском по турецким школьным учебникам.">
+  <meta name="twitter:image" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/assets/social-preview.png">
+  <meta name="twitter:image:alt" content="Учебник как инструмент — Textbook VLM">
   <title>Textbook VLM — исследование RAG-агента</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260815-14">
-  <script src="site.js?v=20260815-6" defer></script>
+  <link rel="stylesheet" href="site.css?v=20260815-16">
+  <script src="site.js?v=20260815-7" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -262,6 +276,68 @@
       </div>
     </section>
 
+    <section id="case-study" class="section case-section">
+      <div class="section-shell">
+        <div class="section-index">03A · ОДНО ЗАДАНИЕ</div>
+        <div class="section-heading reveal">
+          <h2>ОДИН ВОПРОС.<br><em>ТРИ МАРШРУТА.</em></h2>
+          <p>Интерактивная демонстрация показывает, какой контекст получает агент и почему поиск нужен не в каждом задании.</p>
+        </div>
+
+        <div class="case-lab reveal">
+          <article class="case-task" aria-label="Демонстрационная задача о площади прямоугольника">
+            <div class="case-task-head"><span>демонстрационный пример</span><span>математика · 4 класс</span></div>
+            <div class="rectangle-figure" aria-hidden="true">
+              <span class="rectangle-width">6 cm</span>
+              <span class="rectangle-height">4 cm</span>
+            </div>
+            <p lang="tr">Bir dikdörtgenin uzun kenarı 6 cm, kısa kenarı 4 cm'dir. Bu dikdörtgenin alanı kaç cm²'dir?</p>
+            <small>Найдите площадь прямоугольника со сторонами 6 и 4 см.</small>
+          </article>
+
+          <div class="case-route">
+            <div class="case-tabs" role="tablist" aria-label="Маршруты решения демонстрационной задачи">
+              <button id="case-tab-b0" class="case-tab is-active" role="tab" aria-selected="true" aria-controls="case-panel-b0" data-case="b0">Без инструментов</button>
+              <button id="case-tab-web" class="case-tab" role="tab" aria-selected="false" aria-controls="case-panel-web" data-case="web" tabindex="-1">Веб-поиск</button>
+              <button id="case-tab-rag" class="case-tab" role="tab" aria-selected="false" aria-controls="case-panel-rag" data-case="rag" tabindex="-1">Textbook RAG</button>
+            </div>
+
+            <div class="case-panels">
+              <article id="case-panel-b0" class="case-panel is-active" role="tabpanel" aria-labelledby="case-tab-b0">
+                <div class="case-trace">
+                  <span><i>01</i> прочитать числа на изображении</span>
+                  <span><i>02</i> применить формулу площади</span>
+                  <span><i>03</i> проверить вычисление 6 × 4</span>
+                </div>
+                <div class="case-context"><span>Внешний контекст</span><strong>не требуется</strong><p>Условие самодостаточно: поиск добавил бы шум, но не новое знание.</p></div>
+                <div class="case-answer"><span>ответ</span><strong>24 cm²</strong><small>совпадает с эталоном</small></div>
+              </article>
+
+              <article id="case-panel-web" class="case-panel" role="tabpanel" aria-labelledby="case-tab-web" hidden>
+                <div class="case-trace">
+                  <span><i>01</i> оценить достаточность условия</span>
+                  <span><i>02</i> не вызывать веб без внешнего факта</span>
+                  <span><i>03</i> решить по исходному изображению</span>
+                </div>
+                <div class="case-context"><span>Решение агента</span><strong>поиск пропущен</strong><p>Доступ к инструменту не означает, что им нужно пользоваться.</p></div>
+                <div class="case-answer"><span>ответ</span><strong>24 cm²</strong><small>веб не повлиял на решение</small></div>
+              </article>
+
+              <article id="case-panel-rag" class="case-panel" role="tabpanel" aria-labelledby="case-tab-rag" hidden>
+                <div class="case-trace">
+                  <span><i>01</i> запрос: <b lang="tr">dikdörtgen alanı formülü</b></span>
+                  <span><i>02</i> проверить найденный фрагмент</span>
+                  <span><i>03</i> сверить числа с изображением</span>
+                </div>
+                <blockquote lang="tr">Dikdörtgenin alanı = uzun kenar × kısa kenar.</blockquote>
+                <div class="case-answer"><span>ответ</span><strong>24 cm²</strong><small>учебник только подтверждает формулу</small></div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="results" class="section section-shell">
       <div class="section-index">04 · РЕЗУЛЬТАТЫ</div>
       <div class="section-heading reveal">
@@ -300,6 +376,52 @@
             <span class="card-eyebrow">интерпретация</span>
             <p>Пользу даёт не сам доступ к поиску, а правильное решение — <b>когда, где и что искать</b>.</p>
           </article>
+        </div>
+      </div>
+
+      <div class="subject-explorer reveal" aria-labelledby="subject-explorer-title">
+        <div class="subject-explorer-head">
+          <div>
+            <span class="card-eyebrow">валидационный срез · N = 198 · модель-судья</span>
+            <h3 id="subject-explorer-title">Где помогает каждый источник</h3>
+          </div>
+          <label for="subject-result-select">Предмет
+            <select id="subject-result-select">
+              <option value="all">Все предметы</option>
+              <option value="ataturk">Ататюркизм</option>
+              <option value="biology">Биология</option>
+              <option value="chemistry">Химия</option>
+              <option value="english">Английский</option>
+              <option value="geography">География</option>
+              <option value="history">История</option>
+              <option value="math">Математика</option>
+              <option value="philosophy">Философия</option>
+              <option value="physics">Физика</option>
+              <option value="science">Естествознание</option>
+              <option value="sociology">Социология</option>
+              <option value="turkish">Турецкий язык и литература</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="subject-bars">
+          <article class="subject-bar subject-b0" data-result-mode="b0">
+            <div><span>Без инструментов</span><strong data-subject-value>57,1%</strong></div>
+            <div class="bar-track"><span data-subject-bar style="width: 57.1%"></span></div>
+          </article>
+          <article class="subject-bar subject-web" data-result-mode="web">
+            <div><span>Веб-поиск</span><strong data-subject-value>70,7%</strong></div>
+            <div class="bar-track"><span data-subject-bar style="width: 70.7%"></span></div>
+          </article>
+          <article class="subject-bar subject-rag" data-result-mode="rag">
+            <div><span>Textbook RAG</span><strong data-subject-value>54,5%</strong></div>
+            <div class="bar-track"><span data-subject-bar style="width: 54.5%"></span></div>
+          </article>
+        </div>
+
+        <div class="subject-verdict">
+          <span id="subject-result-count">198 заданий</span>
+          <p id="subject-result-verdict" aria-live="polite">На полном срезе веб-поиск лидирует, а RAG уступает модели без инструментов на 2,6 п.п.</p>
         </div>
       </div>
 
@@ -361,7 +483,7 @@
                     <span class="node-number">3</span>
                     <div><b>Агент</b><small>читает изображение, решает и проверяет</small></div>
                   </div>
-                  <span class="flow-arrow reversible" aria-hidden="true">⇄</span>
+                  <span class="flow-arrow reversible" data-motion-stage="6" aria-hidden="true">⇄</span>
                   <div class="system-node node-search">
                     <span class="node-number">⌕</span>
                     <div><b>Поиск по учебникам</b><small>до двух запросов · пять фрагментов</small></div>
@@ -371,7 +493,7 @@
               </article>
             </div>
 
-            <div class="system-result" data-motion-stage="6">
+            <div class="system-result" data-motion-stage="7">
               <span class="result-arrow" aria-hidden="true">↓</span>
               <article class="system-node node-result">
                 <span class="node-number">4</span>
@@ -464,42 +586,42 @@
             <span class="member-role">Данные и парсинг</span>
             <h3>Дмитрий Быков</h3>
             <p>Парсинг учебников, разбиение материала на чанки.</p>
-            <div class="member-contacts"><span>GitHub · добавить</span><span>Telegram · добавить</span></div>
+            <div class="member-contacts"><a href="https://github.com/Dentander" target="_blank" rel="noreferrer" aria-label="GitHub Дмитрия Быкова"><span class="contact-icon" aria-hidden="true">GH</span>GitHub ↗</a></div>
           </article>
           <article class="member-card reveal">
             <div class="member-photo" aria-label="Место для фотографии Даниила Теслова"><span>ДТ</span><small>фото</small></div>
             <span class="member-role">Поиск</span>
             <h3>Даниил Теслов</h3>
             <p>Эмбеддер, поиск и поисковый индекс.</p>
-            <div class="member-contacts"><span>GitHub · добавить</span><span>Telegram · добавить</span></div>
+            <div class="member-contacts"><span class="contact-pending">контакты уточняются</span></div>
           </article>
           <article class="member-card reveal">
             <div class="member-photo" aria-label="Место для фотографии Максима Кулямина"><span>МК</span><small>фото</small></div>
             <span class="member-role">Оценка</span>
             <h3>Максим Кулямин</h3>
             <p>Модель-судья и аналитика качества.</p>
-            <div class="member-contacts"><span>GitHub · добавить</span><span>Telegram · добавить</span></div>
+            <div class="member-contacts"><span class="contact-pending">контакты уточняются</span></div>
           </article>
           <article class="member-card reveal">
             <div class="member-photo" aria-label="Место для фотографии Дениса Шаброва"><span>ДШ</span><small>фото</small></div>
             <span class="member-role">Агент</span>
             <h3>Денис Шабров</h3>
             <p>Базовый агент и экспериментальные прогоны.</p>
-            <div class="member-contacts"><span>GitHub · добавить</span><span>Telegram · добавить</span></div>
+            <div class="member-contacts"><span class="contact-pending">контакты уточняются</span></div>
           </article>
           <article class="member-card reveal">
             <div class="member-photo" aria-label="Место для фотографии Артура Заплатина"><span>АЗ</span><small>фото</small></div>
             <span class="member-role">Агент</span>
             <h3>Артур Заплатин</h3>
             <p>Инструмент поиска, агентная стратегия и интеграция.</p>
-            <div class="member-contacts"><span>GitHub · добавить</span><span>Telegram · добавить</span></div>
+            <div class="member-contacts"><a href="https://github.com/ZaplatinArtur" target="_blank" rel="noreferrer" aria-label="GitHub Артура Заплатина"><span class="contact-icon" aria-hidden="true">GH</span>GitHub ↗</a></div>
           </article>
           <article class="member-card mentor-card reveal">
             <div class="member-photo" aria-label="Место для фотографии Ильи Короткова"><span>ИК</span><small>фото</small></div>
             <span class="member-role">Ментор проекта</span>
             <h3>Илья Коротков</h3>
             <p>Методология, постановка экспериментов и ревью.</p>
-            <div class="member-contacts"><span>GitHub · добавить</span><span>Telegram · добавить</span></div>
+            <div class="member-contacts"><span class="contact-pending">контакты уточняются</span></div>
           </article>
         </div>
       </div>

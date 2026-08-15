@@ -6,6 +6,8 @@ const siteNav = document.querySelector(".site-nav");
 const readingProgress = document.querySelector(".reading-progress");
 const approachTabs = [...document.querySelectorAll(".approach-tab")];
 const approachPanels = [...document.querySelectorAll(".approach-panel")];
+const caseTabs = [...document.querySelectorAll(".case-tab")];
+const casePanels = [...document.querySelectorAll(".case-panel")];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const mobileNavigation = window.matchMedia("(max-width: 900px)");
 let mobileScrollFrame = null;
@@ -253,6 +255,56 @@ approachTabs.forEach((tab, index) => {
   });
 });
 
+function selectCaseRoute(selectedTab) {
+  const selectedPanel = casePanels.find(
+    (panel) => panel.id === `case-panel-${selectedTab.dataset.case}`,
+  );
+
+  if (!selectedPanel || selectedPanel.classList.contains("is-active")) {
+    return;
+  }
+
+  caseTabs.forEach((tab) => {
+    const isSelected = tab === selectedTab;
+    tab.classList.toggle("is-active", isSelected);
+    tab.setAttribute("aria-selected", String(isSelected));
+    tab.tabIndex = isSelected ? 0 : -1;
+  });
+
+  casePanels.forEach((panel) => {
+    const isSelected = panel === selectedPanel;
+    panel.hidden = !isSelected;
+    panel.classList.toggle("is-active", isSelected);
+    panel.classList.remove("is-entering");
+    panel.setAttribute("aria-hidden", String(!isSelected));
+  });
+
+  if (!prefersReducedMotion) {
+    void selectedPanel.offsetWidth;
+    selectedPanel.classList.add("is-entering");
+    selectedPanel.addEventListener(
+      "animationend",
+      () => selectedPanel.classList.remove("is-entering"),
+      { once: true },
+    );
+  }
+}
+
+caseTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => selectCaseRoute(tab));
+  tab.addEventListener("keydown", (event) => {
+    if (!["ArrowRight", "ArrowLeft"].includes(event.key)) {
+      return;
+    }
+
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    const nextIndex = (index + direction + caseTabs.length) % caseTabs.length;
+    caseTabs[nextIndex].focus();
+    selectCaseRoute(caseTabs[nextIndex]);
+  });
+});
+
 const revealElements = [...document.querySelectorAll(".reveal")];
 
 if (prefersReducedMotion) {
@@ -268,6 +320,122 @@ if (prefersReducedMotion) {
   );
 
   revealElements.forEach((element) => revealObserver.observe(element));
+}
+
+const subjectResults = {
+  all: { name: "Все предметы", count: 198, b0: 57.1, web: 70.7, rag: 54.5 },
+  ataturk: { name: "Ататюркизм", count: 1, b0: 0, web: 100, rag: 100 },
+  biology: { name: "Биология", count: 18, b0: 44.4, web: 61.1, rag: 44.4 },
+  chemistry: { name: "Химия", count: 32, b0: 62.5, web: 81.2, rag: 59.4 },
+  english: { name: "Английский", count: 9, b0: 88.9, web: 88.9, rag: 77.8 },
+  geography: { name: "География", count: 14, b0: 57.1, web: 71.4, rag: 78.6 },
+  history: { name: "История", count: 10, b0: 50, web: 70, rag: 60 },
+  math: { name: "Математика", count: 64, b0: 51.6, web: 73.4, rag: 46.9 },
+  philosophy: { name: "Философия", count: 2, b0: 50, web: 50, rag: 100 },
+  physics: { name: "Физика", count: 19, b0: 73.7, web: 73.7, rag: 57.9 },
+  science: { name: "Естествознание", count: 5, b0: 40, web: 20, rag: 40 },
+  sociology: { name: "Социология", count: 3, b0: 66.7, web: 66.7, rag: 66.7 },
+  turkish: { name: "Турецкий язык и литература", count: 21, b0: 57.1, web: 57.1, rag: 42.9 },
+};
+
+const subjectSelect = document.getElementById("subject-result-select");
+const subjectRows = [...document.querySelectorAll("[data-result-mode]")];
+const subjectCount = document.getElementById("subject-result-count");
+const subjectVerdict = document.getElementById("subject-result-verdict");
+const subjectAnimationFrames = new WeakMap();
+let currentSubjectResult = subjectResults.all;
+
+function formatPercent(value) {
+  return `${new Intl.NumberFormat("ru-RU", {
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 1,
+    maximumFractionDigits: 1,
+  }).format(value)}%`;
+}
+
+function animateSubjectValue(element, from, to) {
+  const previousFrame = subjectAnimationFrames.get(element);
+  if (previousFrame) {
+    window.cancelAnimationFrame(previousFrame);
+  }
+
+  if (prefersReducedMotion) {
+    element.textContent = formatPercent(to);
+    return;
+  }
+
+  const startedAt = performance.now();
+  const duration = 1050;
+
+  function draw(now) {
+    const progress = Math.min((now - startedAt) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    element.textContent = formatPercent(from + (to - from) * eased);
+
+    if (progress < 1) {
+      subjectAnimationFrames.set(element, window.requestAnimationFrame(draw));
+    } else {
+      element.textContent = formatPercent(to);
+      subjectAnimationFrames.delete(element);
+    }
+  }
+
+  subjectAnimationFrames.set(element, window.requestAnimationFrame(draw));
+}
+
+function describeSubjectResult(result) {
+  const labels = { b0: "модель без инструментов", web: "веб-поиск", rag: "Textbook RAG" };
+  const modes = ["b0", "web", "rag"];
+  const bestScore = Math.max(...modes.map((mode) => result[mode]));
+  const leaders = modes.filter((mode) => result[mode] === bestScore).map((mode) => labels[mode]);
+  const ragDelta = Math.round((result.rag - result.b0) * 10) / 10;
+  const ragComparison = ragDelta === 0
+    ? "RAG не меняет точность относительно режима без инструментов."
+    : ragDelta > 0
+      ? `RAG улучшает результат на ${formatPercent(ragDelta).replace("%", " п.п.")}`
+      : `RAG уступает режиму без инструментов на ${formatPercent(Math.abs(ragDelta)).replace("%", " п.п.")}`;
+
+  return `${leaders.join(" и ")} ${leaders.length > 1 ? "делят первое место" : "лидирует"}. ${ragComparison}`;
+}
+
+function updateSubjectResult(key, animate = true) {
+  const result = subjectResults[key] || subjectResults.all;
+  const modes = ["b0", "web", "rag"];
+  const bestScore = Math.max(...modes.map((mode) => result[mode]));
+
+  subjectRows.forEach((row) => {
+    const mode = row.dataset.resultMode;
+    const valueElement = row.querySelector("[data-subject-value]");
+    const bar = row.querySelector("[data-subject-bar]");
+    const fromValue = currentSubjectResult[mode];
+
+    row.classList.toggle("is-best", result[mode] === bestScore);
+    if (bar) {
+      if (animate && !prefersReducedMotion) {
+        bar.style.width = `${fromValue}%`;
+        window.requestAnimationFrame(() => {
+          bar.style.width = `${result[mode]}%`;
+        });
+      } else {
+        bar.style.width = `${result[mode]}%`;
+      }
+    }
+    if (valueElement) {
+      animateSubjectValue(valueElement, animate ? fromValue : result[mode], result[mode]);
+    }
+  });
+
+  if (subjectCount) {
+    subjectCount.textContent = `${result.count} ${result.count === 1 ? "задание" : "заданий"}`;
+  }
+  if (subjectVerdict) {
+    subjectVerdict.textContent = describeSubjectResult(result);
+  }
+  currentSubjectResult = result;
+}
+
+if (subjectSelect && subjectRows.length) {
+  updateSubjectResult(subjectSelect.value, false);
+  subjectSelect.addEventListener("change", () => updateSubjectResult(subjectSelect.value));
 }
 
 function formatCount(value, decimals, suffix) {
@@ -386,6 +554,7 @@ if (prefersReducedMotion) {
 }
 
 const systemMap = document.querySelector(".system-map");
+const pipelineSteps = document.querySelector(".pipeline-steps");
 
 if (systemMap && !prefersReducedMotion) {
   systemMap.classList.add("is-motion-pending");
@@ -393,6 +562,9 @@ if (systemMap && !prefersReducedMotion) {
     (entries) => {
       entries.forEach((entry) => {
         entry.target.classList.toggle("is-animated", entry.isIntersecting);
+        if (pipelineSteps) {
+          pipelineSteps.classList.toggle("is-sequenced", entry.isIntersecting);
+        }
       });
     },
     { threshold: 0.28 },
