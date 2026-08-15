@@ -313,16 +313,29 @@ img {
 .hero {
   --hero-glow-alpha: 0.14;
   position: relative;
-  overflow: hidden;
+  isolation: isolate;
+  overflow: visible;
   min-height: 100vh;
   min-height: 100svh;
   padding-top: 165px;
   padding-bottom: 50px;
+}
+
+.hero::before {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  content: "";
   background: radial-gradient(
-    circle at 76% 48%,
+    circle at 70% 48%,
     rgba(155, 124, 255, var(--hero-glow-alpha)),
     transparent 30rem
   );
+  pointer-events: none;
+  transform: translateX(-50%);
 }
 
 [data-theme="dark"] .hero {
@@ -330,6 +343,8 @@ img {
 }
 
 .hero-kicker {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -418,6 +433,7 @@ img {
   font-size: 0.68rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  z-index: 2;
 }
 
 .hero-strip i {
@@ -429,7 +445,7 @@ img {
 
 .hero-orbit {
   position: absolute;
-  z-index: 0;
+  z-index: 1;
   border: 2px solid var(--ink);
 }
 
@@ -1915,6 +1931,9 @@ img {
     min-height: 100vh;
     min-height: 100svh;
     padding-top: 130px;
+  }
+
+  .hero::before {
     background: radial-gradient(
       circle at 72% 54%,
       rgba(155, 124, 255, var(--hero-glow-alpha)),

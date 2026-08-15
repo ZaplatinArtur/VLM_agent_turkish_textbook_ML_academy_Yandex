@@ -7,6 +7,47 @@ const readingProgress = document.querySelector(".reading-progress");
 const approachTabs = [...document.querySelectorAll(".approach-tab")];
 const approachPanels = [...document.querySelectorAll(".approach-panel")];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const mobileNavigation = window.matchMedia("(max-width: 900px)");
+let mobileScrollFrame = null;
+let previousScrollBehavior = "";
+
+function scrollToMobileSection(target) {
+  const startY = window.scrollY;
+  const targetY = Math.max(
+    0,
+    target.getBoundingClientRect().top + startY - 88,
+  );
+  const distance = targetY - startY;
+  const duration = Math.min(1300, Math.max(700, Math.abs(distance) * 0.2));
+  const startedAt = performance.now();
+
+  if (mobileScrollFrame) {
+    window.cancelAnimationFrame(mobileScrollFrame);
+  } else {
+    previousScrollBehavior = root.style.scrollBehavior;
+  }
+
+  root.style.scrollBehavior = "auto";
+
+  function animateScroll(now) {
+    const progress = Math.min((now - startedAt) / duration, 1);
+    const easedProgress =
+      progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    window.scrollTo(0, startY + distance * easedProgress);
+
+    if (progress < 1) {
+      mobileScrollFrame = window.requestAnimationFrame(animateScroll);
+    } else {
+      mobileScrollFrame = null;
+      root.style.scrollBehavior = previousScrollBehavior;
+    }
+  }
+
+  mobileScrollFrame = window.requestAnimationFrame(animateScroll);
+}
 
 function setTheme(theme) {
   root.dataset.theme = theme;
@@ -49,10 +90,28 @@ if (menuToggle && siteNav) {
   });
 
   siteNav.addEventListener("click", (event) => {
-    if (event.target.closest("a")) {
-      siteNav.classList.remove("is-open");
-      menuToggle.setAttribute("aria-expanded", "false");
+    const link = event.target.closest('a[href^="#"]');
+
+    if (!link) {
+      return;
     }
+
+    siteNav.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+
+    if (!mobileNavigation.matches || prefersReducedMotion) {
+      return;
+    }
+
+    const target = document.querySelector(link.getAttribute("href"));
+
+    if (!target) {
+      return;
+    }
+
+    event.preventDefault();
+    window.history.pushState(null, "", link.hash);
+    scrollToMobileSection(target);
   });
 }
 
