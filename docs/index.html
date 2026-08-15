@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260815-1">
+  <link rel="stylesheet" href="site.css?v=20260815-3">
   <script src="site.js?v=20260815-1" defer></script>
 </head>
 <body>
@@ -30,9 +30,10 @@
     <nav id="site-nav" class="site-nav">
       <a href="#research">задача</a>
       <a href="#approaches">подходы</a>
+      <a href="#data">данные</a>
       <a href="#results">результаты</a>
-      <a href="#progress">ход работы</a>
       <a href="#system">система</a>
+      <a href="#progress">ход работы</a>
       <a href="#team">команда</a>
     </nav>
     <div class="topbar-actions">
@@ -218,8 +219,60 @@
       </div>
     </section>
 
+    <section id="data" class="section data-section">
+      <div class="section-shell">
+        <div class="section-index">03 · ДАННЫЕ</div>
+        <div class="section-heading reveal">
+          <h2>8 300 ЗАДАЧ.<br><em>ОДИН ЧЕСТНЫЙ СРЕЗ.</em></h2>
+          <p>Объединяем три многоязычных бенчмарка и сравниваем все режимы на одних и тех же заданиях — от текста до экзаменационных скриншотов.</p>
+        </div>
+
+        <div class="data-summary reveal" aria-label="Состав экспериментальной выборки">
+          <article><span>задач</span><strong data-count-to="8300" data-count-decimals="0">8 300</strong><p>в итоговой сводке</p></article>
+          <article><span>языки</span><strong data-count-to="33" data-count-decimals="0">33</strong><p>языковых среза</p></article>
+          <article><span>предметы</span><strong data-count-to="16" data-count-decimals="0">16</strong><p>школьных направлений</p></article>
+          <article><span>форматы</span><strong data-count-to="2" data-count-decimals="0">2</strong><p>текст и скриншот</p></article>
+        </div>
+
+        <div class="data-source-grid">
+          <article class="data-source data-source-purple reveal">
+            <div class="data-source-head"><span>01 · TUMLU</span><span class="data-tag">текст · выбор ответа</span></div>
+            <strong data-count-to="2583" data-count-decimals="0">2 583</strong>
+            <h3>Многоязычные школьные вопросы</h3>
+            <p>Закрытые задания по школьным предметам с вариантами ответа.</p>
+          </article>
+          <article class="data-source data-source-green reveal">
+            <div class="data-source-head"><span>02 · EXAMS-V</span><span class="data-tag">скриншот · выбор ответа</span></div>
+            <strong data-count-to="2977" data-count-decimals="0">2 977</strong>
+            <h3>Визуальные экзаменационные задания</h3>
+            <p>Закрытые вопросы, где модель получает исходный скриншот задания.</p>
+          </article>
+          <article class="data-source data-source-yellow reveal">
+            <div class="data-source-head"><span>03 · MGSM</span><span class="data-tag">текст · открытый ответ</span></div>
+            <strong data-count-to="2740" data-count-decimals="0">2 740</strong>
+            <h3>Многошаговые задачи по математике</h3>
+            <p>Открытые задания с числовым ответом, который нужно получить рассуждением.</p>
+          </article>
+        </div>
+
+        <div class="data-method reveal">
+          <div>
+            <span class="card-eyebrow">как собран срез</span>
+            <p>Каноническая выборка зафиксирована с сидом 47 и стратифицирована по предмету. В итог вошли только задания, которые оба сравниваемых режима завершили без ошибки.</p>
+          </div>
+          <ul aria-label="Распределение заданий">
+            <li><b>5 560</b><span>закрытых вопросов</span></li>
+            <li><b>2 740</b><span>открытых вопросов</span></li>
+            <li><b>5 323</b><span>текстовых заданий</span></li>
+            <li><b>2 977</b><span>скриншотов</span></li>
+          </ul>
+          <a class="data-report-link" href="https://claude.ai/code/artifact/cefe767d-3f81-459e-b90a-d388b3e4e039">Полный отчёт о данных ↗</a>
+        </div>
+      </div>
+    </section>
+
     <section id="results" class="section section-shell">
-      <div class="section-index">03 · РЕЗУЛЬТАТЫ</div>
+      <div class="section-index">04 · РЕЗУЛЬТАТЫ</div>
       <div class="section-heading reveal">
         <h2>ПОИСК — НЕ<br><em>АВТОМАТИЧЕСКИЙ РОСТ.</em></h2>
         <p>Первый большой эксперимент показывает цену неправильного вызова инструмента.</p>
@@ -270,7 +323,7 @@
 
     <section id="system" class="section section-blue">
       <div class="section-shell">
-        <div class="section-index">04 · СИСТЕМА</div>
+        <div class="section-index">05 · СИСТЕМА</div>
         <div class="section-heading reveal">
           <h2>ИЗОБРАЖЕНИЕ<br><em>ОСТАЁТСЯ ГЛАВНЫМ.</em></h2>
           <p>Найденный фрагмент поддерживает решение, но не заменяет условие задачи.</p>
@@ -340,7 +393,7 @@
     </section>
 
     <section id="progress" class="section section-shell">
-      <div class="section-index">05 · ХОД РАБОТЫ</div>
+      <div class="section-index">06 · ХОД РАБОТЫ</div>
       <div class="section-heading reveal">
         <h2>ОТ КОНТРАКТА<br><em>К ПРОВЕРЯЕМОМУ ВЫВОДУ.</em></h2>
         <p>Каждый следующий этап добавлялся только после воспроизводимой проверки предыдущего.</p>
@@ -376,7 +429,7 @@
 
     <section class="section stack-section">
       <div class="section-shell">
-        <div class="section-index">06 · ТЕХНОЛОГИИ</div>
+        <div class="section-index">07 · ТЕХНОЛОГИИ</div>
         <div class="tech-grid reveal" aria-label="Технологии проекта">
           <article class="tech-card tech-purple">
             <span class="tech-number">01</span>
@@ -399,7 +452,7 @@
 
     <section id="team" class="section team-section">
       <div class="section-shell">
-        <div class="section-index">07 · КОМАНДА</div>
+        <div class="section-index">08 · КОМАНДА</div>
         <div class="section-heading reveal">
           <h2>ЛЮДИ, КОТОРЫЕ<br><em>СОБИРАЮТ СИСТЕМУ.</em></h2>
           <p>Пять направлений разработки и единая исследовательская методология.</p>
