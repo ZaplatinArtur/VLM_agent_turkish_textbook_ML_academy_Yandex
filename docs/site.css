@@ -33,6 +33,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 112px;
+  scroll-snap-type: y proximity;
 }
 
 body {
@@ -100,6 +101,13 @@ img {
 
 .section {
   padding: 120px 0;
+}
+
+body:not(.detail-page) main > section {
+  min-height: 100vh;
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
 }
 
 .section-index,
@@ -313,7 +321,8 @@ img {
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: 680px;
+  min-height: 100vh;
+  min-height: 100svh;
   padding-top: 165px;
   padding-bottom: 50px;
 }
@@ -458,7 +467,10 @@ img {
 }
 
 .metric-card {
+  display: flex;
   min-height: 300px;
+  flex-direction: column;
+  justify-content: center;
   padding: 34px;
   border-right: 2px solid #0e0e0e;
 }
@@ -1585,11 +1597,12 @@ img {
 
 [data-theme="dark"] .mentor-card {
   color: #0e0e0e;
-  background: #f8f3e8;
+  background: var(--yellow);
 }
 
 [data-theme="dark"] .mentor-card .member-photo {
   border-color: #0e0e0e;
+  box-shadow: 4px 5px 0 var(--purple);
 }
 
 [data-theme="dark"] .mentor-card .member-role,
@@ -1688,7 +1701,8 @@ img {
   }
 
   .hero {
-    min-height: 650px;
+    min-height: 100vh;
+    min-height: 100svh;
   }
 
   .section-heading,
@@ -1857,7 +1871,8 @@ img {
   }
 
   .hero {
-    min-height: 600px;
+    min-height: 100vh;
+    min-height: 100svh;
     padding-top: 130px;
   }
 
