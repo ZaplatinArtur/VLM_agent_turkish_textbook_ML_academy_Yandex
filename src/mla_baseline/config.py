@@ -135,6 +135,11 @@ class Settings(BaseSettings):
     rag_max_calls: int = 3          # лимит обращений к корпусу на задачу
     rag_max_context_chars: int = 6000  # символов корпуса в контекст (контракт ретрива)
 
+    # Визуальный ретрив (MLA_RETRIEVAL_BACKEND=visual). Порога по умолчанию нет:
+    # шкала MaxSim своя у каждого индекса, её калибруют перед прогоном.
+    visual_min_score: float | None = None
+    visual_image_top_n: int = 0  # 0 — страницы в контекст не подклеиваются
+
     # Трассировка в Langfuse. Ключи читаем из стандартных имён (без MLA_-префикса),
     # чтобы .env выглядел как в доке Langfuse; tracing.py прокинет их в SDK.
     langfuse_enabled: bool = False

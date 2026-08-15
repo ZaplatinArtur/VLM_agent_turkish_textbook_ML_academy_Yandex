@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import base64
 import json
+import os
 import re
 import time
 from typing import Any
@@ -30,6 +32,32 @@ from ..tools import (
 from .b0_no_tools import B0NoTools
 
 
+def _search_client_from_env(settings: Settings) -> TextbookSearchBackend:
+    """Бэкенд тулы выбирается переменной, а не умолчанием в файле.
+
+    Дефолт text — существующие прогоны от появления визуального режима
+    не меняются ни на байт.
+    """
+    backend = os.environ.get("MLA_RETRIEVAL_BACKEND", "text").strip() or "text"
+    if backend == "visual":
+        from ..tools import visual_client_from_env
+
+        return visual_client_from_env(settings)
+    if backend != "text":
+        raise ValueError(
+            f"unknown MLA_RETRIEVAL_BACKEND {backend!r}: text | visual"
+        )
+    return LocalTextbookSearchClient(
+        retrieval_fetch_k=settings.retrieval_fetch_k,
+        mmr_lambda=(
+            settings.retrieval_mmr_lambda
+            if settings.retrieval_mmr_enabled
+            else None
+        ),
+        context_order=settings.retrieval_context_order,
+    )
+
+
 class AgentRag(B0NoTools):
     """A bounded, traceable model-tool loop for textbook retrieval."""
 
@@ -45,15 +73,7 @@ class AgentRag(B0NoTools):
         super().__init__(settings, llm=llm)
         if settings.retrieval_fetch_k < settings.retrieval_top_k:
             raise ValueError("retrieval_fetch_k must be at least retrieval_top_k")
-        self.search_client = search_client or LocalTextbookSearchClient(
-            retrieval_fetch_k=settings.retrieval_fetch_k,
-            mmr_lambda=(
-                settings.retrieval_mmr_lambda
-                if settings.retrieval_mmr_enabled
-                else None
-            ),
-            context_order=settings.retrieval_context_order,
-        )
+        self.search_client = search_client or _search_client_from_env(settings)
         self.search_tool = create_search_textbooks_tool(
             self.search_client,
             top_k=settings.retrieval_top_k,
@@ -130,6 +150,60 @@ class AgentRag(B0NoTools):
         except json.JSONDecodeError:
             return {}
         return parsed if isinstance(parsed, dict) else {}
+
+    def _page_image_message(self, output: str, attached: int) -> HumanMessage | None:
+        """Страница учебника картинкой — иначе визуальный ретрив вырождается.
+
+        Без неё модель видит только answer_text, то есть тот же OCR, что лежит
+        в текстовом индексе, и весь смысл поиска по изображениям теряется.
+        Ровно там, где визуальный поиск сильнее всего — схемы, формулы, плохие
+        сканы, — answer_text как раз мусорный.
+
+        Потолок общий на задачу, а не на вызов: две страницы поверх картинки
+        самой задачи съедают бюджет, из которого растёт reasoning, а его потеря
+        уже стоила пайплайну 11 пунктов.
+        """
+        limit = self.settings.visual_image_top_n
+        if limit <= 0 or attached >= limit:
+            return None
+        get_image = getattr(self.search_client, "get_page_image", None)
+        if not callable(get_image):
+            return None
+        payload = self._tool_payload(output)
+        relevance = payload.get("relevance")
+        if not isinstance(relevance, dict) or not relevance.get("is_useful"):
+            return None
+        hits = payload.get("hits") if isinstance(payload.get("hits"), list) else []
+        # Потолок держит внешняя проверка attached; здесь смотрим всю выдачу,
+        # чтобы пропущенная картинка у топ-1 не отменяла подклейку целиком.
+        for hit in hits:
+            if not isinstance(hit, dict):
+                continue
+            page_id = str(hit.get("page_id") or hit.get("chunk_id") or "")
+            raw = get_image(page_id) if page_id else None
+            if not raw:
+                continue
+            encoded = base64.b64encode(raw).decode("ascii")
+            return HumanMessage(
+                content=[
+                    {
+                        "type": "text",
+                        # Явно разводим две картинки: без этого модель может
+                        # начать решать упражнение с найденной страницы.
+                        "text": (
+                            "Aşağıdaki görsel arama sonucundaki ders kitabı "
+                            "sayfasıdır, çözülecek soru değildir. Sorunun kendisi "
+                            "yukarıda verilen görseldir. Sayfayı yalnızca kanıt "
+                            "olarak kullan."
+                        ),
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{encoded}"},
+                    },
+                ]
+            )
+        return None
 
     @staticmethod
     def _normalize_query(arguments: dict[str, Any]) -> str:
@@ -407,6 +481,7 @@ class AgentRag(B0NoTools):
         tool_logs: list[ToolCallLog] = []
         seen_queries: set[str] = set()
         executed_calls = 0
+        attached_pages = 0
         last_relevance: str | None = None
         rewrite_used = False
         raw: str | None = None
@@ -545,6 +620,10 @@ class AgentRag(B0NoTools):
                             name=name or None,
                         )
                     )
+                    page_block = self._page_image_message(output, attached_pages)
+                    if page_block is not None:
+                        messages.append(page_block)
+                        attached_pages += 1
 
                 if (
                     executed_calls >= self.settings.retrieval_max_calls

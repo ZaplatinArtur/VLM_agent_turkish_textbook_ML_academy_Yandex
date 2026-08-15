@@ -18,6 +18,11 @@ from .textbook_search import (
     create_search_textbooks_tool,
     format_search_result_for_model,
 )
+from .visual_search import (
+    VISUAL_PROFILE,
+    VisualSearchClient,
+    visual_client_from_env,
+)
 
 __all__ = [
     "LocalTextbookSearchClient",
@@ -26,6 +31,9 @@ __all__ = [
     "TextbookSearchError",
     "TextbookSearchInput",
     "ToolUnavailable",
+    "VISUAL_PROFILE",
+    "VisualSearchClient",
     "create_search_textbooks_tool",
     "format_search_result_for_model",
+    "visual_client_from_env",
 ]

@@ -36,6 +36,10 @@ dev = ["pytest>=8"]
 tracing = ["langfuse>=3"]
 deep-search = ["trafilatura>=2.0"]
 official-source = ["pypdf>=6.10,<7", "pdfplumber>=0.11,<1"]
+# Визуальный ретрив. colpali-engine импортируется лениво внутри загрузчика
+# энкодера, поэтому без этого extra падение приходит не на старте, а на первом
+# запросе поиска, посреди прогона.
+visual = ["colpali-engine>=0.3,<1"]
 
 [project.scripts]
 vlm-judge = "vlm_judge.cli:main"
@@ -44,6 +48,9 @@ vlm-retrieval-api = "vlm_judge.retrieval_server:main"
 mla-baseline = "mla_baseline.runner:main"
 textbook-index = "retrieve.build_index:main"
 textbook-eval = "retrieve.evaluate:main"
+visual-search-service = "visual_retrive.search_service:main"
+visual-preflight = "mla_baseline.visual_preflight:main"
+visual-calibrate = "retrieve.calibrate_visual:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
