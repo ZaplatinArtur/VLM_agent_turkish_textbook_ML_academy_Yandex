@@ -39,15 +39,16 @@ def _search_client_from_env(settings: Settings) -> TextbookSearchBackend:
     не меняются ни на байт.
     """
     backend = os.environ.get("MLA_RETRIEVAL_BACKEND", "text").strip() or "text"
+    if backend not in ("text", "visual", "hybrid"):
+        raise ValueError(
+            f"unknown MLA_RETRIEVAL_BACKEND {backend!r}: text | visual | hybrid"
+        )
     if backend == "visual":
         from ..tools import visual_client_from_env
 
         return visual_client_from_env(settings)
-    if backend != "text":
-        raise ValueError(
-            f"unknown MLA_RETRIEVAL_BACKEND {backend!r}: text | visual"
-        )
-    return LocalTextbookSearchClient(
+
+    text_client = LocalTextbookSearchClient(
         retrieval_fetch_k=settings.retrieval_fetch_k,
         mmr_lambda=(
             settings.retrieval_mmr_lambda
@@ -56,6 +57,11 @@ def _search_client_from_env(settings: Settings) -> TextbookSearchBackend:
         ),
         context_order=settings.retrieval_context_order,
     )
+    if backend == "hybrid":
+        from ..tools import HybridSearchClient, visual_client_from_env
+
+        return HybridSearchClient(text_client, visual_client_from_env(settings))
+    return text_client
 
 
 class AgentRag(B0NoTools):

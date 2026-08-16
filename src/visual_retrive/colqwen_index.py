@@ -139,7 +139,12 @@ class ColQwenCascadeIndex:
                 mask[j,:n] = True
             docs, mask = docs.to(dev), mask.to(dev)
             sim = torch.einsum("qd,bsd->qbs", qg, docs).masked_fill(~mask.unsqueeze(0), -1e4)
-            scores = sim.amax(-1).sum(0).float().cpu().numpy()
+            # Среднее, а не сумма, по токенам запроса. Внутри одного запроса
+            # деление на константу ранжирование не меняет, но без него счёт
+            # растёт с длиной запроса и порог уверенности меряет длину, а не
+            # релевантность: на калибровке чужие запросы (медиана 6 слов)
+            # обошли свои (4 слова) и гейт пропускал всё подряд.
+            scores = sim.amax(-1).mean(0).float().cpu().numpy()
             scored.extend((float(s), i) for s,i in zip(scores,chunk))
         scored.sort(reverse=True)
         hits=[]

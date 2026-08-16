@@ -18,6 +18,7 @@ from .textbook_search import (
     create_search_textbooks_tool,
     format_search_result_for_model,
 )
+from .hybrid_search import HYBRID_PROFILE, HybridSearchClient
 from .visual_search import (
     VISUAL_PROFILE,
     VisualSearchClient,
@@ -30,6 +31,8 @@ __all__ = [
     "TextbookSearchClient",
     "TextbookSearchError",
     "TextbookSearchInput",
+    "HYBRID_PROFILE",
+    "HybridSearchClient",
     "ToolUnavailable",
     "VISUAL_PROFILE",
     "VisualSearchClient",
