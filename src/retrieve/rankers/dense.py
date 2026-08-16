@@ -11,7 +11,7 @@ from schemas.retrieve import RetrievedChunk
 from ..cache import EmbeddingCache
 from ..embedders import Embedder
 from ..index import Index
-from ..persistence import (
+from ..storage.persistence import (
     IndexValidationError,
     StrictBuildLock,
     acquire_strict_build_lock,
@@ -21,7 +21,7 @@ from ..persistence import (
     retrieval_corpus_projection_sha256,
     save_index,
 )
-from ..vector_store import (
+from ..storage.vector_store import (
     FaissVectorStore,
     IndexKind,
     resolve_index_kind,

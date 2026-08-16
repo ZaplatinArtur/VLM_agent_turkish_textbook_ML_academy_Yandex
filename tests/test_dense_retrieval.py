@@ -7,13 +7,13 @@ pytest.importorskip("numpy")
 
 from retrieve.embedders.base import SymmetricTextEmbedder
 from retrieve.index import Index
-from retrieve.persistence import (
+from retrieve.storage.persistence import (
     BUILD_LOCK_FILE,
     IndexValidationError,
     MANIFEST_FILE,
 )
 from retrieve.rankers.dense import DenseRanker
-from retrieve.vector_store import CHUNK_IDS_FILE, INDEX_FILE, IndexKind
+from retrieve.storage.vector_store import CHUNK_IDS_FILE, INDEX_FILE, IndexKind
 from schemas.retrieve import RetrievedChunk
 
 VOCAB = ["üçgen", "alan", "hız", "kuvvet", "hücre"]

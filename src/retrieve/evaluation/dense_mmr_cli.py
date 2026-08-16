@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Sequence
 
-from .evaluation import DEFAULT_CUTOFFS, evaluate_dense_mmr, prepare_qrels_from_agent_run
+from .scoring import DEFAULT_CUTOFFS, evaluate_dense_mmr, prepare_qrels_from_agent_run
 
 
 def _build_parser() -> argparse.ArgumentParser:

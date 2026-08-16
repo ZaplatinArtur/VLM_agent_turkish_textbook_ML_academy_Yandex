@@ -46,11 +46,11 @@ vlm-judge = "vlm_judge.cli:main"
 vlm-judge-ui = "vlm_judge.ui_server:main"
 vlm-retrieval-api = "vlm_judge.retrieval_server:main"
 mla-baseline = "mla_baseline.runner:main"
-textbook-index = "retrieve.build_index:main"
-textbook-eval = "retrieve.evaluate:main"
+textbook-index = "retrieve.ingest.build_index:main"
+textbook-eval = "retrieve.evaluation.evaluate:main"
 visual-search-service = "visual_retrive.search_service:main"
 visual-preflight = "mla_baseline.visual_preflight:main"
-visual-calibrate = "retrieve.calibrate_visual:main"
+visual-calibrate = "retrieve.evaluation.calibrate_visual:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,6 +1,6 @@
 import json
 
-from retrieve.chunking.refinement import RefinementDecision, _extract_json
+from retrieve.ingest.chunking.refinement import RefinementDecision, _extract_json
 
 
 def test_extracts_fenced_json() -> None:

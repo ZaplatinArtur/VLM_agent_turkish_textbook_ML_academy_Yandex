@@ -14,7 +14,7 @@ from retrieve.rankers import (
 from retrieve.service import ADVANCED_PIPELINE, build_pipeline
 from paths import INDEX_DIR
 from schemas.retrieve import RetrievedChunk
-from retrieve.vector_store import IndexKind
+from retrieve.storage.vector_store import IndexKind
 
 
 RUNTIME_VERSIONS = {

@@ -1,6 +1,6 @@
 import pytest
 
-from retrieve.calibrate_visual import load_queries, top_scores
+from retrieve.evaluation.calibrate_visual import load_queries, top_scores
 
 
 class StubClient:
@@ -58,7 +58,7 @@ def test_failing_query_does_not_abort_calibration(capsys):
 
 
 def test_calibration_separates_own_from_foreign_queries():
-    from retrieve.compare import calibrate_gate
+    from retrieve.evaluation.compare import calibrate_gate
 
     # Чужие запросы по MaxSim набирают заметно меньше своих — порог обязан
     # лечь между ними, а не остаться дефолтным 0.57 из другой шкалы.

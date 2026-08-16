@@ -67,7 +67,7 @@ def check_threshold() -> Check:
             False,
             "MLA_VISUAL_MIN_SCORE не задан. Шкала MaxSim своя у каждого индекса, "
             "дефолтный порог пропустил бы любую выдачу. "
-            "Снимите: python -m retrieve.calibrate_visual",
+            "Снимите: python -m retrieve.evaluation.calibrate_visual",
         )
     try:
         value = float(raw)

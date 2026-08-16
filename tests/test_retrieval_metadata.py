@@ -6,7 +6,7 @@ from retrieve.metadata import (
     enrich_chunk_metadata,
     infer_textbook_metadata,
 )
-from retrieve.parsing.chunk_store.jsonl import JsonlChunkStore
+from retrieve.ingest.parsing.chunk_store.jsonl import JsonlChunkStore
 from schemas.retrieve import RetrievedChunk
 
 

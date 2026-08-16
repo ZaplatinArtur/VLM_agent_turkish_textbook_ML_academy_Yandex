@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from retrieve.qrels_annotation import (
+from retrieve.evaluation.qrels_annotation import (
     annotate_candidate_pool,
     build_candidate_pool,
     parse_annotation,

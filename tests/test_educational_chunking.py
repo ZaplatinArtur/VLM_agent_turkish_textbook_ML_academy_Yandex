@@ -1,6 +1,6 @@
 from schemas.retrieve import RetrievedChunk
 
-from retrieve.chunking import EducationalChunker, UnitKind
+from retrieve.ingest.chunking import EducationalChunker, UnitKind
 
 
 def _page(text: str, page: int = 1) -> RetrievedChunk:

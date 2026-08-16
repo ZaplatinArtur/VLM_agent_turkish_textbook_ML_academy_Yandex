@@ -10,7 +10,7 @@ from typing import Any
 
 from schemas.retrieve import RetrievedChunk
 
-from .metadata import canonical_subject
+from ..metadata import canonical_subject
 
 
 DEFAULT_CUTOFFS = (1, 5, 10, 50)
@@ -224,8 +224,8 @@ def evaluate_dense_mmr(
     if candidate_text_chars < 0:
         raise ValueError("candidate_text_chars must not be negative")
 
-    from .parsing import get_retrieved_chunks
-    from .service import build_pipeline
+    from ..ingest.parsing import get_retrieved_chunks
+    from ..service import build_pipeline
 
     raw_corpus = get_retrieved_chunks() if chunks is None else chunks
     corpus = [chunk for chunk in raw_corpus if chunk.text.strip()]

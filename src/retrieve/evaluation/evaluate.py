@@ -28,9 +28,9 @@ from typing import Any, Iterable
 
 from schemas.retrieve import RetrievedChunk
 
-from .index import Index
-from .pipelines import PROFILES, build_profile
-from .service import ADVANCED_PIPELINE
+from ..index import Index
+from ..pipelines import PROFILES, build_profile
+from ..service import ADVANCED_PIPELINE
 
 
 def _read_qrels(path: Path) -> list[dict[str, Any]]:
@@ -183,7 +183,7 @@ def load_corpus(book: str | None) -> list[RetrievedChunk]:
         with path.open("r", encoding="utf-8") as handle:
             chunks = [RetrievedChunk.model_validate_json(line) for line in handle if line.strip()]
     else:
-        from .parsing import get_retrieved_chunks
+        from ..ingest.parsing import get_retrieved_chunks
 
         chunks = get_retrieved_chunks()
     return [chunk for chunk in chunks if chunk.text.strip()]
@@ -261,7 +261,7 @@ def main(argv: list[str] | None = None) -> int:
         started = time.perf_counter()
         if system == ADVANCED_PIPELINE:
             # Графовый пайплайн собирается своим путём: ему нужен корпус, а не Index.
-            from .service import build_pipeline
+            from ..service import build_pipeline
 
             pipeline = build_pipeline(corpus, profile=ADVANCED_PIPELINE)
         else:

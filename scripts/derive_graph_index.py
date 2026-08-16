@@ -14,8 +14,8 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from retrieve.embedders.sentence_transformer import DEFAULT_MODEL
 from retrieve.graph import KnowledgeGraph
-from retrieve.persistence import save_index
-from retrieve.vector_store import FaissVectorStore
+from retrieve.storage.persistence import save_index
+from retrieve.storage.vector_store import FaissVectorStore
 
 
 def main() -> int:

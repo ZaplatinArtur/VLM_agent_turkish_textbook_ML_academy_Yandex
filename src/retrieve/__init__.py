@@ -16,7 +16,7 @@ _LAZY_ATTRS = {
     "PlainEmbedder": (".embedders", "PlainEmbedder"),
     "Qwen3Embedder": (".embedders", "Qwen3Embedder"),
     "EmbeddingCache": (".cache", "EmbeddingCache"),
-    "FaissVectorStore": (".vector_store", "FaissVectorStore"),
+    "FaissVectorStore": (".storage.vector_store", "FaissVectorStore"),
     "Index": (".index", "Index"),
     "PrimaryCandidateUnion": (".rankers", "PrimaryCandidateUnion"),
     "MaximalMarginalRelevanceRanker": (
@@ -29,7 +29,7 @@ _LAZY_ATTRS = {
     "StemmedBM25Ranker": (".rankers", "StemmedBM25Ranker"),
     "rescored": (".rankers", "rescored"),
     "build_profile": (".pipelines", "build_profile"),
-    "evaluate_pipeline": (".evaluate", "evaluate_pipeline"),
+    "evaluate_pipeline": (".evaluation.evaluate", "evaluate_pipeline"),
     "Relevance": (".confidence", "Relevance"),
     "RelevanceVerdict": (".confidence", "RelevanceVerdict"),
     "RetrievalPipeline": (".pipeline", "RetrievalPipeline"),

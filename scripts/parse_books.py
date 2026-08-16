@@ -5,7 +5,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from paths import BOOKS_DIR, ensure_data_dirs
-from retrieve.parsing.factory import get_parser
+from retrieve.ingest.parsing.factory import get_parser
 
 
 def main() -> None:

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from retrieve.evaluation import (
+from retrieve.evaluation.scoring import (
     evaluate_dense_mmr,
     prepare_qrels_from_agent_run,
     score_ranking,

@@ -3,7 +3,7 @@ from pathlib import Path
 from paths import CHUNKS_JSONL_DIR, ensure_data_dirs
 from schemas.retrieve import RetrievedChunk
 
-from ...metadata import enrich_chunk_metadata
+from ....metadata import enrich_chunk_metadata
 from .base import ChunkStore
 
 

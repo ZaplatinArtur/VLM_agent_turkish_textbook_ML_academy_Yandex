@@ -28,8 +28,8 @@ from paths import EVAL_DIR
 from schemas.retrieve import RetrievedChunk
 
 from .evaluate import _mean, _percentile, load_corpus
-from .index import Index
-from .pipelines import PROFILES, build_profile
+from ..index import Index
+from ..pipelines import PROFILES, build_profile
 
 DEFAULT_QUERIES_FILE = EVAL_DIR / "eval_queries_tr.txt"
 DEFAULT_OOD_FILE = EVAL_DIR / "eval_queries_ood_tr.txt"

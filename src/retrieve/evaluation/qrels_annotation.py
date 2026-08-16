@@ -10,8 +10,8 @@ from vlm_judge.backends import BackendResponse
 from vlm_judge.prompts import JudgeRequest
 from vlm_judge.retrieval import build_bm25_index, search_bm25
 
-from .parsing import get_retrieved_chunks
-from .service import build_pipeline
+from ..ingest.parsing import get_retrieved_chunks
+from ..service import build_pipeline
 
 
 ANNOTATION_SYSTEM_PROMPT = """You label textbook chunks for retrieval evaluation.

@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from retrieve.evaluate import evaluate_pipeline
+from retrieve.evaluation.evaluate import evaluate_pipeline
 from schemas.retrieve import RetrievedChunk
 
 

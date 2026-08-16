@@ -75,7 +75,7 @@ def main(argv: list[str] | None = None) -> int:
         and (graph_dir / "nodes.jsonl").is_file()
         and (graph_dir / "edges.jsonl").is_file()
     ):
-        from .graph import KnowledgeGraph
+        from ..graph import KnowledgeGraph
 
         chunks = KnowledgeGraph.load(graph_dir).searchable_nodes()
     else:
@@ -94,8 +94,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     # Delay optional ML imports until after the dependency-free corpus check.
-    from .persistence import load_manifest
-    from .service import build_pipeline
+    from ..storage.persistence import load_manifest
+    from ..service import build_pipeline
 
     started = time.perf_counter()
     pipeline = build_pipeline(chunks)
