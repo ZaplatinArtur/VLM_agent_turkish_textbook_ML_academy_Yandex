@@ -12,7 +12,7 @@
   <meta property="og:locale" content="ru_RU">
   <meta property="og:url" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/retrieval-tool.html">
   <meta property="og:title" content="Устройство поиска — Textbook VLM">
-  <meta property="og:description" content="Контракт, гибридный поиск, повторное ранжирование и проверка найденных фрагментов.">
+  <meta property="og:description" content="Точный источник, текстовый retrieval и визуальный поиск ColQwen по страницам учебников.">
   <meta property="og:image" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/assets/social-preview.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
@@ -27,10 +27,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260815-20">
-  <link rel="stylesheet" href="detail.css?v=20260814-3">
-  <link rel="stylesheet" href="engraving.css?v=20260815-11">
-  <script src="site.js?v=20260815-14" defer></script>
+  <link rel="stylesheet" href="site.css?v=20260817-1">
+  <link rel="stylesheet" href="detail.css?v=20260817-1">
+  <link rel="stylesheet" href="engraving.css?v=20260817-1">
+  <script src="site.js?v=20260817-1" defer></script>
 </head>
 <body class="detail-page">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -44,7 +44,7 @@
       <div class="section-shell">
         <span class="detail-kicker">документация · инструмент агента</span>
         <h1 class="detail-title">ПОИСК ПО<br><em>УЧЕБНИКАМ</em></h1>
-        <div class="detail-intro"><a class="detail-back" href="index.html">← На главную</a><p>Как агент превращает тему задания в проверяемый запрос, получает пять фрагментов и решает, можно ли им доверять.</p></div>
+        <div class="detail-intro"><a class="detail-back" href="index.html">← На главную</a><p>Как точный источник, текстовая выдача и визуальная страница образуют три последовательных уровня поиска.</p></div>
       </div>
     </section>
 
@@ -61,17 +61,17 @@
 
     <section class="doc-section doc-section-dark">
       <div class="section-shell">
-        <div class="doc-heading"><h2>ЧТО ПРОИСХОДИТ<br><em>ВНУТРИ.</em></h2><p>Текущий режим объединяет лексический и векторный поиск, затем уточняет порядок кандидатов.</p></div>
+        <div class="doc-heading"><h2>ТРИ УРОВНЯ<br><em>ПОИСКА.</em></h2><p>Сначала система ищет точный официальный источник. Только если его нет, запускаются текстовая и визуальная ветки.</p></div>
         <div class="doc-flow">
-          <div class="flow-step"><span>01</span><strong>Запрос на турецком</strong></div>
-          <div class="flow-step"><span>02</span><strong>BM25 по словам</strong></div>
-          <div class="flow-step"><span>03</span><strong>E5 по смыслу</strong></div>
-          <div class="flow-step"><span>04</span><strong>Объединение списков</strong></div>
-          <div class="flow-step"><span>05</span><strong>Повторное ранжирование BGE</strong></div>
-          <div class="flow-step"><span>06</span><strong>Порог релевантности</strong></div>
-          <div class="flow-step"><span>07</span><strong>Пять лучших фрагментов</strong></div>
+          <div class="flow-step"><span>01</span><strong>Фото задания</strong></div>
+          <div class="flow-step"><span>02</span><strong>Точный поиск в базе источников</strong></div>
+          <div class="flow-step"><span>03</span><strong>E5-small + BM25</strong></div>
+          <div class="flow-step"><span>04</span><strong>LoRA-кросс-энкодер · порог 0,5</strong></div>
+          <div class="flow-step"><span>05</span><strong>ColQwen по странице без OCR</strong></div>
+          <div class="flow-step"><span>06</span><strong>MaxSim по токенам запроса</strong></div>
+          <div class="flow-step"><span>07</span><strong>Агент решает → единая оценка</strong></div>
         </div>
-        <div class="doc-callout"><span>↗</span><div><h3>Профили поиска</h3><p>Базовый профиль — гибридный поиск с повторным ранжированием. Для сравнительных экспериментов доступны дополнительные профили, включая лексический контрольный режим.</p></div></div>
+        <div class="doc-callout"><span>↗</span><div><h3>Визуальная ветка — экспериментальная</h3><p>Она сохраняет карты, схемы и таблицы, потому что ищет страницу как изображение. Текстовая ветка остаётся основным проверяемым retrieval-профилем.</p></div></div>
       </div>
     </section>
 
@@ -91,13 +91,27 @@
 
     <section class="doc-section">
       <div class="section-shell">
-        <div class="doc-heading"><h2>КОНТРОЛЬНАЯ<br><em>ТОЧКА.</em></h2><p>Показатели лексического индекса фиксируют масштаб и дают воспроизводимый контроль для следующих поисковых систем.</p></div>
+        <div class="doc-heading"><h2>ЧТО ДАЁТ<br><em>RETRIEVAL.</em></h2><p>Дообученный гибрид резко улучшает порядок страниц. LLM-гейт добавляет немного качества, но увеличивает задержку в 24 раза.</p></div>
         <div class="stat-grid">
-          <article class="doc-stat"><span class="doc-number">ИСХОДНЫЕ ЧАНКИ</span><strong>280 822</strong><p>фрагмента в исходном корпусе</p></article>
-          <article class="doc-stat"><span class="doc-number">ТЕКСТ</span><strong>103 070</strong><p>текстовых чанков в контрольном индексе</p></article>
-          <article class="doc-stat"><span class="doc-number">ИЗОБРАЖЕНИЯ</span><strong>177 752</strong><p>фрагмента без текста пропущено</p></article>
-          <article class="doc-stat"><span class="doc-number">ЗАДЕРЖКА</span><strong>≈32 мс</strong><p>контрольное время одного запроса</p></article>
+          <article class="doc-stat"><span class="doc-number">MINILM · HIT@1</span><strong>34,2%</strong><p>базовый би-энкодер · 19 мс</p></article>
+          <article class="doc-stat"><span class="doc-number">ГИБРИД + LORA · HIT@1</span><strong>86,1%</strong><p>MRR@10 91,1% · 383 мс</p></article>
+          <article class="doc-stat"><span class="doc-number">+ LLM-ГЕЙТ · HIT@1</span><strong>89,3%</strong><p>MRR@10 92,9% · 9 207 мс</p></article>
+          <article class="doc-stat"><span class="doc-number">ПОСТРАНИЧНО · HIT@5</span><strong>97,3%</strong><p>192 реальных запроса · 735 мс</p></article>
         </div>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Набор запросов</th><th>Разбиение</th><th>Hit@1</th><th>Hit@5</th><th>MRR@10</th><th>Задержка</th></tr></thead>
+            <tbody>
+              <tr><td rowspan="2">84 реальных</td><td>Страница</td><td>76,5%</td><td>96,3%</td><td>85,0%</td><td>738 мс</td></tr>
+              <tr><td>По смыслу</td><td>70,4%</td><td>91,4%</td><td>80,1%</td><td>1 620 мс</td></tr>
+              <tr><td rowspan="2">192 реальных</td><td>Страница</td><td>82,4%</td><td>97,3%</td><td>89,1%</td><td>735 мс</td></tr>
+              <tr><td>По смыслу</td><td>75,9%</td><td>95,2%</td><td>84,2%</td><td>1 593 мс</td></tr>
+              <tr><td rowspan="2">300 синтетических</td><td>Страница</td><td>85,7%</td><td>99,0%</td><td>91,4%</td><td>912 мс</td></tr>
+              <tr><td>По смыслу</td><td>79,0%</td><td>96,3%</td><td>86,4%</td><td>2 293 мс</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="doc-callout"><span>✓</span><div><h3>Постраничное разбиение победило</h3><p>Оно оказалось лучше смысловых блоков во всех двенадцати сравнениях Hit@1, Hit@5 и MRR@10 и примерно вдвое быстрее.</p></div></div>
       </div>
     </section>
 

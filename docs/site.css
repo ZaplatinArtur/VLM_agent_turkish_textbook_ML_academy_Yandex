@@ -1033,6 +1033,10 @@ img {
   background: var(--purple);
 }
 
+.bar-hybrid {
+  background: var(--yellow);
+}
+
 .chart-delta {
   display: grid;
   grid-template-columns: auto auto 1fr;
@@ -1160,12 +1164,16 @@ img {
   background: var(--purple);
 }
 
-.subject-web [data-subject-bar] {
+.subject-text [data-subject-bar] {
   background: var(--red);
 }
 
-.subject-rag [data-subject-bar] {
+.subject-visual [data-subject-bar] {
   background: var(--green);
+}
+
+.subject-hybrid [data-subject-bar] {
+  background: var(--yellow);
 }
 
 .subject-bar.is-best strong {

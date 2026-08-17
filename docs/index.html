@@ -12,7 +12,7 @@
   <meta property="og:locale" content="ru_RU">
   <meta property="og:url" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/">
   <meta property="og:title" content="Textbook VLM — учебник как инструмент">
-  <meta property="og:description" content="Исследование VLM-агента: без инструментов, веб-поиск и проверяемый поиск по учебникам.">
+  <meta property="og:description" content="Исследование VLM-агента: текстовый, визуальный и гибридный поиск по турецким учебникам.">
   <meta property="og:image" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/assets/social-preview.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
@@ -27,9 +27,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260815-21">
-  <link rel="stylesheet" href="engraving.css?v=20260815-11">
-  <script src="site.js?v=20260815-14" defer></script>
+  <link rel="stylesheet" href="site.css?v=20260817-1">
+  <link rel="stylesheet" href="engraving.css?v=20260817-1">
+  <script src="site.js?v=20260817-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -84,7 +84,7 @@
         <i></i>
         <span>изображение задания</span>
         <i></i>
-        <span>поиск по учебникам</span>
+        <span>текст + визуал</span>
         <i></i>
         <span>единая оценка</span>
       </div>
@@ -92,24 +92,24 @@
 
     <section class="metric-band" aria-label="Ключевые результаты">
       <article class="metric-card metric-dark reveal">
-        <span class="metric-label">единый срез</span>
-        <strong data-result-key="benchmarks.visual_validation.tasks" data-count-to="198" data-count-decimals="0">198</strong>
-        <p>визуальных заданий в сравнении трёх режимов моделью-судьёй</p>
+        <span class="metric-label">единый эксперимент</span>
+        <strong data-result-key="benchmarks.rag_274.tasks" data-count-to="274" data-count-decimals="0">274</strong>
+        <p>задания · одна модель · четыре режима доступа к учебникам</p>
       </article>
       <article class="metric-card metric-green reveal">
         <span class="metric-label">без инструментов</span>
-        <strong data-result-key="benchmarks.visual_validation.scores.b0" data-count-to="57.1" data-count-decimals="1" data-count-suffix="%">57,1%</strong>
-        <p>модель решает задачу только по исходному изображению</p>
+        <strong data-result-key="benchmarks.rag_274.scores.b0" data-count-to="65.3" data-count-decimals="1" data-count-suffix="%">65,3%</strong>
+        <p>лучшая средняя точность в новом сравнении</p>
       </article>
       <article class="metric-card metric-red reveal">
-        <span class="metric-label">с веб-поиском</span>
-        <strong data-result-key="benchmarks.visual_validation.scores.web" data-count-to="70.7" data-count-decimals="1" data-count-suffix="%">70,7%</strong>
-        <p>открытый веб помогает на общем валидационном срезе</p>
+        <span class="metric-label">текстовый RAG</span>
+        <strong data-result-key="benchmarks.rag_274.scores.text" data-count-to="62" data-count-decimals="1" data-count-suffix="%">62,0%</strong>
+        <p>поиск находит страницу, но контекст не всегда помогает ответу</p>
       </article>
       <article class="metric-card metric-purple reveal">
-        <span class="metric-label">Textbook RAG</span>
-        <strong data-result-key="benchmarks.visual_validation.scores.rag" data-count-to="54.5" data-count-decimals="1" data-count-suffix="%">54,5%</strong>
-        <p>поиск по учебникам требует более точной маршрутизации и фильтрации</p>
+        <span class="metric-label">гибридный RAG</span>
+        <strong data-result-key="benchmarks.rag_274.scores.hybrid" data-count-to="59.2" data-count-decimals="1" data-count-suffix="%">59,2%</strong>
+        <p>больше контекста без маршрутизации усиливает отвлечение</p>
       </article>
     </section>
 
@@ -127,20 +127,20 @@
       <div class="research-grid">
         <article class="question-card reveal">
           <span class="card-eyebrow">исследовательский вопрос</span>
-          <p>Улучшает ли поиск по учебным материалам качество ответов VLM-агента по сравнению с той же моделью без retrieval или с веб-поиском?</p>
+          <p>Улучшает ли текстовый, визуальный или гибридный поиск по учебникам качество ответов той же VLM-модели без инструментов?</p>
           <div class="question-arrow" aria-hidden="true">↘</div>
         </article>
 
         <div class="hypotheses reveal">
           <article class="hypothesis">
             <span>H1</span>
-            <h3>Веб для широких фактов</h3>
-            <p>Общие и редкие сведения, которых модель могла не видеть во время обучения.</p>
+            <h3>Текст для точных знаний</h3>
+            <p>Формулировки, определения и решения из учебной программы.</p>
           </article>
           <article class="hypothesis">
             <span>H2</span>
-            <h3>Учебник для программы</h3>
-            <p>Точные определения, формулировки и примеры из конкретного курса.</p>
+            <h3>Изображение для схем</h3>
+            <p>Страница целиком сохраняет карты, графики и пространственные связи.</p>
           </article>
           <article class="hypothesis">
             <span>H3</span>
@@ -150,7 +150,7 @@
           <article class="hypothesis">
             <span>H4</span>
             <h3>Нужна маршрутизация</h3>
-            <p>Тип задания должен определять: решать самому, искать в вебе или в учебниках.</p>
+            <p>Тип задачи должен определять: решать самому, искать текст или страницу.</p>
           </article>
         </div>
       </div>
@@ -161,15 +161,15 @@
         <div class="section-index">02 · ПОДХОДЫ</div>
         <div class="section-heading reveal">
           <h2>ОДНА МОДЕЛЬ.<br><em>РАЗНЫЕ ИСТОЧНИКИ.</em></h2>
-          <p>Меняем только доступные инструменты и стратегию их применения. Формат задачи, ответа и оценки остаётся единым.</p>
+          <p>На одном наборе из 274 заданий меняется только источник контекста. Модель, формат ответа и оценка остаются одинаковыми.</p>
         </div>
 
         <div class="approach-switcher reveal">
           <div class="approach-tabs" role="tablist" aria-label="Режимы агента">
             <button id="tab-b0" class="approach-tab is-active" role="tab" aria-selected="true" aria-controls="panel-b0" data-approach="b0">01 · Без инструментов</button>
-            <button id="tab-web" class="approach-tab" role="tab" aria-selected="false" aria-controls="panel-web" data-approach="web">02 · Веб-поиск</button>
-            <button id="tab-rag" class="approach-tab" role="tab" aria-selected="false" aria-controls="panel-rag" data-approach="rag">03 · Textbook RAG</button>
-            <button id="tab-route" class="approach-tab" role="tab" aria-selected="false" aria-controls="panel-route" data-approach="route">04 · Маршрутизатор</button>
+            <button id="tab-text" class="approach-tab" role="tab" aria-selected="false" aria-controls="panel-text" data-approach="text">02 · Текстовый RAG</button>
+            <button id="tab-visual" class="approach-tab" role="tab" aria-selected="false" aria-controls="panel-visual" data-approach="visual">03 · Визуальный RAG</button>
+            <button id="tab-hybrid" class="approach-tab" role="tab" aria-selected="false" aria-controls="panel-hybrid" data-approach="hybrid">04 · Гибрид</button>
           </div>
 
           <div class="approach-panels">
@@ -185,40 +185,40 @@
                 <li><b>Риск:</b> не хватает специфичных знаний</li>
               </ul>
             </article>
-            <article id="panel-web" class="approach-panel" role="tabpanel" aria-labelledby="tab-web" hidden>
+            <article id="panel-text" class="approach-panel" role="tabpanel" aria-labelledby="tab-text" hidden>
               <div>
-                <span class="panel-number">WEB</span>
-                <h3>Широкий внешний контекст</h3>
-                <p>Агент может искать сведения в интернете, если считает собственных знаний недостаточно.</p>
+                <span class="panel-number">TEXT</span>
+                <h3>Текст страницы после OCR</h3>
+                <p>E5-small и BM25 объединяют кандидатов, затем дообученный кросс-энкодер повторно ранжирует их.</p>
               </div>
               <ul>
-                <li><b>Источник:</b> открытый веб</li>
-                <li><b>Сильная сторона:</b> широкий охват</li>
-                <li><b>Риск:</b> нерелевантные и неучебные источники</li>
+                <li><b>Единица:</b> страница учебника</li>
+                <li><b>Порог:</b> 0,5; слабая выдача скрывается</li>
+                <li><b>Риск:</b> OCR теряет визуальные связи</li>
               </ul>
             </article>
-            <article id="panel-rag" class="approach-panel" role="tabpanel" aria-labelledby="tab-rag" hidden>
+            <article id="panel-visual" class="approach-panel" role="tabpanel" aria-labelledby="tab-visual" hidden>
               <div>
-                <span class="panel-number">RAG</span>
-                <h3>Проверяемый поиск по учебникам</h3>
-                <p>Гибридный поиск и повторное ранжирование возвращают до пяти сильных фрагментов из корпуса.</p>
+                <span class="panel-number">VISUAL</span>
+                <h3>Страница остаётся изображением</h3>
+                <p>ColQwen ищет по визуальным токенам без OCR и передаёт найденную страницу агенту картинкой.</p>
               </div>
               <ul>
-                <li><b>Источник:</b> турецкие учебники</li>
-                <li><b>Сильная сторона:</b> знания учебной программы</li>
-                <li><b>Риск:</b> слабый чанк может увести решение</li>
+                <li><b>Источник:</b> визуальный индекс страниц</li>
+                <li><b>Сильная сторона:</b> схемы, карты и таблицы</li>
+                <li><b>Риск:</b> порог уверенности плохо разделяет запросы</li>
               </ul>
             </article>
-            <article id="panel-route" class="approach-panel" role="tabpanel" aria-labelledby="tab-route" hidden>
+            <article id="panel-hybrid" class="approach-panel" role="tabpanel" aria-labelledby="tab-hybrid" hidden>
               <div>
-                <span class="panel-number">ROUTE</span>
-                <h3>Источник выбирается по задаче</h3>
-                <p>Точное официальное совпадение используется напрямую; иначе image-first агент решает сам или вызывает поиск.</p>
+                <span class="panel-number">HYBRID</span>
+                <h3>Обе ветки одновременно</h3>
+                <p>Агент получает текстовые фрагменты и найденную страницу, чтобы объединить независимые сигналы.</p>
               </div>
               <ul>
-                <li><b>Источник:</b> ключ, изображение или учебник</li>
-                <li><b>Сильная сторона:</b> меньше лишних вызовов</li>
-                <li><b>Риск:</b> ошибка маршрутизации</li>
+                <li><b>Источник:</b> текст и визуальная страница</li>
+                <li><b>Ожидание:</b> взаимная компенсация ошибок</li>
+                <li><b>Результат:</b> лишний контекст чаще отвлекал модель</li>
               </ul>
             </article>
           </div>
@@ -230,50 +230,50 @@
       <div class="section-shell">
         <div class="section-index">03 · ДАННЫЕ</div>
         <div class="section-heading reveal">
-          <h2>8 300 ЗАДАЧ.<br><em>ОДИН ЧЕСТНЫЙ СРЕЗ.</em></h2>
-          <p>Объединяем три многоязычных бенчмарка и фиксируем сопоставимые срезы для разных режимов — от текста до экзаменационных скриншотов.</p>
+          <h2>200 УЧЕБНИКОВ.<br><em>ДВА ИНДЕКСА.</em></h2>
+          <p>Текстовая ветка работает с OCR страницы, визуальная — с целой страницей как изображением. Корпус покрывает 1–8 классы.</p>
         </div>
 
-        <div class="data-summary reveal" aria-label="Состав экспериментальной выборки">
-          <article><span>задач</span><strong data-result-key="dataset.tasks" data-count-to="8300" data-count-decimals="0">8 300</strong><p>в итоговой сводке</p></article>
-          <article><span>языки</span><strong data-result-key="dataset.languages" data-count-to="33" data-count-decimals="0">33</strong><p>языковых среза</p></article>
-          <article><span>предметы</span><strong data-result-key="dataset.subjects" data-count-to="16" data-count-decimals="0">16</strong><p>школьных направлений</p></article>
-          <article><span>форматы</span><strong data-result-key="dataset.formats" data-count-to="2" data-count-decimals="0">2</strong><p>текст и скриншот</p></article>
+        <div class="data-summary reveal" aria-label="Состав корпуса учебников">
+          <article><span>учебники</span><strong data-result-key="corpus.textbooks" data-count-to="200" data-count-decimals="0">200</strong><p>турецких школьных книг</p></article>
+          <article><span>текстовый индекс</span><strong data-result-key="corpus.text_index_pages" data-count-to="42981" data-count-decimals="0">42 981</strong><p>страница или фрагмент</p></article>
+          <article><span>визуальный индекс</span><strong data-result-key="corpus.visual_index_pages" data-count-to="53329" data-count-decimals="0">53 329</strong><p>страниц для ColQwen</p></article>
+          <article><span>смысловые блоки</span><strong data-result-key="corpus.semantic_units" data-count-to="151576" data-count-decimals="0">151 576</strong><p>экспериментальный разбор</p></article>
         </div>
 
         <div class="data-source-grid reveal">
           <article class="data-source data-source-purple">
-            <div class="data-source-head"><span>01 · TUMLU</span><span class="data-tag">текст · выбор ответа</span></div>
-            <strong data-result-key="dataset.sources.tumlu" data-count-to="2583" data-count-decimals="0">2 583</strong>
-            <h3>Многоязычные школьные вопросы</h3>
-            <p>Закрытые задания по школьным предметам с вариантами ответа.</p>
+            <div class="data-source-head"><span>01 · ПОСТРАНИЧНО</span><span class="data-tag">Tesseract OCR</span></div>
+            <strong>1 → 1</strong>
+            <h3>Одна страница — один фрагмент</h3>
+            <p>Больше контекста вокруг ответа, простая индексация и лучшая измеренная полнота.</p>
           </article>
           <article class="data-source data-source-green">
-            <div class="data-source-head"><span>02 · EXAMS-V</span><span class="data-tag">скриншот · выбор ответа</span></div>
-            <strong data-result-key="dataset.sources.exams_v" data-count-to="2977" data-count-decimals="0">2 977</strong>
-            <h3>Визуальные экзаменационные задания</h3>
-            <p>Закрытые вопросы, где модель получает исходный скриншот задания.</p>
+            <div class="data-source-head"><span>02 · ПО СМЫСЛУ</span><span class="data-tag">граф знаний</span></div>
+            <strong data-result-key="corpus.semantic_units" data-count-to="151576" data-count-decimals="0">151 576</strong>
+            <h3>Теория, пример, задача, решение</h3>
+            <p>Чище смысловая единица, но меньше соседнего контекста и выше задержка.</p>
           </article>
           <article class="data-source data-source-yellow">
-            <div class="data-source-head"><span>03 · MGSM</span><span class="data-tag">текст · открытый ответ</span></div>
-            <strong data-result-key="dataset.sources.mgsm" data-count-to="2740" data-count-decimals="0">2 740</strong>
-            <h3>Многошаговые задачи по математике</h3>
-            <p>Открытые задания с числовым ответом, который нужно получить рассуждением.</p>
+            <div class="data-source-head"><span>03 · ПОКРЫТИЕ</span><span class="data-tag">1–8 классы</span></div>
+            <strong data-result-key="corpus.benchmark_outside_coverage_pct" data-count-to="68" data-count-decimals="0" data-count-suffix="%">68%</strong>
+            <h3>Задания вне текущего корпуса</h3>
+            <p>Большая часть набора относится к экзаменам TYT/AYT за 9–12 классы — это главный предел эксперимента.</p>
           </article>
         </div>
 
         <div class="data-method reveal">
           <div>
-            <span class="card-eyebrow">как собран срез</span>
-            <p>Каноническая выборка зафиксирована с сидом 47 и стратифицирована по предмету. В итог вошли только задания, которые оба сравниваемых режима завершили без ошибки.</p>
+            <span class="card-eyebrow">два разных вопроса</span>
+            <p>Качество retrieval измеряется на запросах с размеченной релевантной страницей. Качество агента — отдельно на 274 заданиях с одинаковой моделью во всех режимах.</p>
           </div>
           <ul aria-label="Распределение заданий">
-            <li><b data-result-key="dataset.composition.closed_questions" data-result-decimals="0">5 560</b><span>закрытых вопросов</span></li>
-            <li><b data-result-key="dataset.composition.open_questions" data-result-decimals="0">2 740</b><span>открытых вопросов</span></li>
-            <li><b data-result-key="dataset.composition.text_tasks" data-result-decimals="0">5 323</b><span>текстовых заданий</span></li>
-            <li><b data-result-key="dataset.composition.image_tasks" data-result-decimals="0">2 977</b><span>скриншотов</span></li>
+            <li><b>Hit@k</b><span>найдена ли нужная страница</span></li>
+            <li><b>MRR@10</b><span>насколько высоко она стоит</span></li>
+            <li><b>Accuracy</b><span>решил ли агент задачу</span></li>
+            <li><b>Latency</b><span>цена улучшения поиска</span></li>
           </ul>
-          <a class="data-report-link" href="https://claude.ai/code/artifact/cefe767d-3f81-459e-b90a-d388b3e4e039">Полный отчёт о данных ↗</a>
+          <a class="data-report-link" href="retrieval-tool.html">Метрики и устройство поиска →</a>
         </div>
       </div>
     </section>
@@ -282,43 +282,58 @@
       <div class="section-index">04 · РЕЗУЛЬТАТЫ</div>
       <div class="section-heading reveal">
         <h2>ПОИСК — НЕ<br><em>АВТОМАТИЧЕСКИЙ РОСТ.</em></h2>
-        <p>На одном валидационном срезе напрямую сравниваются самостоятельное решение, открытый веб и поиск по учебникам.</p>
+        <p>На 274 заданиях Qwen 3.5 9B сравнивается сама с собой: без инструментов, с текстовым, визуальным и гибридным RAG.</p>
       </div>
 
       <div class="result-layout">
-        <div class="chart-card reveal" aria-label="Сравнение точности без инструментов, с веб-поиском и Textbook RAG">
+        <div class="chart-card reveal" aria-label="Сравнение точности четырёх режимов на 274 заданиях">
           <div class="chart-head">
-            <span>LLM-as-a-judge · N = <b data-result-key="benchmarks.visual_validation.tasks" data-result-decimals="0">198</b></span>
-            <span>один валидационный срез</span>
+            <span>единый протокол · N = <b data-result-key="benchmarks.rag_274.tasks" data-result-decimals="0">274</b></span>
+            <span>Qwen 3.5 9B · одна конфигурация</span>
           </div>
           <div class="bar-row">
-            <div class="bar-meta"><span>Без инструментов</span><strong data-result-key="benchmarks.visual_validation.scores.b0" data-count-to="57.1" data-count-decimals="1" data-count-suffix="%">57,1%</strong></div>
-            <div class="bar-track"><div class="bar bar-green" data-result-width-key="benchmarks.visual_validation.scores.b0" data-width="57.1"></div></div>
+            <div class="bar-meta"><span>Без инструментов</span><strong data-result-key="benchmarks.rag_274.scores.b0" data-count-to="65.3" data-count-decimals="1" data-count-suffix="%">65,3%</strong></div>
+            <div class="bar-track"><div class="bar bar-green" data-result-width-key="benchmarks.rag_274.scores.b0" data-width="65.3"></div></div>
           </div>
           <div class="bar-row">
-            <div class="bar-meta"><span>С веб-поиском</span><strong data-result-key="benchmarks.visual_validation.scores.web" data-count-to="70.7" data-count-decimals="1" data-count-suffix="%">70,7%</strong></div>
-            <div class="bar-track"><div class="bar bar-red" data-result-width-key="benchmarks.visual_validation.scores.web" data-width="70.7"></div></div>
+            <div class="bar-meta"><span>Текстовый RAG</span><strong data-result-key="benchmarks.rag_274.scores.text" data-count-to="62" data-count-decimals="1" data-count-suffix="%">62,0%</strong></div>
+            <div class="bar-track"><div class="bar bar-red" data-result-width-key="benchmarks.rag_274.scores.text" data-width="62"></div></div>
           </div>
           <div class="bar-row">
-            <div class="bar-meta"><span>Textbook RAG</span><strong data-result-key="benchmarks.visual_validation.scores.rag" data-count-to="54.5" data-count-decimals="1" data-count-suffix="%">54,5%</strong></div>
-            <div class="bar-track"><div class="bar bar-rag" data-result-width-key="benchmarks.visual_validation.scores.rag" data-width="54.5"></div></div>
+            <div class="bar-meta"><span>Визуальный RAG</span><strong data-result-key="benchmarks.rag_274.scores.visual" data-count-to="60.8" data-count-decimals="1" data-count-suffix="%">60,8%</strong></div>
+            <div class="bar-track"><div class="bar bar-rag" data-result-width-key="benchmarks.rag_274.scores.visual" data-width="60.8"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-meta"><span>Гибрид: текст + визуал</span><strong data-result-key="benchmarks.rag_274.scores.hybrid" data-count-to="59.2" data-count-decimals="1" data-count-suffix="%">59,2%</strong></div>
+            <div class="bar-track"><div class="bar bar-hybrid" data-result-width-key="benchmarks.rag_274.scores.hybrid" data-width="59.2"></div></div>
           </div>
           <div class="chart-delta">
             <span>Δ</span>
-            <strong data-result-key="benchmarks.visual_validation.rag_vs_b0_delta_pp" data-result-decimals="1" data-result-suffix=" п.п.">−2,6 п.п.</strong>
-            <p>Textbook RAG относительно режима без инструментов</p>
+            <strong data-result-key="benchmarks.rag_274.delta_vs_b0_pp.hybrid" data-result-decimals="1" data-result-suffix=" п.п.">−6,0 п.п.</strong>
+            <p>гибрид относительно режима без инструментов; различие не достигло значимости</p>
           </div>
         </div>
 
         <div class="result-notes">
           <article class="note-card note-red reveal">
-            <span class="card-eyebrow">крупный срез · EM · N = <span data-result-key="benchmarks.multilingual.tasks" data-result-decimals="0">8 300</span></span>
-            <strong><span data-result-key="benchmarks.multilingual.scores.b0" data-result-decimals="1" data-result-suffix="%">84,1%</span> / <span data-result-key="benchmarks.multilingual.scores.web" data-result-decimals="1" data-result-suffix="%">81,8%</span></strong>
-            <p>Без инструментов / веб-поиск. На открытых заданиях разница достигла <span data-result-key="benchmarks.multilingual.open_questions_delta_pp" data-result-decimals="1" data-result-suffix=" п.п.">−6,0 п.п.</span></p>
+            <span class="card-eyebrow">покрытие корпуса</span>
+            <strong><span data-result-key="corpus.benchmark_outside_coverage_pct" data-result-decimals="0" data-result-suffix="%">68%</span> вне диапазона</strong>
+            <p>Корпус собран для 1–8 классов, тогда как большинство задач относится к TYT/AYT за 9–12 классы.</p>
           </article>
           <article class="note-card note-yellow reveal">
-            <span class="card-eyebrow">интерпретация</span>
-            <p>Пользу даёт не сам доступ к поиску, а правильное решение — <b>когда, где и что искать</b>.</p>
+            <span class="card-eyebrow">воронка доверия</span>
+            <strong><span data-result-key="funnel.correct_after_reliance" data-result-decimals="0">40</span> из <span data-result-key="funnel.agent_relied" data-result-decimals="0">62</span></strong>
+            <p>Агент вызвал поиск в 271 задаче, но опёрся на выдачу только в 62. Узкое место — использование контекста, а не только его поиск.</p>
+          </article>
+          <article class="note-card note-red reveal">
+            <span class="card-eyebrow">отдельный мультиязычный бенчмарк · N = <span data-result-key="benchmarks.multilingual.tasks" data-result-decimals="0">8 300</span></span>
+            <strong><span data-result-key="benchmarks.multilingual.scores.b0" data-result-decimals="1" data-result-suffix="%">84,1%</span> / <span data-result-key="benchmarks.multilingual.scores.web" data-result-decimals="1" data-result-suffix="%">81,8%</span></strong>
+            <p>Без инструментов / веб-поиск. Веб дал +0,9 п.п. на TUMLU, но уступил на EXAMS-V и MGSM.</p>
+          </article>
+          <article class="note-card note-yellow reveal">
+            <span class="card-eyebrow">локальные исключения</span>
+            <strong>Литература · География</strong>
+            <p>Текстовый RAG дал 66,7% против 47,6% на литературе; гибрид — 92,9% против 57,1% на географии. Малые N показывают направление, а не доказательство.</p>
           </article>
         </div>
       </div>
@@ -326,8 +341,8 @@
       <div class="subject-explorer reveal" aria-labelledby="subject-explorer-title">
         <div class="subject-explorer-head">
           <div>
-            <span class="card-eyebrow">валидационный срез · N = <span data-result-key="benchmarks.visual_validation.tasks" data-result-decimals="0">198</span> · модель-судья</span>
-            <h3 id="subject-explorer-title">Где помогает каждый источник</h3>
+            <span class="card-eyebrow">единый срез · N = <span data-result-key="benchmarks.rag_274.tasks" data-result-decimals="0">274</span></span>
+            <h3 id="subject-explorer-title">Как меняется ответ по предметам</h3>
           </div>
           <div class="subject-picker" data-subject-picker>
             <span class="subject-picker-label" id="subject-picker-label">Предмет</span>
@@ -344,40 +359,42 @@
             </button>
             <div id="subject-picker-options" class="subject-picker-options" role="listbox" aria-labelledby="subject-picker-label" hidden>
               <button type="button" role="option" aria-selected="true" data-subject-key="all">Все предметы</button>
-              <button type="button" role="option" aria-selected="false" data-subject-key="ataturk">Ататюркизм</button>
-              <button type="button" role="option" aria-selected="false" data-subject-key="biology">Биология</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="math">Математика</button>
               <button type="button" role="option" aria-selected="false" data-subject-key="chemistry">Химия</button>
-              <button type="button" role="option" aria-selected="false" data-subject-key="english">Английский</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="turkish">Турецкий язык и литература</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="physics">Физика</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="biology">Биология</button>
               <button type="button" role="option" aria-selected="false" data-subject-key="geography">География</button>
               <button type="button" role="option" aria-selected="false" data-subject-key="history">История</button>
-              <button type="button" role="option" aria-selected="false" data-subject-key="math">Математика</button>
-              <button type="button" role="option" aria-selected="false" data-subject-key="philosophy">Философия</button>
-              <button type="button" role="option" aria-selected="false" data-subject-key="physics">Физика</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="english">Английский</button>
               <button type="button" role="option" aria-selected="false" data-subject-key="science">Естествознание</button>
-              <button type="button" role="option" aria-selected="false" data-subject-key="sociology">Социология</button>
-              <button type="button" role="option" aria-selected="false" data-subject-key="turkish">Турецкий язык и литература</button>
+              <button type="button" role="option" aria-selected="false" data-subject-key="other">Другие три предмета</button>
             </div>
           </div>
         </div>
 
         <div class="subject-bars">
           <article class="subject-bar subject-b0" data-result-mode="b0">
-            <div><span>Без инструментов</span><strong data-subject-value>57,1%</strong></div>
-            <div class="bar-track"><span data-subject-bar style="width: 57.1%"></span></div>
+            <div><span>Без инструментов</span><strong data-subject-value>65,3%</strong></div>
+            <div class="bar-track"><span data-subject-bar style="width: 65.3%"></span></div>
           </article>
-          <article class="subject-bar subject-web" data-result-mode="web">
-            <div><span>Веб-поиск</span><strong data-subject-value>70,7%</strong></div>
-            <div class="bar-track"><span data-subject-bar style="width: 70.7%"></span></div>
+          <article class="subject-bar subject-text" data-result-mode="text">
+            <div><span>Текстовый RAG</span><strong data-subject-value>62,0%</strong></div>
+            <div class="bar-track"><span data-subject-bar style="width: 62%"></span></div>
           </article>
-          <article class="subject-bar subject-rag" data-result-mode="rag">
-            <div><span>Textbook RAG</span><strong data-subject-value>54,5%</strong></div>
-            <div class="bar-track"><span data-subject-bar style="width: 54.5%"></span></div>
+          <article class="subject-bar subject-visual" data-result-mode="visual">
+            <div><span>Визуальный RAG</span><strong data-subject-value>60,8%</strong></div>
+            <div class="bar-track"><span data-subject-bar style="width: 60.8%"></span></div>
+          </article>
+          <article class="subject-bar subject-hybrid" data-result-mode="hybrid">
+            <div><span>Гибридный RAG</span><strong data-subject-value>59,2%</strong></div>
+            <div class="bar-track"><span data-subject-bar style="width: 59.2%"></span></div>
           </article>
         </div>
 
         <div class="subject-verdict">
-          <span id="subject-result-count">198 заданий</span>
-          <p id="subject-result-verdict" aria-live="polite">На полном срезе веб-поиск лидирует, а RAG уступает модели без инструментов на 2,6 п.п.</p>
+          <span id="subject-result-count">274 задания</span>
+          <p id="subject-result-verdict" aria-live="polite">Модель без инструментов лидирует. Лучший режим с поиском уступает базовой линии на 3,3 п.п.</p>
         </div>
       </div>
 
@@ -385,7 +402,7 @@
         <span class="conclusion-symbol" aria-hidden="true">✣</span>
         <div>
           <span class="card-eyebrow">основной вывод</span>
-          <p>Веб — для внешних фактов, RAG — для знаний из учебников, сама модель — для рассуждения по условию. Главный фактор качества — не наличие поиска, а правильный выбор источника и момента его вызова.</p>
+          <p>Гипотеза о среднем росте не подтвердилась: 65,3% без инструментов против 62,0% / 60,8% / 59,2% с поиском. Retrieval находит нужную страницу, но польза теряется из-за неполного покрытия корпуса, слишком частых вызовов и доверия к отвлекающему контексту. При этом отдельные предметы показывают, что правильный маршрут всё же может помочь.</p>
         </div>
       </div>
     </section>
@@ -394,21 +411,21 @@
       <div class="section-shell">
         <div class="section-index">05 · СИСТЕМА</div>
         <div class="section-heading reveal">
-          <h2>ИЗОБРАЖЕНИЕ<br><em>ОСТАЁТСЯ ГЛАВНЫМ.</em></h2>
-          <p>Найденный фрагмент поддерживает решение, но не заменяет условие задачи.</p>
+          <h2>СНАЧАЛА ИСТОЧНИК.<br><em>ЗАТЕМ ДВА ПОИСКА.</em></h2>
+          <p>Точное совпадение возвращает официальный ответ. Иначе агент получает текстовую выдачу, визуальную страницу или обе ветки.</p>
         </div>
 
         <div class="pipeline-grid">
           <ol class="pipeline-steps reveal">
-            <li><span>01</span><div><h3>Прочитать задание</h3><p>Извлечь текст, числа, формулы и вопрос из исходного изображения.</p></div></li>
-            <li><span>02</span><div><h3>Выбрать источник</h3><p>Решать самостоятельно либо обратиться к официальному ключу или учебникам.</p></div></li>
-            <li><span>03</span><div><h3>Проверить контекст</h3><p>Отбросить слабые и конфликтующие чанки, разрешить одну переформулировку.</p></div></li>
-            <li><span>04</span><div><h3>Сверить ответ</h3><p>Повторно проверить числа и вопрос по изображению, затем вернуть единый результат.</p></div></li>
+            <li><span>01</span><div><h3>Найти точный источник</h3><p>Сопоставить наблюдаемый текст задания с базой официальных ответов.</p></div></li>
+            <li><span>02</span><div><h3>Искать текст</h3><p>Объединить E5-small и BM25, повторно ранжировать кросс-энкодером.</p></div></li>
+            <li><span>03</span><div><h3>Искать страницу</h3><p>ColQwen сопоставляет изображение страницы с запросом без OCR.</p></div></li>
+            <li><span>04</span><div><h3>Решить и оценить</h3><p>Агент сверяет контекст с изображением; ответ проходит единый протокол оценки.</p></div></li>
           </ol>
           <div class="system-map reveal" aria-label="Схема маршрутизации задания между официальным ответом и агентом с поиском">
             <div class="system-map-head">
               <span>действующая схема</span>
-              <strong>ОДИН ВХОД · ДВА МАРШРУТА · ЕДИНЫЙ РЕЗУЛЬТАТ</strong>
+              <strong>ТОЧНЫЙ ИСТОЧНИК · ТЕКСТ · ВИЗУАЛ · ЕДИНЫЙ РЕЗУЛЬТАТ</strong>
             </div>
 
             <div class="system-map-start">
@@ -437,15 +454,15 @@
                 <div class="agent-search-pair">
                   <div class="system-node node-agent">
                     <span class="node-number">3</span>
-                    <div><b>Агент</b><small>читает изображение, решает и проверяет</small></div>
+                    <div><b>Агент</b><small>читает изображение и выбирает контекст</small></div>
                   </div>
                   <span class="flow-arrow reversible" data-motion-stage="6" aria-hidden="true">⇄</span>
                   <div class="system-node node-search">
                     <span class="node-number">⌕</span>
-                    <div><b>Поиск по учебникам</b><small>до двух запросов · пять фрагментов</small></div>
+                    <div><b>Текст + страница</b><small>E5 + BM25 + LoRA · ColQwen без OCR</small></div>
                   </div>
                 </div>
-                <p class="branch-note">Слабые и противоречивые фрагменты не участвуют в ответе.</p>
+                <p class="branch-note">Текстовая ветка скрывает выдачу ниже 0,5; визуальная возвращает страницу изображением.</p>
               </article>
             </div>
 
@@ -464,34 +481,34 @@
     <section id="progress" class="section section-shell">
       <div class="section-index">06 · ХОД РАБОТЫ</div>
       <div class="section-heading reveal">
-        <h2>ОТ КОНТРАКТА<br><em>К ПРОВЕРЯЕМОМУ ВЫВОДУ.</em></h2>
-        <p>Каждый следующий этап добавлялся только после воспроизводимой проверки предыдущего.</p>
+        <h2>ОТ «ПОИСК ПОМОЖЕТ»<br><em>К ПРОВЕРКЕ ВОРОНКИ.</em></h2>
+        <p>Исследование отделило качество retrieval от качества финального ответа и показало, где именно теряется польза.</p>
       </div>
 
       <div class="timeline reveal">
         <article class="timeline-item">
           <span class="timeline-number">01</span><span class="timeline-status done">готово</span>
-          <h3>Форматы данных</h3><p>Единые схемы задания, изображения, чанка и результата агента.</p>
+          <h3>Корпус и два индекса</h3><p>200 учебников, текстовый индекс и визуальная коллекция страниц.</p>
         </article>
         <article class="timeline-item">
           <span class="timeline-number">02</span><span class="timeline-status done">готово</span>
-          <h3>Базовая линия</h3><p>Запуск одной модели без инструментов и сохранение полного trace.</p>
+          <h3>Retrieval отдельно</h3><p>Hit@1/5, MRR@10 и задержка для разбиения и поисковых профилей.</p>
         </article>
         <article class="timeline-item">
           <span class="timeline-number">03</span><span class="timeline-status done">готово</span>
-          <h3>Корпус и индексы</h3><p>Разбор учебников, гибридный retrieval и повторное ранжирование.</p>
+          <h3>Четыре режима</h3><p>Без инструментов, текстовый, визуальный и гибридный RAG на 274 задачах.</p>
         </article>
         <article class="timeline-item">
           <span class="timeline-number">04</span><span class="timeline-status done">готово</span>
-          <h3>Агентный инструмент</h3><p>Прямой вызов поиска, ограничение запросов и проверка релевантности.</p>
+          <h3>Воронка доверия</h3><p>271 вызов, 105 уверенных выдач, 62 опоры на контекст, 40 верных ответов.</p>
         </article>
         <article class="timeline-item">
           <span class="timeline-number">05</span><span class="timeline-status done">готово</span>
-          <h3>Единая оценка</h3><p>Точные метрики, мультимодальный судья и предметные срезы.</p>
+          <h3>Главный вывод</h3><p>Средний рост не подтверждён; найденная страница ещё не означает полезный ответ.</p>
         </article>
         <article class="timeline-item">
           <span class="timeline-number">06</span><span class="timeline-status active">сейчас</span>
-          <h3>Маршрутизация</h3><p>Выбор между самостоятельным решением, вебом и учебником.</p>
+          <h3>Следующий эксперимент</h3><p>Корпус 9–12, исправленный предметный фильтр и маршрутизация по типу задания.</p>
         </article>
       </div>
     </section>
@@ -508,7 +525,7 @@
           <article class="tech-card tech-green">
             <span class="tech-number">02</span>
             <h3>Поиск</h3>
-            <ul><li>FAISS</li><li>BM25</li><li>Многоязычный E5</li><li>BGE · повторное ранжирование</li></ul>
+            <ul><li>BM25 + E5-small</li><li>LoRA кросс-энкодер</li><li>ColQwen</li><li>MaxSim</li></ul>
           </article>
           <article class="tech-card tech-yellow">
             <span class="tech-number">03</span>
@@ -607,7 +624,7 @@
     <div class="section-shell footer-inner">
       <div>
         <strong>TEXTBOOK VLM</strong>
-        <p>VLM-агент с проверяемым поиском по турецким учебникам.</p>
+        <p>VLM-агент с текстовым и визуальным поиском по турецким учебникам.</p>
       </div>
       <div class="footer-meta">
         <span>Young && Yandex</span>

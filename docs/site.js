@@ -384,18 +384,24 @@ function animateSubjectValue(element, from, to) {
 }
 
 function describeSubjectResult(result) {
-  const labels = { b0: "модель без инструментов", web: "веб-поиск", rag: "Textbook RAG" };
-  const modes = ["b0", "web", "rag"];
+  const labels = {
+    b0: "модель без инструментов",
+    text: "текстовый RAG",
+    visual: "визуальный RAG",
+    hybrid: "гибридный RAG",
+  };
+  const modes = ["b0", "text", "visual", "hybrid"];
   const bestScore = Math.max(...modes.map((mode) => result[mode]));
   const leaders = modes.filter((mode) => result[mode] === bestScore).map((mode) => labels[mode]);
-  const ragDelta = Math.round((result.rag - result.b0) * 10) / 10;
-  const ragComparison = ragDelta === 0
-    ? "RAG не меняет точность относительно режима без инструментов."
-    : ragDelta > 0
-      ? `RAG улучшает результат на ${formatPercent(ragDelta).replace("%", " п.п.")}`
-      : `RAG уступает режиму без инструментов на ${formatPercent(Math.abs(ragDelta)).replace("%", " п.п.")}`;
+  const bestRetrievalScore = Math.max(result.text, result.visual, result.hybrid);
+  const retrievalDelta = Math.round((bestRetrievalScore - result.b0) * 10) / 10;
+  const retrievalComparison = retrievalDelta === 0
+    ? "Лучший режим с поиском совпадает с базовой линией."
+    : retrievalDelta > 0
+      ? `Лучший режим с поиском улучшает результат на ${formatPercent(retrievalDelta).replace("%", " п.п.")}`
+      : `Лучший режим с поиском уступает базовой линии на ${formatPercent(Math.abs(retrievalDelta)).replace("%", " п.п.")}`;
 
-  return `${leaders.join(" и ")} ${leaders.length > 1 ? "делят первое место" : "лидирует"}. ${ragComparison}`;
+  return `${leaders.join(" и ")} ${leaders.length > 1 ? "делят первое место" : "лидирует"}. ${retrievalComparison}`;
 }
 
 function updateSubjectResult(key, animate = true) {
@@ -404,7 +410,7 @@ function updateSubjectResult(key, animate = true) {
   }
 
   const result = subjectResults[key] || subjectResults.all;
-  const modes = ["b0", "web", "rag"];
+  const modes = ["b0", "text", "visual", "hybrid"];
   const bestScore = Math.max(...modes.map((mode) => result[mode]));
 
   subjectRows.forEach((row) => {

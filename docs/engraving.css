@@ -584,12 +584,12 @@ select {
 }
 
 .bar-green,
-.subject-rag [data-subject-bar] {
+.subject-visual [data-subject-bar] {
   background: var(--ink);
 }
 
 .bar-red,
-.subject-web [data-subject-bar] {
+.subject-text [data-subject-bar] {
   background-color: var(--ink);
   background-image: repeating-linear-gradient(135deg, var(--paper) 0 2px, transparent 2px 8px);
 }
@@ -599,6 +599,12 @@ select {
   background-image:
     repeating-linear-gradient(45deg, var(--paper) 0 1px, transparent 1px 7px),
     repeating-linear-gradient(-45deg, var(--paper) 0 1px, transparent 1px 7px);
+}
+
+.bar-hybrid,
+.subject-hybrid [data-subject-bar] {
+  background-color: var(--ink);
+  background-image: repeating-linear-gradient(0deg, var(--paper) 0 2px, transparent 2px 8px);
 }
 
 .subject-b0 [data-subject-bar] {

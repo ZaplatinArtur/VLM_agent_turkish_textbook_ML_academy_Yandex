@@ -12,7 +12,7 @@
   <meta property="og:locale" content="ru_RU">
   <meta property="og:url" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/project-map.html">
   <meta property="og:title" content="Карта проекта — Textbook VLM">
-  <meta property="og:description" content="Как задание проходит через маршрутизацию, агента, поиск по учебникам и единую оценку.">
+  <meta property="og:description" content="Как задание проходит через точный источник, текстовый и визуальный поиск, агента и единую оценку.">
   <meta property="og:image" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/assets/social-preview.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
@@ -27,10 +27,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260815-20">
-  <link rel="stylesheet" href="detail.css?v=20260814-3">
-  <link rel="stylesheet" href="engraving.css?v=20260815-11">
-  <script src="site.js?v=20260815-14" defer></script>
+  <link rel="stylesheet" href="site.css?v=20260817-1">
+  <link rel="stylesheet" href="detail.css?v=20260817-1">
+  <link rel="stylesheet" href="engraving.css?v=20260817-1">
+  <script src="site.js?v=20260817-1" defer></script>
 </head>
 <body class="detail-page">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -46,7 +46,7 @@
         <h1 class="detail-title">КАРТА<br><em>ПРОЕКТА</em></h1>
         <div class="detail-intro">
           <a class="detail-back" href="index.html">← На главную</a>
-          <p>Как задание проходит от входного изображения через маршрутизацию, решение и поиск до единой оценки.</p>
+          <p>Как фото задания проходит через точный источник, текстовую и визуальную ветки, решение агента и единую оценку.</p>
         </div>
       </div>
     </section>
@@ -56,11 +56,11 @@
         <div class="doc-heading"><h2>ЧЕТЫРЕ<br><em>КОНТУРА.</em></h2><p>Компоненты разделены так, чтобы один и тот же набор заданий честно проходил через разные режимы.</p></div>
         <div class="doc-grid">
           <article class="doc-card accent-purple"><span class="doc-number">01 · АГЕНТ</span><h3>Единый запуск</h3><p>Загружает задачи, выбирает режим, сохраняет ответ, шаги решения, вызовы инструментов и ошибки.</p></article>
-          <article class="doc-card accent-green"><span class="doc-number">02 · ПОИСК</span><h3>Корпус учебников</h3><p>Находит кандидатов, объединяет сигналы и повторно ранжирует фрагменты перед передачей агенту.</p></article>
+          <article class="doc-card accent-green"><span class="doc-number">02 · ПОИСК</span><h3>Два индекса</h3><p>Текстовая ветка объединяет E5-small и BM25; визуальная ищет ColQwen по страницам без OCR.</p></article>
           <article class="doc-card accent-yellow"><span class="doc-number">03 · ОЦЕНКА</span><h3>Слепая проверка</h3><p>Сравнивает ответ агента с эталоном по одинаковому протоколу и считает строгую точность.</p></article>
           <article class="doc-card accent-blue"><span class="doc-number">04 · АНАЛИТИКА</span><h3>Разбор результата</h3><p>Собирает предметные срезы, ошибки, историю поиска и сравнение экспериментальных режимов.</p></article>
           <article class="doc-card"><span class="doc-number">05 · ДАННЫЕ</span><h3>Общие контракты</h3><p>Задание, изображение, найденный чанк и результат описаны строгими Pydantic-схемами.</p></article>
-          <article class="doc-card"><span class="doc-number">06 · ИСТОЧНИКИ</span><h3>Официальный ответ</h3><p>При надёжном точном совпадении система возвращает ключ без вызова модели.</p></article>
+          <article class="doc-card"><span class="doc-number">06 · ИСТОЧНИКИ</span><h3>Официальный ответ</h3><p>При точном совпадении система возвращает ключ без агента и без поиска по учебникам.</p></article>
         </div>
       </div>
     </section>
@@ -71,9 +71,9 @@
         <div class="doc-flow">
           <div class="flow-step"><span>01</span><strong>Прочитать JSONL</strong></div>
           <div class="flow-step"><span>02</span><strong>Проверить официальный источник</strong></div>
-          <div class="flow-step"><span>03</span><strong>Выбрать режим агента</strong></div>
-          <div class="flow-step"><span>04</span><strong>Решить или вызвать поиск</strong></div>
-          <div class="flow-step"><span>05</span><strong>Сохранить полный след</strong></div>
+          <div class="flow-step"><span>03</span><strong>Запустить текстовую ветку</strong></div>
+          <div class="flow-step"><span>04</span><strong>Запустить визуальную ветку</strong></div>
+          <div class="flow-step"><span>05</span><strong>Решить и сохранить полный след</strong></div>
           <div class="flow-step"><span>06</span><strong>Передать ответ судье</strong></div>
           <div class="flow-step"><span>07</span><strong>Построить отчёт</strong></div>
         </div>

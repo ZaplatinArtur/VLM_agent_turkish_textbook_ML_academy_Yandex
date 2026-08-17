@@ -12,7 +12,7 @@
   <meta property="og:locale" content="ru_RU">
   <meta property="og:url" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/evaluation.html">
   <meta property="og:title" content="Протокол оценки — Textbook VLM">
-  <meta property="og:description" content="Единая слепая оценка агентов без инструментов, с веб-поиском и Textbook RAG.">
+  <meta property="og:description" content="Единая оценка четырёх режимов: без инструментов, текстовый, визуальный и гибридный RAG.">
   <meta property="og:image" content="https://zaplatinartur.github.io/VLM_agent_turkish_textbook_ML_academy_Yandex/assets/social-preview.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
@@ -27,10 +27,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20260815-20">
-  <link rel="stylesheet" href="detail.css?v=20260814-3">
-  <link rel="stylesheet" href="engraving.css?v=20260815-11">
-  <script src="site.js?v=20260815-14" defer></script>
+  <link rel="stylesheet" href="site.css?v=20260817-1">
+  <link rel="stylesheet" href="detail.css?v=20260817-1">
+  <link rel="stylesheet" href="engraving.css?v=20260817-1">
+  <script src="site.js?v=20260817-1" defer></script>
 </head>
 <body class="detail-page">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -50,11 +50,12 @@
 
     <section class="doc-section">
       <div class="section-shell">
-        <div class="doc-heading"><h2>ЧТО МЫ<br><em>СРАВНИВАЕМ.</em></h2><p>Основной вопрос — улучшает ли поиск по учебникам качество относительно той же модели без инструментов и с веб-поиском.</p></div>
+        <div class="doc-heading"><h2>ЧТО МЫ<br><em>СРАВНИВАЕМ.</em></h2><p>274 задания, одна Qwen 3.5 9B и одинаковая конфигурация. Меняется только вид контекста из учебников.</p></div>
         <div class="doc-grid">
           <article class="doc-card accent-blue"><span class="doc-number">B0</span><h3>Без инструментов</h3><p>Модель видит только задание и решает его самостоятельно.</p></article>
-          <article class="doc-card accent-purple"><span class="doc-number">WEB</span><h3>Веб-поиск</h3><p>Агент может обратиться к открытому интернету за внешними фактами.</p></article>
-          <article class="doc-card accent-green"><span class="doc-number">RAG</span><h3>Поиск по учебникам</h3><p>Агент получает релевантные фрагменты из фиксированного корпуса.</p></article>
+          <article class="doc-card accent-purple"><span class="doc-number">TEXT</span><h3>Текстовый RAG</h3><p>Агент получает OCR-фрагменты страниц после гибридного поиска и повторного ранжирования.</p></article>
+          <article class="doc-card accent-green"><span class="doc-number">VISUAL</span><h3>Визуальный RAG</h3><p>Агент получает найденную ColQwen страницу целиком как изображение.</p></article>
+          <article class="doc-card accent-yellow"><span class="doc-number">HYBRID</span><h3>Текст + визуал</h3><p>Обе retrieval-ветки доступны одновременно.</p></article>
         </div>
         <div class="doc-callout"><span>=</span><div><h3>Фиксируем условия</h3><p>Для сравниваемых режимов одинаковы набор заданий, версия модели, параметры генерации, формат ответа и судья.</p></div></div>
       </div>
@@ -79,7 +80,7 @@
         <div class="doc-heading"><h2>КАК ПРОХОДИТ<br><em>ПРОВЕРКА.</em></h2><p>Судья калибруется после завершения прогонов, а спорные случаи отправляются на отдельный разбор.</p></div>
         <div class="doc-flow">
           <div class="flow-step"><span>01</span><strong>Зафиксировать план</strong></div>
-          <div class="flow-step"><span>02</span><strong>Прогнать три режима</strong></div>
+          <div class="flow-step"><span>02</span><strong>Прогнать четыре режима</strong></div>
           <div class="flow-step"><span>03</span><strong>Скрыть название режима</strong></div>
           <div class="flow-step"><span>04</span><strong>Проверить формат ответа</strong></div>
           <div class="flow-step"><span>05</span><strong>Получить вердикт судьи</strong></div>
@@ -99,6 +100,19 @@
           <article class="doc-card"><span class="doc-number">НЕОПРЕДЕЛЁННОСТЬ</span><h3>95% доверительный интервал</h3><p>Парная разница точности сопровождается бутстреп-интервалом, а не только одной итоговой цифрой.</p></article>
         </div>
         <div class="doc-callout"><span>!</span><div><h3>Ручной разбор нужен точечно</h3><p>Проверяются расхождения автоматических метрик, ошибки судьи, низкая уверенность, сомнительный эталон и случайная доля согласованных примеров.</p></div></div>
+      </div>
+    </section>
+
+    <section class="doc-section doc-section-dark">
+      <div class="section-shell">
+        <div class="doc-heading"><h2>ГДЕ ТЕРЯЕТСЯ<br><em>ПОЛЬЗА.</em></h2><p>Поиск вызывается почти всегда, но до опоры агента на выдачу доходит меньше четверти задач.</p></div>
+        <div class="stat-grid">
+          <article class="doc-stat"><span class="doc-number">ЗАДАЧИ</span><strong>274</strong><p>поиск доступен во всём срезе</p></article>
+          <article class="doc-stat"><span class="doc-number">ВЫЗОВ ПОИСКА</span><strong>271</strong><p>агент почти всегда обращается к инструменту</p></article>
+          <article class="doc-stat"><span class="doc-number">ОПОРА НА ВЫДАЧУ</span><strong>62</strong><p>контекст признан достаточно полезным</p></article>
+          <article class="doc-stat"><span class="doc-number">ВЕРНЫЙ ОТВЕТ</span><strong>40</strong><p>среди 62 задач с опорой на поиск</p></article>
+        </div>
+        <div class="doc-callout"><span>!</span><div><h3>Главный результат</h3><p>65,3% без инструментов против 62,0% текстового, 60,8% визуального и 59,2% гибридного RAG. Различия не достигли статистической значимости, но у всех трёх режимов знак отрицательный.</p></div></div>
       </div>
     </section>
 
