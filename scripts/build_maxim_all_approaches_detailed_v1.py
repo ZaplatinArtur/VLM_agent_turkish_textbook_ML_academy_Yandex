@@ -601,6 +601,11 @@ def _format_delta(transition: Mapping[str, Any]) -> str:
     )
 
 
+def _format_cell(value: Any) -> str:
+    """Экранирует разделитель столбцов: внутри f-строки бэкслеш запрещён до 3.12."""
+    return str(value).replace("|", "\\|")
+
+
 def _format_optional_int(value: Any) -> str:
     return "—" if value is None else f"{int(value):,}"
 
@@ -665,7 +670,7 @@ def render_markdown(report: Mapping[str, Any]) -> str:
             + " | ".join(
                 [
                     str(rank),
-                    str(item["label"]).replace("|", "\\|"),
+                    _format_cell(item["label"]),
                     _format_score(item["metrics"]["overall"]),
                     _format_score(item["metrics"]["math"]),
                     _format_score(item["metrics"]["non_math"]),
@@ -713,8 +718,8 @@ def render_markdown(report: Mapping[str, Any]) -> str:
             if artifact is None:
                 artifact = item.get("supersession_attestation", {}).get("path", "—")
             lines.append(
-                f"| {str(item['label']).replace('|', '\\|')} | "
-                f"{str(item.get('reason', 'non-final')).replace('|', '\\|')} | `{artifact}` |"
+                f"| {_format_cell(item['label'])} | "
+                f"{_format_cell(item.get('reason', 'non-final'))} | `{artifact}` |"
             )
     else:
         lines.append("None.")
@@ -724,8 +729,8 @@ def render_markdown(report: Mapping[str, Any]) -> str:
         lines.extend(["| Branch | Reason |", "|---|---|"])
         for item in report["pending"]:
             lines.append(
-                f"| {str(item['label']).replace('|', '\\|')} | "
-                f"{str(item.get('reason', 'pending')).replace('|', '\\|')} |"
+                f"| {_format_cell(item['label'])} | "
+                f"{_format_cell(item.get('reason', 'pending'))} |"
             )
     else:
         lines.append("None.")
