@@ -76,7 +76,11 @@ class B1Search(B0NoTools):
 
     def _step_llm(self, budget: int):
         """LLM с инструментом и укороченным бюджетом шага."""
-        return self.llm_tools.bind(extra_body=self._base_extra_body(budget))
+        # Метод B0 переименовали в _generation_extra_body, ветку b1 тогда не
+        # тронули — до первого запуска условия это не всплывало.
+        return self.llm_tools.bind(
+            extra_body=self._generation_extra_body(max_tokens=budget)
+        )
 
     def _finish_call(self, messages: list, task: Task, usage: Usage) -> str:
         """Финал без инструмента: полный бюджет + структурный JSON."""
