@@ -1,31 +1,55 @@
-# visrag2
+# visrag2: subject-local SigLIP continuation
 
-Корректный Turkish visual page retriever: `query -> PNG page` на основе готового
-retrieval-checkpoint `athrael-soju/colqwen3.5-4.5B-v3` и LoRA.
+Continues the already trained `visrag_siglip_e5_v3` checkpoint. It trains the
+last three blocks of both SigLIP towers and their projection heads; LoRA is not
+used because this base-size dual encoder fits without adapters and direct block
+tuning adapts both image and Turkish text representations.
 
-- late-interaction MaxSim, без pooling в обучающей цели;
-- батчи состоят из страниц одного предмета;
-- страницы из `visrag_relevance_groups_v3_reviewed.json` считаются взаимозаменяемыми positives;
-- целые relevance-группы попадают либо в train, либо в validation;
-- validation ранжирует 120 запросов среди одних и тех же 120 страниц предмета;
-- W&B: Hit@1/2/3/5/10/15/20/25/30, MRR@10 и nDCG@10 в целом и по предметам;
-- автоматическая остановка и checkpoint за 8 минут до 11:00 Europe/Moscow;
-- checkpoint содержит LoRA, optimizer, scheduler, mixed-precision state и RNG;
-- `--resume auto` продолжает обучение с последнего checkpoint.
+## Objective and batching
 
-Запуск на GPU 0 и 1:
+Numbers below are the defaults in `run_a100.sh`; every one of them is a flag.
+
+- physical batch: 32 query/page pairs per GPU, no gradient accumulation;
+- global differentiable pool: 128 pairs across four GPUs;
+- every global optimizer step contains one subject only;
+- reviewed relevance groups and exact duplicate-query links form positive sets;
+- grouped pages are packed together in a batch when possible;
+- symmetric multi-positive supervised contrastive loss averages log-probability
+  across all relevant pages, so a relevant sibling is never a false negative.
+
+## Validation
+
+The split holds out complete relevance groups. Every subject has exactly 120
+page images and 120 deterministic queries, ranked only inside that subject.
+Online W&B logs Hit@1/3/5/10/20/30, Recall@k, Precision@k, MRR@10 and NDCG@10
+for each subject plus macro and micro averages.
+
+## Run and resume
+
+The script finds the repository itself, so it runs from anywhere:
 
 ```bash
 bash src/visrag2/run_a100.sh
+
+# Resume model, optimizer, scheduler, RNG, epoch and dataloader position:
+bash src/visrag2/run_a100.sh --resume auto
 ```
 
-Возобновление:
+It launches four processes on `CUDA_VISIBLE_DEVICES=0,1,2,3` and expects
+`.venv/bin/accelerate` in the repository root. `start_when_ready.sh` is the same
+run, delayed until the query manifest is complete and all four GPUs are free.
+
+Query manifests are not in git and the two hosts disagree on where they live, so
+`VISRAG_CATALOG_DIR` selects the directory — `catalog` on the training server,
+`data/visual_retrive/catalog` by the repository convention:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0,1 accelerate launch --num_processes 2 -m visrag2.train \
-  ...те же аргументы... --resume auto
+VISRAG_CATALOG_DIR=data/visual_retrive/catalog bash src/visrag2/run_a100.sh
 ```
 
-Основа решения — официальный ColPali/ColQwen multi-vector подход и ColBERT-style
-late interaction. В отличие от старого trainer метрики не усредняются по маленьким
-in-batch задачам.
+`best_model` is selected by macro Hit@3; `final_model` is always exported in
+Hugging Face format, both under `--output-dir`. The run stops ten minutes before
+the next 12:00 Moscow.
+
+The base checkpoint, `--output-dir` and the paths inside `start_when_ready.sh`
+are host-specific and point at the training server, not at this repository.

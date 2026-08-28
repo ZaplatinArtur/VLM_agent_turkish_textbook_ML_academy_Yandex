@@ -4,22 +4,17 @@ import torch
 import torch.nn.functional as F
 
 
-def maxsim_scores(queries: torch.Tensor, documents: torch.Tensor) -> torch.Tensor:
-    """ColBERT/ColQwen late interaction, normalized by query length."""
-    # [query_batch, document_batch, query_tokens, document_tokens]
-    similarity = torch.einsum("aqd,btd->abqt", queries, documents)
-    return similarity.amax(dim=-1).sum(dim=-1) / queries.shape[1]
-
-
-def multi_positive_infonce(scores: torch.Tensor, positive_mask: torch.Tensor, temperature: float = 0.02):
-    """Probability mass of every equivalent page is positive; none is a false negative."""
-    logits = scores / temperature
+def multi_positive_supcon(scores: torch.Tensor, positive_mask: torch.Tensor, temperature: float = 0.05):
+    """Mean log-probability of every relevant target; relevant pairs are never negatives."""
     if not positive_mask.any(dim=1).all():
-        raise ValueError("every query must have at least one positive document")
-    positive_logits = logits.masked_fill(~positive_mask, -torch.inf)
-    return -(torch.logsumexp(positive_logits, dim=1) - torch.logsumexp(logits, dim=1)).mean()
+        raise ValueError("every anchor must have at least one positive")
+    log_prob = F.log_softmax(scores.float()/temperature, dim=1)
+    weights = positive_mask.float()/positive_mask.sum(1, keepdim=True)
+    return -(weights*log_prob).sum(1).mean()
 
 
-def stable_group_hash(group_id: str) -> int:
-    import hashlib
-    return int.from_bytes(hashlib.blake2b(group_id.encode(), digest_size=8).digest(), "big") & (2**63-1)
+def symmetric_multi_positive_loss(query_embeddings, document_embeddings, positive_mask, temperature=.05):
+    scores = F.normalize(query_embeddings.float(), dim=-1) @ F.normalize(document_embeddings.float(), dim=-1).T
+    q2d = multi_positive_supcon(scores, positive_mask, temperature)
+    d2q = multi_positive_supcon(scores.T, positive_mask.T, temperature)
+    return (q2d+d2q)/2, scores
