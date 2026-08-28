@@ -1,12 +1,18 @@
+import pytest
+
 from retrieve.confidence import (
     CROSS_ENCODER_MIN_SCORE,
     DEFAULT_MIN_SCORE,
     PROFILE_MIN_SCORE,
+    UNCALIBRATED_PROFILES,
     Relevance,
+    UncalibratedProfileError,
     assess_relevance,
     min_score_for,
+    validate_profile,
 )
 from retrieve.pipelines import PROFILES
+from retrieve.rankers.fusion import DEFAULT_RRF_K
 from schemas.retrieve import RetrievedChunk
 
 
@@ -47,10 +53,62 @@ def test_explicit_min_score_wins_over_profile():
     assert assess_relevance(results, min_score=0.6, profile="e5-small").is_useful
 
 
-def test_unknown_and_missing_profile_fall_back_to_default():
+def test_missing_profile_falls_back_to_default():
+    # None — вызывающий про профиль не знает; это не то же самое, что профиль
+    # без порога, и ломать этот путь нельзя: так зовёт запасная ветка тулы.
     assert min_score_for(None) == DEFAULT_MIN_SCORE
-    assert min_score_for("m3") == DEFAULT_MIN_SCORE
+    assert min_score_for("") == DEFAULT_MIN_SCORE
     assert min_score_for("e5-small") == PROFILE_MIN_SCORE["e5-small"]
+
+
+def test_uncalibrated_profile_is_rejected_not_defaulted():
+    with pytest.raises(UncalibratedProfileError, match="m3"):
+        min_score_for("m3")
+    with pytest.raises(UncalibratedProfileError):
+        assess_relevance([chunk("a", 0.9)], profile="rrf_e5-small_bm25")
+
+
+def test_unknown_profile_is_rejected():
+    # Новый профиль не должен молча получить чужой порог.
+    with pytest.raises(UncalibratedProfileError):
+        min_score_for("visual_colqwen25_cascade")
+
+
+def test_explicit_min_score_bypasses_calibration_check():
+    verdict = assess_relevance([chunk("a", 18.4)], min_score=12.0, profile="m3")
+    assert verdict.is_useful
+
+
+def test_validate_profile_passes_for_calibrated():
+    validate_profile("rrf_e5-small_bm25_cross-encoder")
+    with pytest.raises(UncalibratedProfileError):
+        validate_profile("bm25")
+
+
+def test_every_profile_is_either_calibrated_or_declared_uncalibrated():
+    known = set(PROFILE_MIN_SCORE) | UNCALIBRATED_PROFILES
+    unclassified = [profile for profile in PROFILES if profile not in known]
+    assert not unclassified, (
+        f"профили без записи в реестре порогов: {unclassified}. "
+        "Добавьте порог в PROFILE_MIN_SCORE либо честно объявите "
+        "профиль в UNCALIBRATED_PROFILES."
+    )
+    assert not (set(PROFILE_MIN_SCORE) & UNCALIBRATED_PROFILES)
+
+
+def test_rrf_tail_profiles_stay_uncalibrated():
+    # Счёт RRF складывается из рангов и при rrf_k=60 не превышает 2/61:
+    # любой порог из шкалы [0, 1] отсекал бы всю выдачу.
+    unreachable = 2 / (DEFAULT_RRF_K + 1)
+    assert unreachable < CROSS_ENCODER_MIN_SCORE
+    rrf_tails = [
+        profile
+        for profile in PROFILES
+        if profile.startswith("rrf_") and profile.removesuffix("_gate").endswith("bm25")
+    ]
+    assert rrf_tails
+    for profile in rrf_tails:
+        assert profile in UNCALIBRATED_PROFILES, profile
 
 
 def test_cross_encoder_profiles_share_one_threshold():

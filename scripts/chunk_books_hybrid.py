@@ -12,7 +12,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from retrieve.chunking import EducationalChunker, UnitKind
+from retrieve.ingest.chunking import EducationalChunker, UnitKind
 from schemas.retrieve import RetrievedChunk
 
 

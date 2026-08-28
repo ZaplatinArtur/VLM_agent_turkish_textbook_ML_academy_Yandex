@@ -94,7 +94,7 @@ def build_pipeline(
 
     selected_profile = active_profile(profile)
     if selected_profile:
-        from .parsing import get_retrieved_chunks
+        from .ingest.parsing import get_retrieved_chunks
         from .pipelines import build_profile
 
         raw_corpus = get_retrieved_chunks() if chunks is None else chunks
@@ -108,7 +108,7 @@ def build_pipeline(
 
     if fetch_k is not None or mmr_lambda is not None:
         from .embedders import SentenceTransformerEmbedder
-        from .parsing import get_retrieved_chunks
+        from .ingest.parsing import get_retrieved_chunks
         from .rankers import DenseRanker, MaximalMarginalRelevanceRanker
 
         raw_corpus = get_retrieved_chunks() if chunks is None else chunks
@@ -157,7 +157,7 @@ def build_pipeline(
         corpus = graph.searchable_nodes()
     else:
         if chunks is None:
-            from .parsing import get_retrieved_chunks
+            from .ingest.parsing import get_retrieved_chunks
 
             raw_corpus = get_retrieved_chunks()
         else:

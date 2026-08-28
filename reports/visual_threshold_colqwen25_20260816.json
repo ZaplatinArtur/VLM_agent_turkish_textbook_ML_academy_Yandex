@@ -1,0 +1,14 @@
+{
+  "threshold": 0.7273,
+  "accuracy": 0.6226415094339622,
+  "in_domain_kept": 1.0,
+  "out_domain_leaked": 1.0,
+  "in_domain_min": 0.7373,
+  "in_domain_median": 0.7725,
+  "out_domain_median": 0.7754,
+  "out_domain_max": 0.7969,
+  "separable": false,
+  "profile": "visual_colqwen25_cascade",
+  "in_domain_queries": 33,
+  "out_domain_queries": 20
+}

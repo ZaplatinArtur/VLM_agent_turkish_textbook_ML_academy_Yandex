@@ -7,8 +7,8 @@ import pytest
 pytest.importorskip("faiss")
 pytest.importorskip("numpy")
 
-from retrieve import persistence as persistence_module
-from retrieve.persistence import (
+from retrieve.storage import persistence as persistence_module
+from retrieve.storage.persistence import (
     BUILD_LOCK_FILE,
     IndexValidationError,
     MANIFEST_FILE,
@@ -18,7 +18,7 @@ from retrieve.persistence import (
     retrieval_corpus_projection_sha256,
     save_index,
 )
-from retrieve.vector_store import CHUNK_IDS_FILE, INDEX_FILE, FaissVectorStore
+from retrieve.storage.vector_store import CHUNK_IDS_FILE, INDEX_FILE, FaissVectorStore
 from schemas.retrieve import RetrievedChunk
 
 

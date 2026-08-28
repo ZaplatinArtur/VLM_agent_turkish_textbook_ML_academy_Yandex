@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from retrieve.compare import (
+from retrieve.evaluation.compare import (
     calibrate_gate,
     iter_rankers,
     load_queries,

@@ -2,7 +2,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from paths import INDEX_DIR
-from retrieve.build_index import corpus_inventory, pipeline_index_directory
+from retrieve.ingest.build_index import corpus_inventory, pipeline_index_directory
 from schemas.retrieve import RetrievedChunk
 
 

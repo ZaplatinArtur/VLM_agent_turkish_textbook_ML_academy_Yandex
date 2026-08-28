@@ -130,7 +130,7 @@ def main(argv=None) -> int:
     parser.add_argument("--timeout", type=float, default=300.0)
     args = parser.parse_args(argv)
 
-    from retrieve.evaluate import load_corpus
+    from retrieve.evaluation.evaluate import load_corpus
 
     corpus = [c for c in load_corpus(None) if len(c.text.strip()) >= args.min_chars]
     by_subject = defaultdict(list)
